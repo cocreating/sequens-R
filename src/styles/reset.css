@@ -1,0 +1,6 @@
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  html { min-width: 20rem; background: var(--color-canvas); }
+  body { min-height: 100svh; margin: 0; }
+  button, input, select, textarea { font: inherit; }
+}

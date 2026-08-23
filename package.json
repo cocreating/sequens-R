@@ -12,10 +12,11 @@
     "test:e2e": "playwright test",
     "check": "svelte-check --tsconfig ./tsconfig.app.json",
     "check:bundle": "node scripts/check-bundle.mjs",
-    "verify:phase0": "npm run check && npm test && npm run build && npm run check:bundle && npm run test:e2e"
+    "verify": "npm run check && npm test && npm run build && npm run check:bundle && npm run test:e2e"
   },
   "dependencies": {
-    "svelte": "^5.0.0"
+    "svelte": "^5.0.0",
+    "svelte-dnd-action": "^0.9.79"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.0",

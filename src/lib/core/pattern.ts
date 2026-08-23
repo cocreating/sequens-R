@@ -55,6 +55,8 @@ export interface ParamDefinition {
   step: number;
   label: string;
   unit?: string;
+  options?: readonly string[];
+  control?: 'range' | 'select' | 'hidden';
 }
 
 export type ParamSchema = readonly ParamDefinition[];

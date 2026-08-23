@@ -6,6 +6,7 @@ export default defineConfig({
     ...devices['Desktop Chrome'],
     baseURL: 'http://127.0.0.1:4173',
     channel: 'chrome',
+    permissions: ['clipboard-read', 'clipboard-write'],
   },
   webServer: {
     command: 'npm run build && npm run preview -- --host 127.0.0.1',

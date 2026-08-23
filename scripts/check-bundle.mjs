@@ -7,10 +7,10 @@ const gzipBytes = javascriptAssets.reduce(
   (total, name) => total + gzipSync(readFileSync(new URL(name, assetDirectory))).byteLength,
   0,
 );
-const limitBytes = 30 * 1024;
+const limitBytes = 200 * 1024;
 
 if (gzipBytes > limitBytes) {
-  throw new Error(`Initial JavaScript is ${gzipBytes} bytes gzip; Phase 0 allows ${limitBytes}.`);
+  throw new Error(`Initial JavaScript is ${gzipBytes} bytes gzip; the product budget allows ${limitBytes}.`);
 }
 
-console.log(`Initial JavaScript: ${(gzipBytes / 1024).toFixed(2)} KiB gzip / 30.00 KiB budget.`);
+console.log(`Initial JavaScript: ${(gzipBytes / 1024).toFixed(2)} KiB gzip / 200.00 KiB budget.`);

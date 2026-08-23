@@ -6,6 +6,7 @@ import { loadRackFromFragment, rackToFragment } from '../../src/lib/share/fragme
 import { MODULE_TYPES, PARAM_SCHEMAS } from '../../src/lib/share/schema';
 import { STARTER_RACK } from '../../src/lib/share/starter';
 import type { ShareableModule, ShareableRack } from '../../src/lib/share/types';
+import { GENERATORS } from '../../src/lib/generators';
 
 function randomModule(random: () => number, type: ModuleType): ShareableModule {
   const params: Record<string, number> = {};
@@ -24,6 +25,10 @@ function randomRack(random: () => number): ShareableRack {
   };
 }
 
+function generatedPatterns(rack: ShareableRack) {
+  return rack.modules.map((module) => GENERATORS[module.type].generate(module.seed, module.params, { key: rack.key, bars: 1 }));
+}
+
 describe('link patch codec', () => {
   it('round-trips 200 five-module racks and stays below 400 bytes', async () => {
     const random = sfc32(0x5e9e05);
@@ -32,7 +37,9 @@ describe('link patch codec', () => {
       const rack = randomRack(random);
       const encoded = await serializeRack(rack);
       largest = Math.max(largest, encoded.byteLength);
-      expect(await deserializeRack(encoded)).toEqual(normalizeRack(rack));
+      const decoded = await deserializeRack(encoded);
+      expect(decoded).toEqual(normalizeRack(rack));
+      expect(generatedPatterns(decoded)).toEqual(generatedPatterns(rack));
     }
     expect(largest).toBeLessThanOrEqual(400);
   });

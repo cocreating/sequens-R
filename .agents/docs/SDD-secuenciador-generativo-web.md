@@ -248,7 +248,7 @@ Firefox y Samsung Internet funcionan —tienen Web MIDI y AudioWorklet— pero p
 | Capa | Elección | Por qué |
 |---|---|---|
 | Framework | **Svelte 5 + runes** | Reactividad de grano fino sin VDOM. Una rejilla de 8 × 32 pasos son 256 nodos que se tocan constantemente; el coste de diffing de React/Vue aquí se nota. Compila y desaparece: ayuda a C10 |
-| Build | **Vite 6** + `vite-plugin-pwa` | — |
+| Build | **Vite 6** + `vite-plugin-pwa` | SvelteKit was evaluated on 2026-08-23 and deferred: the v1 instrument is a single-screen, client-only PWA, and Kit would not improve the audio or scheduling path. See `architecture-decisions.md` AD-002 |
 | Lenguaje | **TypeScript estricto** | C9 |
 | Estilos | **Vanilla CSS** en `@layer reset, tokens, base, components, utilities` | C5 |
 | Audio | **Web Audio API cruda + AudioWorklet** | Ver 3.3 |
@@ -629,13 +629,13 @@ Ejecuta **una fase por vez**. No empieces la siguiente sin que la DoD de la ante
 
 Resuélvelas **antes** de la fase 0. El agente debe preguntar, no elegir por su cuenta:
 
-1. **Nombre y dominio del producto.**
+1. ~~**Nombre del producto.**~~ **Resuelto:** sequens-R. El dominio y el hosting se decidirán después del desarrollo local de v1.
 2. **Modelo de negocio.** Sin App Store y sin contenedor nativo, cobrar exige pasarela y por tanto **cuenta**, lo que choca de frente con C3 y C4. La recomendación es no monetizar en v1 y decidirlo cuando haya uso. Si se monetiza, hace falta una capa de *capabilities* desde el día uno; meterla después duele.
-3. **Origen del contenido — el mayor riesgo del proyecto.** Los grooves, progresiones y presets hay que **crearlos**; no se copian de ningún producto existente. Replicar un corpus de mil grooves son meses.
-   **La salida propuesta:** autorar un corpus semilla pequeño y decente —unos 40 grooves × 6 estilos— y apoyarse en C12 para que **un pack de grooves sea también un enlace**. Así el corpus lo construye quien use la app, y el problema de foso se convierte en un bucle de crecimiento. Es la respuesta web al problema, no la nativa. Falta decidir si se acepta.
+3. ~~**Origen del contenido — el mayor riesgo del proyecto.**~~ **Resuelto para v1:** los grooves, progresiones y presets se crean de forma original; no se copian de ningún producto existente.
+   **Alcance aceptado:** 40 grooves repartidos entre seis estilos. Durante el desarrollo se implementa un groove representativo por estilo para pruebas; la expansión a 40 queda para el final.
 4. ~~Alcance de la emulación 303.~~ **Resuelto:** voz simple en v1, filtro TPT diferido a la fase 5 detrás de la misma interfaz (§2.5).
 5. ~~¿Hace falta cubrir iOS?~~ **Resuelto: no.** iOS y WebKit quedan fuera de alcance (§2.7). No hay contenedor nativo, no hay segundo backend de MIDI. La fachada `midi/` se mantiene, pero solo para poder inyectar un mock en tests.
-6. **Idioma de la UI.** ¿Solo español, solo inglés, o i18n desde el principio? Retrofitear i18n cuesta.
+6. ~~**Idioma de la UI.**~~ **Resuelto:** todo el producto y el desarrollo se realizan en inglés desde este punto. No se añade i18n en v1.
 
 ---
 

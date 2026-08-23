@@ -26,7 +26,7 @@
 <article class:collapsed={module.collapsed} class:muted={module.mute} class:soloed={module.solo} aria-labelledby={`${module.id}-name`}>
   <div class="module-progress" aria-hidden="true"></div>
   <header class="module-header">
-    <button use:dragHandle type="button" class="drag-handle" aria-label={`Reorder ${module.name}`}>⠿</button>
+    <span use:dragHandle class="drag-handle" aria-label={`Reorder ${module.name}`}>⠿</span>
     <input id={`${module.id}-name`} class="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
     <div class="module-switches">
       <button type="button" aria-label={`Monitor ${module.name}`} aria-pressed={module.monitor} onclick={() => onpatch({ monitor: !module.monitor })}>◖</button>

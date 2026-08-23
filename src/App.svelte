@@ -171,7 +171,7 @@
     <section
       class="module-list"
       aria-label="Rack modules"
-      use:dragHandleZone={{ items: rack.modules, flipDurationMs: 0, delayTouchStart: 100, zoneTabIndex: -1 }}
+      use:dragHandleZone={{ items: rack.modules, flipDurationMs: 0, zoneTabIndex: -1 }}
       onconsider={handleConsider}
       onfinalize={handleFinalize}
     >

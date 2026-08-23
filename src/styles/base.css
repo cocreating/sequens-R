@@ -40,7 +40,7 @@
   .module-progress { position: absolute; inset: 0 0 auto; height: 2px; background: var(--color-structure); }
   .playing .module-progress { background: var(--color-playing); }
   .module-header { display: grid; grid-template-columns: auto minmax(5rem, 1fr); gap: var(--space-2); align-items: center; padding: var(--space-3); }
-  .drag-handle { touch-action: none; color: var(--color-structure); }
+  .drag-handle { display: grid; place-items: center; width: var(--touch-target); height: var(--touch-target); border: 1px solid var(--color-structure); border-radius: var(--radius-sm); background: var(--color-surface); touch-action: none; user-select: none; color: var(--color-structure); font-weight: 750; }
   .module-name { width: 100%; border-color: transparent; background: transparent; font-weight: 800; }
   .module-switches { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-1); }
   .module-switches button { padding-inline: var(--space-2); }

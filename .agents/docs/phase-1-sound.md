@@ -20,7 +20,7 @@ Status: implementation complete; the real-Android Definition of Done remains pen
 - `svelte-check`: 0 errors and 0 warnings.
 - Vitest: 18 tests pass, including five generator goldens, the versioned starter rack, six distinct drum styles, scheduler windows, theory foundations, and the Vercel production-isolation configuration.
 - For 200 random five-module racks, link serialization restores both canonical state and deeply identical generated patterns. The largest payload is 125 bytes against the 400-byte limit.
-- Real Chrome Playwright: 3 tests pass at 375 × 667, covering first Play, Random, a parameter change, sharing, reopening the identical fragment, live add/delete, drum editing, mixer control, and cross-origin isolation.
+- Real Chrome Playwright: 4 tests pass at 375 × 667, covering first Play, Random, a parameter change, sharing, reopening the identical fragment, live add/delete, drag-handle reordering, drum editing, mixer control, and cross-origin isolation.
 - Local Chrome scheduler message-delivery jitter: 0.869 ms standard deviation in the 2026-08-24 verification run. This measures the AudioWorklet-to-main scheduling bridge, not the Phase 3 MIDI-output timestamp path.
 - Initial JavaScript: 43.16 KiB gzip against the 200 KiB product limit.
 - No `Math.random`, `Date.now`, runtime network calls, or production `any` occur in `src/`.
@@ -37,13 +37,15 @@ Verified against `https://sequens-r.vercel.app/` on 2026-08-24 after commit `413
 
 Run automated gates with `npm run verify`.
 
-## Remaining Phase 1 acceptance evidence
+## Real-Android acceptance evidence
 
-The SDD requires the final critical-flow evidence on a real mid-range Android device running stable Chrome. That physical pass still needs:
+On 2026-08-24, the user confirmed on Android stable Chrome that one Play gesture produces audible starter-rack output and that a shared link sounds identical on a second device. Adding and deleting modules during playback also produced no clicks or interruptions.
 
-1. Confirm audible starter-rack output from one Play gesture.
-2. Open a shared link on a second device and compare the audible result; deterministic pattern equality is already automated.
-3. Listen while adding, deleting, and reordering modules to confirm there are no clicks or interruptions.
-4. Record scheduler jitter on the reference device.
+The same pass exposed a non-working drag handle. The handle incorrectly used a nested native button, which `svelte-dnd-action` excludes as a drag origin. The fix replaces it with the library's action-managed handle, removes the unnecessary touch delay, and adds automated pointer and immediate-touch evidence.
+
+The remaining physical evidence is:
+
+1. Retest reordering on Android during playback and confirm there are no clicks or interruptions.
+2. Record scheduler jitter on the Android reference device.
 
 Phase 2 must not begin until this checklist passes or the SDD is explicitly amended.

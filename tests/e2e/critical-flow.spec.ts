@@ -62,3 +62,26 @@ test('modules can change while transport is running', async ({ page }) => {
   await page.getByRole('button', { name: 'Stop' }).click();
   await expect(page.getByText('Transport stopped')).toBeVisible();
 });
+
+test('the dedicated drag handle reorders modules', async ({ page }) => {
+  await page.goto('/');
+
+  for (const name of ['Drums', 'Bass', 'Chords']) {
+    await page.getByRole('button', { name: `Collapse ${name}` }).click();
+  }
+
+  const drumsHandle = page.getByRole('button', { name: 'Reorder Drums' });
+  const bassModule = page.getByRole('listitem', { name: 'Bass' });
+  const start = await drumsHandle.boundingBox();
+  const target = await bassModule.boundingBox();
+  if (start === null || target === null) throw new Error('Reorder controls are not measurable.');
+
+  await page.mouse.move(start.x + start.width / 2, start.y + start.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(target.x + target.width / 2, target.y + target.height * 0.85, { steps: 12 });
+  await page.mouse.up();
+
+  await expect(page.getByText('Modules reordered')).toBeVisible();
+  await expect(page.getByRole('listitem')).toHaveCount(3);
+  await expect(page.locator('.module-name').first()).toHaveValue('Bass');
+});

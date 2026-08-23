@@ -19,6 +19,10 @@
   .app-header.playing .bar-progress { background: var(--color-playing); animation: bar-progress 2.03s linear infinite; }
   @keyframes bar-progress { from { transform: translateX(-100%); } to { transform: translateX(400%); } }
   main { width: min(100% - 1rem, 70rem); margin-inline: auto; padding-block: var(--space-4) max(var(--space-12), env(safe-area-inset-bottom)); }
+  .project-tools { display: grid; grid-template-columns: auto minmax(0, 1fr) repeat(2, auto); gap: var(--space-2); align-items: center; margin-block-end: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
+  .project-tools > label:first-child { color: var(--color-text-muted); font-size: 0.75rem; text-transform: uppercase; }
+  .project-tools > button:nth-of-type(n + 3), .import-project { grid-row: 2; }
+  .import-project { display: grid; place-items: center; min-height: var(--touch-target); border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding-inline: var(--space-3); background: var(--color-surface); cursor: pointer; font-weight: 750; }
   .transport { display: grid; gap: var(--space-4); padding: var(--space-4); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
   .transport-buttons { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-2); }
   .transport-buttons .play[aria-pressed="true"] { border-color: var(--color-playing); background: var(--color-playing); color: var(--color-canvas); }
@@ -43,10 +47,18 @@
   .module-header { display: grid; grid-template-columns: auto minmax(5rem, 1fr); gap: var(--space-2); align-items: center; padding: var(--space-3); }
   .drag-handle { display: grid; place-items: center; width: var(--touch-target); height: var(--touch-target); border: 1px solid var(--color-structure); border-radius: var(--radius-sm); background: var(--color-surface); touch-action: none; user-select: none; color: var(--color-structure); font-weight: 750; }
   .module-name { width: 100%; border-color: transparent; background: transparent; font-weight: 800; }
-  .module-switches { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, 1fr); gap: var(--space-1); }
+  .module-switches { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--space-1); }
   .module-switches button { padding-inline: var(--space-2); }
   .module-switches .delete { color: var(--color-danger); }
   .module-body { border-block-start: 1px solid var(--color-surface-raised); padding: var(--space-3); }
+  .pattern-tools { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-2); align-items: center; padding-block-end: var(--space-3); }
+  .pattern-tools > label { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
+  .slot-picker { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(8, 1fr); gap: var(--space-1); }
+  .slot-picker button { min-width: 0; padding: 0; font-family: var(--font-data); }
+  .seed-input { min-width: 0; width: 100%; font-family: var(--font-data); }
+  .auto-mutate { grid-column: 2 / -1; display: flex; align-items: center; gap: var(--space-2); min-height: var(--touch-target); }
+  .auto-mutate input { width: 1rem; height: 1rem; min-height: 0; }
+  .mutation-loop-select { grid-column: 2 / -1; width: 100%; }
   .step-grid { max-width: 100%; overflow-x: auto; padding-block: var(--space-2); overscroll-behavior-inline: contain; }
   .step-lane { display: grid; grid-template-columns: repeat(var(--step-count), var(--touch-target)); gap: var(--space-1); width: max-content; margin-block-end: var(--space-1); }
   .step-lane button { width: var(--touch-target); padding: 0; border-color: var(--color-surface-raised); background: var(--color-canvas); }
@@ -64,10 +76,12 @@
   .mixer-channel > span { font-weight: 750; }
   .mixer-channel label { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
   .mixer-channel input { grid-column: 2 / -1; width: 100%; }
-  .unsupported { padding-block: 20vh; }
+  .unsupported, .loading { padding-block: 20vh; }
   .visually-hidden:where(:not(:focus-within, :active)) { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; clip-path: inset(50%) !important; overflow: hidden !important; white-space: nowrap !important; }
   @media (min-width: 48rem) {
     .transport { grid-template-columns: minmax(15rem, 1fr) 1fr; }
+    .project-tools { grid-template-columns: auto minmax(12rem, 1fr) repeat(6, auto); }
+    .project-tools > button:nth-of-type(n + 3), .import-project { grid-row: auto; }
     .rack-tools { grid-template-columns: auto auto 1fr; }
     .add-module { grid-column: auto; }
     .parameters { grid-template-columns: repeat(4, minmax(0, 1fr)); }

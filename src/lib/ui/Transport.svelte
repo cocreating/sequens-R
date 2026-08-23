@@ -11,10 +11,11 @@
     onplay: () => void;
     onstop: () => void;
     onbpm: (value: number) => void;
+    onbpmcommit: () => void;
     onkey: (root: number, scale: ScaleName) => void;
   }
 
-  let { bpm, root, scale, playing, onplay, onstop, onbpm, onkey }: Props = $props();
+  let { bpm, root, scale, playing, onplay, onstop, onbpm, onbpmcommit, onkey }: Props = $props();
 
   function numberValue(event: Event): number {
     return Number((event.currentTarget as HTMLInputElement | HTMLSelectElement).value);
@@ -28,7 +29,7 @@
   </div>
   <div class="transport-fields">
     <label for="tempo">Tempo</label>
-    <div class="tempo-field"><input id="tempo" name="tempo" type="number" min="20" max="300" step="0.1" value={bpm} oninput={(event) => onbpm(numberValue(event))} /><span>BPM</span></div>
+    <div class="tempo-field"><input id="tempo" name="tempo" type="number" min="20" max="300" step="0.1" value={bpm} oninput={(event) => onbpm(numberValue(event))} onchange={onbpmcommit} /><span>BPM</span></div>
     <label for="root">Root</label>
     <select id="root" name="root" value={root} onchange={(event) => onkey(numberValue(event), scale)}>
       {#each ROOT_NAMES as name, index}<option value={index}>{name}</option>{/each}

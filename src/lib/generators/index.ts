@@ -12,6 +12,7 @@ export interface RegisteredGenerator {
   readonly defaults: NumericParams;
   readonly paramSchema: ParamSchema;
   generate(seed: number, params: NumericParams, context: MusicalContext): Pattern;
+  mutate(base: Pattern, seed: number, intensity: 1 | 2 | 3 | 4, params: NumericParams, context: MusicalContext): Pattern;
 }
 
 function register<P extends object>(generator: Generator<P>): RegisteredGenerator {
@@ -20,6 +21,7 @@ function register<P extends object>(generator: Generator<P>): RegisteredGenerato
     defaults: generator.defaults as NumericParams,
     paramSchema: generator.paramSchema,
     generate: (seed, params, context) => generator.generate(seed, params as P, context),
+    mutate: (base, seed, intensity, params, context) => generator.mutate(base, seed, intensity, params as P, context),
   };
 }
 

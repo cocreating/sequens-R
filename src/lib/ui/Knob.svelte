@@ -6,16 +6,20 @@
     definition: ParamDefinition;
     value: number;
     onchange: (value: number) => void;
+    oncommit: () => void;
   }
 
-  let { id, definition, value, onchange }: Props = $props();
+  let { id, definition, value, onchange, oncommit }: Props = $props();
   let percentage = $derived((value - definition.min) / (definition.max - definition.min) * 100);
   let angle = $derived(-135 + percentage * 2.7);
   let displayValue = $derived(definition.options?.[value] ?? `${value}${definition.unit ? ` ${definition.unit}` : ''}`);
 
   function update(event: Event): void {
     const target = event.currentTarget;
-    if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement) onchange(Number(target.value));
+    if (target instanceof HTMLInputElement || target instanceof HTMLSelectElement) {
+      onchange(Number(target.value));
+      if (target instanceof HTMLSelectElement) oncommit();
+    }
   }
 </script>
 
@@ -40,6 +44,7 @@
       value={value}
       aria-valuetext={displayValue}
       oninput={update}
+      onchange={oncommit}
     />
   {/if}
 </div>

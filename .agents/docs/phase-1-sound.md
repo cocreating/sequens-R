@@ -1,6 +1,6 @@
 # Phase 1 · Sound
 
-Status: implementation complete; the real-Android Definition of Done remains pending.
+Status: complete. Definition of Done accepted on 2026-08-24.
 
 ## Implemented
 
@@ -45,6 +45,4 @@ The same pass exposed a non-working drag handle. The handle incorrectly used a n
 
 On 2026-08-24, the user retested the deployed fix and confirmed that reordering works during playback. No clicks or interruptions were reported.
 
-The remaining physical evidence is to record the now-visible scheduler jitter on the Android reference device.
-
-Phase 2 must not begin until this checklist passes or the SDD is explicitly amended.
+The Android reference device measured scheduler message-delivery jitter at **0.584 ms standard deviation**, below the 1 ms constraint. Phase 1 is complete.

@@ -22,6 +22,11 @@ export class AudioEngine {
   #master: DynamicsCompressorNode | null = null;
   #snapshot: EngineSnapshot = EMPTY_SNAPSHOT;
   readonly #voices = new Map<string, ModuleVoice>();
+  readonly #onBar: ((bar: number) => void) | null;
+
+  constructor(onBar: ((bar: number) => void) | null = null) {
+    this.#onBar = onBar;
+  }
 
   get ready(): boolean {
     return this.#context !== null;
@@ -55,7 +60,7 @@ export class AudioEngine {
       release: 0.12,
     });
     master.connect(context.destination);
-    const scheduler = new AudioScheduler(context, this.#snapshot, (note) => this.#schedule(note));
+    const scheduler = new AudioScheduler(context, this.#snapshot, (note) => this.#schedule(note), this.#onBar);
     const clock = new AudioWorkletNode(context, 'sequens-clock', { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [1] });
     const clockSink = new GainNode(context, { gain: 0 });
     clock.connect(clockSink).connect(context.destination);

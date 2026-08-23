@@ -46,6 +46,7 @@ export function collectWindowEvents(
 export class AudioScheduler {
   readonly #context: AudioContext;
   readonly #scheduleNote: (note: ScheduledNote) => void;
+  readonly #onBar: ((bar: number) => void) | null;
   #clock: AudioWorkletNode | null = null;
   #snapshot: EngineSnapshot;
   #pending: PendingSnapshot | null = null;
@@ -53,12 +54,14 @@ export class AudioScheduler {
   #scheduledUntil = 0;
   #playing = false;
   readonly #timingOffsets: number[] = [];
+  #lastReportedBar = -1;
 
-  constructor(context: AudioContext, initialSnapshot: EngineSnapshot, scheduleNote: (note: ScheduledNote) => void) {
+  constructor(context: AudioContext, initialSnapshot: EngineSnapshot, scheduleNote: (note: ScheduledNote) => void, onBar: ((bar: number) => void) | null = null) {
     assertBpm(initialSnapshot.bpm);
     this.#context = context;
     this.#snapshot = initialSnapshot;
     this.#scheduleNote = scheduleNote;
+    this.#onBar = onBar;
   }
 
   attachClock(clock: AudioWorkletNode): void {
@@ -95,6 +98,7 @@ export class AudioScheduler {
     this.#playing = true;
     this.#originTime = this.#context.currentTime + START_DELAY_SECONDS;
     this.#scheduledUntil = this.#originTime;
+    this.#lastReportedBar = -1;
     this.#tick(this.#context.currentTime);
   }
 
@@ -102,6 +106,7 @@ export class AudioScheduler {
     this.#playing = false;
     this.#pending = null;
     this.#scheduledUntil = 0;
+    this.#lastReportedBar = -1;
   }
 
   get playing(): boolean {
@@ -135,6 +140,13 @@ export class AudioScheduler {
 
   #tick(contextTime: number): void {
     if (!this.#playing) return;
+    if (contextTime >= this.#originTime) {
+      const currentBar = Math.floor(this.#timeToBeat(contextTime) / SNAPSHOT_BOUNDARY_BEATS);
+      if (currentBar > this.#lastReportedBar) {
+        this.#lastReportedBar = currentBar;
+        this.#onBar?.(currentBar);
+      }
+    }
     const windowEnd = Math.max(contextTime, this.#context.currentTime) + LOOK_AHEAD_SECONDS;
     if (windowEnd <= this.#scheduledUntil) return;
 

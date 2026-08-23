@@ -18,12 +18,22 @@ Status: implementation complete; the real-Android Definition of Done remains pen
 ## Automated evidence
 
 - `svelte-check`: 0 errors and 0 warnings.
-- Vitest: 17 tests pass, including five generator goldens, the versioned starter rack, six distinct drum styles, scheduler windows, and theory foundations.
+- Vitest: 18 tests pass, including five generator goldens, the versioned starter rack, six distinct drum styles, scheduler windows, theory foundations, and the Vercel production-isolation configuration.
 - For 200 random five-module racks, link serialization restores both canonical state and deeply identical generated patterns. The largest payload is 125 bytes against the 400-byte limit.
 - Real Chrome Playwright: 3 tests pass at 375 × 667, covering first Play, Random, a parameter change, sharing, reopening the identical fragment, live add/delete, drum editing, mixer control, and cross-origin isolation.
-- Local Chrome scheduler message-delivery jitter: 1.532 ms standard deviation in the 2026-08-23 verification run. This measures the AudioWorklet-to-main scheduling bridge, not the Phase 3 MIDI-output timestamp path.
+- Local Chrome scheduler message-delivery jitter: 0.869 ms standard deviation in the 2026-08-24 verification run. This measures the AudioWorklet-to-main scheduling bridge, not the Phase 3 MIDI-output timestamp path.
 - Initial JavaScript: 43.16 KiB gzip against the 200 KiB product limit.
 - No `Math.random`, `Date.now`, runtime network calls, or production `any` occur in `src/`.
+
+## Production deployment evidence
+
+Verified against `https://sequens-r.vercel.app/` on 2026-08-24 after commit `4131945`:
+
+- Vercel returns `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` on the deployed app.
+- Real headless Chrome reports `crossOriginIsolated === true` at a 375 × 667 viewport.
+- The deployed starter rack loads with three modules, Play starts the transport, Random and parameter changes work, and live add/delete returns from four modules to three without a page error.
+- A shared `#p=` link restores on a second page and starts its transport with no page error.
+- Deployed Chrome scheduler message-delivery jitter measured 0.613 ms standard deviation. This is desktop Chrome at a mobile viewport, not the required Android reference-device measurement.
 
 Run automated gates with `npm run verify`.
 

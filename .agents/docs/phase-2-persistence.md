@@ -24,6 +24,7 @@ Status: complete. Definition of Done accepted on 2026-08-24.
 - Real Chrome Playwright: 9 tests pass. The five Phase 2 flows cover slots/seeds, manual and scheduled mutation, Revert, coalesced undo/redo, IndexedDB reload restoration, fragment-draft isolation, export/import in a separate browser context, and the local-data share warning.
 - Production build initial JavaScript: 48.18 KiB gzip against the 200 KiB limit.
 - The 375 × 812 mobile visual pass has no horizontal overflow or runtime errors.
+- Production smoke test against `https://sequens-r.vercel.app/` after commit `e617f70`: cross-origin isolation remained active; seed `246802468` survived Mutate → Revert and IndexedDB reload exactly; the resulting shared link opened as a draft; Chrome reported no page errors.
 
 Run all gates with `npm run verify`.
 

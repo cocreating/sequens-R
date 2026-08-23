@@ -18,6 +18,7 @@ test('the mobile critical path loads, plays, changes, shares, and reopens', asyn
   const jitter = Number(await page.locator('.session-status').getAttribute('data-scheduler-jitter-ms'));
   console.log(`Chrome scheduler message jitter: ${jitter.toFixed(3)} ms σ`);
   expect(jitter).toBeLessThan(20);
+  await expect(page.locator('.scheduler-jitter')).toContainText(/Scheduler jitter \d+\.\d{3} ms σ/);
 
   await page.getByRole('button', { name: 'Random' }).click();
   const density = page.getByLabel('Density');

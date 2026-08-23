@@ -166,6 +166,9 @@
     </section>
 
     <p class="session-status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>
+    {#if schedulerJitter !== null}
+      <p class="scheduler-jitter">Scheduler jitter <data value={schedulerJitter.toFixed(3)}>{schedulerJitter.toFixed(3)}</data> ms σ</p>
+    {/if}
     {#if error}<p class="error" role="alert">{error}</p>{/if}
 
     <section

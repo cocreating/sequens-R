@@ -43,9 +43,8 @@ On 2026-08-24, the user confirmed on Android stable Chrome that one Play gesture
 
 The same pass exposed a non-working drag handle. The handle incorrectly used a nested native button, which `svelte-dnd-action` excludes as a drag origin. The fix replaces it with the library's action-managed handle, removes the unnecessary touch delay, and adds automated pointer and immediate-touch evidence.
 
-The remaining physical evidence is:
+On 2026-08-24, the user retested the deployed fix and confirmed that reordering works during playback. No clicks or interruptions were reported.
 
-1. Retest reordering on Android during playback and confirm there are no clicks or interruptions.
-2. Record scheduler jitter on the Android reference device.
+The remaining physical evidence is to record the now-visible scheduler jitter on the Android reference device.
 
 Phase 2 must not begin until this checklist passes or the SDD is explicitly amended.

@@ -57,7 +57,7 @@ test('saving restores the exact project after reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('.workspace-utilities > summary').click();
   await page.getByRole('textbox', { name: 'Project' }).fill('Persistent Session');
-  await page.getByLabel('Tempo').fill('137.5');
+  await page.getByLabel('Tempo').fill('138');
   await page.getByLabel('Tempo').blur();
   const bass = page.getByRole('listitem', { name: 'Bass' });
   await bass.locator('.module-advanced > summary').click();
@@ -71,7 +71,7 @@ test('saving restores the exact project after reload', async ({ page }) => {
   await expect(page.getByText('Local project restored')).toBeVisible();
   await page.locator('.workspace-utilities > summary').click();
   await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Persistent Session');
-  await expect(page.getByLabel('Tempo')).toHaveValue('137.5');
+  await expect(page.getByLabel('Tempo')).toHaveValue('138');
   const restoredBass = page.getByRole('listitem', { name: 'Bass' });
   await restoredBass.locator('.module-advanced > summary').click();
   await expect(restoredBass.getByRole('button', { name: 'Bass slot 3' })).toHaveAttribute('aria-pressed', 'true');

@@ -62,12 +62,15 @@
   .rack-tabs { padding-block-start: var(--space-2); border-block-start: 1px solid var(--color-surface-raised); }
   .rack-tabs [aria-selected="true"] { border-width: 2px; background: var(--color-surface-raised); }
   .rack-switcher > label { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
-  .transport-fields { display: grid; grid-template-columns: 1.15fr 0.72fr 1.35fr; gap: var(--space-1); align-items: end; }
+  .transport-fields { display: grid; grid-template-columns: 0.72fr 1.35fr; gap: var(--space-1); align-items: end; }
+  .tempo-control { grid-column: 1 / -1; }
   .transport-field { display: grid; gap: var(--space-1); min-width: 0; }
   .transport-fields label { color: var(--color-text-muted); font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; }
   .transport-field > select { width: 100%; min-width: 0; }
-  .tempo-field { display: flex; align-items: center; gap: var(--space-2); }
-  .tempo-field input { width: 100%; min-width: 0; font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+  .tempo-field { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: var(--space-1); }
+  .tempo-field button { padding-inline: var(--space-1); }
+  .tempo-field input { width: 100%; min-width: 0; appearance: textfield; font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: center; }
+  .tempo-field input::-webkit-inner-spin-button, .tempo-field input::-webkit-outer-spin-button { appearance: none; margin: 0; }
   .tempo-field span { display: none; color: var(--color-text-muted); font: 0.75rem var(--font-data); }
   .rack-tools { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-1); align-items: end; padding: 0; }
   .hardware-panel { display: grid; gap: var(--space-3); margin-block-start: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
@@ -227,6 +230,8 @@
     .brand-title-compact { display: none; }
     .performance-deck { grid-template-columns: minmax(22rem, 1fr) minmax(22rem, 1fr); align-items: stretch; }
     .transport { align-items: center; }
+    .transport-fields { grid-template-columns: minmax(9.5rem, 1.4fr) 0.72fr 1.35fr; }
+    .tempo-control { grid-column: auto; }
     .project-tools { grid-template-columns: auto minmax(12rem, 1fr) repeat(6, auto); }
     .project-tools > button:nth-of-type(n + 3), .import-project { grid-row: auto; }
     .rack-tools { grid-template-columns: auto minmax(15rem, 1fr); align-items: center; }

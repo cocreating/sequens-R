@@ -3,6 +3,7 @@
   import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
   import { AudioEngine } from './lib/audio/engine';
   import { CORE_MODULE_TYPES, isControlModule, SCALE_NAMES, type ModuleType, type Pattern, type ScaleName } from './lib/core/pattern';
+  import { TapTempo } from './lib/core/tap-tempo';
   import {
     activeProjectRack,
     captureProjectScene,
@@ -75,6 +76,7 @@
     arp: 'Arp', euclid: 'Euclid', piano: 'Piano roll', cc: 'CC Control', mod: 'Mod',
   };
   const initialRack = createRackState(STARTER_RACK);
+  const tempoTapper = new TapTempo();
 
   let rack = $state<RackState>(initialRack);
   let project = $state<ProjectDocument>(createProject(initialRack));
@@ -378,8 +380,20 @@
 
   function setTempo(value: number): void {
     if (!Number.isFinite(value) || value < 20 || value > 300) return;
-    replaceRack({ ...rack, bpm: Math.round(value * 10) / 10 }, 'tempo');
-    if (playing) playbackSession.updatePosition(value, playheadBeat ?? 0);
+    const nextBpm = Math.round(value);
+    replaceRack({ ...rack, bpm: nextBpm }, 'tempo');
+    if (playing) playbackSession.updatePosition(nextBpm, playheadBeat ?? 0);
+  }
+
+  function tapTempo(): void {
+    const tappedBpm = tempoTapper.tap(performance.now());
+    if (tappedBpm === null) {
+      status = 'Tap tempo · tap again';
+      return;
+    }
+    setTempo(tappedBpm);
+    endCoalescing();
+    status = `Tap tempo · ${tappedBpm} BPM`;
   }
 
   async function resumeAudio(): Promise<void> {
@@ -742,6 +756,7 @@
   </div>
   {#if supported && initialized}
     <div class="app-header-actions" role="group" aria-label="Primary actions" onpointermove={showAppHelp} onfocusin={showAppHelp}>
+      <button type="button" class="header-action header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={tapTempo}>TAP</button>
       <button
         type="button"
         class="header-action header-play"

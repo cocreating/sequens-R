@@ -62,7 +62,7 @@ Post-fix evidence:
 
 No actionable P0, P1, or P2 mismatch remains. Residual differences are acceptable product constraints: the implementation carries full production controls, keeps root/scale visible, and uses one mobile Workspace disclosure instead of three concept-only utility shortcuts.
 
-Primary interactions tested: Play/Pause/Resume/Stop, frozen paused playheads, keyboard-accessible parameter change in automated Chrome, Workspace persistence, module actions menu, module MIDI export, Output & advanced routing, add/delete module, scenes, save/import/export/share, accessible icon names, and responsive mobile/desktop transitions.
+Primary interactions tested: Tap BPM with whole-number output, bounded one-BPM minus/plus stepping, Play/Pause/Resume/Stop, frozen paused playheads, keyboard-accessible parameter change in automated Chrome, Workspace persistence, module actions menu, module MIDI export, Output & advanced routing, add/delete module, scenes, save/import/export/share, accessible icon names, and responsive mobile/desktop transitions.
 
 Console errors checked: page-error assertions pass in the critical and desktop module Chrome flows; the complete automated suite is required before handoff.
 

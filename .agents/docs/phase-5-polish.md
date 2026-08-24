@@ -28,13 +28,13 @@ npm run check
   svelte-check: 0 errors, 0 warnings
 
 npm test
-  11 files, 53 tests passed
+  12 files, 56 tests passed
 
 npm run build
-  production PWA build passed; 10 entries / 256.60 KiB precached
+  production PWA build passed; 10 entries / 258.32 KiB precached
 
 npm run check:bundle
-  76.11 KiB initial JavaScript gzip / 200.00 KiB budget
+  76.56 KiB initial JavaScript gzip / 200.00 KiB budget
 
 npm run test:e2e
   25 Chrome tests passed
@@ -49,8 +49,8 @@ Two size budgets and the local synthetic TTI proxy have automated evidence. The 
 
 | Budget | Current evidence | Gate status |
 |---|---|---|
-| Initial JavaScript ≤ 200 KiB gzip | 76.11 KiB | Pass |
-| Total initial load ≤ 400 KiB | 73 KiB Lighthouse transfer; 256.60 KiB full precache | Pass |
+| Initial JavaScript ≤ 200 KiB gzip | 76.56 KiB | Pass |
+| Total initial load ≤ 400 KiB | 73 KiB Lighthouse transfer; 258.32 KiB full precache | Pass |
 | TTI ≤ 2.5 s on simulated 4G | Lighthouse desktop FCP 1.3 s/LCP 1.7 s/TBT 20 ms | Android 4G run required |
 | 0 audio xruns, 16 active modules at 140 BPM | Panel records underrun ratio where supported | Physical run required |
 | Render Capacity average ≤ 0.5, peak ≤ 0.8 | Panel and feature-detected fallback verified | Physical run required if API exists |

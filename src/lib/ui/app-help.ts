@@ -68,6 +68,10 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
     title: 'Play',
     body: 'Starts the audio scheduler, internal monitoring, routed MIDI, and enabled MIDI clock outputs.',
   },
+  'tap-tempo': {
+    title: 'Tap tempo',
+    body: 'Tap at least twice in time to set the shared tempo. Recent taps are averaged and the result is rounded to a whole BPM.',
+  },
   pause: {
     title: 'Pause',
     body: 'Pauses playback at the current beat and clears active internal and external notes. Press Play to continue from the same position.',
@@ -78,7 +82,7 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   },
   tempo: {
     title: 'Tempo',
-    body: 'Sets the shared transport speed from 20 to 300 beats per minute.',
+    body: 'Sets the shared transport speed from 20 to 300 whole beats per minute. Use the minus and plus buttons for one-BPM changes.',
   },
   root: {
     title: 'Root note',

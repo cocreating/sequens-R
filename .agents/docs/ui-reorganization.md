@@ -6,7 +6,8 @@ This is the UI consolidation requested before the next SDD phase is defined. It 
 
 ## Delivered
 
-- Compact global header containing a stable Play/Pause toggle, Stop, Share, and General Help, followed by a performance deck for tempo, key, Random, and module creation.
+- Compact global header containing Tap BPM, a stable Play/Pause toggle, Stop, Share, and General Help, followed by a performance deck for tempo, key, Random, and module creation.
+- Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. The labelled BPM field adds 44 px minus/plus controls on its left for one-BPM changes, with disabled 20/300 boundaries; manual entry also writes whole values.
 - Pause preserves the current transport beat, freezes the header/grid/piano playheads on it, and clears scheduled internal/MIDI events; Play continues from that beat while Stop resets to zero and hides the playheads.
 - Responsive branding that shows `Local generative MIDI` and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
 - Mobile critical path with the rack directly after one collapsed `Workspace` row.
@@ -46,15 +47,15 @@ This is the UI consolidation requested before the next SDD phase is defined. It 
 
 ## Automated acceptance
 
-The full command is `npm run verify`. It covers strict Svelte/TypeScript diagnostics, 53 deterministic unit tests, the production PWA build, the initial-JavaScript budget, 25 Chrome flows, and the existing axe serious/critical gate. Browser flows include exact-beat Pause/Resume, visible icon assertions with accessible names, and the existing workspace, module action, advanced disclosure, and accessibility coverage.
+The full command is `npm run verify`. It covers strict Svelte/TypeScript diagnostics, 56 deterministic unit tests, the production PWA build, the initial-JavaScript budget, 25 Chrome flows, and the existing axe serious/critical gate. Browser flows include Tap BPM placement/integer output, exact-beat Pause/Resume, visible icon assertions with accessible names, and the existing workspace, module action, advanced disclosure, and accessibility coverage.
 
 Executed on 2026-08-24 after the responsive header optimization:
 
 ```text
 svelte-check: 0 errors, 0 warnings
-Vitest: 11 files / 53 tests passed
-production PWA build: 10 entries / 256.60 KiB precached
-initial JavaScript: 76.11 KiB gzip / 200.00 KiB budget
+Vitest: 12 files / 56 tests passed
+production PWA build: 10 entries / 258.32 KiB precached
+initial JavaScript: 76.56 KiB gzip / 200.00 KiB budget
 Playwright Chrome: 25 tests passed
 axe: no serious or critical violations
 ```

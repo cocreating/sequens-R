@@ -17,13 +17,23 @@
   function numberValue(event: Event): number {
     return Number((event.currentTarget as HTMLInputElement | HTMLSelectElement).value);
   }
+
+  function adjustBpm(delta: -1 | 1): void {
+    onbpm(Math.max(20, Math.min(300, Math.round(bpm) + delta)));
+    onbpmcommit();
+  }
 </script>
 
 <header class="transport" data-app-help-key="transport" aria-label="Transport">
   <div class="transport-fields">
-    <div class="transport-field" data-app-help-key="tempo">
+    <div class="transport-field tempo-control" data-app-help-key="tempo">
       <label for="tempo">Tempo</label>
-      <div class="tempo-field"><input id="tempo" name="tempo" type="number" min="20" max="300" step="0.1" value={bpm} oninput={(event) => onbpm(numberValue(event))} onchange={onbpmcommit} /><span>BPM</span></div>
+      <div class="tempo-field">
+        <button type="button" aria-label="Decrease BPM" disabled={bpm <= 20} onclick={() => adjustBpm(-1)}>−</button>
+        <button type="button" aria-label="Increase BPM" disabled={bpm >= 300} onclick={() => adjustBpm(1)}>+</button>
+        <input id="tempo" name="tempo" type="number" min="20" max="300" step="1" value={bpm} oninput={(event) => onbpm(numberValue(event))} onchange={onbpmcommit} />
+        <span>BPM</span>
+      </div>
     </div>
     <div class="transport-field" data-app-help-key="root">
       <label for="root">Root</label>

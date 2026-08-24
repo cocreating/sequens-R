@@ -153,6 +153,7 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand p')).toBeVisible();
     await expect(page.locator('.brand-title-full')).toBeVisible();
     await expect(page.locator('.brand-title-compact')).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Tap BPM' })).toHaveText('TAP');
     await expect(page.locator('.header-play')).toHaveText('▶');
     await expect(page.getByRole('button', { name: 'Stop' })).toHaveText('◼');
     await expect(page.getByRole('button', { name: 'Share' })).toHaveText('🔗');
@@ -162,6 +163,34 @@ test.describe('Phase 5 polish', () => {
 
     const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
+    const actionNames = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
+    expect(actionNames.slice(0, 2)).toEqual(['Tap BPM', 'Play']);
+
+    const tempo = page.locator('#tempo');
+    await expect(tempo).toHaveAttribute('step', '1');
+    const decreaseTempo = page.getByRole('button', { name: 'Decrease BPM' });
+    const increaseTempo = page.getByRole('button', { name: 'Increase BPM' });
+    await decreaseTempo.click();
+    await expect(tempo).toHaveValue('117');
+    await increaseTempo.click();
+    await expect(tempo).toHaveValue('118');
+    const [decreaseBox, increaseBox, tempoBox] = await Promise.all([decreaseTempo.boundingBox(), increaseTempo.boundingBox(), tempo.boundingBox()]);
+    expect(decreaseBox).not.toBeNull();
+    expect(increaseBox).not.toBeNull();
+    expect(tempoBox).not.toBeNull();
+    expect(decreaseBox!.x + decreaseBox!.width).toBeLessThanOrEqual(tempoBox!.x);
+    expect(increaseBox!.x + increaseBox!.width).toBeLessThanOrEqual(tempoBox!.x);
+    await tempo.fill('20');
+    await expect(decreaseTempo).toBeDisabled();
+    await tempo.fill('300');
+    await expect(increaseTempo).toBeDisabled();
+    await tempo.fill('118');
+    await page.getByRole('button', { name: 'Tap BPM' }).click();
+    await expect(page.getByText('Tap tempo · tap again')).toBeVisible();
+    await page.waitForTimeout(500);
+    await page.getByRole('button', { name: 'Tap BPM' }).click();
+    expect(await tempo.inputValue()).toMatch(/^\d+$/u);
+    await expect(page.getByText(/Tap tempo · \d+ BPM/u)).toBeVisible();
 
     await page.getByRole('button', { name: 'Play', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Pause', exact: true })).toHaveText('⏸');
@@ -188,6 +217,10 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand-title-full')).toBeHidden();
     await expect(page.locator('.brand-title-compact')).toBeVisible();
     expect(await page.getByRole('heading', { name: 'sequens-R' }).evaluate((heading) => (heading as HTMLElement).innerText)).toBe('s-R');
+    const mobileActions = await page.locator('.app-header-actions').boundingBox();
+    expect(mobileActions).not.toBeNull();
+    expect(mobileActions!.x).toBeGreaterThanOrEqual(0);
+    expect(mobileActions!.x + mobileActions!.width).toBeLessThanOrEqual(375);
   });
 
   test('uses compact emoticons for recognizable workspace actions', async ({ page }) => {

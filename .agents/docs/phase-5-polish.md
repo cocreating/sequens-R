@@ -5,7 +5,7 @@ Status: implementation and automated acceptance complete on 2026-08-24. The phas
 ## Delivered
 
 - Scenes capture each module’s active slot, persist in project schema version 3, can be named or deleted, and launch through one immutable snapshot at the next scheduler bar while playing.
-- Media Session metadata, play/pause/stop handlers, four-beat position state, Screen Wake Lock during playback, and visibility-return recovery for suspended audio.
+- Media Session metadata, exact-beat play/pause/resume and stop handlers, MIDI Continue on resume, four-beat position state, Screen Wake Lock during playback, and visibility-return recovery for suspended audio.
 - Progressive Chrome layer: View Transitions for module changes, `content-visibility: auto` and intrinsic sizing for module plates, compositor `transform` playheads with once-per-bar correction, and `scheduler.postTask({ priority: 'background' })` for debounced persistence.
 - Android reduced-motion compatibility: playheads remain visible and use discrete step easing instead of being removed, preserving essential transport position feedback without continuous sweeping motion.
 - A four-stage zero-delay-feedback TPT ladder in the Acid AudioWorklet, retaining monophonic slide and accent behavior and the same voice interface. Offline bounce loads the same processor.
@@ -28,16 +28,16 @@ npm run check
   svelte-check: 0 errors, 0 warnings
 
 npm test
-  11 files, 52 tests passed
+  11 files, 53 tests passed
 
 npm run build
-  production PWA build passed; 10 entries / 253.83 KiB precached
+  production PWA build passed; 10 entries / 256.60 KiB precached
 
 npm run check:bundle
-  75.60 KiB initial JavaScript gzip / 200.00 KiB budget
+  76.11 KiB initial JavaScript gzip / 200.00 KiB budget
 
 npm run test:e2e
-  23 Chrome tests passed
+  25 Chrome tests passed
   General Help pointer/focus/Escape flow: passed
   axe: no serious or critical violations
   native Phase 5 API path and forced fallbacks: passed
@@ -49,8 +49,8 @@ Two size budgets and the local synthetic TTI proxy have automated evidence. The 
 
 | Budget | Current evidence | Gate status |
 |---|---|---|
-| Initial JavaScript ≤ 200 KiB gzip | 75.21 KiB | Pass |
-| Total initial load ≤ 400 KiB | 73 KiB Lighthouse transfer; 252.00 KiB full precache | Pass |
+| Initial JavaScript ≤ 200 KiB gzip | 76.11 KiB | Pass |
+| Total initial load ≤ 400 KiB | 73 KiB Lighthouse transfer; 256.60 KiB full precache | Pass |
 | TTI ≤ 2.5 s on simulated 4G | Lighthouse desktop FCP 1.3 s/LCP 1.7 s/TBT 20 ms | Android 4G run required |
 | 0 audio xruns, 16 active modules at 140 BPM | Panel records underrun ratio where supported | Physical run required |
 | Render Capacity average ≤ 0.5, peak ≤ 0.8 | Panel and feature-detected fallback verified | Physical run required if API exists |

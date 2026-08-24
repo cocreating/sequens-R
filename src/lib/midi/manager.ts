@@ -2,6 +2,7 @@ import type { MidiAccessLike, MidiEnvironment, MidiPermissionState, MidiPortInfo
 
 const MIDI_CLOCK = 0xf8;
 const MIDI_START = 0xfa;
+const MIDI_CONTINUE = 0xfb;
 const MIDI_STOP = 0xfc;
 
 export interface MidiManagerState {
@@ -93,8 +94,17 @@ export class MidiManager implements MidiSink {
     this.#sendRealtime(MIDI_START, timestamp);
   }
 
+  resume(timestamp: number): void {
+    this.#sendRealtime(MIDI_CONTINUE, timestamp);
+  }
+
   stop(timestamp: number): void {
     this.#sendRealtime(MIDI_STOP, timestamp);
+  }
+
+  clear(): void {
+    if (this.#access === null) return;
+    for (const output of this.#access.outputs.values()) output.clear?.();
   }
 
   panic(timestamp: number): void {

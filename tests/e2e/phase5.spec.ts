@@ -16,7 +16,7 @@ test.describe('Phase 5 polish', () => {
     await page.getByRole('button', { name: 'Launch Drop' }).click();
     await expect(page.getByText('Drop queued for the next bar')).toBeVisible();
     await expect(drums.getByRole('button', { name: 'Drums slot 2' })).toHaveAttribute('aria-pressed', 'true');
-    await page.getByRole('button', { name: 'Playing' }).click();
+    await page.getByRole('button', { name: 'Pause' }).click();
   });
 
   test('integrates available Chromium scheduling, session, transition, wake-lock, and diagnostics APIs', async ({ page }) => {
@@ -75,7 +75,7 @@ test.describe('Phase 5 polish', () => {
     expect(state.actions).toEqual(expect.arrayContaining(['play', 'pause', 'stop']));
     await page.getByText('Diagnostics', { exact: true }).click();
     await expect(page.getByText('Average render load').locator('..').getByText('0.240')).toBeVisible();
-    await page.getByRole('button', { name: 'Playing' }).click();
+    await page.getByRole('button', { name: 'Pause' }).click();
   });
 
   test('keeps core flows working when Phase 5 APIs are absent', async ({ page }) => {
@@ -96,7 +96,7 @@ test.describe('Phase 5 polish', () => {
     await page.getByText('Diagnostics', { exact: true }).click();
     await expect(page.getByText('Render Capacity API is unavailable')).toBeVisible();
     expect(errors).toEqual([]);
-    await page.getByRole('button', { name: 'Playing' }).click();
+    await page.getByRole('button', { name: 'Pause' }).click();
   });
 
   test('supports keyboard rack navigation and piano-note authoring', async ({ page }) => {
@@ -109,6 +109,7 @@ test.describe('Phase 5 polish', () => {
     await page.getByLabel('New module').selectOption('piano');
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
+    await expect(piano.getByRole('button', { name: 'Add note' })).toHaveText('➕');
     await piano.getByRole('button', { name: 'Add note' }).click();
     await expect(piano.locator('.piano-note')).toHaveCount(1);
     await piano.locator('.piano-note').focus();
@@ -144,6 +145,75 @@ test.describe('Phase 5 polish', () => {
     await page.keyboard.press('Escape');
     await expect(readout).toBeHidden();
     await expect(page.getByRole('button', { name: 'Turn on general help' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('keeps the global header compact and responsive', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.locator('.brand p')).toBeVisible();
+    await expect(page.locator('.brand-title-full')).toBeVisible();
+    await expect(page.locator('.brand-title-compact')).toBeHidden();
+    await expect(page.locator('.header-play')).toHaveText('▶');
+    await expect(page.getByRole('button', { name: 'Stop' })).toHaveText('◼');
+    await expect(page.getByRole('button', { name: 'Share' })).toHaveText('🔗');
+    await expect(page.locator('.app-help-toggle')).toHaveText('?');
+    await expect(page.getByRole('button', { name: 'Random' })).toHaveText('🎲');
+    await expect(page.getByRole('button', { name: 'Add', exact: true })).toHaveText('➕');
+
+    const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
+    expect(new Set(actionTops).size).toBe(1);
+
+    await page.getByRole('button', { name: 'Play', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Pause', exact: true })).toHaveText('⏸');
+    await expect(page.getByText('Transport playing')).toBeVisible();
+    await page.waitForTimeout(250);
+    await page.getByRole('button', { name: 'Pause', exact: true }).click();
+    const pausedBeat = Number(await page.locator('.bar-progress').getAttribute('data-sync-beat'));
+    expect(pausedBeat).toBeGreaterThan(0);
+    await expect(page.locator('.bar-progress')).toHaveAttribute('data-playhead-state', 'paused');
+    const frozenStepPlayhead = page.locator('.step-grid .compositor-playhead').first();
+    await expect(frozenStepPlayhead).toHaveAttribute('data-playhead-state', 'paused');
+    expect(await frozenStepPlayhead.evaluate((playhead) => (playhead as HTMLElement).style.transform)).not.toBe('translateX(-100%)');
+    await expect(page.getByRole('button', { name: 'Play', exact: true })).toHaveText('▶');
+    await expect(page.getByText('Transport paused')).toBeVisible();
+    await page.getByRole('button', { name: 'Play', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Pause', exact: true })).toHaveText('⏸');
+    expect(Number(await page.locator('.bar-progress').getAttribute('data-sync-beat'))).toBeCloseTo(pausedBeat, 3);
+    await page.getByRole('button', { name: 'Stop' }).click();
+    await expect(page.locator('.bar-progress')).toHaveAttribute('data-sync-beat', '');
+    await expect(frozenStepPlayhead).toHaveAttribute('data-playhead-state', 'stopped');
+
+    await page.setViewportSize({ width: 375, height: 667 });
+    await expect(page.locator('.brand p')).toBeHidden();
+    await expect(page.locator('.brand-title-full')).toBeHidden();
+    await expect(page.locator('.brand-title-compact')).toBeVisible();
+    expect(await page.getByRole('heading', { name: 'sequens-R' }).evaluate((heading) => (heading as HTMLElement).innerText)).toBe('s-R');
+  });
+
+  test('uses compact emoticons for recognizable workspace actions', async ({ page }) => {
+    await page.goto('/');
+
+    const iconActions = [
+      ['Undo', '↩️'],
+      ['Redo', '↪️'],
+      ['Save', '💾'],
+      ['Export', '📤'],
+      ['New rack', '➕'],
+      ['Duplicate rack', '📑'],
+      ['Capture scene', '📸'],
+      ['Connect hardware', '🎛️'],
+      ['Refresh outputs', '🔄'],
+      ['Rack MIDI', '🎼'],
+      ['Mix WAV', '🎧'],
+      ['WAV stems', '🎚️'],
+    ] as const;
+
+    for (const [name, emoticon] of iconActions) {
+      await expect(page.getByRole('button', { name, exact: true })).toHaveText(emoticon);
+    }
+    await expect(page.locator('.import-project .button-emoticon')).toHaveText('📥');
+    await expect(page.locator('.module-menu > summary').first()).toHaveText('⋯');
+    await expect(page.getByRole('button', { name: 'Delete rack' })).toHaveText('Delete rack');
   });
 
   test('has no serious accessibility violations and exposes an installable offline PWA', async ({ page, request, context }) => {

@@ -67,7 +67,7 @@
   const engine = new AudioEngine(handleBar, midi);
   const playbackSession = new PlaybackSession(createBrowserPlaybackPlatform(), {
     play: () => { void play(); },
-    pause: () => stop(),
+    pause: () => pause(),
     stop: () => stop(),
   });
   const moduleLabels: Readonly<Record<ModuleType, string>> = {
@@ -158,7 +158,7 @@
     if (!desktopSurface || isTypingTarget(event.target)) return;
     if (event.code === 'Space') {
       event.preventDefault();
-      if (playing) stop(); else void play();
+      if (playing) pause(); else void play();
     } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
       event.preventDefault();
       if (event.shiftKey) redo(); else undo();
@@ -293,12 +293,13 @@
   async function play(): Promise<void> {
     error = '';
     try {
+      const startBeat = playheadBeat ?? 0;
       publish();
       await engine.play();
       playing = true;
-      playheadBeat = 0;
+      playheadBeat = startBeat;
       audioState = engine.state;
-      await playbackSession.setPlaying(true, rack.bpm, 0);
+      await playbackSession.setPlaying(true, rack.bpm, startBeat);
       status = 'Transport playing';
       diagnosticTimer ??= window.setInterval(() => {
         schedulerJitter = engine.schedulerMessageJitterMs;
@@ -311,15 +312,27 @@
     }
   }
 
-  function stop(): void {
-    const now = performance.now();
-    engine.stop();
+  function haltPlaybackUi(): void {
     playing = false;
-    playheadBeat = null;
     audioState = engine.state;
     audioDiagnostics = engine.diagnostics;
     if (diagnosticTimer !== null) window.clearInterval(diagnosticTimer);
     diagnosticTimer = null;
+  }
+
+  function pause(): void {
+    const pausedBeat = engine.pause();
+    if (pausedBeat !== null) playheadBeat = pausedBeat;
+    haltPlaybackUi();
+    void playbackSession.setPlaying(false, rack.bpm, playheadBeat ?? 0);
+    status = 'Transport paused';
+  }
+
+  function stop(): void {
+    const now = performance.now();
+    engine.stop();
+    playheadBeat = null;
+    haltPlaybackUi();
     void playbackSession.setPlaying(false, rack.bpm, 0);
     status = now - lastStopTime < 400 ? 'Panic: all internal voices stopped' : 'Transport stopped';
     lastStopTime = now;
@@ -722,17 +735,32 @@
 <svelte:head><title>sequens-R · generative MIDI sequencer</title></svelte:head>
 
 <a class="skip-link" href="#rack">Skip to rack</a>
-<header class:playing class="app-header">
-  <div class="brand"><p>Local generative MIDI</p><h1>sequens-R</h1></div>
+<header class:playing class:app-help-active={appHelpActive} class="app-header">
+  <div class="brand">
+    <p>Local generative MIDI</p>
+    <h1 aria-label="sequens-R"><span class="brand-title-full" aria-hidden="true">sequens-R</span><span class="brand-title-compact" aria-hidden="true">s-R</span></h1>
+  </div>
   {#if supported && initialized}
-    <button
-      type="button"
-      class="app-help-toggle"
-      aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
-      aria-pressed={appHelpActive}
-      aria-controls="app-help-readout"
-      onclick={toggleAppHelp}
-    ><span aria-hidden="true">?</span> Help</button>
+    <div class="app-header-actions" role="group" aria-label="Primary actions" onpointermove={showAppHelp} onfocusin={showAppHelp}>
+      <button
+        type="button"
+        class="header-action header-play"
+        data-app-help-key={playing ? 'pause' : 'play'}
+        data-playing={playing}
+        aria-label={playing ? 'Pause' : 'Play'}
+        onclick={playing ? pause : play}
+      >{playing ? '⏸' : '▶'}</button>
+      <button type="button" class="header-action" data-app-help-key="stop" aria-label="Stop" onclick={stop}>◼</button>
+      <button type="button" class="header-action has-emoticon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><span class="button-emoticon" aria-hidden="true">🔗</span></button>
+      <button
+        type="button"
+        class="app-help-toggle"
+        aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
+        aria-pressed={appHelpActive}
+        aria-controls="app-help-readout"
+        onclick={toggleAppHelp}
+      ><span aria-hidden="true">?</span></button>
+    </div>
   {/if}
   <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
 </header>
@@ -755,16 +783,15 @@
 {:else}
   <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp}>
     <div class="performance-deck">
-      <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} {playing} onplay={play} onstop={stop} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+      <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
       <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
-        <button type="button" class="random has-emoticon" data-app-help-key="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><span class="button-emoticon" aria-hidden="true">🎲</span>Random</button>
-        <button type="button" class="has-emoticon" data-app-help-key="share" onclick={share}><span class="button-emoticon" aria-hidden="true">🔗</span>Share</button>
+        <button type="button" class="random has-emoticon" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><span class="button-emoticon" aria-hidden="true">🎲</span></button>
         <div class="add-module">
           <label for="module-type" data-app-help-key="module-type">New module</label>
           <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
             {#each (desktopSurface ? MODULE_TYPES : CORE_MODULE_TYPES) as type}<option value={type}>{moduleLabels[type]}</option>{/each}
           </select>
-          <button id="add-module-button" type="button" data-app-help-key="add-module" onclick={addModule} disabled={rack.modules.length >= 16}>Add</button>
+          <button id="add-module-button" type="button" class="has-emoticon icon-only" data-app-help-key="add-module" aria-label="Add" onclick={addModule} disabled={rack.modules.length >= 16}><span class="button-emoticon" aria-hidden="true">➕</span></button>
         </div>
       </section>
     </div>
@@ -783,11 +810,11 @@
           <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
             <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
-            <button type="button" data-app-help-key="undo" onclick={undo} disabled={!canUndo}>Undo</button>
-            <button type="button" data-app-help-key="redo" onclick={redo} disabled={!canRedo}>Redo</button>
-            <button type="button" class="has-emoticon" data-app-help-key="save" onclick={saveProject}><span class="button-emoticon" aria-hidden="true">💾</span>{sharedDraft ? 'Save draft' : 'Save'}</button>
-            <button type="button" class="has-emoticon" data-app-help-key="export-project" onclick={() => void exportProject()}><span class="button-emoticon" aria-hidden="true">📤</span>Export</button>
-            <label class="import-project has-emoticon" data-app-help-key="import-project" for="project-import"><span class="button-emoticon" aria-hidden="true">📥</span>Import</label>
+            <button type="button" class="has-emoticon icon-only" data-app-help-key="undo" aria-label="Undo" onclick={undo} disabled={!canUndo}><span class="button-emoticon" aria-hidden="true">↩️</span></button>
+            <button type="button" class="has-emoticon icon-only" data-app-help-key="redo" aria-label="Redo" onclick={redo} disabled={!canRedo}><span class="button-emoticon" aria-hidden="true">↪️</span></button>
+            <button type="button" class="has-emoticon icon-only" data-app-help-key="save" aria-label={sharedDraft ? 'Save draft' : 'Save'} onclick={saveProject}><span class="button-emoticon" aria-hidden="true">💾</span></button>
+            <button type="button" class="has-emoticon icon-only" data-app-help-key="export-project" aria-label="Export" onclick={() => void exportProject()}><span class="button-emoticon" aria-hidden="true">📤</span></button>
+            <label class="import-project has-emoticon icon-only" data-app-help-key="import-project" for="project-import"><span class="button-emoticon" aria-hidden="true">📥</span><span class="visually-hidden">Import</span></label>
             <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
           </section>
 
@@ -796,8 +823,8 @@
               <div class="rack-switcher-heading">
                 <div><p>Project racks</p><h2 id="rack-switcher-heading">Studio lanes</h2></div>
                 <div class="rack-actions">
-                  <button type="button" class="has-emoticon" data-app-help-key="new-rack" onclick={addRack}><span class="button-emoticon" aria-hidden="true">➕</span>New rack</button>
-                  <button type="button" class="has-emoticon" data-app-help-key="duplicate-rack" onclick={duplicateRack}><span class="button-emoticon" aria-hidden="true">📑</span>Duplicate rack</button>
+                  <button type="button" class="has-emoticon icon-only" data-app-help-key="new-rack" aria-label="New rack" onclick={addRack}><span class="button-emoticon" aria-hidden="true">➕</span></button>
+                  <button type="button" class="has-emoticon icon-only" data-app-help-key="duplicate-rack" aria-label="Duplicate rack" onclick={duplicateRack}><span class="button-emoticon" aria-hidden="true">📑</span></button>
                   <button type="button" data-app-help-key="delete-rack" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
                 </div>
               </div>
@@ -840,9 +867,9 @@
             <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
               {#each [1, 2, 4, 8] as bars}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
             </select>
-            <button type="button" class="has-emoticon" data-app-help-key="rack-midi" onclick={() => void exportMidi()} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎼</span>Rack MIDI</button>
-            <button type="button" class="has-emoticon" data-app-help-key="mix-wav" onclick={bounceMix} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎧</span>Mix WAV</button>
-            <button type="button" class="has-emoticon" data-app-help-key="wav-stems" onclick={bounceStems} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎚️</span>WAV stems</button>
+            <button type="button" class="has-emoticon icon-only" data-app-help-key="rack-midi" aria-label="Rack MIDI" onclick={() => void exportMidi()} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎼</span></button>
+            <button type="button" class="has-emoticon icon-only" data-app-help-key="mix-wav" aria-label="Mix WAV" onclick={bounceMix} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎧</span></button>
+            <button type="button" class="has-emoticon icon-only" data-app-help-key="wav-stems" aria-label="WAV stems" onclick={bounceStems} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎚️</span></button>
           </section>
           <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
         </div>

@@ -10,10 +10,12 @@ class MockOutput implements MidiOutputLike {
   readonly state = 'connected' as const;
   readonly connection = 'open' as const;
   readonly sent: Array<{ data: number[]; timestamp: number | undefined }> = [];
+  clearCount = 0;
   async open(): Promise<void> {}
   send(data: Iterable<number>, timestamp?: number): void {
     this.sent.push({ data: [...data], timestamp });
   }
+  clear(): void { this.clearCount += 1; }
 }
 
 class MockAccess extends EventTarget implements MidiAccessLike {
@@ -52,13 +54,17 @@ describe('MIDI facade', () => {
     manager.start(1000);
     manager.clock(1010);
     manager.note({ portId: output.id, channel: 3 }, { pitch: 64, velocity: 99 }, 1020, 125);
+    manager.clear();
     manager.stop(1200);
+    manager.resume(1250);
+    expect(output.clearCount).toBe(1);
     expect(output.sent).toEqual([
       { data: [0xfa], timestamp: 1000 },
       { data: [0xf8], timestamp: 1010 },
       { data: [0x92, 64, 99], timestamp: 1020 },
       { data: [0x82, 64, 0], timestamp: 1145 },
       { data: [0xfc], timestamp: 1200 },
+      { data: [0xfb], timestamp: 1250 },
     ]);
   });
 

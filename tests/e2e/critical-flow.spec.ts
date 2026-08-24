@@ -10,7 +10,7 @@ test('the mobile critical path loads, plays, changes, shares, and reopens', asyn
   await expect(page.getByRole('heading', { name: 'sequens-R' })).toBeVisible();
   await expect(page.locator('article')).toHaveCount(3);
   await page.getByRole('button', { name: 'Play', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Playing' })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByRole('button', { name: 'Pause' })).toHaveText('⏸');
   await expect.poll(async () => {
     const value = await page.locator('.session-status').getAttribute('data-scheduler-jitter-ms');
     return value === null || value === '' ? null : Number(value);
@@ -37,7 +37,7 @@ test('the mobile critical path loads, plays, changes, shares, and reopens', asyn
   await recipient.getByRole('button', { name: 'Share' }).click();
   await expect.poll(() => new URL(recipient.url()).hash).toBe(new URL(sharedUrl).hash);
   await recipient.getByRole('button', { name: 'Play', exact: true }).click();
-  await expect(recipient.getByRole('button', { name: 'Playing' })).toBeVisible();
+  await expect(recipient.getByRole('button', { name: 'Pause' })).toBeVisible();
 
   expect(pageErrors).toEqual([]);
 });

@@ -25,7 +25,7 @@ state: dark theme, restored local rack, stopped transport, workspace open on des
 
 ## Focused region comparison evidence
 
-- Module header: immediate reorder/monitor/solo/mute/collapse controls and one More disclosure match the target hierarchy; Help, duplicate, MIDI export, and delete are reachable inside More.
+- Module header: immediate reorder/monitor/solo/mute/collapse controls and one compact `⋯` actions disclosure match the target hierarchy; Help, duplicate, MIDI export, and delete remain text-labelled inside it.
 - Control field: rotary controls, steppers, segmented values, switches, selects, and desktop mixer faders are visually distinct while preserving native semantics.
 - Drum grid: visible lane names improve scanning without reducing the scrollable step target or changing pattern behavior.
 - No raster imagery, logos, illustrations, or product-photo assets exist in either the app or target, so image-quality fidelity is not applicable. Existing text/glyph utility marks are retained; no replacement image assets were required.
@@ -36,7 +36,7 @@ state: dark theme, restored local rack, stopped transport, workspace open on des
 - Spacing and layout rhythm: command height, rail width, three-lane grid, module header density, and 44 px targets match the target intent without clipping or page-level horizontal overflow.
 - Colors and visual tokens: existing canvas/surface/structure/text/playing/danger tokens are preserved; lime remains limited to playing and selected musical states.
 - Image quality and asset fidelity: not applicable; the product uses no target imagery.
-- Copy and content: Workspace, Output & advanced, More, module labels, and lane names are concise and standalone. Existing status, help, and export copy is preserved.
+- Copy and content: Workspace, Output & advanced, accessible module action labels, module labels, and lane names are concise and standalone. Frequent-action emoticons retain explicit accessible names; existing status, help, and export copy is preserved where consequence or ambiguity calls for visible text.
 
 ## Comparison history
 
@@ -62,7 +62,7 @@ Post-fix evidence:
 
 No actionable P0, P1, or P2 mismatch remains. Residual differences are acceptable product constraints: the implementation carries full production controls, keeps root/scale visible, and uses one mobile Workspace disclosure instead of three concept-only utility shortcuts.
 
-Primary interactions tested: Play/Stop, keyboard-accessible parameter change in automated Chrome, Workspace persistence, module More menu, module MIDI export, Output & advanced routing, add/delete module, scenes, save/import/export/share, and responsive mobile/desktop transitions.
+Primary interactions tested: Play/Pause/Resume/Stop, frozen paused playheads, keyboard-accessible parameter change in automated Chrome, Workspace persistence, module actions menu, module MIDI export, Output & advanced routing, add/delete module, scenes, save/import/export/share, accessible icon names, and responsive mobile/desktop transitions.
 
 Console errors checked: page-error assertions pass in the critical and desktop module Chrome flows; the complete automated suite is required before handoff.
 

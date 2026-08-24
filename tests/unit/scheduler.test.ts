@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { collectWindowEvents } from '../../src/lib/audio/scheduler';
+import { AudioScheduler, collectWindowEvents } from '../../src/lib/audio/scheduler';
 import type { EngineSnapshot } from '../../src/lib/audio/types';
 
 const pattern = {
@@ -33,5 +33,29 @@ describe('look-ahead event collection', () => {
       ],
     };
     expect(collectWindowEvents(withSolo, 0, 1, 0).map((note) => note.moduleId)).toEqual(['bass-2']);
+  });
+
+  it('pauses at the current beat, resumes from it, and resets only on stop', () => {
+    const context = {
+      currentTime: 10,
+      getOutputTimestamp: () => ({ contextTime: 10, performanceTime: 1_000 }),
+    } as unknown as AudioContext;
+    const positions: Array<number | null> = [];
+    const scheduler = new AudioScheduler(context, snapshot(), () => undefined, null, null, (beat) => positions.push(beat));
+
+    scheduler.start();
+    (context as unknown as { currentTime: number }).currentTime = 10.3;
+    expect(scheduler.pause()).toBeCloseTo(0.5, 5);
+    expect(scheduler.paused).toBe(true);
+
+    (context as unknown as { currentTime: number }).currentTime = 20;
+    scheduler.start();
+    expect(positions.at(-1)).toBeCloseTo(0.5, 5);
+    (context as unknown as { currentTime: number }).currentTime = 20.3;
+    expect(scheduler.pause()).toBeCloseTo(1, 5);
+
+    scheduler.stop();
+    scheduler.start();
+    expect(positions.at(-1)).toBe(0);
   });
 });

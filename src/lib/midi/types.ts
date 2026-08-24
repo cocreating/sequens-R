@@ -23,6 +23,7 @@ export interface MidiOutputLike {
   readonly connection: 'open' | 'closed' | 'pending';
   open(): Promise<unknown>;
   send(data: Iterable<number>, timestamp?: number): void;
+  clear?(): void;
 }
 
 export interface MidiAccessLike extends EventTarget {
@@ -41,6 +42,8 @@ export interface MidiSink {
   silence(route: MidiRoute, timestamp: number): void;
   clock(timestamp: number): void;
   start(timestamp: number): void;
+  resume(timestamp: number): void;
   stop(timestamp: number): void;
+  clear(): void;
   panic(timestamp: number): void;
 }

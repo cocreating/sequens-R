@@ -7,15 +7,12 @@
     bpm: number;
     root: number;
     scale: ScaleName;
-    playing: boolean;
-    onplay: () => void;
-    onstop: () => void;
     onbpm: (value: number) => void;
     onbpmcommit: () => void;
     onkey: (root: number, scale: ScaleName) => void;
   }
 
-  let { bpm, root, scale, playing, onplay, onstop, onbpm, onbpmcommit, onkey }: Props = $props();
+  let { bpm, root, scale, onbpm, onbpmcommit, onkey }: Props = $props();
 
   function numberValue(event: Event): number {
     return Number((event.currentTarget as HTMLInputElement | HTMLSelectElement).value);
@@ -23,10 +20,6 @@
 </script>
 
 <header class="transport" data-app-help-key="transport" aria-label="Transport">
-  <div class="transport-buttons">
-    <button type="button" class="play has-emoticon" data-app-help-key="play" aria-pressed={playing} onclick={onplay}><span class="button-emoticon" aria-hidden="true">▶️</span>{playing ? 'Playing' : 'Play'}</button>
-    <button type="button" class="has-emoticon" data-app-help-key="stop" onclick={onstop}><span class="button-emoticon" aria-hidden="true">⏹️</span>Stop</button>
-  </div>
   <div class="transport-fields">
     <div class="transport-field" data-app-help-key="tempo">
       <label for="tempo">Tempo</label>

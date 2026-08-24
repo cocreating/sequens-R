@@ -9,7 +9,7 @@
     className?: string;
   }
 
-  let { playing, bpm, beats = 4, syncBeat = 0, className = '' }: Props = $props();
+  let { playing, bpm, beats = 4, syncBeat = null, className = '' }: Props = $props();
   let element: HTMLDivElement;
   let reducedMotion = $state(false);
 
@@ -26,9 +26,10 @@
     const tempo = bpm;
     const cycleBeats = Math.max(0.25, beats);
     const correctionBeat = syncBeat ?? 0;
+    const frozenProgress = ((correctionBeat % cycleBeats) + cycleBeats) % cycleBeats / cycleBeats;
     if (!active || !Number.isFinite(tempo) || tempo <= 0) {
       if (typeof element.getAnimations === 'function') element.getAnimations().forEach((animation) => animation.cancel());
-      element.style.transform = 'translateX(-100%)';
+      element.style.transform = syncBeat === null ? 'translateX(-100%)' : `translateX(${(frozenProgress - 1) * 100}%)`;
       return;
     }
 
@@ -56,4 +57,10 @@
   });
 </script>
 
-<div bind:this={element} class={`compositor-playhead ${className}`} aria-hidden="true"></div>
+<div
+  bind:this={element}
+  class={`compositor-playhead ${className}`}
+  data-playhead-state={playing ? 'playing' : syncBeat === null ? 'stopped' : 'paused'}
+  data-sync-beat={syncBeat ?? ''}
+  aria-hidden="true"
+></div>

@@ -28,7 +28,7 @@
 <section class="scene-panel" data-app-help-key="scenes" aria-labelledby="scene-heading">
   <div class="scene-heading">
     <div><p>Pattern snapshots</p><h2 id="scene-heading">Scenes</h2></div>
-    <button id="capture-scene-button" type="button" class="has-emoticon" data-app-help-key="capture-scene" onclick={oncapture}><span class="button-emoticon" aria-hidden="true">📸</span>Capture scene</button>
+    <button id="capture-scene-button" type="button" class="has-emoticon icon-only" data-app-help-key="capture-scene" aria-label="Capture scene" onclick={oncapture}><span class="button-emoticon" aria-hidden="true">📸</span></button>
   </div>
   <p class="scene-help">Capture the active slot of every module. Launches land together on the next bar while playing.</p>
   {#if scenes.length === 0}

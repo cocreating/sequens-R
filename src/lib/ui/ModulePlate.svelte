@@ -107,7 +107,7 @@
       <button type="button" data-help-key="mute" aria-label={`Mute ${module.name}`} aria-pressed={module.mute} onclick={() => onpatch({ mute: !module.mute })}>M</button>
       <button type="button" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}>{module.collapsed ? '+' : '−'}</button>
       <details class="module-menu">
-        <summary aria-label={`${module.name} actions`}>More</summary>
+        <summary aria-label={`${module.name} actions`}>⋯</summary>
         <div class="module-menu-popover">
           {#if desktopSurface}
             <button

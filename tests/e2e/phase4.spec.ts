@@ -63,9 +63,9 @@ test.describe('Phase 4 desktop studio', () => {
     await expect(page.getByRole('tab', { selected: true })).toContainText('Live rack');
 
     await page.keyboard.press('Space');
-    await expect(page.getByRole('button', { name: 'Playing' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
     await page.keyboard.press('Space');
-    await expect(page.getByText('Transport stopped')).toBeVisible();
+    await expect(page.getByText('Transport paused')).toBeVisible();
 
     await page.keyboard.press('Control+s');
     await expect(page.getByText(/Project saved/)).toBeVisible();

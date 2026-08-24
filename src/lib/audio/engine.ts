@@ -166,12 +166,25 @@ export class AudioEngine {
     await this.initialize();
     await this.#context!.resume();
     if (this.#scheduler!.playing) return;
-    this.#midi?.start(this.#toPerformanceTime(this.#context!.currentTime + 0.05));
+    const resuming = this.#scheduler!.paused;
+    const transportTime = this.#toPerformanceTime(this.#context!.currentTime + 0.05);
+    if (resuming) this.#midi?.resume(transportTime);
+    else this.#midi?.start(transportTime);
     this.#scheduler!.start();
+  }
+
+  pause(): number | null {
+    const pausedBeat = this.#scheduler?.pause() ?? null;
+    if (pausedBeat === null) return null;
+    this.#midi?.clear();
+    this.#midi?.stop(this.#toPerformanceTime(this.#context?.currentTime ?? 0));
+    this.panic();
+    return pausedBeat;
   }
 
   stop(): void {
     this.#scheduler?.stop();
+    this.#midi?.clear();
     this.#midi?.stop(this.#toPerformanceTime(this.#context?.currentTime ?? 0));
     this.panic();
   }

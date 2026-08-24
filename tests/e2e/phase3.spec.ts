@@ -49,7 +49,6 @@ test('MIDI remains opt-in, routes timestamped notes, clocks, and discovers hot-p
   await expect(bass.getByRole('button', { name: 'Monitor Bass' })).toHaveAttribute('aria-pressed', 'false');
   await page.getByLabel('Send clock').check();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
-  await page.getByRole('button', { name: 'Playing', exact: true }).click();
   await page.waitForTimeout(350);
   await page.getByRole('button', { name: 'Stop' }).click();
 

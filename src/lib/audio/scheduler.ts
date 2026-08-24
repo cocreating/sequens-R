@@ -55,8 +55,11 @@ export class AudioScheduler {
   #snapshot: EngineSnapshot;
   #pending: PendingSnapshot | null = null;
   #originTime = 0;
+  #activeFromTime = 0;
   #scheduledUntil = 0;
   #playing = false;
+  #paused = false;
+  #resumeBeat = 0;
   readonly #timingOffsets: number[] = [];
   #lastReportedBar = -1;
   #lastReportedStep = -1;
@@ -102,18 +105,38 @@ export class AudioScheduler {
 
   start(): void {
     if (this.#playing) return;
+    const resumeBeat = this.#paused ? this.#resumeBeat : 0;
+    const resuming = this.#paused;
     this.#playing = true;
-    this.#originTime = this.#context.currentTime + START_DELAY_SECONDS;
-    this.#scheduledUntil = this.#originTime;
-    this.#lastReportedBar = -1;
-    this.#lastReportedStep = -1;
-    this.#onPosition?.(0);
+    this.#paused = false;
+    this.#activeFromTime = this.#context.currentTime + START_DELAY_SECONDS;
+    this.#originTime = this.#activeFromTime - beatsToSeconds(resumeBeat, this.#snapshot.bpm);
+    this.#scheduledUntil = this.#activeFromTime;
+    this.#lastReportedBar = resuming ? Math.floor(resumeBeat / SNAPSHOT_BOUNDARY_BEATS) : -1;
+    const stepsPerBeat = Math.max(1, ...this.#snapshot.modules.map((module) => module.pattern.stepsPerBeat));
+    this.#lastReportedStep = resuming ? Math.floor(resumeBeat * stepsPerBeat) : -1;
+    this.#onPosition?.(resumeBeat);
     this.#tick(this.#context.currentTime);
+  }
+
+  pause(): number | null {
+    if (!this.#playing) return null;
+    if (this.#context.currentTime >= this.#activeFromTime) this.#resumeBeat = this.#timeToBeat(this.#context.currentTime);
+    this.#playing = false;
+    this.#paused = true;
+    if (this.#pending !== null) this.#snapshot = this.#pending.snapshot;
+    this.#pending = null;
+    this.#scheduledUntil = 0;
+    this.#onPosition?.(this.#resumeBeat);
+    return this.#resumeBeat;
   }
 
   stop(): void {
     this.#playing = false;
+    this.#paused = false;
+    this.#resumeBeat = 0;
     this.#pending = null;
+    this.#activeFromTime = 0;
     this.#scheduledUntil = 0;
     this.#lastReportedBar = -1;
     this.#lastReportedStep = -1;
@@ -122,6 +145,10 @@ export class AudioScheduler {
 
   get playing(): boolean {
     return this.#playing;
+  }
+
+  get paused(): boolean {
+    return this.#paused;
   }
 
   #timeToBeat(time: number): number {
@@ -158,7 +185,7 @@ export class AudioScheduler {
 
   #tick(contextTime: number): void {
     if (!this.#playing) return;
-    if (contextTime >= this.#originTime) {
+    if (contextTime >= this.#activeFromTime) {
       const currentBeat = this.#timeToBeat(contextTime);
       const currentBar = Math.floor(currentBeat / SNAPSHOT_BOUNDARY_BEATS);
       if (currentBar > this.#lastReportedBar) {

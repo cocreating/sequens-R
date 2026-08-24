@@ -130,7 +130,7 @@
 
 <section class="piano-roll-editor" data-help-key="piano-roll" aria-labelledby="piano-roll-heading">
   <div class="piano-roll-heading">
-    <div><h3 id="piano-roll-heading">Piano roll</h3><button type="button" data-help-key="add-note" onclick={addKeyboardNote}>Add note</button></div>
+    <div><h3 id="piano-roll-heading">Piano roll</h3><button type="button" class="has-emoticon icon-only" data-help-key="add-note" aria-label="Add note" onclick={addKeyboardNote}><span class="button-emoticon" aria-hidden="true">➕</span></button></div>
     <p>Click to add · drag to move · drag a note’s right edge to resize · Delete removes.</p>
   </div>
   <div

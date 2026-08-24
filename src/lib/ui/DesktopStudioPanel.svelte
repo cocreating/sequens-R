@@ -23,13 +23,13 @@
         <option value={output.deviceId}>{output.label || `Audio output ${output.deviceId.slice(0, 6)}`}</option>
       {/each}
     </select>
-    <button type="button" class="has-emoticon" data-app-help-key="refresh-outputs" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}><span class="button-emoticon" aria-hidden="true">🔄</span>Refresh outputs</button>
+    <button type="button" class="has-emoticon icon-only" data-app-help-key="refresh-outputs" aria-label="Refresh outputs" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}><span class="button-emoticon" aria-hidden="true">🔄</span></button>
     {#if !outputSelectionSupported}<p>Audio output selection is unavailable; the system default remains active.</p>{/if}
   </div>
   <details data-app-help-key="shortcuts">
     <summary>Keyboard shortcuts</summary>
     <dl class="shortcut-list">
-      <div><dt><kbd>Space</kbd></dt><dd>Play / stop</dd></div>
+      <div><dt><kbd>Space</kbd></dt><dd>Play / pause</dd></div>
       <div><dt><kbd>R</kbd></dt><dd>Randomize</dd></div>
       <div><dt><kbd>⌘/Ctrl Z</kbd></dt><dd>Undo</dd></div>
       <div><dt><kbd>⇧ ⌘/Ctrl Z</kbd></dt><dd>Redo</dd></div>

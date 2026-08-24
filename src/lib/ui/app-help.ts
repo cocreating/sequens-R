@@ -62,11 +62,15 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   },
   transport: {
     title: 'Transport and musical context',
-    body: 'Starts or stops every active module and defines the shared tempo, root note, and scale used for generation.',
+    body: 'Plays, pauses, or stops every active module and defines the shared tempo, root note, and scale used for generation.',
   },
   play: {
     title: 'Play',
     body: 'Starts the audio scheduler, internal monitoring, routed MIDI, and enabled MIDI clock outputs.',
+  },
+  pause: {
+    title: 'Pause',
+    body: 'Pauses playback at the current beat and clears active internal and external notes. Press Play to continue from the same position.',
   },
   stop: {
     title: 'Stop / panic',

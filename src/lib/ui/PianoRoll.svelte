@@ -1,11 +1,14 @@
 <script lang="ts">
   import type { MusicalKey, NoteEvent, Pattern } from '../core/pattern';
   import { SCALE_INTERVALS } from '../core/theory/scales';
+  import CompositorPlayhead from './CompositorPlayhead.svelte';
 
   interface Props {
     pattern: Pattern;
     musicalKey: MusicalKey;
-    playheadBeat?: number | null;
+    syncBeat?: number | null;
+    playing: boolean;
+    bpm: number;
     inKey: boolean;
     onchange: (pattern: Pattern) => void;
   }
@@ -21,12 +24,11 @@
   const PITCH_MIN = 36;
   const PITCH_MAX = 83;
   const ROWS = PITCH_MAX - PITCH_MIN + 1;
-  let { pattern, musicalKey, playheadBeat = null, inKey, onchange }: Props = $props();
+  let { pattern, musicalKey, syncBeat = null, playing, bpm, inKey, onchange }: Props = $props();
   let surface: HTMLDivElement;
   let drag = $state<DragState | null>(null);
   let draftEvents = $state<readonly NoteEvent[] | null>(null);
   let visibleEvents = $derived(draftEvents ?? pattern.events);
-  let currentStep = $derived(playheadBeat === null ? null : Math.floor(playheadBeat * pattern.stepsPerBeat) % pattern.lengthSteps);
 
   function snapPitch(pitch: number): number {
     const clamped = Math.max(PITCH_MIN, Math.min(PITCH_MAX, Math.round(pitch)));
@@ -53,6 +55,17 @@
     const row = Math.max(0, Math.min(ROWS - 1, Math.floor((event.clientY - bounds.top) / bounds.height * ROWS)));
     const pitch = snapPitch(PITCH_MAX - row);
     onchange({ ...pattern, events: [...pattern.events, { startStep: step, durationSteps: 1, pitch, velocity: 96 }].sort((left, right) => left.startStep - right.startStep || left.pitch - right.pitch) });
+  }
+
+  function addKeyboardNote(): void {
+    const occupiedSteps = new Set(pattern.events.map((event) => Math.floor(event.startStep)));
+    const startStep = Array.from({ length: pattern.lengthSteps }, (_, index) => index).find((step) => !occupiedSteps.has(step)) ?? 0;
+    const pitch = snapPitch(60 + musicalKey.root);
+    onchange({
+      ...pattern,
+      events: [...pattern.events, { startStep, durationSteps: 1, pitch, velocity: 96 }]
+        .sort((left, right) => left.startStep - right.startStep || left.pitch - right.pitch),
+    });
   }
 
   function startDrag(event: PointerEvent, index: number): void {
@@ -117,7 +130,7 @@
 
 <section class="piano-roll-editor" aria-labelledby="piano-roll-heading">
   <div class="piano-roll-heading">
-    <h3 id="piano-roll-heading">Piano roll</h3>
+    <div><h3 id="piano-roll-heading">Piano roll</h3><button type="button" onclick={addKeyboardNote}>Add note</button></div>
     <p>Click to add · drag to move · drag a note’s right edge to resize · Delete removes.</p>
   </div>
   <div
@@ -125,17 +138,14 @@
     class="piano-roll-surface"
     style:--piano-steps={pattern.lengthSteps}
     style:--piano-rows={ROWS}
-    role="grid"
-    tabindex="0"
+    role="group"
     aria-label={`${pattern.lengthSteps}-step piano roll`}
     onpointerdown={addNote}
     onpointermove={continueDrag}
     onpointerup={finishDrag}
     onpointercancel={finishDrag}
   >
-    {#if currentStep !== null}
-      <div class="piano-playhead" style:--playhead-step={currentStep} aria-hidden="true"></div>
-    {/if}
+    <CompositorPlayhead {playing} {bpm} beats={pattern.lengthSteps / pattern.stepsPerBeat} {syncBeat} />
     {#each visibleEvents as note, index (index)}
       <button
         type="button"

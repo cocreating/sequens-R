@@ -51,4 +51,8 @@ export class DrumKitVoice {
     }
     this.#active.clear();
   }
+
+  get activeVoiceCount(): number {
+    return this.#active.size;
+  }
 }

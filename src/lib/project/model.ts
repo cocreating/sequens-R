@@ -11,12 +11,18 @@ import {
   type RackState,
 } from '../state/rack';
 
-export const PROJECT_SCHEMA_VERSION = 2;
+export const PROJECT_SCHEMA_VERSION = 3;
 
 export interface ProjectRack {
   id: string;
   name: string;
   state: RackState;
+}
+
+export interface ProjectScene {
+  id: string;
+  name: string;
+  assignments: Record<string, number>;
 }
 
 export interface ProjectDocument {
@@ -25,7 +31,7 @@ export interface ProjectDocument {
   name: string;
   racks: ProjectRack[];
   activeRackId: string;
-  scenes: unknown[];
+  scenes: ProjectScene[];
   settings: Record<string, unknown>;
   createdAt: number;
   updatedAt: number;
@@ -162,6 +168,17 @@ function normalizeRackState(value: unknown): RackState {
   return { bpm, key: { root, scale: scale as ScaleName }, modules };
 }
 
+function normalizeScene(value: unknown): ProjectScene {
+  if (!isRecord(value) || !isRecord(value.assignments)) throw new TypeError('Project scene must contain assignments.');
+  const assignments: Record<string, number> = {};
+  for (const [moduleId, rawSlot] of Object.entries(value.assignments)) {
+    const slot = expectNumber(rawSlot, `Scene assignment for ${moduleId}`);
+    if (!Number.isInteger(slot) || slot < 0 || slot > 7) throw new RangeError('Scene assignments must reference slots 0 to 7.');
+    assignments[expectString(moduleId, 'Scene module id')] = slot;
+  }
+  return { id: expectString(value.id, 'Scene id'), name: expectString(value.name, 'Scene name'), assignments };
+}
+
 export function createProject(rack: RackState, name = 'Untitled Project'): ProjectDocument {
   const timestamp = now();
   const rackId = crypto.randomUUID();
@@ -201,7 +218,7 @@ function migrateLegacyProject(value: Record<string, unknown>): ProjectDocument {
 export function migrateProject(value: unknown): ProjectDocument {
   if (!isRecord(value)) throw new TypeError('Project file must contain an object.');
   if (value.schemaVersion === 0) return migrateLegacyProject(value);
-  if (value.schemaVersion !== 1 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
+  if (value.schemaVersion !== 1 && value.schemaVersion !== 2 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
   if (!Array.isArray(value.racks) || value.racks.length < 1) throw new RangeError('A project must contain at least one rack.');
   const racks = value.racks.map((entry): ProjectRack => {
     if (!isRecord(entry)) throw new TypeError('Project rack must be an object.');
@@ -215,7 +232,7 @@ export function migrateProject(value: unknown): ProjectDocument {
     name: expectString(value.name, 'Project name'),
     racks,
     activeRackId,
-    scenes: Array.isArray(value.scenes) ? structuredClone(value.scenes) : [],
+    scenes: Array.isArray(value.scenes) ? value.scenes.map(normalizeScene) : [],
     settings: isRecord(value.settings) ? structuredClone(value.settings) : {},
     createdAt: expectNumber(value.createdAt, 'Created time'),
     updatedAt: expectNumber(value.updatedAt, 'Updated time'),
@@ -232,4 +249,22 @@ export function projectFromJson(json: string): ProjectDocument {
 
 export function nonShareableModuleNames(rack: RackState): string[] {
   return rack.modules.filter(({ shareable }) => !shareable).map(({ name }) => name);
+}
+
+export function captureProjectScene(project: ProjectDocument, rack: RackState, name = `Scene ${project.scenes.length + 1}`): ProjectDocument {
+  const scene: ProjectScene = {
+    id: crypto.randomUUID(),
+    name,
+    assignments: Object.fromEntries(rack.modules.map((module) => [module.id, module.activeSlot])),
+  };
+  return { ...project, scenes: [...project.scenes, scene], updatedAt: now() };
+}
+
+export function renameProjectScene(project: ProjectDocument, sceneId: string, name: string): ProjectDocument {
+  const normalized = name.trimStart() || 'Untitled scene';
+  return { ...project, scenes: project.scenes.map((scene) => scene.id === sceneId ? { ...scene, name: normalized } : scene), updatedAt: now() };
+}
+
+export function deleteProjectScene(project: ProjectDocument, sceneId: string): ProjectDocument {
+  return { ...project, scenes: project.scenes.filter((scene) => scene.id !== sceneId), updatedAt: now() };
 }

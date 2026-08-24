@@ -62,3 +62,16 @@ Status: accepted on 2026-08-24.
 - CC automation is normalized both when the loop length changes and when a project crosses the import boundary, keeping every point inside its active loop.
 - Multiple racks share one transport engine and only the active rack is published. Switching racks while playing uses the scheduler's existing immutable snapshot boundary, so the change lands on the next safe bar.
 - File System Access is a desktop progressive enhancement. Unsupported environments and mobile continue through Blob downloads. Audio output selection similarly feature-detects `AudioContext.setSinkId()` and otherwise retains the system output.
+
+## AD-006 · Phase 5 progressive enhancement and scenes
+
+Status: accepted on 2026-08-24.
+
+- The project schema is version 3. Scenes store only stable module-ID-to-slot assignments and migrate version 1/2 documents with an empty scene list. Launching publishes one immutable rack snapshot, so every assignment reaches the audio scheduler at the same bar boundary.
+- Phase 5 does not implement Stabs, Rain, Sampler, or Performer. The SDD makes demonstrated usage a prerequisite for those backlog modules; no usage evidence was available during this phase.
+- The Acid voice keeps its existing public scheduling interface while moving oscillator, accent/slide envelopes, and a four-stage zero-delay-feedback TPT ladder into one AudioWorklet. Live playback and offline bounce load the same processor.
+- Media Session, position state, Screen Wake Lock, View Transitions, Web Animations, `content-visibility`, `scheduler.postTask`, and `AudioContext.renderCapacity` are progressive enhancements selected only through feature detection. Their fallbacks are respectively in-app transport, no lock, immediate DOM updates, `requestAnimationFrame`, normal rendering, `setTimeout(0)`, and a fixed 16-module ceiling without render telemetry.
+- Persistence serialization runs at background priority after its existing debounce. The audio thread still consumes only immutable snapshots and never reads Svelte state.
+- Playheads animate `transform` through Web Animations and receive one audio-clock correction per bar. Reduced-motion users get instant view changes and no moving playhead.
+- The diagnostics panel reports audio state, combined base/output latency, scheduler jitter, active voices, render load/underruns when available, and isolation state. It contains no telemetry or runtime network path.
+- The accessibility gate combines semantic native controls, tab-pattern keyboard behavior, keyboard piano-note authoring/editing, focus recovery after deletion, reduced motion, visible focus, and automated axe/Chrome coverage.

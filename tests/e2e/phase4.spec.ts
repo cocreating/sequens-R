@@ -29,7 +29,7 @@ test.describe('Phase 4 desktop studio', () => {
     await expect(mod.getByLabel('LFO 3 mode')).toBeVisible();
 
     const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
-    const pianoSurface = piano.getByRole('grid', { name: /step piano roll/ });
+    const pianoSurface = piano.getByRole('group', { name: /step piano roll/ });
     await pianoSurface.click({ position: { x: 120, y: 120 } });
     await expect(piano.locator('.piano-note')).toHaveCount(1);
 

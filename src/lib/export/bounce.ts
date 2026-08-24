@@ -7,6 +7,7 @@ import type { RackState } from '../state/rack';
 import { toEngineSnapshot } from '../state/rack';
 import { beatsToSeconds } from '../core/time';
 import { isControlModule } from '../core/pattern';
+import acidWorkletUrl from '../audio/acid.worklet.ts?worker&url';
 
 const SAMPLE_RATE = 44_100;
 const BEATS_PER_BAR = 4;
@@ -22,6 +23,7 @@ export async function renderRackAudio(rack: RackState, bars: number, moduleId: s
   if (![1, 2, 4, 8].includes(bars)) throw new RangeError('WAV bounce length must be 1, 2, 4, or 8 bars.');
   const duration = beatsToSeconds(bars * BEATS_PER_BAR, rack.bpm);
   const context = new OfflineAudioContext(2, Math.ceil(duration * SAMPLE_RATE), SAMPLE_RATE);
+  await context.audioWorklet.addModule(acidWorkletUrl);
   const master = new DynamicsCompressorNode(context, { threshold: -3, knee: 3, ratio: 20, attack: 0.003, release: 0.12 });
   master.connect(context.destination);
   const source = toEngineSnapshot(rack);

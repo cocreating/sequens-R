@@ -19,6 +19,7 @@
     "svelte-dnd-action": "^0.9.79"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.51.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@types/node": "^22.0.0",

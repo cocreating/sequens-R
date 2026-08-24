@@ -4,6 +4,7 @@ import { normalizeRack } from '../share/codec';
 import type { ShareableRack } from '../share/types';
 import type { EngineSnapshot } from '../audio/types';
 import { mutationSeed } from '../generators/shared';
+import type { ProjectScene } from '../project/model';
 
 export interface PatternSlot {
   seed: number;
@@ -286,4 +287,14 @@ export function toggleDrumStep(module: RackModule, key: MusicalKey, lane: number
 
 export function setRackKey(rack: RackState, root: number, scale: ScaleName): RackState {
   return { ...rack, key: { root, scale } };
+}
+
+export function applyScene(rack: RackState, scene: ProjectScene): RackState {
+  return {
+    ...rack,
+    modules: rack.modules.map((module) => {
+      const slot = scene.assignments[module.id];
+      return slot === undefined ? module : setModuleSlot(module, slot);
+    }),
+  };
 }

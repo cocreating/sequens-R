@@ -5,39 +5,34 @@ function frequencyForMidi(pitch: number): number {
 }
 
 export class AcidVoice {
-  readonly #oscillator: OscillatorNode;
-  readonly #filter: BiquadFilterNode;
-  readonly #envelope: GainNode;
-  #lastFrequency = 110;
+  readonly #context: BaseAudioContext;
+  readonly #node: AudioWorkletNode;
+  #activeUntil = 0;
 
   constructor(context: BaseAudioContext, destination: AudioNode) {
-    this.#oscillator = new OscillatorNode(context, { type: 'sawtooth', frequency: this.#lastFrequency });
-    this.#filter = new BiquadFilterNode(context, { type: 'lowpass', frequency: 900, Q: 10 });
-    this.#envelope = new GainNode(context, { gain: 0 });
-    this.#oscillator.connect(this.#filter).connect(this.#envelope).connect(destination);
-    this.#oscillator.start();
+    this.#context = context;
+    this.#node = new AudioWorkletNode(context, 'sequens-acid', { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [1] });
+    this.#node.connect(destination);
   }
 
   trigger(event: NoteEvent, time: number, duration: number): void {
-    const frequency = frequencyForMidi(event.pitch);
-    this.#oscillator.frequency.cancelScheduledValues(time);
-    this.#oscillator.frequency.setValueAtTime(this.#lastFrequency, time);
-    if (event.slide) this.#oscillator.frequency.exponentialRampToValueAtTime(frequency, time + Math.min(0.09, duration * 0.5));
-    else this.#oscillator.frequency.setValueAtTime(frequency, time);
-    this.#lastFrequency = frequency;
-
-    const peak = event.accent ? 0.28 : 0.18;
-    this.#filter.frequency.cancelScheduledValues(time);
-    this.#filter.frequency.setValueAtTime(event.accent ? 2600 : 1500, time);
-    this.#filter.frequency.exponentialRampToValueAtTime(420, time + Math.max(0.04, duration));
-    this.#envelope.gain.cancelScheduledValues(time);
-    this.#envelope.gain.setValueAtTime(0, time);
-    this.#envelope.gain.linearRampToValueAtTime(peak, time + 0.004);
-    this.#envelope.gain.exponentialRampToValueAtTime(0.0001, time + Math.max(0.04, duration));
+    this.#activeUntil = Math.max(this.#activeUntil, time + duration);
+    this.#node.port.postMessage({
+      type: 'trigger',
+      startTime: time,
+      duration,
+      frequency: frequencyForMidi(event.pitch),
+      slide: event.slide === true,
+      accent: event.accent === true,
+    });
   }
 
   panic(time: number): void {
-    this.#envelope.gain.cancelScheduledValues(time);
-    this.#envelope.gain.setValueAtTime(0, time);
+    this.#activeUntil = time;
+    this.#node.port.postMessage({ type: 'panic', time });
+  }
+
+  get activeVoiceCount(): number {
+    return this.#context.currentTime < this.#activeUntil ? 1 : 0;
   }
 }

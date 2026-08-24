@@ -1,0 +1,138 @@
+import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
+
+test.describe('Phase 5 polish', () => {
+  test.use({ viewport: { width: 1440, height: 1000 } });
+
+  test('captures and launches a scene at the shared transport boundary', async ({ page }) => {
+    await page.goto('/');
+    const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
+    await drums.getByRole('button', { name: 'Drums slot 2' }).click();
+    await page.getByRole('button', { name: 'Capture scene' }).click();
+    await expect(page.getByLabel('Scene 1 name')).toHaveValue('Scene 1');
+    await page.getByLabel('Scene 1 name').fill('Drop');
+    await drums.getByRole('button', { name: 'Drums slot 3' }).click();
+    await page.getByRole('button', { name: 'Play', exact: true }).click();
+    await page.getByRole('button', { name: 'Launch Drop' }).click();
+    await expect(page.getByText('Drop queued for the next bar')).toBeVisible();
+    await expect(drums.getByRole('button', { name: 'Drums slot 2' })).toHaveAttribute('aria-pressed', 'true');
+    await page.getByRole('button', { name: 'Playing' }).click();
+  });
+
+  test('integrates available Chromium scheduling, session, transition, wake-lock, and diagnostics APIs', async ({ page }) => {
+    await page.addInitScript(() => {
+      const state = { tasks: 0, transitions: 0, wakeRequests: 0, wakeReleases: 0, actions: [] as string[] };
+      (window as typeof window & { __phase5Apis?: typeof state }).__phase5Apis = state;
+      Object.defineProperty(window, 'scheduler', { configurable: true, value: {
+        postTask: async (callback: () => unknown) => { state.tasks += 1; return callback(); },
+      } });
+      Object.defineProperty(document, 'startViewTransition', { configurable: true, value: (callback: () => unknown) => {
+        state.transitions += 1;
+        const updateCallbackDone = Promise.resolve(callback());
+        return { finished: updateCallbackDone, ready: Promise.resolve(), updateCallbackDone, skipTransition: () => undefined };
+      } });
+      Object.defineProperty(navigator, 'mediaSession', { configurable: true, value: {
+        metadata: null,
+        playbackState: 'none',
+        setActionHandler: (action: string) => state.actions.push(action),
+        setPositionState: () => undefined,
+      } });
+      Object.defineProperty(navigator, 'wakeLock', { configurable: true, value: {
+        request: async () => {
+          state.wakeRequests += 1;
+          return Object.assign(new EventTarget(), {
+            released: false,
+            release: async function () { this.released = true; state.wakeReleases += 1; },
+          });
+        },
+      } });
+      const renderCapacity = Object.assign(new EventTarget(), {
+        start: function () {
+          window.setTimeout(() => this.dispatchEvent(Object.assign(new Event('update'), {
+            averageLoad: 0.24,
+            peakLoad: 0.42,
+            underrunRatio: 0,
+          })), 10);
+        },
+        stop: () => undefined,
+        averageLoad: 0.24,
+        peakLoad: 0.42,
+        underrunRatio: 0,
+      });
+      Object.defineProperty(AudioContext.prototype, 'renderCapacity', { configurable: true, get: () => renderCapacity });
+    });
+    await page.goto('/');
+    await page.getByLabel('New module').selectOption('acid');
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.getByRole('button', { name: 'Play', exact: true }).click();
+    await expect(page.getByText('Transport playing')).toBeVisible();
+    await page.waitForTimeout(350);
+    const state = await page.evaluate(() => (window as typeof window & { __phase5Apis: { tasks: number; transitions: number; wakeRequests: number; actions: string[] } }).__phase5Apis);
+    expect(state.tasks).toBeGreaterThan(0);
+    expect(state.transitions).toBeGreaterThan(0);
+    expect(state.wakeRequests).toBe(1);
+    expect(state.actions).toEqual(expect.arrayContaining(['play', 'pause', 'stop']));
+    await page.getByText('Diagnostics', { exact: true }).click();
+    await expect(page.getByText('Average render load').locator('..').getByText('0.240')).toBeVisible();
+    await page.getByRole('button', { name: 'Playing' }).click();
+  });
+
+  test('keeps core flows working when Phase 5 APIs are absent', async ({ page }) => {
+    const errors: Error[] = [];
+    page.on('pageerror', (error) => errors.push(error));
+    await page.addInitScript(() => {
+      Object.defineProperty(document, 'startViewTransition', { configurable: true, value: undefined });
+      Object.defineProperty(window, 'scheduler', { configurable: true, value: undefined });
+      Object.defineProperty(navigator, 'mediaSession', { configurable: true, value: undefined });
+      Object.defineProperty(navigator, 'wakeLock', { configurable: true, value: undefined });
+      Object.defineProperty(Element.prototype, 'animate', { configurable: true, value: undefined });
+    });
+    await page.goto('/');
+    await page.getByLabel('New module').selectOption('acid');
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await page.getByRole('button', { name: 'Play', exact: true }).click();
+    await expect(page.getByText('Transport playing')).toBeVisible();
+    await page.getByText('Diagnostics', { exact: true }).click();
+    await expect(page.getByText('Render Capacity API is unavailable')).toBeVisible();
+    expect(errors).toEqual([]);
+    await page.getByRole('button', { name: 'Playing' }).click();
+  });
+
+  test('supports keyboard rack navigation and piano-note authoring', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('button', { name: 'New rack' }).click();
+    const activeTab = page.getByRole('tab', { selected: true });
+    await activeTab.focus();
+    await page.keyboard.press('ArrowLeft');
+    await expect(page.getByRole('tab', { selected: true })).toContainText('Rack 1');
+    await page.getByLabel('New module').selectOption('piano');
+    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
+    await piano.getByRole('button', { name: 'Add note' }).click();
+    await expect(piano.locator('.piano-note')).toHaveCount(1);
+    await piano.locator('.piano-note').focus();
+    await page.keyboard.press('ArrowRight');
+    await expect(piano.locator('.piano-note')).toHaveAttribute('aria-label', /step 2/u);
+  });
+
+  test('has no serious accessibility violations and exposes an installable offline PWA', async ({ page, request, context }) => {
+    await page.goto('/');
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations.filter((violation) => ['serious', 'critical'].includes(violation.impact ?? ''))).toEqual([]);
+    const manifestHref = await page.locator('link[rel="manifest"]').getAttribute('href');
+    expect(manifestHref).toBeTruthy();
+    const response = await request.get(new URL(manifestHref!, page.url()).toString());
+    expect(response.ok()).toBe(true);
+    const manifest = await response.json() as { name?: string; icons?: unknown[]; display?: string };
+    expect(manifest.name).toBe('sequens-R');
+    expect(manifest.icons?.length).toBeGreaterThan(0);
+    expect(manifest.display).toBe('standalone');
+    await page.evaluate(() => navigator.serviceWorker.ready);
+    await page.reload();
+    await context.setOffline(true);
+    await page.reload();
+    await expect(page.getByRole('heading', { name: 'sequens-R' })).toBeVisible();
+    await context.setOffline(false);
+  });
+});

@@ -1,16 +1,20 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onDestroy, onMount, tick } from 'svelte';
   import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
   import { AudioEngine } from './lib/audio/engine';
   import { CORE_MODULE_TYPES, isControlModule, SCALE_NAMES, type ModuleType, type Pattern, type ScaleName } from './lib/core/pattern';
   import {
     activeProjectRack,
+    captureProjectScene,
     createProject,
+    deleteProjectScene,
     nonShareableModuleNames,
     projectFromJson,
     projectToJson,
+    renameProjectScene,
     updateProjectRack,
     type ProjectDocument,
+    type ProjectScene,
   } from './lib/project/model';
   import { loadCurrentProject, requestPersistentStorage, saveCurrentProject } from './lib/project/storage';
   import { loadRackFromFragment, rackToFragment } from './lib/share/fragment';
@@ -19,6 +23,7 @@
   import {
     createModule,
     createRackState,
+    applyScene,
     mutateModule,
     randomizeRack,
     revertModule,
@@ -41,6 +46,7 @@
   import Transport from './lib/ui/Transport.svelte';
   import HardwarePanel from './lib/ui/HardwarePanel.svelte';
   import DesktopStudioPanel from './lib/ui/DesktopStudioPanel.svelte';
+  import ScenePanel from './lib/ui/ScenePanel.svelte';
   import { createBrowserMidiEnvironment, midiSupported } from './lib/midi/environment';
   import { MidiManager, type MidiManagerState } from './lib/midi/manager';
   import { createSmfType1 } from './lib/export/smf';
@@ -48,10 +54,21 @@
   import { renderRackAudio } from './lib/export/bounce';
   import { encodePcm16Wav } from './lib/export/wav';
   import { createStoredZip } from './lib/export/zip';
+  import { createBrowserPlaybackPlatform, PlaybackSession } from './lib/platform/playback-session';
+  import { postBackgroundTask } from './lib/platform/tasks';
+  import { runViewTransition } from './lib/platform/view-transition';
+  import CompositorPlayhead from './lib/ui/CompositorPlayhead.svelte';
+  import DiagnosticsPanel from './lib/ui/DiagnosticsPanel.svelte';
+  import type { AudioDiagnostics } from './lib/audio/engine';
 
   let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
   const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
-  const engine = new AudioEngine(handleBar, midi, handlePlayhead);
+  const engine = new AudioEngine(handleBar, midi);
+  const playbackSession = new PlaybackSession(createBrowserPlaybackPlatform(), {
+    play: () => { void play(); },
+    pause: () => stop(),
+    stop: () => stop(),
+  });
   const moduleLabels: Readonly<Record<ModuleType, string>> = {
     drums: 'Drums', bass: 'Bass', acid: 'Acid', chords: 'Chords', mixer: 'Mixer',
     arp: 'Arp', euclid: 'Euclid', piano: 'Piano roll', cc: 'CC Control', mod: 'Mod',
@@ -71,6 +88,7 @@
   let schedulerJitter = $state<number | null>(null);
   let diagnosticTimer: number | null = null;
   let saveTimer: number | null = null;
+  let saveRevision = 0;
   let initialized = $state(false);
   let sharedDraft = $state(false);
   let canUndo = $state(false);
@@ -80,14 +98,18 @@
   let desktopSurface = $state(false);
   let audioOutputs = $state<readonly MediaDeviceInfo[]>([]);
   let selectedAudioOutputId = $state('');
+  let audioState = $state<AudioContextState | 'uninitialized'>('uninitialized');
+  let audioDiagnostics = $state<AudioDiagnostics>(engine.diagnostics);
   let desktopMedia: MediaQueryList | null = null;
 
   onDestroy(() => {
     if (diagnosticTimer !== null) window.clearInterval(diagnosticTimer);
     if (saveTimer !== null) window.clearTimeout(saveTimer);
     void engine.destroy();
+    void playbackSession.destroy();
     midi.disconnect();
     window.removeEventListener('keydown', handleKeyboardShortcut);
+    document.removeEventListener('visibilitychange', handleVisibilityChange);
     desktopMedia?.removeEventListener('change', handleDesktopChange);
   });
 
@@ -98,8 +120,18 @@
     desktopSurface = desktopMedia.matches;
     desktopMedia.addEventListener('change', handleDesktopChange);
     window.addEventListener('keydown', handleKeyboardShortcut);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    playbackSession.initialize();
     void initializeApp();
   });
+
+  async function handleVisibilityChange(): Promise<void> {
+    if (document.visibilityState !== 'visible' || !playing) return;
+    await engine.resume();
+    await playbackSession.restoreAfterVisibility();
+    audioState = engine.state;
+    status = engine.state === 'running' ? 'Audio session recovered' : 'Audio is suspended · resume playback';
+  }
 
   function handleDesktopChange(event: MediaQueryListEvent): void {
     desktopSurface = event.matches;
@@ -178,11 +210,16 @@
   function scheduleSave(): void {
     if (!initialized || sharedDraft) return;
     if (saveTimer !== null) window.clearTimeout(saveTimer);
+    saveRevision += 1;
+    const revision = saveRevision;
     saveTimer = window.setTimeout(() => {
-      project = updateProjectRack(projectSnapshot(), rackSnapshot());
-      void saveCurrentProject(projectSnapshot()).catch((reason: unknown) => {
-        error = reason instanceof Error ? reason.message : 'The project could not be saved locally.';
-      });
+      void postBackgroundTask(async () => {
+        if (revision !== saveRevision) return;
+        project = updateProjectRack(projectSnapshot(), rackSnapshot());
+        await saveCurrentProject(projectSnapshot());
+      }).catch((reason: unknown) => {
+          error = reason instanceof Error ? reason.message : 'The project could not be saved locally.';
+        });
     }, 250);
   }
 
@@ -218,6 +255,8 @@
   }
 
   function handleBar(bar: number): void {
+    playheadBeat = bar * 4;
+    playbackSession.updatePosition(rack.bpm, bar * 4);
     if (bar === 0) return;
     const due = rack.modules.some((module) => module.mutation.on && bar % module.mutation.everyNLoops === 0);
     if (!due) return;
@@ -228,19 +267,20 @@
     status = 'Scheduled mutation applied';
   }
 
-  function handlePlayhead(beat: number | null): void {
-    playheadBeat = beat;
-  }
-
   async function play(): Promise<void> {
     error = '';
     try {
       publish();
       await engine.play();
       playing = true;
+      playheadBeat = 0;
+      audioState = engine.state;
+      await playbackSession.setPlaying(true, rack.bpm, 0);
       status = 'Transport playing';
       diagnosticTimer ??= window.setInterval(() => {
         schedulerJitter = engine.schedulerMessageJitterMs;
+        audioState = engine.state;
+        audioDiagnostics = engine.diagnostics;
       }, 250);
     } catch (reason: unknown) {
       error = reason instanceof Error ? reason.message : 'Audio could not start.';
@@ -252,6 +292,12 @@
     const now = performance.now();
     engine.stop();
     playing = false;
+    playheadBeat = null;
+    audioState = engine.state;
+    audioDiagnostics = engine.diagnostics;
+    if (diagnosticTimer !== null) window.clearInterval(diagnosticTimer);
+    diagnosticTimer = null;
+    void playbackSession.setPlaying(false, rack.bpm, 0);
     status = now - lastStopTime < 400 ? 'Panic: all internal voices stopped' : 'Transport stopped';
     lastStopTime = now;
   }
@@ -297,6 +343,13 @@
   function setTempo(value: number): void {
     if (!Number.isFinite(value) || value < 20 || value > 300) return;
     replaceRack({ ...rack, bpm: Math.round(value * 10) / 10 }, 'tempo');
+    if (playing) playbackSession.updatePosition(value, playheadBeat ?? 0);
+  }
+
+  async function resumeAudio(): Promise<void> {
+    await engine.resume();
+    audioState = engine.state;
+    status = audioState === 'running' ? 'Audio resumed' : 'Audio remains suspended';
   }
 
   function setKey(root: number, scale: ScaleName): void {
@@ -325,6 +378,22 @@
     publish();
     scheduleSave();
     status = `${target.name} active`;
+  }
+
+  async function handleRackTabKey(event: KeyboardEvent, index: number): Promise<void> {
+    const lastIndex = project.racks.length - 1;
+    let nextIndex = index;
+    if (event.key === 'ArrowRight') nextIndex = index === lastIndex ? 0 : index + 1;
+    else if (event.key === 'ArrowLeft') nextIndex = index === 0 ? lastIndex : index - 1;
+    else if (event.key === 'Home') nextIndex = 0;
+    else if (event.key === 'End') nextIndex = lastIndex;
+    else return;
+    event.preventDefault();
+    const target = project.racks[nextIndex];
+    if (target === undefined) return;
+    switchRack(target.id);
+    await tick();
+    document.getElementById(`rack-tab-${target.id}`)?.focus();
   }
 
   function renameRack(name: string): void {
@@ -388,6 +457,29 @@
     status = 'Rack deleted';
   }
 
+  function captureScene(): void {
+    project = captureProjectScene(currentProject(), rackSnapshot());
+    scheduleSave();
+    status = `${project.scenes.at(-1)?.name ?? 'Scene'} captured`;
+  }
+
+  function launchScene(scene: ProjectScene): void {
+    replaceRack(applyScene(rack, scene));
+    status = playing ? `${scene.name} queued for the next bar` : `${scene.name} launched`;
+  }
+
+  function renameScene(sceneId: string, name: string): void {
+    project = renameProjectScene(currentProject(), sceneId, name);
+    scheduleSave();
+  }
+
+  function deleteScene(sceneId: string): void {
+    const scene = project.scenes.find(({ id }) => id === sceneId);
+    project = deleteProjectScene(currentProject(), sceneId);
+    scheduleSave();
+    status = `${scene?.name ?? 'Scene'} deleted`;
+  }
+
   function setSeed(id: string, seed: number): void {
     updateModule(id, (module) => setModuleSeed(module, seed));
     status = 'Seed updated';
@@ -414,7 +506,14 @@
   }
 
   function addModule(): void {
-    replaceRack({ ...rack, modules: [...rack.modules, createModule(selectedModuleType)] });
+    if (rack.modules.length >= 16) {
+      status = 'The 16-module rack limit is reached';
+      return;
+    }
+    void runViewTransition(async () => {
+      replaceRack({ ...rack, modules: [...rack.modules, createModule(selectedModuleType)] });
+      await tick();
+    });
     status = `${moduleLabels[selectedModuleType]} added`;
   }
 
@@ -425,13 +524,20 @@
     const duplicate = JSON.parse(JSON.stringify(source)) as unknown as RackModule;
     duplicate.id = createModule(source.type).id;
     duplicate.name = `${source.name} copy`;
-    replaceRack({ ...rack, modules: [...rack.modules.slice(0, index + 1), duplicate, ...rack.modules.slice(index + 1)] });
+    void runViewTransition(async () => {
+      replaceRack({ ...rack, modules: [...rack.modules.slice(0, index + 1), duplicate, ...rack.modules.slice(index + 1)] });
+      await tick();
+    });
     status = `${source.name} duplicated`;
   }
 
   function deleteModule(id: string): void {
     if (rack.modules.length === 1) return;
-    replaceRack({ ...rack, modules: rack.modules.filter((module) => module.id !== id) });
+    void runViewTransition(async () => {
+      replaceRack({ ...rack, modules: rack.modules.filter((module) => module.id !== id) });
+      await tick();
+      document.getElementById('add-module-button')?.focus();
+    });
     status = 'Module deleted';
   }
 
@@ -441,7 +547,10 @@
 
   function handleFinalize(event: CustomEvent<DndEvent<RackModule>>): void {
     const reordered = { ...rack, modules: event.detail.items };
-    replaceRack(reordered);
+    void runViewTransition(async () => {
+      replaceRack(reordered);
+      await tick();
+    });
     status = 'Modules reordered';
   }
 
@@ -592,7 +701,7 @@
 <a class="skip-link" href="#rack">Skip to rack</a>
 <header class:playing class="app-header">
   <div class="brand"><p>Local generative MIDI</p><h1>sequens-R</h1></div>
-  <div class="bar-progress" aria-hidden="true"></div>
+  <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
 </header>
 
 {#if !supported}
@@ -624,7 +733,16 @@
         </div>
         <div class="rack-tabs" role="tablist" aria-label="Project racks">
           {#each project.racks as projectRack, index (projectRack.id)}
-            <button type="button" role="tab" aria-selected={projectRack.id === project.activeRackId} aria-controls="module-lanes" onclick={() => switchRack(projectRack.id)}>{index + 1} · {projectRack.name}</button>
+            <button
+              id={`rack-tab-${projectRack.id}`}
+              type="button"
+              role="tab"
+              tabindex={projectRack.id === project.activeRackId ? 0 : -1}
+              aria-selected={projectRack.id === project.activeRackId}
+              aria-controls="module-lanes"
+              onclick={() => switchRack(projectRack.id)}
+              onkeydown={(event) => void handleRackTabKey(event, index)}
+            >{index + 1} · {projectRack.name}</button>
           {/each}
         </div>
         <label for="rack-name">Active rack name</label>
@@ -633,6 +751,8 @@
     {/if}
 
     <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} {playing} onplay={play} onstop={stop} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+
+    <ScenePanel scenes={project.scenes} modules={rack.modules} oncapture={captureScene} onlaunch={launchScene} onrename={renameScene} ondelete={deleteScene} />
 
     <HardwarePanel state={midiState} onconnect={connectMidi} onclock={(portId, enabled) => midi.setClock(portId, enabled)} />
 
@@ -665,20 +785,24 @@
         <select id="module-type" bind:value={selectedModuleType}>
           {#each (desktopSurface ? MODULE_TYPES : CORE_MODULE_TYPES) as type}<option value={type}>{moduleLabels[type]}</option>{/each}
         </select>
-        <button type="button" onclick={addModule}>Add</button>
+        <button id="add-module-button" type="button" onclick={addModule} disabled={rack.modules.length >= 16}>Add</button>
       </div>
     </section>
 
     <p class="session-status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>
+    {#if playing && audioState === 'suspended'}<button type="button" class="resume-audio" onclick={resumeAudio}>Resume audio</button>{/if}
     {#if schedulerJitter !== null}
       <p class="scheduler-jitter">Scheduler jitter <data value={schedulerJitter.toFixed(3)}>{schedulerJitter.toFixed(3)}</data> ms σ</p>
     {/if}
+    <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
     {#if error}<p class="error" role="alert">{error}</p>{/if}
 
     <section
       class="module-list"
       id="module-lanes"
-      aria-label="Rack modules"
+      role={desktopSurface ? 'tabpanel' : undefined}
+      aria-label={desktopSurface ? undefined : 'Rack modules'}
+      aria-labelledby={desktopSurface ? `rack-tab-${project.activeRackId}` : undefined}
       use:dragHandleZone={{ items: rack.modules, flipDurationMs: 0, zoneTabIndex: -1 }}
       onconsider={handleConsider}
       onfinalize={handleFinalize}
@@ -689,6 +813,7 @@
           musicalKey={rack.key}
           bpm={rack.bpm}
           {playheadBeat}
+          {playing}
           {desktopSurface}
           onpatch={(modulePatch) => patchModule(module.id, modulePatch)}
           onparam={(key, value) => setParam(module.id, key, value)}

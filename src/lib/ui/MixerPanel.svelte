@@ -13,7 +13,7 @@
   }
 </script>
 
-<div class="mixer-panel" aria-label="Module mixer">
+<div class="mixer-panel" role="group" aria-label="Module mixer">
   {#each modules.filter((module) => module.type !== 'mixer') as target (target.id)}
     <div class="mixer-channel">
       <span>{target.name}</span>

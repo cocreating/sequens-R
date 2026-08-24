@@ -73,7 +73,7 @@ describe('project documents', () => {
 
   it('migrates the legacy single-rack schema', () => {
     const migrated = migrateProject({ schemaVersion: 0, name: 'Legacy', rack: STARTER_RACK });
-    expect(migrated.schemaVersion).toBe(2);
+    expect(migrated.schemaVersion).toBe(3);
     expect(migrated.name).toBe('Legacy');
     expect(migrated.racks[0]?.state.modules).toHaveLength(3);
     expect(migrated.racks[0]?.state.modules[0]?.slots).toHaveLength(8);

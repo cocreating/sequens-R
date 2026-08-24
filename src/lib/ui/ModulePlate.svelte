@@ -14,6 +14,7 @@
     musicalKey: MusicalKey;
     bpm: number;
     playheadBeat: number | null;
+    playing: boolean;
     desktopSurface: boolean;
     onpatch: (patch: Partial<RackModule>) => void;
     onparam: (key: string, value: number) => void;
@@ -37,7 +38,7 @@
     onclearautomation: () => void;
   }
 
-  let { module, musicalKey, bpm, playheadBeat, desktopSurface, onpatch, onparam, onparamcommit, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, ondelete, rackModules = [], ontargetpatch, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
+  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, ondelete, rackModules = [], ontargetpatch, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
   let pattern = $derived(modulePattern(module, musicalKey, rackModules));
   let schema = $derived(GENERATORS[module.type].paramSchema.filter((definition) => definition.control !== 'hidden'));
   let recordingCc = $state(false);
@@ -69,7 +70,7 @@
     <p>This module is reproduced from the patch, but editing is available on screens 1024 px or wider.</p>
   </article>
 {:else}
-<article class:collapsed={module.collapsed} class:muted={module.mute} class:soloed={module.solo} aria-labelledby={`${module.id}-name`}>
+<article class:collapsed={module.collapsed} class:muted={module.mute} class:soloed={module.solo} aria-labelledby={`${module.id}-name`} style:view-transition-name={`module-${module.id}`}>
   <div class="module-progress" aria-hidden="true"></div>
   <header class="module-header">
     <span use:dragHandle class="drag-handle" aria-label={`Reorder ${module.name}`}>⠿</span>
@@ -113,7 +114,7 @@
         {/if}
         {#if module.type !== 'piano' && !isControlModule(module.type)}
         <div class="pattern-tools">
-          <div class="slot-picker" aria-label={`${module.name} pattern slots`}>
+          <div class="slot-picker" role="group" aria-label={`${module.name} pattern slots`}>
             {#each module.slots as _, index}
               <button type="button" aria-label={`${module.name} slot ${index + 1}`} aria-pressed={module.activeSlot === index} onclick={() => onslot(index)}>{index + 1}</button>
             {/each}
@@ -135,9 +136,9 @@
         </div>
         {/if}
         {#if module.type === 'piano'}
-          <PianoRoll {pattern} {musicalKey} {playheadBeat} inKey={module.params.inKey === 1} onchange={onpattern} />
+          <PianoRoll {pattern} {musicalKey} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} onchange={onpattern} />
         {:else if !isControlModule(module.type)}
-          <StepGrid {pattern} {playheadBeat} editable={module.type === 'drums'} ontoggle={onstep} />
+          <StepGrid {pattern} syncBeat={playheadBeat} {playing} {bpm} editable={module.type === 'drums'} ontoggle={onstep} />
         {/if}
       {/if}
       {#if schema.length > 0}

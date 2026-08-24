@@ -5,6 +5,7 @@ import { AcidVoice } from './voices/acid';
 import { DrumKitVoice } from './voices/drumkit';
 import { PolyVoice } from './voices/poly';
 import clockWorkletUrl from './clock.worklet.ts?worker&url';
+import acidWorkletUrl from './acid.worklet.ts?worker&url';
 import { MidiTimeBridge } from '../midi/time-bridge';
 import type { MidiSink } from '../midi/types';
 
@@ -12,6 +13,32 @@ interface ModuleVoice {
   type: ModuleType;
   bus: GainNode;
   voice: AcidVoice | DrumKitVoice | PolyVoice | null;
+}
+
+interface RenderCapacityUpdate extends Event {
+  readonly averageLoad?: number;
+  readonly peakLoad?: number;
+  readonly underrunRatio?: number;
+}
+
+interface RenderCapacityLike extends EventTarget {
+  start(options?: { updateInterval?: number }): void;
+  stop(): void;
+}
+
+interface CapacityAudioContext extends AudioContext {
+  readonly renderCapacity?: RenderCapacityLike;
+}
+
+export interface AudioDiagnostics {
+  state: AudioContextState | 'uninitialized';
+  latencySeconds: number | null;
+  schedulerJitterMs: number | null;
+  activeVoices: number;
+  renderCapacitySupported: boolean;
+  averageRenderLoad: number | null;
+  peakRenderLoad: number | null;
+  underrunRatio: number | null;
 }
 
 const EMPTY_SNAPSHOT: EngineSnapshot = { bpm: 118, modules: [] };
@@ -29,6 +56,10 @@ export class AudioEngine {
   readonly #midi: MidiSink | null;
   #midiTime: MidiTimeBridge | null = null;
   #midiResyncTimer: number | null = null;
+  #renderCapacity: RenderCapacityLike | null = null;
+  #averageRenderLoad: number | null = null;
+  #peakRenderLoad: number | null = null;
+  #underrunRatio: number | null = null;
 
   constructor(onBar: ((bar: number) => void) | null = null, midi: MidiSink | null = null, onPosition: ((beat: number | null) => void) | null = null) {
     this.#onBar = onBar;
@@ -49,8 +80,27 @@ export class AudioEngine {
     return this.#context.baseLatency + (this.#context.outputLatency ?? 0);
   }
 
+  get state(): AudioContextState | 'uninitialized' {
+    return this.#context?.state ?? 'uninitialized';
+  }
+
   get schedulerMessageJitterMs(): number | null {
     return this.#scheduler?.messageJitterMs ?? null;
+  }
+
+  get diagnostics(): AudioDiagnostics {
+    let activeVoices = 0;
+    for (const module of this.#voices.values()) activeVoices += module.voice?.activeVoiceCount ?? 0;
+    return {
+      state: this.state,
+      latencySeconds: this.latencySeconds,
+      schedulerJitterMs: this.schedulerMessageJitterMs,
+      activeVoices,
+      renderCapacitySupported: this.#renderCapacity !== null,
+      averageRenderLoad: this.#averageRenderLoad,
+      peakRenderLoad: this.#peakRenderLoad,
+      underrunRatio: this.#underrunRatio,
+    };
   }
 
   get outputSelectionSupported(): boolean {
@@ -64,13 +114,17 @@ export class AudioEngine {
     await context.setSinkId(deviceId);
   }
 
+  async resume(): Promise<void> {
+    if (this.#context?.state === 'suspended') await this.#context.resume();
+  }
+
   async initialize(): Promise<void> {
     if (this.#context !== null) {
       if (this.#context.state === 'suspended') await this.#context.resume();
       return;
     }
     const context = new AudioContext({ latencyHint: 'interactive' });
-    await context.audioWorklet.addModule(clockWorkletUrl);
+    await Promise.all([context.audioWorklet.addModule(clockWorkletUrl), context.audioWorklet.addModule(acidWorkletUrl)]);
     const master = new DynamicsCompressorNode(context, {
       threshold: -3,
       knee: 3,
@@ -91,6 +145,12 @@ export class AudioEngine {
     this.#scheduler = scheduler;
     this.#clock = clock;
     this.#clockSink = clockSink;
+    const renderCapacity = (context as CapacityAudioContext).renderCapacity;
+    if (renderCapacity !== undefined) {
+      this.#renderCapacity = renderCapacity;
+      renderCapacity.addEventListener('update', this.#handleRenderCapacity);
+      renderCapacity.start({ updateInterval: 1 });
+    }
     this.#syncVoices(this.#snapshot.modules);
   }
 
@@ -132,6 +192,9 @@ export class AudioEngine {
     this.stop();
     if (this.#midiResyncTimer !== null) window.clearInterval(this.#midiResyncTimer);
     this.#midiResyncTimer = null;
+    this.#renderCapacity?.stop();
+    this.#renderCapacity?.removeEventListener('update', this.#handleRenderCapacity);
+    this.#renderCapacity = null;
     this.#clock?.disconnect();
     this.#clockSink?.disconnect();
     this.#master?.disconnect();
@@ -146,6 +209,13 @@ export class AudioEngine {
     this.#midiTime = null;
     await context.close();
   }
+
+  readonly #handleRenderCapacity = (event: Event): void => {
+    const update = event as RenderCapacityUpdate;
+    this.#averageRenderLoad = typeof update.averageLoad === 'number' ? update.averageLoad : null;
+    this.#peakRenderLoad = typeof update.peakLoad === 'number' ? update.peakLoad : null;
+    this.#underrunRatio = typeof update.underrunRatio === 'number' ? update.underrunRatio : null;
+  };
 
   #schedule(note: ScheduledNote): void {
     const module = this.#voices.get(note.moduleId);

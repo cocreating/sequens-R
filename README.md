@@ -8,6 +8,8 @@ Phases 1, 2, and 4 are complete and pass their automated Definitions of Done. Ph
 
 At 1024 CSS px and wider, Phase 4 adds the parallel-lane desktop studio, Arp, Euclid, Piano roll, CC Control, Mod, multiple racks, keyboard shortcuts, selectable audio output, and File System Access saves. Shareable desktop modules still reproduce from links on mobile through playback-only plates; manual Piano roll data and recorded CC motion use project export instead.
 
+Phase 5 implementation and automated acceptance are complete. It adds quantized scenes, Media Session and Wake Lock integration, background recovery, compositor playheads, progressive View Transitions and background task scheduling, the Acid TPT ladder worklet, live audio diagnostics, and the full accessibility pass. The four optional backlog modules remain deliberately deferred because the SDD requires demonstrated usage first. Physical mid-range Android measurements for all seven C10 budgets remain before the Phase 5 gate can be marked fully accepted.
+
 The application deliberately uses Svelte 5 with Vite rather than SvelteKit. sequens-R is currently a single-screen, client-only, offline-first instrument, so SvelteKit's routing and server-rendering facilities would add browser/SSR boundaries without improving AudioWorklet scheduling or synthesis performance. This decision should be revisited if the product gains multiple routes, server endpoints, authentication, cloud storage, or a separately prerendered public site.
 
 ## Local development
@@ -29,4 +31,4 @@ npm run verify
 
 This runs strict Svelte/TypeScript checks, deterministic unit and property tests, a production PWA build, the 200 KiB initial-JavaScript gate, and the Chrome browser flows.
 
-See [Phase 1 evidence](.agents/docs/phase-1-sound.md), [Phase 2 evidence](.agents/docs/phase-2-persistence.md), [Phase 3 evidence](.agents/docs/phase-3-midi-outputs.md), [Phase 4 evidence](.agents/docs/phase-4-desktop.md), and [architecture decisions](.agents/docs/architecture-decisions.md) for the current acceptance status and technical rationale.
+See [Phase 1 evidence](.agents/docs/phase-1-sound.md), [Phase 2 evidence](.agents/docs/phase-2-persistence.md), [Phase 3 evidence](.agents/docs/phase-3-midi-outputs.md), [Phase 4 evidence](.agents/docs/phase-4-desktop.md), [Phase 5 evidence](.agents/docs/phase-5-polish.md), and [architecture decisions](.agents/docs/architecture-decisions.md) for the current acceptance status and technical rationale.

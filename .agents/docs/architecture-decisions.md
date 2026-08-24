@@ -72,7 +72,7 @@ Status: accepted on 2026-08-24.
 - The Acid voice keeps its existing public scheduling interface while moving oscillator, accent/slide envelopes, and a four-stage zero-delay-feedback TPT ladder into one AudioWorklet. Live playback and offline bounce load the same processor.
 - Media Session, position state, Screen Wake Lock, View Transitions, Web Animations, `content-visibility`, `scheduler.postTask`, and `AudioContext.renderCapacity` are progressive enhancements selected only through feature detection. Their fallbacks are respectively in-app transport, no lock, immediate DOM updates, `requestAnimationFrame`, normal rendering, `setTimeout(0)`, and a fixed 16-module ceiling without render telemetry.
 - Persistence serialization runs at background priority after its existing debounce. The audio thread still consumes only immutable snapshots and never reads Svelte state.
-- Playheads animate `transform` through Web Animations and receive one audio-clock correction per bar. Reduced-motion users get instant view changes and no moving playhead.
+- Playheads animate `transform` through Web Animations and receive one audio-clock correction per bar. Reduced-motion users get instant view changes and a discrete step-eased playhead, preserving essential position feedback without continuous sweeping motion.
 - The diagnostics panel reports audio state, combined base/output latency, scheduler jitter, active voices, render load/underruns when available, and isolation state. It contains no telemetry or runtime network path.
 - The accessibility gate combines semantic native controls, tab-pattern keyboard behavior, keyboard piano-note authoring/editing, focus recovery after deletion, reduced motion, visible focus, and automated axe/Chrome coverage.
 

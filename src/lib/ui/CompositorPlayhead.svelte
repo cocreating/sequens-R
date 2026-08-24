@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   interface Props {
     playing: boolean;
     bpm: number;
@@ -9,6 +11,15 @@
 
   let { playing, bpm, beats = 4, syncBeat = 0, className = '' }: Props = $props();
   let element: HTMLDivElement;
+  let reducedMotion = $state(false);
+
+  onMount(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateMotionPreference = (): void => { reducedMotion = media.matches; };
+    updateMotionPreference();
+    media.addEventListener('change', updateMotionPreference);
+    return () => media.removeEventListener('change', updateMotionPreference);
+  });
 
   $effect(() => {
     const active = playing;
@@ -23,10 +34,11 @@
 
     const duration = cycleBeats * 60 / tempo * 1000;
     const offset = ((correctionBeat % cycleBeats) + cycleBeats) % cycleBeats * 60 / tempo * 1000;
+    const easing = reducedMotion ? `steps(${Math.max(1, Math.round(cycleBeats * 4))}, end)` : 'linear';
     if (typeof element.animate === 'function') {
       const animation = element.animate(
         [{ transform: 'translateX(-100%)' }, { transform: 'translateX(0)' }],
-        { duration, iterations: Number.POSITIVE_INFINITY, easing: 'linear' },
+        { duration, iterations: Number.POSITIVE_INFINITY, easing },
       );
       animation.currentTime = offset;
       return () => animation.cancel();

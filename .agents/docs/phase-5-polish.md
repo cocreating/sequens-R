@@ -7,6 +7,7 @@ Status: implementation and automated acceptance complete on 2026-08-24. The phas
 - Scenes capture each module’s active slot, persist in project schema version 3, can be named or deleted, and launch through one immutable snapshot at the next scheduler bar while playing.
 - Media Session metadata, play/pause/stop handlers, four-beat position state, Screen Wake Lock during playback, and visibility-return recovery for suspended audio.
 - Progressive Chrome layer: View Transitions for module changes, `content-visibility: auto` and intrinsic sizing for module plates, compositor `transform` playheads with once-per-bar correction, and `scheduler.postTask({ priority: 'background' })` for debounced persistence.
+- Android reduced-motion compatibility: playheads remain visible and use discrete step easing instead of being removed, preserving essential transport position feedback without continuous sweeping motion.
 - A four-stage zero-delay-feedback TPT ladder in the Acid AudioWorklet, retaining monophonic slide and accent behavior and the same voice interface. Offline bounce loads the same processor.
 - An internal diagnostics panel for audio state, `baseLatency + outputLatency`, scheduler jitter, active voices, `renderCapacity` average/peak load and underrun ratio when exposed, and cross-origin isolation.
 - Accessibility pass: proper rack tabs with roving focus and arrow/Home/End navigation, keyboard piano-note creation/move/resize/delete, semantic groups and pressed states, focus recovery after module deletion, keyboard-accessible horizontal grids, visible focus, reduced-motion behavior, a top-right General Help mode for pointer/keyboard contextual guidance across the application, per-module detailed help, and axe coverage.
@@ -30,10 +31,10 @@ npm test
   11 files, 52 tests passed
 
 npm run build
-  production PWA build passed; 10 entries / 252.00 KiB precached
+  production PWA build passed; 10 entries / 253.83 KiB precached
 
 npm run check:bundle
-  75.21 KiB initial JavaScript gzip / 200.00 KiB budget
+  75.60 KiB initial JavaScript gzip / 200.00 KiB budget
 
 npm run test:e2e
   23 Chrome tests passed

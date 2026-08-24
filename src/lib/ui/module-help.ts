@@ -22,6 +22,10 @@ const CONTROL_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
     title: 'Module name',
     body: 'Rename this module for easier routing, scene recall, mixer control, and exported file identification.',
   },
+  'module-width': {
+    title: 'Full-width module',
+    body: 'Makes this module span every desktop studio lane in its own row. Toggle it again to restore the regular multi-column layout.',
+  },
   monitor: {
     title: 'Monitor',
     body: 'Turns this module’s internal sound on or off. MIDI can still be routed to external hardware independently.',

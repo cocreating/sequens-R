@@ -3,6 +3,18 @@ import { expect, test } from '@playwright/test';
 test.describe('Phase 4 desktop studio', () => {
   test.use({ viewport: { width: 1440, height: 1000 } });
 
+  test('collapses the desktop workspace to its emoticon trigger', async ({ page }) => {
+    await page.goto('/');
+    const workspace = page.locator('.workspace-utilities');
+    await expect(workspace).toHaveAttribute('open', '');
+    await workspace.getByLabel('Workspace').click();
+    await expect(workspace).not.toHaveAttribute('open', '');
+    await expect(workspace.locator('summary .button-emoticon')).toBeVisible();
+    await expect(workspace.locator('.workspace-summary-text')).toBeHidden();
+    await expect(workspace.locator('summary > small')).toBeHidden();
+    await expect(workspace).toHaveCSS('width', '44px');
+  });
+
   test('lays modules into parallel lanes and exposes every schema-driven desktop module', async ({ page }) => {
     const pageErrors: Error[] = [];
     page.on('pageerror', (reason) => pageErrors.push(reason));
@@ -45,6 +57,34 @@ test.describe('Phase 4 desktop studio', () => {
     await page.getByRole('button', { name: 'Share' }).click();
     await expect(page.locator('.error')).toContainText('Piano roll');
     await expect(page.locator('.error')).toContainText('CC Control');
+  });
+
+  test('expands one module across every desktop lane in its own row', async ({ page }) => {
+    await page.goto('/');
+    const modules = page.locator('.module-list');
+    const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
+    const bass = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'bass module name' }) });
+    const widthToggle = drums.getByRole('button', { name: 'Full-width layout for Drums' });
+
+    await widthToggle.click();
+    await expect(widthToggle).toHaveAttribute('aria-pressed', 'true');
+    const expanded = await drums.evaluate((element) => ({
+      end: getComputedStyle(element).gridColumnEnd,
+      start: getComputedStyle(element).gridColumnStart,
+      width: element.getBoundingClientRect().width,
+    }));
+    const moduleListWidth = await modules.evaluate((element) => element.getBoundingClientRect().width);
+    expect(expanded).toMatchObject({ start: '1', end: '-1' });
+    expect(Math.abs(expanded.width - moduleListWidth)).toBeLessThan(1);
+    const drumsBox = await drums.boundingBox();
+    const bassBox = await bass.boundingBox();
+    expect(drumsBox).not.toBeNull();
+    expect(bassBox).not.toBeNull();
+    expect(bassBox!.y).toBeGreaterThanOrEqual(drumsBox!.y + drumsBox!.height);
+
+    await widthToggle.click();
+    await expect(widthToggle).toHaveAttribute('aria-pressed', 'false');
+    await expect.poll(async () => drums.evaluate((element) => element.getBoundingClientRect().width)).toBeLessThan(moduleListWidth);
   });
 
   test('manages multiple racks, persists the active rack, and supports desktop shortcuts', async ({ page }) => {
@@ -130,7 +170,7 @@ test.describe('Phase 4 desktop studio', () => {
   });
 });
 
-test('mobile reproduces a shared desktop module but keeps it read-only', async ({ browser }) => {
+test('mobile reproduces, edits, and re-shares a desktop-authored module', async ({ browser }) => {
   const desktopContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
   const desktop = await desktopContext.newPage();
   await desktop.goto('/');
@@ -143,10 +183,12 @@ test('mobile reproduces a shared desktop module but keeps it read-only', async (
   const mobileContext = await browser.newContext({ viewport: { width: 375, height: 667 } });
   const mobile = await mobileContext.newPage();
   await mobile.goto(sharedUrl);
-  const readonly = mobile.locator('.desktop-module-readonly');
-  await expect(readonly.getByRole('heading', { name: 'Arp' })).toBeVisible();
-  await expect(readonly).toContainText('editing is available on screens 1024 px or wider');
-  await expect(mobile.getByLabel('New module').getByRole('option', { name: 'Arp' })).toHaveCount(0);
+  const arp = mobile.locator('article').filter({ has: mobile.getByRole('textbox', { name: 'arp module name' }) });
+  await expect(arp.getByLabel('Direction')).toBeVisible();
+  await expect(mobile.getByLabel('New module').getByRole('option', { name: 'Arp' })).toHaveCount(1);
+  await arp.getByLabel('Direction').selectOption({ label: 'Down' });
+  await mobile.getByRole('button', { name: 'Share' }).click();
+  await expect(mobile.getByText(/Patch link copied/)).toBeVisible();
   await mobile.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(mobile.getByText('Transport playing')).toBeVisible();
   await desktopContext.close();

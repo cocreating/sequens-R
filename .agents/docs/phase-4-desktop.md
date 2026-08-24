@@ -19,7 +19,7 @@ Status: automated Definition of Done accepted on 2026-08-24.
 - Per-module desktop contextual Help mode. Its pressed-state toggle exposes a stable help readout, and delegated pointer-hover or keyboard-focus interest updates specific copy for module switches, MIDI routing, pattern slots, mutation, step and piano editors, mixer controls, CC automation, and every visible schema-generated parameter. Controls remain operational while Help is active, and the compact module-header layout keeps all seven actions visible in two- and three-lane dispositions.
 - Shareable desktop generators survive link round trips and reproduce on mobile. Mobile replaces their editor with a playback-only plate explaining the 1024 px requirement. Piano roll and recorded CC motion are blocked from link sharing with an exact project-export alternative.
 
-The mobile playback-only plate is the accepted historical Phase 4 behavior. Phase 6 is now planned to replace it with adaptive mobile editors for all five modules while preserving these deterministic and sharing contracts.
+The mobile playback-only plate is the accepted historical Phase 4 behavior. Phase 6 has now replaced it with adaptive mobile editors for all five modules while preserving these deterministic and sharing contracts.
 
 ## Determinism and migration
 
@@ -59,6 +59,6 @@ npm run test:e2e
   Existing mobile, persistence, MIDI/export, drag, and isolation flows: all passed
 ```
 
-The Phase 4 Chrome flows cover parallel lanes, all five module editors, piano note entry, CC recording/non-shareability, multiple-rack persistence, shortcuts, mocked `setSinkId`, mocked File System Access writes, link sharing, mobile playback-only rendering, and Help activation/deactivation with pointer and keyboard-driven copy changes. A 1440 × 1100 desktop surface was visually inspected with all three starter modules visible; the active Help readout and seven-button module header fit the three-lane disposition without clipping.
+At historical Phase 4 acceptance, the Chrome flows covered parallel lanes, all five module editors, piano note entry, CC recording/non-shareability, multiple-rack persistence, shortcuts, mocked `setSinkId`, mocked File System Access writes, link sharing, mobile playback-only rendering, and Help activation/deactivation with pointer and keyboard-driven copy changes. The current regression replaces the playback-only assertion with desktop-authored mobile editing and re-sharing, and also covers the collapsed 44 px Workspace rail plus the per-module full-width desktop row. A 1440 × 1100 desktop surface was visually inspected with all three starter modules visible; the active Help readout and seven-button module header fit the three-lane disposition without clipping.
 
 Physical MIDI clock/jitter and DAW-import checks remain part of the Phase 3 gate and were deliberately not reclassified by this phase.

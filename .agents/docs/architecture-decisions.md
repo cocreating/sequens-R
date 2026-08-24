@@ -39,6 +39,8 @@ Decision: persist a versioned project document in native IndexedDB through a sma
 - IndexedDB values and history entries receive plain `$state.snapshot(...)` objects. Svelte proxies never cross clone or storage boundaries.
 - Project import runs through the same migration and validation path as IndexedDB restoration.
 - `navigator.storage.persist()` is requested from the explicit Save gesture; ordinary edits still autosave without prompting.
+- New documents use `New Project` as their default name. Migration rewrites only the former exact default `Untitled Project`, preserving every user-authored project name.
+- Versioned example documents may ship under `public/projects/` and enter the app only through the ordinary import/migration boundary. `basic-electro.sequens-r.json` is the first such schema-version-3 example.
 
 ## AD-004 · Phase 3 export contract
 
@@ -54,7 +56,7 @@ Status: accepted on 2026-08-24.
 
 Status: accepted on 2026-08-24.
 
-- The desktop studio surface activates through the same `64rem` (1024 CSS px) media query in JavaScript and CSS. Core modules keep their existing mobile surface; Phase 4 desktop modules render a concise playback-only plate below that threshold. This playback-only restriction is the historical Phase 4 behavior and is superseded by the planned Phase 6 mobile editors in AD-009.
+- The desktop studio surface activates through the same `64rem` (1024 CSS px) media query in JavaScript and CSS. Core modules keep their existing mobile surface; Phase 4 desktop modules historically rendered a concise playback-only plate below that threshold. AD-009's implemented Phase 6 mobile editors supersede that historical restriction.
 - The patch schema is version 2. Version 1 links remain readable because the five original module indexes are unchanged. New shareable desktop generators append indexes; Piano roll is rejected at the codec boundary and must travel in a project file.
 - The project schema is version 2 and migrates version 1 documents. Piano-roll notes live in their active `PatternSlot` as `handEdited` pattern data. Recorded CC motion lives on its module. Either kind of local authored data makes the module non-shareable until the automation is cleared where applicable.
 - Rack, history, and persistence boundaries clone the JSON-safe project domain explicitly. This strips Svelte proxies while preserving manual patterns and automation before they cross undo/history, IndexedDB, or audio snapshot boundaries.
@@ -95,7 +97,9 @@ Status: accepted on 2026-08-24.
 - Pause captures the scheduler's exact current beat, freezes every compositor playhead at that position, cancels internal and Web MIDI look-ahead, and sends MIDI Stop; Play reconstructs the audio-time origin from that beat and sends MIDI Continue. Stop remains a distinct reset-to-zero and panic action that hides the playheads.
 - Tap BPM is an explicit post-SDD transport refinement. A native header button averages recent valid tap intervals and writes an integer from 20–300 BPM; the tempo field adds native minus/plus buttons for one-BPM changes and manual edits also write integers. Existing project/share decoders retain tenth-BPM compatibility so older saved patches remain readable.
 - Project persistence, rack management, scenes, hardware, audio output, exports, shortcuts, and diagnostics remain fully available inside one `Workspace` disclosure. Its open state is explicit Svelte state so edits and status updates cannot collapse a user-open disclosure.
+- On desktop, a closed Workspace contracts to one accessible 44 CSS px toolbox trigger so the studio lanes reclaim the remaining width without removing the native disclosure semantics.
 - Module headers retain reorder, monitor, solo, mute, and collapse as immediate controls. Help, duplicate, module MIDI export, and delete move into one native per-module action disclosure.
+- A desktop-only full-width toggle lets one module span every current lane for dense editing. It is local presentation state and does not alter the project document, generator output, or engine snapshot.
 - Module plates present slots, mutation, pattern editing, and musical parameters before routing. MIDI output/channel, seed, copy, and automatic mutation scheduling live in `Output & advanced`; this is a presentation change only and does not alter project or patch schemas.
 - `ParamDefinition.control` is the single source of UI control selection. Continuous performance parameters use rotary ranges, bounded integer parameters use steppers, short enumerations use segmented buttons, binary modes use switches, named modes use selects, and mixer levels become vertical faders on desktop. Every custom presentation retains a native input or button surface and the existing generator schema remains module-agnostic.
 - Drum lanes expose instrument names while retaining horizontal scrolling and native pressed buttons. All controls keep the 44 CSS px target, visible focus, labels, reduced-motion behavior, and automated axe coverage.
@@ -103,7 +107,7 @@ Status: accepted on 2026-08-24.
 
 ## AD-009 · Phase 6 mobile editing parity
 
-Status: planned and accepted on 2026-08-25.
+Status: implemented with automated acceptance on 2026-08-25; physical Android acceptance remains open.
 
 - Arp, Euclid, Piano roll, CC Control, and Mod become addable and editable below 1024 CSS px. The existing module types, parameter schemas, generators, project documents, patch indexes, scheduler snapshots, and audio/MIDI paths remain shared with desktop.
 - Responsive presentation replaces capability gating. Desktop retains parallel lanes, global shortcuts, `AudioContext.setSinkId()`, and File System Access enhancements; those are not requirements for mobile parity.

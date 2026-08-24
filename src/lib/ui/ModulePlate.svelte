@@ -2,7 +2,7 @@
   import { dragHandle } from 'svelte-dnd-action';
   import { GENERATORS } from '../generators';
   import { modulePattern, type RackModule } from '../state/rack';
-  import { isControlModule, isDesktopModule, type MusicalKey, type Pattern } from '../core/pattern';
+  import { isControlModule, type MusicalKey, type Pattern } from '../core/pattern';
   import Knob from './Knob.svelte';
   import StepGrid from './StepGrid.svelte';
   import MixerPanel from './MixerPanel.svelte';
@@ -29,6 +29,7 @@
     onschedule: (on: boolean, everyNLoops: number) => void;
     onstep: (lane: number, step: number) => void;
     onduplicate: () => void;
+    onmove: (offset: -1 | 1) => void;
     ondelete: () => void;
     rackModules?: readonly RackModule[];
     ontargetpatch?: (id: string, patch: Partial<RackModule>) => void;
@@ -39,15 +40,21 @@
     onclearautomation: () => void;
   }
 
-  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, ondelete, rackModules = [], ontargetpatch, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
+  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
   let pattern = $derived(modulePattern(module, musicalKey, rackModules));
   let schema = $derived(GENERATORS[module.type].paramSchema.filter((definition) => definition.control !== 'hidden'));
   let recordingCc = $state(false);
   let recordingStartedAt = 0;
   let helpActive = $state(false);
+  let fullWidth = $state(false);
+  let mobilePianoDialog = $state<HTMLDialogElement | null>(null);
+  let mobilePianoTrigger = $state<HTMLButtonElement | null>(null);
   let activeHelpKey = $state('module');
   let activeHelpDefinition = $derived(activeHelpKey.startsWith('param:') ? schema.find((definition) => definition.key === activeHelpKey.slice('param:'.length)) : undefined);
   let activeHelp = $derived(moduleHelpFor(activeHelpKey, module.type, module.name, activeHelpDefinition));
+  let ccParameterGroups = $derived(Array.from({ length: 4 }, (_, index) => schema.filter((definition) => definition.key.endsWith(String(index + 1)))));
+  let modParameterGroups = $derived(Array.from({ length: 3 }, (_, index) => schema.filter((definition) => definition.key.endsWith(String(index + 1)))));
+  let loopParameters = $derived(schema.filter((definition) => definition.key === 'bars'));
 
   function toggleCcRecording(): void {
     recordingCc = !recordingCc;
@@ -74,23 +81,27 @@
     const target = event.target.closest<HTMLElement>('[data-help-key]');
     activeHelpKey = target?.dataset.helpKey ?? 'module';
   }
+
+  function openMobilePiano(): void {
+    if (mobilePianoDialog === null || mobilePianoDialog.open) return;
+    mobilePianoDialog.showModal();
+  }
+
+  function closeMobilePiano(): void {
+    mobilePianoDialog?.close();
+  }
+
+  function restoreMobilePianoFocus(): void {
+    mobilePianoTrigger?.focus();
+  }
 </script>
 
-{#if isDesktopModule(module.type) && !desktopSurface}
-  <article class="desktop-module-readonly" data-app-help-key="module-panel" class:muted={module.mute} aria-labelledby={`${module.id}-mobile-name`}>
-    <div class="module-progress" aria-hidden="true"></div>
-    <header class="desktop-module-readonly-header">
-      <div><span>Desktop module</span><h2 id={`${module.id}-mobile-name`}>{module.name}</h2></div>
-      <span class="module-state">{module.mute ? 'Muted' : 'Playing'}</span>
-    </header>
-    <p>This module is reproduced from the patch, but editing is available on screens 1024 px or wider.</p>
-  </article>
-{:else}
 <article
   class:collapsed={module.collapsed}
   class:muted={module.mute}
   class:soloed={module.solo}
   class:help-active={desktopSurface && helpActive}
+  class:module-full-width={desktopSurface && fullWidth}
   data-app-help-key="module-panel"
   aria-labelledby={`${module.id}-name`}
   style:view-transition-name={`module-${module.id}`}
@@ -101,6 +112,9 @@
   <header class="module-header">
     <span use:dragHandle class="drag-handle" data-help-key="reorder" aria-label={`Reorder ${module.name}`}>⠿</span>
     <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
+    {#if desktopSurface}
+      <button type="button" class="module-width-toggle has-emoticon icon-only" data-help-key="module-width" aria-label={`Full-width layout for ${module.name}`} aria-pressed={fullWidth} onclick={() => { fullWidth = !fullWidth; }}><span class="button-emoticon" aria-hidden="true">↔️</span></button>
+    {/if}
     <div class="module-switches">
       <button type="button" data-help-key="monitor" aria-label={`Monitor ${module.name}`} aria-pressed={module.monitor} onclick={() => onpatch({ monitor: !module.monitor })}>◖</button>
       <button type="button" data-help-key="solo" aria-label={`Solo ${module.name}`} aria-pressed={module.solo} onclick={() => onpatch({ solo: !module.solo })}>S</button>
@@ -121,6 +135,10 @@
             ><span aria-hidden="true">?</span> Help</button>
           {/if}
           <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={onduplicate}>Duplicate</button>
+          {#if !desktopSurface}
+            <button type="button" aria-label={`Move ${module.name} earlier`} onclick={() => onmove(-1)}>Move earlier</button>
+            <button type="button" aria-label={`Move ${module.name} later`} onclick={() => onmove(1)}>Move later</button>
+          {/if}
           {#if module.type !== 'mixer'}<button type="button" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>{/if}
           <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>Delete</button>
         </div>
@@ -167,17 +185,82 @@
         </div>
         {/if}
         {#if module.type === 'piano'}
-          <PianoRoll {pattern} {musicalKey} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} onchange={onpattern} />
+          {#if desktopSurface}
+            <PianoRoll editorId={`${module.id}-desktop-piano`} {pattern} {musicalKey} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} onchange={onpattern} />
+          {:else}
+            <button bind:this={mobilePianoTrigger} type="button" class="open-mobile-piano" aria-haspopup="dialog" aria-controls={`${module.id}-mobile-piano-dialog`} onclick={openMobilePiano}>Open Piano roll editor</button>
+            <dialog
+              bind:this={mobilePianoDialog}
+              id={`${module.id}-mobile-piano-dialog`}
+              class="mobile-piano-dialog"
+              aria-labelledby={`${module.id}-mobile-piano-title`}
+              onclose={restoreMobilePianoFocus}
+            >
+              <div class="mobile-piano-shell">
+                <header>
+                  <div><p>Full-screen editor</p><h2 id={`${module.id}-mobile-piano-title`}>{module.name}</h2></div>
+                  <button type="button" aria-label={`Close ${module.name} editor`} onclick={closeMobilePiano}>Close</button>
+                </header>
+                <section class="mobile-piano-mode-controls" aria-labelledby={`${module.id}-mobile-piano-mode-heading`}>
+                  <h3 id={`${module.id}-mobile-piano-mode-heading`}>Loop setup</h3>
+                  <div class="parameters">
+                    {#each schema as definition (definition.key)}
+                      <Knob id={`${module.id}-mobile-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
+                    {/each}
+                  </div>
+                </section>
+                <PianoRoll editorId={`${module.id}-mobile-piano`} {pattern} {musicalKey} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} mobile onchange={onpattern} />
+              </div>
+            </dialog>
+          {/if}
         {:else if !isControlModule(module.type)}
           <StepGrid {pattern} syncBeat={playheadBeat} {playing} {bpm} editable={module.type === 'drums'} laneLabels={module.type === 'drums' ? ['Kick', 'Snare', 'Closed hat', 'Open hat', 'Clap', 'Tom', 'Rim', 'Perc'] : []} ontoggle={onstep} />
         {/if}
       {/if}
-      {#if schema.length > 0}
+      {#if schema.length > 0 && (module.type !== 'piano' || desktopSurface)}
+        {#if !desktopSurface && module.type === 'cc'}
+          <div class="mobile-parameter-groups">
+            <div class="parameters compact-parameters">
+              {#each loopParameters as definition (definition.key)}
+                <Knob id={`${module.id}-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
+              {/each}
+            </div>
+            {#each ccParameterGroups as group, index}
+              <details open={index === 0}>
+                <summary>Control {index + 1}</summary>
+                <div class="parameters">
+                  {#each group as definition (definition.key)}
+                    <Knob id={`${module.id}-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
+                  {/each}
+                </div>
+              </details>
+            {/each}
+          </div>
+        {:else if !desktopSurface && module.type === 'mod'}
+          <div class="mobile-parameter-groups">
+            <div class="parameters compact-parameters">
+              {#each loopParameters as definition (definition.key)}
+                <Knob id={`${module.id}-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
+              {/each}
+            </div>
+            {#each modParameterGroups as group, index}
+              <details open={index === 0}>
+                <summary>LFO {index + 1}</summary>
+                <div class="parameters">
+                  {#each group as definition (definition.key)}
+                    <Knob id={`${module.id}-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
+                  {/each}
+                </div>
+              </details>
+            {/each}
+          </div>
+        {:else}
         <div class="parameters">
           {#each schema as definition (definition.key)}
             <Knob id={`${module.id}-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
           {/each}
         </div>
+        {/if}
       {/if}
       <details class="module-advanced">
         <summary>Output &amp; advanced</summary>
@@ -213,4 +296,3 @@
     </div>
   {/if}
 </article>
-{/if}

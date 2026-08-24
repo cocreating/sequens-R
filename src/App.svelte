@@ -2,12 +2,13 @@
   import { onDestroy, onMount, tick } from 'svelte';
   import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
   import { AudioEngine } from './lib/audio/engine';
-  import { CORE_MODULE_TYPES, isControlModule, SCALE_NAMES, type ModuleType, type Pattern, type ScaleName } from './lib/core/pattern';
+  import { isControlModule, isDesktopModule, SCALE_NAMES, type ModuleType, type Pattern, type ScaleName } from './lib/core/pattern';
   import { TapTempo } from './lib/core/tap-tempo';
   import {
     activeProjectRack,
     captureProjectScene,
     createProject,
+    DEFAULT_PROJECT_NAME,
     deleteProjectScene,
     nonShareableModuleNames,
     projectFromJson,
@@ -144,7 +145,25 @@
   function handleDesktopChange(event: MediaQueryListEvent): void {
     desktopSurface = event.matches;
     workspaceOpen = event.matches;
-    if (!desktopSurface && !CORE_MODULE_TYPES.includes(selectedModuleType as (typeof CORE_MODULE_TYPES)[number])) selectedModuleType = 'acid';
+    if (!desktopSurface) normalizeMobileDenseModules();
+  }
+
+  function normalizeMobileDenseModules(): void {
+    let expandedDenseModuleFound = false;
+    let changed = false;
+    const modules = rack.modules.map((module) => {
+      if (!isDesktopModule(module.type) || module.collapsed) return module;
+      if (!expandedDenseModuleFound) {
+        expandedDenseModuleFound = true;
+        return module;
+      }
+      changed = true;
+      return { ...module, collapsed: true };
+    });
+    if (!changed) return;
+    rack = { ...rack, modules };
+    publish();
+    scheduleSave();
   }
 
   function isTypingTarget(target: EventTarget | null): boolean {
@@ -208,6 +227,7 @@
     } catch (reason: unknown) {
       error = reason instanceof Error ? reason.message : 'Local state could not be restored; the starter rack was loaded.';
     } finally {
+      if (!desktopSurface) normalizeMobileDenseModules();
       rackHistory.reset(rackSnapshot());
       syncHistoryButtons();
       initialized = true;
@@ -345,6 +365,16 @@
   }
 
   function patchModule(id: string, modulePatch: Partial<RackModule>): void {
+    const target = rack.modules.find((module) => module.id === id);
+    if (!desktopSurface && target !== undefined && isDesktopModule(target.type) && modulePatch.collapsed === false) {
+      replaceRack({
+        ...rack,
+        modules: rack.modules.map((module) => module.id === id
+          ? { ...module, ...modulePatch }
+          : isDesktopModule(module.type) ? { ...module, collapsed: true } : module),
+      });
+      return;
+    }
     updateModule(id, (module) => ({ ...module, ...modulePatch }));
   }
 
@@ -408,7 +438,7 @@
   }
 
   function setProjectName(name: string): void {
-    project = { ...project, name: name.trimStart() || 'Untitled Project' };
+    project = { ...project, name: name.trimStart() || DEFAULT_PROJECT_NAME };
     scheduleSave();
   }
 
@@ -560,8 +590,17 @@
       status = 'The 16-module rack limit is reached';
       return;
     }
+    const nextModule = createModule(selectedModuleType);
     void runViewTransition(async () => {
-      replaceRack({ ...rack, modules: [...rack.modules, createModule(selectedModuleType)] });
+      replaceRack({
+        ...rack,
+        modules: [
+          ...rack.modules.map((module) => !desktopSurface && isDesktopModule(nextModule.type) && isDesktopModule(module.type)
+            ? { ...module, collapsed: true }
+            : module),
+          nextModule,
+        ],
+      });
       await tick();
     });
     status = `${moduleLabels[selectedModuleType]} added`;
@@ -574,11 +613,30 @@
     const duplicate = JSON.parse(JSON.stringify(source)) as unknown as RackModule;
     duplicate.id = createModule(source.type).id;
     duplicate.name = `${source.name} copy`;
+    if (!desktopSurface && isDesktopModule(source.type)) duplicate.collapsed = false;
     void runViewTransition(async () => {
-      replaceRack({ ...rack, modules: [...rack.modules.slice(0, index + 1), duplicate, ...rack.modules.slice(index + 1)] });
+      const modules = !desktopSurface && isDesktopModule(source.type)
+        ? rack.modules.map((module) => isDesktopModule(module.type) ? { ...module, collapsed: true } : module)
+        : rack.modules;
+      replaceRack({ ...rack, modules: [...modules.slice(0, index + 1), duplicate, ...modules.slice(index + 1)] });
       await tick();
     });
     status = `${source.name} duplicated`;
+  }
+
+  function moveModule(id: string, offset: -1 | 1): void {
+    const sourceIndex = rack.modules.findIndex((module) => module.id === id);
+    const targetIndex = sourceIndex + offset;
+    if (sourceIndex < 0 || targetIndex < 0 || targetIndex >= rack.modules.length) return;
+    const modules = [...rack.modules];
+    const [module] = modules.splice(sourceIndex, 1);
+    if (module === undefined) return;
+    modules.splice(targetIndex, 0, module);
+    void runViewTransition(async () => {
+      replaceRack({ ...rack, modules });
+      await tick();
+    });
+    status = `${module.name} moved ${offset < 0 ? 'earlier' : 'later'}`;
   }
 
   function deleteModule(id: string): void {
@@ -636,6 +694,8 @@
       const imported = projectFromJson(await file.text());
       project = imported;
       rack = activeProjectRack(imported).state;
+      if (!desktopSurface) normalizeMobileDenseModules();
+      project = updateProjectRack(projectSnapshot(), rackSnapshot());
       rackHistory.reset(rackSnapshot());
       syncHistoryButtons();
       sharedDraft = false;
@@ -804,7 +864,7 @@
         <div class="add-module">
           <label for="module-type" data-app-help-key="module-type">New module</label>
           <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
-            {#each (desktopSurface ? MODULE_TYPES : CORE_MODULE_TYPES) as type}<option value={type}>{moduleLabels[type]}</option>{/each}
+            {#each MODULE_TYPES as type}<option value={type}>{moduleLabels[type]}</option>{/each}
           </select>
           <button id="add-module-button" type="button" class="has-emoticon icon-only" data-app-help-key="add-module" aria-label="Add" onclick={addModule} disabled={rack.modules.length >= 16}><span class="button-emoticon" aria-hidden="true">➕</span></button>
         </div>
@@ -820,7 +880,7 @@
 
     <div class="studio-workspace">
       <details class="workspace-utilities" bind:open={workspaceOpen}>
-        <summary><span class="workspace-summary-label"><span class="button-emoticon" aria-hidden="true">🧰</span>Workspace</span><small>{project.name}</small></summary>
+        <summary aria-label="Workspace"><span class="workspace-summary-label"><span class="button-emoticon" aria-hidden="true">🧰</span><span class="workspace-summary-text">Workspace</span></span><small>{project.name}</small></summary>
         <div class="utility-stack">
           <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
@@ -924,6 +984,7 @@
           onautomation={(control, step, value) => addAutomationPoint(module.id, control, step, value)}
           onclearautomation={() => clearAutomation(module.id)}
           onduplicate={() => duplicateModule(module.id)}
+          onmove={(offset) => moveModule(module.id, offset)}
           ondelete={() => deleteModule(module.id)}
           rackModules={rack.modules}
           ontargetpatch={patchModule}

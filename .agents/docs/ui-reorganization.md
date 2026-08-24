@@ -1,10 +1,10 @@
 # Studio UI reorganization evidence
 
-Status: implementation and automated acceptance complete on 2026-08-24.
+Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded on 2026-08-25.
 
-This is the UI consolidation completed before Phase 6 was defined. It changes hierarchy and control presentation without changing generator output, project persistence, share encoding, or export formats. Its later transport refinement adds exact-beat Pause/Resume scheduling and MIDI Continue behavior. The resulting vertical mobile rack, disclosures, schema-driven controls, and performance-first hierarchy are the foundation for the planned Phase 6 mobile editors.
+This is the UI consolidation completed before Phase 6 was defined. It changes hierarchy and control presentation without changing generator output, project persistence, share encoding, or export formats. Its later transport refinement adds exact-beat Pause/Resume scheduling and MIDI Continue behavior. The resulting vertical mobile rack, disclosures, schema-driven controls, and performance-first hierarchy became the foundation used by the implemented Phase 6 mobile editors.
 
-Phase 6 is specified separately in `phase-6-mobile-studio.md`; this evidence remains a record of the completed cross-phase consolidation and does not claim Phase 6 implementation.
+Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-studio.md`; this file remains the record for the cross-phase consolidation and its subsequent desktop refinements.
 
 ## Delivered
 
@@ -14,8 +14,10 @@ Phase 6 is specified separately in `phase-6-mobile-studio.md`; this evidence rem
 - Responsive branding that shows `Local generative MIDI` and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
 - Mobile critical path with the rack directly after one collapsed `Workspace` row.
 - Desktop studio with a sticky workspace rail and three parallel module lanes at 1440 CSS px.
+- Closed desktop Workspace state reduced to one accessible 44 px toolbox trigger, allowing the module lanes to reclaim the released width.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
 - Compact module headers with reorder/name/monitor/solo/mute/collapse plus a `⋯` actions disclosure for Help, duplicate, module MIDI export, and delete.
+- Desktop-only per-module full-width toggles that span all current lanes without changing saved project or playback state.
 - Musical-first module bodies: slots, mutation, grid/editor, and parameters precede `Output & advanced` routing, seed, and automatic mutation controls.
 - Schema-driven control language:
   - rotary native ranges for Swing, Humanize, Density, Fill, Drive, Gate, Decay, Strum, CC values, and LFO depth/fade/center;
@@ -49,15 +51,15 @@ Phase 6 is specified separately in `phase-6-mobile-studio.md`; this evidence rem
 
 ## Automated acceptance
 
-The full command is `npm run verify`. It covers strict Svelte/TypeScript diagnostics, 56 deterministic unit tests, the production PWA build, the initial-JavaScript budget, 25 Chrome flows, and the existing axe serious/critical gate. Browser flows include Tap BPM placement/integer output, exact-beat Pause/Resume, visible icon assertions with accessible names, and the existing workspace, module action, advanced disclosure, and accessibility coverage.
+The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 59 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 36 Chrome flows, and the axe serious/critical gates. Browser flows include Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module layout, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, round-trip, and accessibility coverage.
 
-Executed on 2026-08-24 after the responsive header optimization:
+Latest execution on 2026-08-25 after the Phase 6 and desktop follow-up refinements:
 
 ```text
 svelte-check: 0 errors, 0 warnings
-Vitest: 12 files / 56 tests passed
-production PWA build: 10 entries / 258.32 KiB precached
-initial JavaScript: 76.56 KiB gzip / 200.00 KiB budget
-Playwright Chrome: 25 tests passed
+Vitest: 13 files / 59 tests passed
+production PWA build: 10 entries / 269.39 KiB precached
+initial JavaScript: 78.68 KiB gzip / 200.00 KiB budget
+Playwright Chrome: 36 tests passed
 axe: no serious or critical violations
 ```

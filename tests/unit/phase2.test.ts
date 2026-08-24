@@ -66,6 +66,15 @@ describe('rack history', () => {
 });
 
 describe('project documents', () => {
+  it('uses a clear default name for a new project', () => {
+    expect(createProject(createRackState(STARTER_RACK)).name).toBe('New Project');
+  });
+
+  it('renames the legacy default when loading a saved project', () => {
+    const legacyDefault = { ...createProject(createRackState(STARTER_RACK)), name: 'Untitled Project' };
+    expect(migrateProject(legacyDefault).name).toBe('New Project');
+  });
+
   it('exports and imports an identical versioned project', () => {
     const project = createProject(createRackState(STARTER_RACK), 'Round trip');
     expect(projectFromJson(projectToJson(project))).toEqual(project);

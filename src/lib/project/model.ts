@@ -12,6 +12,8 @@ import {
 } from '../state/rack';
 
 export const PROJECT_SCHEMA_VERSION = 3;
+export const DEFAULT_PROJECT_NAME = 'New Project';
+const LEGACY_DEFAULT_PROJECT_NAME = 'Untitled Project';
 
 export interface ProjectRack {
   id: string;
@@ -179,7 +181,7 @@ function normalizeScene(value: unknown): ProjectScene {
   return { id: expectString(value.id, 'Scene id'), name: expectString(value.name, 'Scene name'), assignments };
 }
 
-export function createProject(rack: RackState, name = 'Untitled Project'): ProjectDocument {
+export function createProject(rack: RackState, name = DEFAULT_PROJECT_NAME): ProjectDocument {
   const timestamp = now();
   const rackId = crypto.randomUUID();
   return {
@@ -225,11 +227,12 @@ export function migrateProject(value: unknown): ProjectDocument {
     return { id: expectString(entry.id, 'Rack id'), name: expectString(entry.name, 'Rack name'), state: normalizeRackState(entry.state) };
   });
   const activeRackId = expectString(value.activeRackId, 'Active rack id');
+  const projectName = expectString(value.name, 'Project name');
   if (!racks.some(({ id }) => id === activeRackId)) throw new RangeError('The active rack does not exist.');
   return {
     schemaVersion: PROJECT_SCHEMA_VERSION,
     id: expectString(value.id, 'Project id'),
-    name: expectString(value.name, 'Project name'),
+    name: projectName === LEGACY_DEFAULT_PROJECT_NAME ? DEFAULT_PROJECT_NAME : projectName,
     racks,
     activeRackId,
     scenes: Array.isArray(value.scenes) ? value.scenes.map(normalizeScene) : [],

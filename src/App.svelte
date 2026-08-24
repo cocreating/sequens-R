@@ -104,6 +104,7 @@
   let desktopMedia: MediaQueryList | null = null;
   let appHelpActive = $state(false);
   let appHelpKey = $state('overview');
+  let workspaceOpen = $state(false);
   let appHelp = $derived(appHelpFor(appHelpKey));
 
   onDestroy(() => {
@@ -122,6 +123,7 @@
     if (supported) void midi.inspectPermission();
     desktopMedia = window.matchMedia('(min-width: 64rem)');
     desktopSurface = desktopMedia.matches;
+    workspaceOpen = desktopSurface;
     desktopMedia.addEventListener('change', handleDesktopChange);
     window.addEventListener('keydown', handleKeyboardShortcut);
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -139,6 +141,7 @@
 
   function handleDesktopChange(event: MediaQueryListEvent): void {
     desktopSurface = event.matches;
+    workspaceOpen = event.matches;
     if (!desktopSurface && !CORE_MODULE_TYPES.includes(selectedModuleType as (typeof CORE_MODULE_TYPES)[number])) selectedModuleType = 'acid';
   }
 
@@ -751,95 +754,101 @@
   <main class="loading" aria-busy="true"><p>Loading local project…</p></main>
 {:else}
   <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp}>
-    <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
-      <label for="project-name" data-app-help-key="project-name">Project</label>
-      <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
-      <button type="button" data-app-help-key="undo" onclick={undo} disabled={!canUndo}>Undo</button>
-      <button type="button" data-app-help-key="redo" onclick={redo} disabled={!canRedo}>Redo</button>
-      <button type="button" data-app-help-key="save" onclick={saveProject}>{sharedDraft ? 'Save draft' : 'Save'}</button>
-      <button type="button" data-app-help-key="export-project" onclick={() => void exportProject()}>Export</button>
-      <label class="import-project" data-app-help-key="import-project" for="project-import">Import</label>
-      <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
-    </section>
-
-    {#if desktopSurface}
-      <section class="rack-switcher" data-app-help-key="rack-switcher" aria-labelledby="rack-switcher-heading">
-        <div class="rack-switcher-heading">
-          <div><p>Project racks</p><h2 id="rack-switcher-heading">Studio lanes</h2></div>
-          <div class="rack-actions">
-            <button type="button" data-app-help-key="new-rack" onclick={addRack}>New rack</button>
-            <button type="button" data-app-help-key="duplicate-rack" onclick={duplicateRack}>Duplicate rack</button>
-            <button type="button" data-app-help-key="delete-rack" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
-          </div>
+    <div class="performance-deck">
+      <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} {playing} onplay={play} onstop={stop} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+      <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
+        <button type="button" class="random" data-app-help-key="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}>Random</button>
+        <button type="button" data-app-help-key="share" onclick={share}>Share</button>
+        <div class="add-module">
+          <label for="module-type" data-app-help-key="module-type">New module</label>
+          <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
+            {#each (desktopSurface ? MODULE_TYPES : CORE_MODULE_TYPES) as type}<option value={type}>{moduleLabels[type]}</option>{/each}
+          </select>
+          <button id="add-module-button" type="button" data-app-help-key="add-module" onclick={addModule} disabled={rack.modules.length >= 16}>Add</button>
         </div>
-        <div class="rack-tabs" role="tablist" aria-label="Project racks">
-          {#each project.racks as projectRack, index (projectRack.id)}
-            <button
-              id={`rack-tab-${projectRack.id}`}
-              data-app-help-key="rack-tabs"
-              type="button"
-              role="tab"
-              tabindex={projectRack.id === project.activeRackId ? 0 : -1}
-              aria-selected={projectRack.id === project.activeRackId}
-              aria-controls="module-lanes"
-              onclick={() => switchRack(projectRack.id)}
-              onkeydown={(event) => void handleRackTabKey(event, index)}
-            >{index + 1} · {projectRack.name}</button>
-          {/each}
-        </div>
-        <label for="rack-name" data-app-help-key="rack-name">Active rack name</label>
-        <input id="rack-name" data-app-help-key="rack-name" value={activeProjectRack(project).name} oninput={(event) => renameRack(event.currentTarget.value)} />
       </section>
-    {/if}
-
-    <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} {playing} onplay={play} onstop={stop} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
-
-    <ScenePanel scenes={project.scenes} modules={rack.modules} oncapture={captureScene} onlaunch={launchScene} onrename={renameScene} ondelete={deleteScene} />
-
-    <HardwarePanel state={midiState} onconnect={connectMidi} onclock={(portId, enabled) => midi.setClock(portId, enabled)} />
-
-    {#if desktopSurface}
-      <DesktopStudioPanel
-        {audioOutputs}
-        selectedOutputId={selectedAudioOutputId}
-        outputSelectionSupported={engine.outputSelectionSupported}
-        onrefreshoutputs={refreshAudioOutputs}
-        onselectoutput={selectAudioOutput}
-      />
-    {/if}
-
-    <section class="music-export" data-app-help-key="music-export" aria-labelledby="music-export-heading" aria-busy={exportingAudio}>
-      <div><h2 id="music-export-heading">Music export</h2><p>Render the current deterministic rack without connecting hardware.</p></div>
-      <label for="export-bars" data-app-help-key="export-length">Length</label>
-      <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
-        {#each [1, 2, 4, 8] as bars}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
-      </select>
-      <button type="button" data-app-help-key="rack-midi" onclick={() => void exportMidi()} disabled={exportingAudio}>Rack MIDI</button>
-      <button type="button" data-app-help-key="mix-wav" onclick={bounceMix} disabled={exportingAudio}>Mix WAV</button>
-      <button type="button" data-app-help-key="wav-stems" onclick={bounceStems} disabled={exportingAudio}>WAV stems</button>
-    </section>
-
-    <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
-      <button type="button" class="random" data-app-help-key="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}>Random</button>
-      <button type="button" data-app-help-key="share" onclick={share}>Share</button>
-      <div class="add-module">
-        <label for="module-type" data-app-help-key="module-type">New module</label>
-        <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
-          {#each (desktopSurface ? MODULE_TYPES : CORE_MODULE_TYPES) as type}<option value={type}>{moduleLabels[type]}</option>{/each}
-        </select>
-        <button id="add-module-button" type="button" data-app-help-key="add-module" onclick={addModule} disabled={rack.modules.length >= 16}>Add</button>
-      </div>
-    </section>
+    </div>
 
     <p class="session-status" data-app-help-key="status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>
     {#if playing && audioState === 'suspended'}<button type="button" class="resume-audio" onclick={resumeAudio}>Resume audio</button>{/if}
     {#if schedulerJitter !== null}
       <p class="scheduler-jitter">Scheduler jitter <data value={schedulerJitter.toFixed(3)}>{schedulerJitter.toFixed(3)}</data> ms σ</p>
     {/if}
-    <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
     {#if error}<p class="error" role="alert">{error}</p>{/if}
 
-    <section
+    <div class="studio-workspace">
+      <details class="workspace-utilities" bind:open={workspaceOpen}>
+        <summary><span>Workspace</span><small>{project.name}</small></summary>
+        <div class="utility-stack">
+          <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
+            <label for="project-name" data-app-help-key="project-name">Project</label>
+            <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
+            <button type="button" data-app-help-key="undo" onclick={undo} disabled={!canUndo}>Undo</button>
+            <button type="button" data-app-help-key="redo" onclick={redo} disabled={!canRedo}>Redo</button>
+            <button type="button" data-app-help-key="save" onclick={saveProject}>{sharedDraft ? 'Save draft' : 'Save'}</button>
+            <button type="button" data-app-help-key="export-project" onclick={() => void exportProject()}>Export</button>
+            <label class="import-project" data-app-help-key="import-project" for="project-import">Import</label>
+            <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
+          </section>
+
+          {#if desktopSurface}
+            <section class="rack-switcher" data-app-help-key="rack-switcher" aria-labelledby="rack-switcher-heading">
+              <div class="rack-switcher-heading">
+                <div><p>Project racks</p><h2 id="rack-switcher-heading">Studio lanes</h2></div>
+                <div class="rack-actions">
+                  <button type="button" data-app-help-key="new-rack" onclick={addRack}>New rack</button>
+                  <button type="button" data-app-help-key="duplicate-rack" onclick={duplicateRack}>Duplicate rack</button>
+                  <button type="button" data-app-help-key="delete-rack" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
+                </div>
+              </div>
+              <div class="rack-tabs" role="tablist" aria-label="Project racks">
+                {#each project.racks as projectRack, index (projectRack.id)}
+                  <button
+                    id={`rack-tab-${projectRack.id}`}
+                    data-app-help-key="rack-tabs"
+                    type="button"
+                    role="tab"
+                    tabindex={projectRack.id === project.activeRackId ? 0 : -1}
+                    aria-selected={projectRack.id === project.activeRackId}
+                    aria-controls="module-lanes"
+                    onclick={() => switchRack(projectRack.id)}
+                    onkeydown={(event) => void handleRackTabKey(event, index)}
+                  >{index + 1} · {projectRack.name}</button>
+                {/each}
+              </div>
+              <label for="rack-name" data-app-help-key="rack-name">Active rack name</label>
+              <input id="rack-name" data-app-help-key="rack-name" value={activeProjectRack(project).name} oninput={(event) => renameRack(event.currentTarget.value)} />
+            </section>
+          {/if}
+
+          <ScenePanel scenes={project.scenes} modules={rack.modules} oncapture={captureScene} onlaunch={launchScene} onrename={renameScene} ondelete={deleteScene} />
+          <HardwarePanel state={midiState} onconnect={connectMidi} onclock={(portId, enabled) => midi.setClock(portId, enabled)} />
+
+          {#if desktopSurface}
+            <DesktopStudioPanel
+              {audioOutputs}
+              selectedOutputId={selectedAudioOutputId}
+              outputSelectionSupported={engine.outputSelectionSupported}
+              onrefreshoutputs={refreshAudioOutputs}
+              onselectoutput={selectAudioOutput}
+            />
+          {/if}
+
+          <section class="music-export" data-app-help-key="music-export" aria-labelledby="music-export-heading" aria-busy={exportingAudio}>
+            <div><h2 id="music-export-heading">Music export</h2><p>Render the current deterministic rack without connecting hardware.</p></div>
+            <label for="export-bars" data-app-help-key="export-length">Length</label>
+            <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
+              {#each [1, 2, 4, 8] as bars}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
+            </select>
+            <button type="button" data-app-help-key="rack-midi" onclick={() => void exportMidi()} disabled={exportingAudio}>Rack MIDI</button>
+            <button type="button" data-app-help-key="mix-wav" onclick={bounceMix} disabled={exportingAudio}>Mix WAV</button>
+            <button type="button" data-app-help-key="wav-stems" onclick={bounceStems} disabled={exportingAudio}>WAV stems</button>
+          </section>
+          <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
+        </div>
+      </details>
+
+      <section
       class="module-list"
       id="module-lanes"
       data-app-help-key="module-lanes"
@@ -880,6 +889,7 @@
           onexportmidi={() => { void exportMidi(module); }}
         />
       {/each}
-    </section>
+      </section>
+    </div>
   </main>
 {/if}

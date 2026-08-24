@@ -30,10 +30,10 @@ const GROOVES: readonly (readonly string[])[] = [
 ] as const;
 
 export const drumsParamSchema: ParamSchema = [
-  { key: 'steps', defaultValue: 16, min: 16, max: 32, step: 16, label: 'Steps' },
+  { key: 'steps', defaultValue: 16, min: 16, max: 32, step: 16, label: 'Steps', options: ['16', '32'], control: 'segmented' },
   { key: 'groove', defaultValue: 0, min: 0, max: 5, step: 1, label: 'Style', options: ['Four', 'Broken', 'Latin', 'Electro', 'Half-time', 'Odd'] },
-  { key: 'swing', defaultValue: 0, min: 0, max: 75, step: 1, label: 'Swing', unit: '%' },
-  { key: 'humanize', defaultValue: 0, min: 0, max: 40, step: 1, label: 'Humanize', unit: '%' },
+  { key: 'swing', defaultValue: 0, min: 0, max: 75, step: 1, label: 'Swing', unit: '%', control: 'knob' },
+  { key: 'humanize', defaultValue: 0, min: 0, max: 40, step: 1, label: 'Humanize', unit: '%', control: 'knob' },
   { key: 'overrideLanes', defaultValue: 0, min: 0, max: 255, step: 1, label: 'Override lanes', control: 'hidden' },
   ...LANE_KEYS.map((key, lane) => ({ key, defaultValue: 0, min: 0, max: 0xffffffff, step: 1, label: `Lane ${lane + 1}`, control: 'hidden' as const })),
 ];

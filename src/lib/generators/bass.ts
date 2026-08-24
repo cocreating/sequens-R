@@ -23,12 +23,12 @@ const STYLE_DEGREES = [
 
 export const bassParamSchema: ParamSchema = [
   { key: 'style', defaultValue: 0, min: 0, max: 5, step: 1, label: 'Style', options: ['Anchor', 'Walk', 'Pulse', 'Round', 'Dub', 'Jump'] },
-  { key: 'steps', defaultValue: 16, min: 4, max: 32, step: 1, label: 'Steps' },
-  { key: 'range', defaultValue: 1, min: 1, max: 3, step: 1, label: 'Range', unit: 'oct' },
-  { key: 'density', defaultValue: 55, min: 0, max: 100, step: 1, label: 'Density', unit: '%' },
-  { key: 'drive', defaultValue: 20, min: 0, max: 100, step: 1, label: 'Drive', unit: '%' },
-  { key: 'octave', defaultValue: 2, min: 1, max: 4, step: 1, label: 'Octave' },
-  { key: 'gate', defaultValue: 70, min: 5, max: 100, step: 1, label: 'Gate', unit: '%' },
+  { key: 'steps', defaultValue: 16, min: 4, max: 32, step: 1, label: 'Steps', control: 'stepper' },
+  { key: 'range', defaultValue: 1, min: 1, max: 3, step: 1, label: 'Range', unit: 'oct', control: 'stepper' },
+  { key: 'density', defaultValue: 55, min: 0, max: 100, step: 1, label: 'Density', unit: '%', control: 'knob' },
+  { key: 'drive', defaultValue: 20, min: 0, max: 100, step: 1, label: 'Drive', unit: '%', control: 'knob' },
+  { key: 'octave', defaultValue: 2, min: 1, max: 4, step: 1, label: 'Octave', control: 'stepper' },
+  { key: 'gate', defaultValue: 70, min: 5, max: 100, step: 1, label: 'Gate', unit: '%', control: 'knob' },
 ];
 
 export const bassGenerator: Generator<BassParams> = {

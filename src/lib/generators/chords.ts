@@ -14,10 +14,10 @@ const QUALITIES = ['triad', 'seventh', 'ninth', 'sus2', 'sus4'] as const satisfi
 const PROGRESSIONS = [[0, 5, 3, 4], [0, 3, 4, 3], [0, 4, 5, 3], [0, 2, 5, 4], [0, 6, 5, 4], [0, 3, 1, 4]] as const;
 
 export const chordsParamSchema: ParamSchema = [
-  { key: 'length', defaultValue: 4, min: 1, max: 8, step: 1, label: 'Chords' },
+  { key: 'length', defaultValue: 4, min: 1, max: 8, step: 1, label: 'Chords', control: 'stepper' },
   { key: 'quality', defaultValue: 0, min: 0, max: 4, step: 1, label: 'Quality', options: ['Triad', '7th', '9th', 'Sus 2', 'Sus 4'] },
-  { key: 'duration', defaultValue: 16, min: 4, max: 32, step: 4, label: 'Duration', unit: 'steps' },
-  { key: 'strum', defaultValue: 0, min: 0, max: 100, step: 1, label: 'Strum', unit: '%' },
+  { key: 'duration', defaultValue: 16, min: 4, max: 32, step: 4, label: 'Duration', unit: 'steps', control: 'stepper' },
+  { key: 'strum', defaultValue: 0, min: 0, max: 100, step: 1, label: 'Strum', unit: '%', control: 'knob' },
 ];
 
 export const chordsGenerator: Generator<ChordsParams> = {

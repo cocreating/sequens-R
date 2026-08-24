@@ -23,10 +23,10 @@ test.describe('Phase 4 desktop studio', () => {
     await expect(arp.getByLabel('Direction')).toBeVisible();
     await expect(arp.getByLabel('Follow chords')).toBeVisible();
     const euclid = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'euclid module name' }) });
-    await expect(euclid.getByLabel('Ring 1 steps')).toBeVisible();
-    await expect(euclid.getByLabel('MIDI channels')).toBeVisible();
+    await expect(euclid.getByRole('spinbutton', { name: 'Ring 1 steps', exact: true })).toBeVisible();
+    await expect(euclid.getByRole('group', { name: 'MIDI channels', exact: true })).toBeVisible();
     const mod = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'mod module name' }) });
-    await expect(mod.getByLabel('LFO 3 mode')).toBeVisible();
+    await expect(mod.getByRole('group', { name: 'LFO 3 mode', exact: true })).toBeVisible();
 
     const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
     const pianoSurface = piano.getByRole('group', { name: /step piano roll/ });
@@ -109,6 +109,7 @@ test.describe('Phase 4 desktop studio', () => {
     const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
     const help = drums.locator('.module-help-panel');
 
+    await drums.locator('.module-menu > summary').click();
     await drums.getByRole('button', { name: 'Turn on help for Drums' }).click();
     await expect(help).toBeVisible();
     await expect(help).toContainText('Hover a control or move to it with the keyboard');
@@ -117,7 +118,7 @@ test.describe('Phase 4 desktop studio', () => {
     await expect(help.getByRole('heading')).toHaveText('Mute');
     await expect(help).toContainText('scheduled notes or control events');
 
-    await drums.getByLabel('Steps', { exact: true }).hover();
+    await drums.getByRole('group', { name: 'Steps', exact: true }).hover();
     await expect(help.getByRole('heading')).toHaveText('Steps');
     await expect(help).toContainText('16 or 32 sixteenth-note steps');
 

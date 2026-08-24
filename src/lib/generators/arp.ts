@@ -17,10 +17,10 @@ const STEP_RATES = [4, 2, 1, 0.5] as const;
 export const arpParamSchema: ParamSchema = [
   { key: 'direction', defaultValue: 0, min: 0, max: 3, step: 1, label: 'Direction', options: ['Up', 'Down', 'Up / down', 'Random'] },
   { key: 'rate', defaultValue: 2, min: 0, max: 3, step: 1, label: 'Rate', options: ['1/4', '1/8', '1/16', '1/32'] },
-  { key: 'span', defaultValue: 2, min: 1, max: 4, step: 1, label: 'Span', unit: 'oct' },
-  { key: 'gate', defaultValue: 68, min: 5, max: 100, step: 1, label: 'Gate', unit: '%' },
-  { key: 'followChords', defaultValue: 1, min: 0, max: 1, step: 1, label: 'Follow chords', options: ['Off', 'On'] },
-  { key: 'octave', defaultValue: 3, min: 1, max: 6, step: 1, label: 'Octave' },
+  { key: 'span', defaultValue: 2, min: 1, max: 4, step: 1, label: 'Span', unit: 'oct', control: 'stepper' },
+  { key: 'gate', defaultValue: 68, min: 5, max: 100, step: 1, label: 'Gate', unit: '%', control: 'knob' },
+  { key: 'followChords', defaultValue: 1, min: 0, max: 1, step: 1, label: 'Follow chords', options: ['Off', 'On'], control: 'switch' },
+  { key: 'octave', defaultValue: 3, min: 1, max: 6, step: 1, label: 'Octave', control: 'stepper' },
 ];
 
 function directionOrder(pitches: readonly number[], direction: number): readonly number[] {

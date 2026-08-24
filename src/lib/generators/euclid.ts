@@ -9,19 +9,19 @@ export interface EuclidParams {
 }
 
 export const euclidParamSchema: ParamSchema = [
-  { key: 'steps1', defaultValue: 16, min: 2, max: 16, step: 1, label: 'Ring 1 steps' },
-  { key: 'hits1', defaultValue: 5, min: 0, max: 16, step: 1, label: 'Ring 1 hits' },
-  { key: 'rotation1', defaultValue: 0, min: 0, max: 15, step: 1, label: 'Ring 1 rotate' },
-  { key: 'note1', defaultValue: 36, min: 0, max: 127, step: 1, label: 'Ring 1 note' },
-  { key: 'steps2', defaultValue: 12, min: 2, max: 16, step: 1, label: 'Ring 2 steps' },
-  { key: 'hits2', defaultValue: 4, min: 0, max: 16, step: 1, label: 'Ring 2 hits' },
-  { key: 'rotation2', defaultValue: 1, min: 0, max: 15, step: 1, label: 'Ring 2 rotate' },
-  { key: 'note2', defaultValue: 42, min: 0, max: 127, step: 1, label: 'Ring 2 note' },
-  { key: 'steps3', defaultValue: 9, min: 2, max: 16, step: 1, label: 'Ring 3 steps' },
-  { key: 'hits3', defaultValue: 3, min: 0, max: 16, step: 1, label: 'Ring 3 hits' },
-  { key: 'rotation3', defaultValue: 0, min: 0, max: 15, step: 1, label: 'Ring 3 rotate' },
-  { key: 'note3', defaultValue: 48, min: 0, max: 127, step: 1, label: 'Ring 3 note' },
-  { key: 'separateChannels', defaultValue: 0, min: 0, max: 1, step: 1, label: 'MIDI channels', options: ['Together', 'Separate'] },
+  { key: 'steps1', defaultValue: 16, min: 2, max: 16, step: 1, label: 'Ring 1 steps', control: 'stepper' },
+  { key: 'hits1', defaultValue: 5, min: 0, max: 16, step: 1, label: 'Ring 1 hits', control: 'stepper' },
+  { key: 'rotation1', defaultValue: 0, min: 0, max: 15, step: 1, label: 'Ring 1 rotate', control: 'stepper' },
+  { key: 'note1', defaultValue: 36, min: 0, max: 127, step: 1, label: 'Ring 1 note', control: 'stepper' },
+  { key: 'steps2', defaultValue: 12, min: 2, max: 16, step: 1, label: 'Ring 2 steps', control: 'stepper' },
+  { key: 'hits2', defaultValue: 4, min: 0, max: 16, step: 1, label: 'Ring 2 hits', control: 'stepper' },
+  { key: 'rotation2', defaultValue: 1, min: 0, max: 15, step: 1, label: 'Ring 2 rotate', control: 'stepper' },
+  { key: 'note2', defaultValue: 42, min: 0, max: 127, step: 1, label: 'Ring 2 note', control: 'stepper' },
+  { key: 'steps3', defaultValue: 9, min: 2, max: 16, step: 1, label: 'Ring 3 steps', control: 'stepper' },
+  { key: 'hits3', defaultValue: 3, min: 0, max: 16, step: 1, label: 'Ring 3 hits', control: 'stepper' },
+  { key: 'rotation3', defaultValue: 0, min: 0, max: 15, step: 1, label: 'Ring 3 rotate', control: 'stepper' },
+  { key: 'note3', defaultValue: 48, min: 0, max: 127, step: 1, label: 'Ring 3 note', control: 'stepper' },
+  { key: 'separateChannels', defaultValue: 0, min: 0, max: 1, step: 1, label: 'MIDI channels', options: ['Together', 'Separate'], control: 'segmented' },
 ];
 
 /** Canonical Bjorklund distribution, rotated after construction. */

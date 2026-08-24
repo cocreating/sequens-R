@@ -6,8 +6,8 @@ export interface PianoParams {
 }
 
 export const pianoParamSchema: ParamSchema = [
-  { key: 'length', defaultValue: 0, min: 0, max: 2, step: 1, label: 'Length', options: ['16 steps', '32 steps', '64 steps'] },
-  { key: 'inKey', defaultValue: 1, min: 0, max: 1, step: 1, label: 'Pitch mode', options: ['Chromatic', 'In key'] },
+  { key: 'length', defaultValue: 0, min: 0, max: 2, step: 1, label: 'Length', options: ['16 steps', '32 steps', '64 steps'], control: 'segmented' },
+  { key: 'inKey', defaultValue: 1, min: 0, max: 1, step: 1, label: 'Pitch mode', options: ['Chromatic', 'In key'], control: 'segmented' },
 ];
 
 function emptyPattern(lengthIndex: number): Pattern {

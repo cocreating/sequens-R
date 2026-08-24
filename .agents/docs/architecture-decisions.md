@@ -85,3 +85,15 @@ Status: accepted on 2026-08-24.
 - General Help delegates `pointermove` and `focusin` through semantic `data-app-help-key` markers. Actual pointer movement is used so layout scrolling cannot overwrite a keyboard-focused description. Module Help delegates its local pointer/focus interest through `data-help-key`; schema-driven parameters resolve through their generator definition.
 - Both Help buttons expose pressed state and persistent `aria-controls` relationships. Readouts are deliberately not live regions: keyboard users can reach the same controls and visible copy without generating noisy announcements on every pointer movement. Escape closes General Help even when focus is inside an input.
 - The desktop module header places its seven actions in a full-width grid below the module name, preventing Help from clipping existing monitor, solo, mute, duplicate, collapse, or delete actions in two- and three-lane layouts.
+
+## AD-008 · Performance-first studio hierarchy and schema-driven controls
+
+Status: accepted on 2026-08-24.
+
+- The next product phase remains undefined until the existing studio hierarchy is consolidated. This change is a cross-phase UI correction and does not claim completion of a new SDD phase.
+- Transport, Random, Share, and module creation are the permanent performance path. Mobile keeps the global workspace closed by default so the first rack plate follows immediately; desktop opens the same workspace as a sticky utility rail beside three module lanes.
+- Project persistence, rack management, scenes, hardware, audio output, exports, shortcuts, and diagnostics remain fully available inside one `Workspace` disclosure. Its open state is explicit Svelte state so edits and status updates cannot collapse a user-open disclosure.
+- Module headers retain reorder, monitor, solo, mute, and collapse as immediate controls. Help, duplicate, module MIDI export, and delete move into one native per-module action disclosure.
+- Module plates present slots, mutation, pattern editing, and musical parameters before routing. MIDI output/channel, seed, copy, and automatic mutation scheduling live in `Output & advanced`; this is a presentation change only and does not alter project or patch schemas.
+- `ParamDefinition.control` is the single source of UI control selection. Continuous performance parameters use rotary ranges, bounded integer parameters use steppers, short enumerations use segmented buttons, binary modes use switches, named modes use selects, and mixer levels become vertical faders on desktop. Every custom presentation retains a native input or button surface and the existing generator schema remains module-agnostic.
+- Drum lanes expose instrument names while retaining horizontal scrolling and native pressed buttons. All controls keep the 44 CSS px target, visible focus, labels, reduced-motion behavior, and automated axe coverage.

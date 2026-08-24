@@ -10,10 +10,10 @@ export interface AcidParams {
 }
 
 export const acidParamSchema: ParamSchema = [
-  { key: 'fill', defaultValue: 60, min: 0, max: 100, step: 1, label: 'Fill', unit: '%' },
-  { key: 'steps', defaultValue: 16, min: 4, max: 32, step: 1, label: 'Steps' },
-  { key: 'range', defaultValue: 2, min: 1, max: 3, step: 1, label: 'Range', unit: 'oct' },
-  { key: 'decay', defaultValue: 45, min: 0, max: 100, step: 1, label: 'Decay', unit: '%' },
+  { key: 'fill', defaultValue: 60, min: 0, max: 100, step: 1, label: 'Fill', unit: '%', control: 'knob' },
+  { key: 'steps', defaultValue: 16, min: 4, max: 32, step: 1, label: 'Steps', control: 'stepper' },
+  { key: 'range', defaultValue: 2, min: 1, max: 3, step: 1, label: 'Range', unit: 'oct', control: 'stepper' },
+  { key: 'decay', defaultValue: 45, min: 0, max: 100, step: 1, label: 'Decay', unit: '%', control: 'knob' },
 ];
 
 export const acidGenerator: Generator<AcidParams> = {

@@ -102,23 +102,29 @@
     <span use:dragHandle class="drag-handle" data-help-key="reorder" aria-label={`Reorder ${module.name}`}>⠿</span>
     <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
     <div class="module-switches">
-      {#if desktopSurface}
-        <button
-          type="button"
-          class="module-help-toggle"
-          data-help-key="help-toggle"
-          aria-label={`${helpActive ? 'Turn off' : 'Turn on'} help for ${module.name}`}
-          aria-pressed={helpActive}
-          aria-controls={`${module.id}-help`}
-          onclick={toggleHelp}
-        ><span aria-hidden="true">?</span> Help</button>
-      {/if}
       <button type="button" data-help-key="monitor" aria-label={`Monitor ${module.name}`} aria-pressed={module.monitor} onclick={() => onpatch({ monitor: !module.monitor })}>◖</button>
       <button type="button" data-help-key="solo" aria-label={`Solo ${module.name}`} aria-pressed={module.solo} onclick={() => onpatch({ solo: !module.solo })}>S</button>
       <button type="button" data-help-key="mute" aria-label={`Mute ${module.name}`} aria-pressed={module.mute} onclick={() => onpatch({ mute: !module.mute })}>M</button>
-      <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={onduplicate}>⧉</button>
       <button type="button" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}>{module.collapsed ? '+' : '−'}</button>
-      <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>×</button>
+      <details class="module-menu">
+        <summary aria-label={`${module.name} actions`}>More</summary>
+        <div class="module-menu-popover">
+          {#if desktopSurface}
+            <button
+              type="button"
+              class="module-help-toggle"
+              data-help-key="help-toggle"
+              aria-label={`${helpActive ? 'Turn off' : 'Turn on'} help for ${module.name}`}
+              aria-pressed={helpActive}
+              aria-controls={`${module.id}-help`}
+              onclick={toggleHelp}
+            ><span aria-hidden="true">?</span> Help</button>
+          {/if}
+          <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={onduplicate}>Duplicate</button>
+          {#if module.type !== 'mixer'}<button type="button" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>{/if}
+          <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>Delete</button>
+        </div>
+      </details>
     </div>
   </header>
 
@@ -135,21 +141,6 @@
 
   {#if !module.collapsed}
     <div class="module-body">
-      <div class="midi-route">
-        <label for={`${module.id}-midi-output`} data-help-key="midi-output">MIDI out</label>
-        <select id={`${module.id}-midi-output`} data-help-key="midi-output" value={module.midi.portId ?? ''} onchange={(event) => {
-          const portId = event.currentTarget.value || null;
-          onpatch({ midi: { ...module.midi, portId }, ...(portId === null ? {} : { monitor: false }) });
-        }}>
-          <option value="">None</option>
-          {#each midiOutputs as output (output.id)}<option value={output.id}>{output.name}</option>{/each}
-        </select>
-        <label for={`${module.id}-midi-channel`} data-help-key="midi-channel">Channel</label>
-        <select id={`${module.id}-midi-channel`} data-help-key="midi-channel" value={module.midi.channel} onchange={(event) => onpatch({ midi: { ...module.midi, channel: Number(event.currentTarget.value) } })}>
-          {#each Array.from({ length: 16 }, (_, index) => index + 1) as channel}<option value={channel}>{channel}</option>{/each}
-        </select>
-        {#if module.type !== 'mixer'}<button type="button" class="module-midi-export" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>{/if}
-      </div>
       {#if module.type === 'mixer'}
         <MixerPanel modules={rackModules} onpatch={(id, patch) => ontargetpatch?.(id, patch)} />
       {:else}
@@ -167,26 +158,18 @@
               <button type="button" aria-label={`${module.name} slot ${index + 1}`} aria-pressed={module.activeSlot === index} onclick={() => onslot(index)}>{index + 1}</button>
             {/each}
           </div>
-          <label for={`${module.id}-seed`} data-help-key="seed">Seed</label>
-          <input id={`${module.id}-seed`} class="seed-input" data-help-key="seed" type="number" min="0" max="4294967295" step="1" value={module.seed} onchange={(event) => onseed(Number(event.currentTarget.value))} />
-          <button type="button" data-help-key="copy-seed" aria-label={`Copy ${module.name} seed`} onclick={oncopyseed}>Copy</button>
           <label for={`${module.id}-mutation-intensity`} data-help-key="mutation-intensity">Mutation</label>
           <select id={`${module.id}-mutation-intensity`} data-help-key="mutation-intensity" value={module.mutation.intensity} onchange={(event) => onintensity(Number(event.currentTarget.value) as 1 | 2 | 3 | 4)}>
             {#each [1, 2, 3, 4] as intensity}<option value={intensity}>Level {intensity}</option>{/each}
           </select>
           <button type="button" data-help-key="mutate" onclick={onmutate}>Mutate</button>
           <button type="button" data-help-key="revert" onclick={onrevert} disabled={module.mutation.revert === null}>Revert</button>
-          <label class="auto-mutate" data-help-key="auto-mutate"><input type="checkbox" checked={module.mutation.on} onchange={(event) => onschedule(event.currentTarget.checked, module.mutation.everyNLoops)} /> Auto</label>
-          <label for={`${module.id}-mutation-loops`} data-help-key="mutation-frequency">Every</label>
-          <select class="mutation-loop-select" id={`${module.id}-mutation-loops`} data-help-key="mutation-frequency" value={module.mutation.everyNLoops} onchange={(event) => onschedule(module.mutation.on, Number(event.currentTarget.value))}>
-            {#each [1, 2, 4, 8, 16] as loops}<option value={loops}>{loops} {loops === 1 ? 'loop' : 'loops'}</option>{/each}
-          </select>
         </div>
         {/if}
         {#if module.type === 'piano'}
           <PianoRoll {pattern} {musicalKey} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} onchange={onpattern} />
         {:else if !isControlModule(module.type)}
-          <StepGrid {pattern} syncBeat={playheadBeat} {playing} {bpm} editable={module.type === 'drums'} ontoggle={onstep} />
+          <StepGrid {pattern} syncBeat={playheadBeat} {playing} {bpm} editable={module.type === 'drums'} laneLabels={module.type === 'drums' ? ['Kick', 'Snare', 'Closed hat', 'Open hat', 'Clap', 'Tom', 'Rim', 'Perc'] : []} ontoggle={onstep} />
         {/if}
       {/if}
       {#if schema.length > 0}
@@ -196,6 +179,37 @@
           {/each}
         </div>
       {/if}
+      <details class="module-advanced">
+        <summary>Output &amp; advanced</summary>
+        <div class="module-advanced-content">
+          <div class="midi-route">
+            <label for={`${module.id}-midi-output`} data-help-key="midi-output">MIDI out</label>
+            <select id={`${module.id}-midi-output`} data-help-key="midi-output" value={module.midi.portId ?? ''} onchange={(event) => {
+              const portId = event.currentTarget.value || null;
+              onpatch({ midi: { ...module.midi, portId }, ...(portId === null ? {} : { monitor: false }) });
+            }}>
+              <option value="">None</option>
+              {#each midiOutputs as output (output.id)}<option value={output.id}>{output.name}</option>{/each}
+            </select>
+            <label for={`${module.id}-midi-channel`} data-help-key="midi-channel">Channel</label>
+            <select id={`${module.id}-midi-channel`} data-help-key="midi-channel" value={module.midi.channel} onchange={(event) => onpatch({ midi: { ...module.midi, channel: Number(event.currentTarget.value) } })}>
+              {#each Array.from({ length: 16 }, (_, index) => index + 1) as channel}<option value={channel}>{channel}</option>{/each}
+            </select>
+          </div>
+          {#if module.type !== 'piano' && !isControlModule(module.type)}
+            <div class="advanced-pattern-tools">
+              <label for={`${module.id}-seed`} data-help-key="seed">Seed</label>
+              <input id={`${module.id}-seed`} class="seed-input" data-help-key="seed" type="number" min="0" max="4294967295" step="1" value={module.seed} onchange={(event) => onseed(Number(event.currentTarget.value))} />
+              <button type="button" data-help-key="copy-seed" aria-label={`Copy ${module.name} seed`} onclick={oncopyseed}>Copy</button>
+              <label class="auto-mutate" data-help-key="auto-mutate"><input type="checkbox" checked={module.mutation.on} onchange={(event) => onschedule(event.currentTarget.checked, module.mutation.everyNLoops)} /> Auto mutate</label>
+              <label for={`${module.id}-mutation-loops`} data-help-key="mutation-frequency">Every</label>
+              <select class="mutation-loop-select" id={`${module.id}-mutation-loops`} data-help-key="mutation-frequency" value={module.mutation.everyNLoops} onchange={(event) => onschedule(module.mutation.on, Number(event.currentTarget.value))}>
+                {#each [1, 2, 4, 8, 16] as loops}<option value={loops}>{loops} {loops === 1 ? 'loop' : 'loops'}</option>{/each}
+              </select>
+            </div>
+          {/if}
+        </div>
+      </details>
     </div>
   {/if}
 </article>

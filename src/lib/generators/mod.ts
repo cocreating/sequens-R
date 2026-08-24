@@ -10,19 +10,19 @@ const SHAPES = ['Sine', 'Triangle', 'Square', 'Saw', 'Random'] as const;
 const RATES = [0.25, 0.5, 1, 2, 4, 8] as const;
 
 const lfoSchema = (index: number): ParamSchema => [
-  { key: `enabled${index}`, defaultValue: index === 1 ? 1 : 0, min: 0, max: 1, step: 1, label: `LFO ${index}`, options: ['Off', 'On'] },
-  { key: `cc${index}`, defaultValue: [74, 71, 1][index - 1]!, min: 0, max: 127, step: 1, label: `LFO ${index} CC` },
-  { key: `channel${index}`, defaultValue: 1, min: 1, max: 16, step: 1, label: `LFO ${index} channel` },
+  { key: `enabled${index}`, defaultValue: index === 1 ? 1 : 0, min: 0, max: 1, step: 1, label: `LFO ${index}`, options: ['Off', 'On'], control: 'switch' },
+  { key: `cc${index}`, defaultValue: [74, 71, 1][index - 1]!, min: 0, max: 127, step: 1, label: `LFO ${index} CC`, control: 'stepper' },
+  { key: `channel${index}`, defaultValue: 1, min: 1, max: 16, step: 1, label: `LFO ${index} channel`, control: 'stepper' },
   { key: `shape${index}`, defaultValue: index - 1, min: 0, max: 4, step: 1, label: `LFO ${index} shape`, options: SHAPES },
   { key: `rate${index}`, defaultValue: index + 1, min: 0, max: 5, step: 1, label: `LFO ${index} rate`, options: ['1/4 beat', '1/2 beat', '1 beat', '2 beats', '4 beats', '8 beats'] },
-  { key: `depth${index}`, defaultValue: 32, min: 0, max: 63, step: 1, label: `LFO ${index} depth` },
-  { key: `fade${index}`, defaultValue: 0, min: 0, max: 16, step: 1, label: `LFO ${index} fade`, unit: 'beats' },
-  { key: `center${index}`, defaultValue: 64, min: 0, max: 127, step: 1, label: `LFO ${index} center` },
-  { key: `bipolar${index}`, defaultValue: 1, min: 0, max: 1, step: 1, label: `LFO ${index} mode`, options: ['Unipolar', 'Bipolar'] },
+  { key: `depth${index}`, defaultValue: 32, min: 0, max: 63, step: 1, label: `LFO ${index} depth`, control: 'knob' },
+  { key: `fade${index}`, defaultValue: 0, min: 0, max: 16, step: 1, label: `LFO ${index} fade`, unit: 'beats', control: 'knob' },
+  { key: `center${index}`, defaultValue: 64, min: 0, max: 127, step: 1, label: `LFO ${index} center`, control: 'knob' },
+  { key: `bipolar${index}`, defaultValue: 1, min: 0, max: 1, step: 1, label: `LFO ${index} mode`, options: ['Unipolar', 'Bipolar'], control: 'segmented' },
 ];
 
 export const modParamSchema: ParamSchema = [
-  { key: 'bars', defaultValue: 4, min: 1, max: 8, step: 1, label: 'Loop', unit: 'bars' },
+  { key: 'bars', defaultValue: 4, min: 1, max: 8, step: 1, label: 'Loop', unit: 'bars', control: 'stepper' },
   ...lfoSchema(1),
   ...lfoSchema(2),
   ...lfoSchema(3),

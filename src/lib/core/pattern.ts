@@ -77,7 +77,7 @@ export interface ParamDefinition {
   label: string;
   unit?: string;
   options?: readonly string[];
-  control?: 'range' | 'select' | 'hidden';
+  control?: 'range' | 'select' | 'hidden' | 'knob' | 'stepper' | 'segmented' | 'switch';
 }
 
 export type ParamSchema = readonly ParamDefinition[];

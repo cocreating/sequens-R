@@ -77,7 +77,7 @@
 </script>
 
 {#if isDesktopModule(module.type) && !desktopSurface}
-  <article class="desktop-module-readonly" class:muted={module.mute} aria-labelledby={`${module.id}-mobile-name`}>
+  <article class="desktop-module-readonly" data-app-help-key="module-panel" class:muted={module.mute} aria-labelledby={`${module.id}-mobile-name`}>
     <div class="module-progress" aria-hidden="true"></div>
     <header class="desktop-module-readonly-header">
       <div><span>Desktop module</span><h2 id={`${module.id}-mobile-name`}>{module.name}</h2></div>
@@ -91,6 +91,7 @@
   class:muted={module.mute}
   class:soloed={module.solo}
   class:help-active={desktopSurface && helpActive}
+  data-app-help-key="module-panel"
   aria-labelledby={`${module.id}-name`}
   style:view-transition-name={`module-${module.id}`}
   onpointerover={showContextualHelp}

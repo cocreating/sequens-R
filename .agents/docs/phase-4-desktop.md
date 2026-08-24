@@ -44,13 +44,13 @@ npm test
   11 files, 52 tests passed
 
 npm run build
-  production PWA build passed; 10 entries / 229.15 KiB precached
+  production PWA build passed; 10 entries / 239.89 KiB precached
 
 npm run check:bundle
-  70.91 KiB initial JavaScript gzip / 200.00 KiB budget
+  73.82 KiB initial JavaScript gzip / 200.00 KiB budget
 
 npm run test:e2e
-  22 Chrome tests passed
+  23 Chrome tests passed
   Phase 4 spec: 5 passed
   contextual Help pointer/focus flow: passed
   axe: no serious or critical violations

@@ -10,23 +10,23 @@
   let { audioOutputs, selectedOutputId, outputSelectionSupported, onrefreshoutputs, onselectoutput }: Props = $props();
 </script>
 
-<aside class="desktop-studio-panel" aria-labelledby="desktop-studio-heading">
+<aside class="desktop-studio-panel" data-app-help-key="desktop-output" aria-labelledby="desktop-studio-heading">
   <div>
     <p class="eyebrow">Desktop studio</p>
     <h2 id="desktop-studio-heading">Output & shortcuts</h2>
   </div>
   <div class="audio-output-control">
-    <label for="audio-output">Internal audio out</label>
-    <select id="audio-output" value={selectedOutputId} disabled={!outputSelectionSupported} onchange={(event) => onselectoutput(event.currentTarget.value)}>
+    <label for="audio-output" data-app-help-key="audio-output">Internal audio out</label>
+    <select id="audio-output" data-app-help-key="audio-output" value={selectedOutputId} disabled={!outputSelectionSupported} onchange={(event) => onselectoutput(event.currentTarget.value)}>
       <option value="">System default</option>
       {#each audioOutputs as output (output.deviceId)}
         <option value={output.deviceId}>{output.label || `Audio output ${output.deviceId.slice(0, 6)}`}</option>
       {/each}
     </select>
-    <button type="button" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}>Refresh outputs</button>
+    <button type="button" data-app-help-key="refresh-outputs" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}>Refresh outputs</button>
     {#if !outputSelectionSupported}<p>Audio output selection is unavailable; the system default remains active.</p>{/if}
   </div>
-  <details>
+  <details data-app-help-key="shortcuts">
     <summary>Keyboard shortcuts</summary>
     <dl class="shortcut-list">
       <div><dt><kbd>Space</kbd></dt><dd>Play / stop</dd></div>

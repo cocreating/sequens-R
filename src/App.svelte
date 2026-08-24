@@ -60,6 +60,7 @@
   import CompositorPlayhead from './lib/ui/CompositorPlayhead.svelte';
   import DiagnosticsPanel from './lib/ui/DiagnosticsPanel.svelte';
   import type { AudioDiagnostics } from './lib/audio/engine';
+  import { appHelpFor } from './lib/ui/app-help';
 
   let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
   const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
@@ -101,6 +102,9 @@
   let audioState = $state<AudioContextState | 'uninitialized'>('uninitialized');
   let audioDiagnostics = $state<AudioDiagnostics>(engine.diagnostics);
   let desktopMedia: MediaQueryList | null = null;
+  let appHelpActive = $state(false);
+  let appHelpKey = $state('overview');
+  let appHelp = $derived(appHelpFor(appHelpKey));
 
   onDestroy(() => {
     if (diagnosticTimer !== null) window.clearInterval(diagnosticTimer);
@@ -143,6 +147,11 @@
   }
 
   function handleKeyboardShortcut(event: KeyboardEvent): void {
+    if (event.key === 'Escape' && appHelpActive) {
+      appHelpActive = false;
+      appHelpKey = 'overview';
+      return;
+    }
     if (!desktopSurface || isTypingTarget(event.target)) return;
     if (event.code === 'Space') {
       event.preventDefault();
@@ -162,6 +171,17 @@
       const next = (current + offset + project.racks.length) % project.racks.length;
       switchRack(project.racks[next]!.id);
     }
+  }
+
+  function toggleAppHelp(): void {
+    appHelpActive = !appHelpActive;
+    appHelpKey = 'overview';
+  }
+
+  function showAppHelp(event: PointerEvent | FocusEvent): void {
+    if (!appHelpActive || !(event.target instanceof Element)) return;
+    const target = event.target.closest<HTMLElement>('[data-app-help-key]');
+    appHelpKey = target?.dataset.appHelpKey ?? 'overview';
   }
 
   async function initializeApp(): Promise<void> {
@@ -701,40 +721,62 @@
 <a class="skip-link" href="#rack">Skip to rack</a>
 <header class:playing class="app-header">
   <div class="brand"><p>Local generative MIDI</p><h1>sequens-R</h1></div>
+  {#if supported && initialized}
+    <button
+      type="button"
+      class="app-help-toggle"
+      aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
+      aria-pressed={appHelpActive}
+      aria-controls="app-help-readout"
+      onclick={toggleAppHelp}
+    ><span aria-hidden="true">?</span> Help</button>
+  {/if}
   <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
 </header>
+
+{#if supported && initialized}
+  <aside class="app-help-readout" id="app-help-readout" aria-labelledby="app-help-title" hidden={!appHelpActive}>
+    <div class="app-help-marker" aria-hidden="true">?</div>
+    <div>
+      <p class="app-help-kicker">General Help · hover or focus a panel</p>
+      <h2 id="app-help-title">{appHelp.title}</h2>
+      <p>{appHelp.body}</p>
+    </div>
+  </aside>
+{/if}
 
 {#if !supported}
   <main class="unsupported"><h2>This browser cannot run sequens-R.</h2><p>Use a current Chromium browser with AudioWorklet and Web MIDI support. iOS and WebKit are outside this instrument’s supported platform.</p></main>
 {:else if !initialized}
   <main class="loading" aria-busy="true"><p>Loading local project…</p></main>
 {:else}
-  <main id="rack" tabindex="-1">
-    <section class="project-tools" aria-label="Project actions">
-      <label for="project-name">Project</label>
-      <input id="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
-      <button type="button" onclick={undo} disabled={!canUndo}>Undo</button>
-      <button type="button" onclick={redo} disabled={!canRedo}>Redo</button>
-      <button type="button" onclick={saveProject}>{sharedDraft ? 'Save draft' : 'Save'}</button>
-      <button type="button" onclick={() => void exportProject()}>Export</button>
-      <label class="import-project" for="project-import">Import</label>
-      <input id="project-import" class="visually-hidden" type="file" accept="application/json,.json" onchange={importProject} />
+  <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp}>
+    <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
+      <label for="project-name" data-app-help-key="project-name">Project</label>
+      <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
+      <button type="button" data-app-help-key="undo" onclick={undo} disabled={!canUndo}>Undo</button>
+      <button type="button" data-app-help-key="redo" onclick={redo} disabled={!canRedo}>Redo</button>
+      <button type="button" data-app-help-key="save" onclick={saveProject}>{sharedDraft ? 'Save draft' : 'Save'}</button>
+      <button type="button" data-app-help-key="export-project" onclick={() => void exportProject()}>Export</button>
+      <label class="import-project" data-app-help-key="import-project" for="project-import">Import</label>
+      <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
     </section>
 
     {#if desktopSurface}
-      <section class="rack-switcher" aria-labelledby="rack-switcher-heading">
+      <section class="rack-switcher" data-app-help-key="rack-switcher" aria-labelledby="rack-switcher-heading">
         <div class="rack-switcher-heading">
           <div><p>Project racks</p><h2 id="rack-switcher-heading">Studio lanes</h2></div>
           <div class="rack-actions">
-            <button type="button" onclick={addRack}>New rack</button>
-            <button type="button" onclick={duplicateRack}>Duplicate rack</button>
-            <button type="button" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
+            <button type="button" data-app-help-key="new-rack" onclick={addRack}>New rack</button>
+            <button type="button" data-app-help-key="duplicate-rack" onclick={duplicateRack}>Duplicate rack</button>
+            <button type="button" data-app-help-key="delete-rack" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
           </div>
         </div>
         <div class="rack-tabs" role="tablist" aria-label="Project racks">
           {#each project.racks as projectRack, index (projectRack.id)}
             <button
               id={`rack-tab-${projectRack.id}`}
+              data-app-help-key="rack-tabs"
               type="button"
               role="tab"
               tabindex={projectRack.id === project.activeRackId ? 0 : -1}
@@ -745,8 +787,8 @@
             >{index + 1} · {projectRack.name}</button>
           {/each}
         </div>
-        <label for="rack-name">Active rack name</label>
-        <input id="rack-name" value={activeProjectRack(project).name} oninput={(event) => renameRack(event.currentTarget.value)} />
+        <label for="rack-name" data-app-help-key="rack-name">Active rack name</label>
+        <input id="rack-name" data-app-help-key="rack-name" value={activeProjectRack(project).name} oninput={(event) => renameRack(event.currentTarget.value)} />
       </section>
     {/if}
 
@@ -766,30 +808,30 @@
       />
     {/if}
 
-    <section class="music-export" aria-labelledby="music-export-heading" aria-busy={exportingAudio}>
+    <section class="music-export" data-app-help-key="music-export" aria-labelledby="music-export-heading" aria-busy={exportingAudio}>
       <div><h2 id="music-export-heading">Music export</h2><p>Render the current deterministic rack without connecting hardware.</p></div>
-      <label for="export-bars">Length</label>
-      <select id="export-bars" bind:value={exportBars}>
+      <label for="export-bars" data-app-help-key="export-length">Length</label>
+      <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
         {#each [1, 2, 4, 8] as bars}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
       </select>
-      <button type="button" onclick={() => void exportMidi()} disabled={exportingAudio}>Rack MIDI</button>
-      <button type="button" onclick={bounceMix} disabled={exportingAudio}>Mix WAV</button>
-      <button type="button" onclick={bounceStems} disabled={exportingAudio}>WAV stems</button>
+      <button type="button" data-app-help-key="rack-midi" onclick={() => void exportMidi()} disabled={exportingAudio}>Rack MIDI</button>
+      <button type="button" data-app-help-key="mix-wav" onclick={bounceMix} disabled={exportingAudio}>Mix WAV</button>
+      <button type="button" data-app-help-key="wav-stems" onclick={bounceStems} disabled={exportingAudio}>WAV stems</button>
     </section>
 
-    <section class="rack-tools" aria-label="Rack actions">
-      <button type="button" class="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}>Random</button>
-      <button type="button" onclick={share}>Share</button>
+    <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
+      <button type="button" class="random" data-app-help-key="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}>Random</button>
+      <button type="button" data-app-help-key="share" onclick={share}>Share</button>
       <div class="add-module">
-        <label for="module-type">New module</label>
-        <select id="module-type" bind:value={selectedModuleType}>
+        <label for="module-type" data-app-help-key="module-type">New module</label>
+        <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
           {#each (desktopSurface ? MODULE_TYPES : CORE_MODULE_TYPES) as type}<option value={type}>{moduleLabels[type]}</option>{/each}
         </select>
-        <button id="add-module-button" type="button" onclick={addModule} disabled={rack.modules.length >= 16}>Add</button>
+        <button id="add-module-button" type="button" data-app-help-key="add-module" onclick={addModule} disabled={rack.modules.length >= 16}>Add</button>
       </div>
     </section>
 
-    <p class="session-status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>
+    <p class="session-status" data-app-help-key="status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>
     {#if playing && audioState === 'suspended'}<button type="button" class="resume-audio" onclick={resumeAudio}>Resume audio</button>{/if}
     {#if schedulerJitter !== null}
       <p class="scheduler-jitter">Scheduler jitter <data value={schedulerJitter.toFixed(3)}>{schedulerJitter.toFixed(3)}</data> ms σ</p>
@@ -800,6 +842,7 @@
     <section
       class="module-list"
       id="module-lanes"
+      data-app-help-key="module-lanes"
       role={desktopSurface ? 'tabpanel' : undefined}
       aria-label={desktopSurface ? undefined : 'Rack modules'}
       aria-labelledby={desktopSurface ? `rack-tab-${project.activeRackId}` : undefined}

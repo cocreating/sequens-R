@@ -76,12 +76,12 @@ Status: accepted on 2026-08-24.
 - The diagnostics panel reports audio state, combined base/output latency, scheduler jitter, active voices, render load/underruns when available, and isolation state. It contains no telemetry or runtime network path.
 - The accessibility gate combines semantic native controls, tab-pattern keyboard behavior, keyboard piano-note authoring/editing, focus recovery after deletion, reduced motion, visible focus, and automated axe/Chrome coverage.
 
-## AD-007 · Contextual module help
+## AD-007 · Layered contextual help
 
 Status: accepted on 2026-08-24.
 
-- Contextual Help is an explicit, per-module desktop mode rather than a permanently visible tutorial or global application state. Mobile remains unchanged.
-- Help uses a stable readout inside the module plate instead of moving pointer-positioned tooltips. This keeps dense controls unobscured, makes longer explanations readable, and leaves every control operational while Help is active.
-- One delegated `pointerover`/`focusin` boundary reads semantic `data-help-key` markers from controls and control groups. Schema-driven parameters resolve through their generator definition, so every visible parameter across all module types has named, module-specific copy without duplicating event handlers.
-- The Help button exposes its pressed state and a persistent `aria-controls` relationship. The readout is deliberately not a live region: keyboard users can reach the same controls and visible copy without generating noisy announcements on every pointer movement.
+- Contextual Help has two explicit layers: a top-right General Help toggle for application panels and primary controls, plus an independent detailed Help toggle inside each desktop module. Neither mode changes or disables instrument behavior.
+- General Help uses a fixed top-right readout so guidance remains visible while the user moves through the page. Module Help uses a stable readout inside its plate. Both avoid moving pointer-positioned tooltips, keep dense controls unobscured, and make longer explanations readable.
+- General Help delegates `pointermove` and `focusin` through semantic `data-app-help-key` markers. Actual pointer movement is used so layout scrolling cannot overwrite a keyboard-focused description. Module Help delegates its local pointer/focus interest through `data-help-key`; schema-driven parameters resolve through their generator definition.
+- Both Help buttons expose pressed state and persistent `aria-controls` relationships. Readouts are deliberately not live regions: keyboard users can reach the same controls and visible copy without generating noisy announcements on every pointer movement. Escape closes General Help even when focus is inside an input.
 - The desktop module header places its seven actions in a full-width grid below the module name, preventing Help from clipping existing monitor, solo, mute, duplicate, collapse, or delete actions in two- and three-lane layouts.

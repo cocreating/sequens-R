@@ -13,7 +13,7 @@
   let loadWarning = $derived(diagnostics.peakRenderLoad !== null && diagnostics.peakRenderLoad > 0.8);
 </script>
 
-<details class="diagnostics-panel" data-render-capacity-supported={diagnostics.renderCapacitySupported}>
+<details class="diagnostics-panel" data-app-help-key="diagnostics" data-render-capacity-supported={diagnostics.renderCapacitySupported}>
   <summary>Diagnostics</summary>
   <dl>
     <div><dt>Audio state</dt><dd>{diagnostics.state}</dd></div>

@@ -116,6 +116,36 @@ test.describe('Phase 5 polish', () => {
     await expect(piano.locator('.piano-note')).toHaveAttribute('aria-label', /step 2/u);
   });
 
+  test('provides general contextual help across the app', async ({ page }) => {
+    await page.goto('/');
+    const readout = page.locator('#app-help-readout');
+
+    await page.getByRole('button', { name: 'Turn on general help' }).click();
+    await expect(readout).toBeVisible();
+    await expect(readout.getByRole('heading')).toHaveText('General Help');
+
+    await page.getByRole('button', { name: 'Play', exact: true }).hover();
+    await expect(readout.getByRole('heading')).toHaveText('Play');
+    await expect(readout).toContainText('audio scheduler');
+
+    await page.getByRole('button', { name: 'Capture scene' }).focus();
+    await expect(readout.getByRole('heading')).toHaveText('Capture scene');
+
+    await page.getByRole('heading', { name: 'Hardware MIDI' }).hover();
+    await expect(readout.getByRole('heading')).toHaveText('Hardware MIDI');
+
+    await page.getByRole('button', { name: 'Rack MIDI' }).focus();
+    await expect(readout.getByRole('heading')).toHaveText('Rack MIDI');
+
+    const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
+    await drums.hover();
+    await expect(readout.getByRole('heading')).toHaveText('Module panel');
+
+    await page.keyboard.press('Escape');
+    await expect(readout).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Turn on general help' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
   test('has no serious accessibility violations and exposes an installable offline PWA', async ({ page, request, context }) => {
     await page.goto('/');
     const results = await new AxeBuilder({ page }).analyze();

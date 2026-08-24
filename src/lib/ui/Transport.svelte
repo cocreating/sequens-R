@@ -22,20 +22,20 @@
   }
 </script>
 
-<header class="transport" aria-label="Transport">
+<header class="transport" data-app-help-key="transport" aria-label="Transport">
   <div class="transport-buttons">
-    <button type="button" class="play" aria-pressed={playing} onclick={onplay}>{playing ? 'Playing' : 'Play'}</button>
-    <button type="button" onclick={onstop}>Stop</button>
+    <button type="button" class="play" data-app-help-key="play" aria-pressed={playing} onclick={onplay}>{playing ? 'Playing' : 'Play'}</button>
+    <button type="button" data-app-help-key="stop" onclick={onstop}>Stop</button>
   </div>
   <div class="transport-fields">
-    <label for="tempo">Tempo</label>
-    <div class="tempo-field"><input id="tempo" name="tempo" type="number" min="20" max="300" step="0.1" value={bpm} oninput={(event) => onbpm(numberValue(event))} onchange={onbpmcommit} /><span>BPM</span></div>
-    <label for="root">Root</label>
-    <select id="root" name="root" value={root} onchange={(event) => onkey(numberValue(event), scale)}>
+    <label for="tempo" data-app-help-key="tempo">Tempo</label>
+    <div class="tempo-field" data-app-help-key="tempo"><input id="tempo" name="tempo" type="number" min="20" max="300" step="0.1" value={bpm} oninput={(event) => onbpm(numberValue(event))} onchange={onbpmcommit} /><span>BPM</span></div>
+    <label for="root" data-app-help-key="root">Root</label>
+    <select id="root" name="root" data-app-help-key="root" value={root} onchange={(event) => onkey(numberValue(event), scale)}>
       {#each ROOT_NAMES as name, index}<option value={index}>{name}</option>{/each}
     </select>
-    <label for="scale">Scale</label>
-    <select id="scale" name="scale" value={scale} onchange={(event) => onkey(root, (event.currentTarget as HTMLSelectElement).value as ScaleName)}>
+    <label for="scale" data-app-help-key="scale">Scale</label>
+    <select id="scale" name="scale" data-app-help-key="scale" value={scale} onchange={(event) => onkey(root, (event.currentTarget as HTMLSelectElement).value as ScaleName)}>
       {#each SCALE_NAMES as name}<option value={name}>{name}</option>{/each}
     </select>
   </div>

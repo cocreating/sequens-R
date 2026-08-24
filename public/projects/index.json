@@ -1,0 +1,9 @@
+{
+  "projects": [
+    {
+      "name": "Basic Electro",
+      "file": "basic-electro.sequens-r.json",
+      "description": "A 110 BPM C minor demo with Drums and Arp modules."
+    }
+  ]
+}

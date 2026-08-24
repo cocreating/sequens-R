@@ -18,6 +18,7 @@
     type ProjectDocument,
     type ProjectScene,
   } from './lib/project/model';
+  import { DEMO_PROJECT_INDEX_URL, demoProjectUrl, parseDemoProjectIndex, type DemoProjectEntry } from './lib/project/demos';
   import { loadCurrentProject, requestPersistentStorage, saveCurrentProject } from './lib/project/storage';
   import { loadRackFromFragment, rackToFragment } from './lib/share/fragment';
   import { MODULE_TYPES } from './lib/share/schema';
@@ -108,6 +109,12 @@
   let appHelpActive = $state(false);
   let appHelpKey = $state('overview');
   let workspaceOpen = $state(false);
+  let demoProjects = $state<readonly DemoProjectEntry[]>([]);
+  let demoProjectsLoaded = $state(false);
+  let demoProjectsLoading = $state(false);
+  let demoProjectLoadingFile = $state<string | null>(null);
+  let demoProjectsError = $state('');
+  let demoProjectsPopover = $state<HTMLDivElement>();
   let appHelp = $derived(appHelpFor(appHelpKey));
 
   onDestroy(() => {
@@ -684,6 +691,19 @@
     status = destination === 'cancelled' ? 'Project export cancelled' : destination === 'file' ? 'Project saved to disk' : 'Project downloaded';
   }
 
+  async function activateImportedProject(imported: ProjectDocument, nextStatus: string): Promise<void> {
+    project = imported;
+    rack = activeProjectRack(imported).state;
+    if (!desktopSurface) normalizeMobileDenseModules();
+    project = updateProjectRack(projectSnapshot(), rackSnapshot());
+    rackHistory.reset(rackSnapshot());
+    syncHistoryButtons();
+    sharedDraft = false;
+    publish();
+    await saveCurrentProject(projectSnapshot());
+    status = nextStatus;
+  }
+
   async function importProject(event: Event): Promise<void> {
     const input = event.currentTarget as HTMLInputElement;
     const file = input.files?.[0];
@@ -692,18 +712,43 @@
     error = '';
     try {
       const imported = projectFromJson(await file.text());
-      project = imported;
-      rack = activeProjectRack(imported).state;
-      if (!desktopSurface) normalizeMobileDenseModules();
-      project = updateProjectRack(projectSnapshot(), rackSnapshot());
-      rackHistory.reset(rackSnapshot());
-      syncHistoryButtons();
-      sharedDraft = false;
-      publish();
-      await saveCurrentProject(projectSnapshot());
-      status = 'Project imported and saved locally';
+      await activateImportedProject(imported, 'Project imported and saved locally');
     } catch (reason: unknown) {
       error = reason instanceof Error ? reason.message : 'The project file could not be imported.';
+    }
+  }
+
+  async function loadDemoProjectIndex(): Promise<void> {
+    if (demoProjectsLoaded || demoProjectsLoading) return;
+    demoProjectsLoading = true;
+    demoProjectsError = '';
+    try {
+      const response = await fetch(DEMO_PROJECT_INDEX_URL);
+      if (!response.ok) throw new Error(`Demo project list returned ${response.status}.`);
+      demoProjects = parseDemoProjectIndex(await response.json());
+      demoProjectsLoaded = true;
+    } catch (reason: unknown) {
+      demoProjectsError = reason instanceof Error ? reason.message : 'Demo projects could not be listed.';
+    } finally {
+      demoProjectsLoading = false;
+    }
+  }
+
+  async function loadDemoProject(entry: DemoProjectEntry): Promise<void> {
+    if (demoProjectLoadingFile !== null) return;
+    demoProjectLoadingFile = entry.file;
+    demoProjectsError = '';
+    error = '';
+    try {
+      const response = await fetch(demoProjectUrl(entry.file));
+      if (!response.ok) throw new Error(`${entry.name} returned ${response.status}.`);
+      const imported = projectFromJson(await response.text());
+      await activateImportedProject(imported, `${imported.name} demo loaded and saved locally`);
+      demoProjectsPopover?.hidePopover();
+    } catch (reason: unknown) {
+      demoProjectsError = reason instanceof Error ? reason.message : 'The demo project could not be loaded.';
+    } finally {
+      demoProjectLoadingFile = null;
     }
   }
 
@@ -891,7 +936,28 @@
             <button type="button" class="has-emoticon icon-only" data-app-help-key="export-project" aria-label="Export" onclick={() => void exportProject()}><span class="button-emoticon" aria-hidden="true">📤</span></button>
             <label class="import-project has-emoticon icon-only" data-app-help-key="import-project" for="project-import"><span class="button-emoticon" aria-hidden="true">📥</span><span class="visually-hidden">Import</span></label>
             <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
+            <button type="button" class="demo-projects-trigger has-emoticon" data-app-help-key="demo-projects" popovertarget="demo-projects-popover" onclick={() => void loadDemoProjectIndex()}><span class="button-emoticon" aria-hidden="true">📂</span>Demos projects</button>
           </section>
+
+          <div bind:this={demoProjectsPopover} class="demo-projects-popover" id="demo-projects-popover" popover aria-labelledby="demo-projects-heading">
+            <div class="demo-projects-heading">
+              <div><p>Bundled examples</p><h2 id="demo-projects-heading">Demos projects</h2></div>
+              <button type="button" popovertarget="demo-projects-popover" popovertargetaction="hide" aria-label="Close demos projects">×</button>
+            </div>
+            {#if demoProjectsLoading}
+              <p class="demo-projects-state" role="status">Loading demo projects…</p>
+            {:else if demoProjectsError !== ''}
+              <p class="demo-projects-state error" role="alert">{demoProjectsError}</p>
+            {:else if demoProjectsLoaded && demoProjects.length === 0}
+              <p class="demo-projects-state">No demo projects are available.</p>
+            {:else}
+              <ul class="demo-projects-list">
+                {#each demoProjects as entry (entry.file)}
+                  <li><button type="button" onclick={() => void loadDemoProject(entry)} disabled={demoProjectLoadingFile !== null}><strong>{entry.name}</strong>{#if entry.description}<span>{entry.description}</span>{/if}{#if demoProjectLoadingFile === entry.file}<small>Loading…</small>{/if}</button></li>
+                {/each}
+              </ul>
+            {/if}
+          </div>
 
           {#if desktopSurface}
             <section class="rack-switcher" data-app-help-key="rack-switcher" aria-labelledby="rack-switcher-heading">

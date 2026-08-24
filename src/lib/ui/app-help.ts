@@ -10,7 +10,7 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   },
   'project-actions': {
     title: 'Project actions',
-    body: 'Name, save, import, export, undo, or redo the complete local project. A project can contain multiple racks and scenes.',
+    body: 'Name, save, import, export, load a bundled demo, undo, or redo the complete local project. A project can contain multiple racks and scenes.',
   },
   'project-name': {
     title: 'Project name',
@@ -35,6 +35,10 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   'import-project': {
     title: 'Import project',
     body: 'Loads a sequens-R project JSON file and saves the validated result locally.',
+  },
+  'demo-projects': {
+    title: 'Demos projects',
+    body: 'Lists bundled example projects. Selecting one validates it through the normal import path and saves it as the current local project.',
   },
   'rack-switcher': {
     title: 'Studio lanes',

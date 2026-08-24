@@ -12,6 +12,7 @@ Status: complete. Definition of Done accepted on 2026-08-24.
 - IndexedDB autosave and explicit Save, with `navigator.storage.persist()` requested only from the Save gesture.
 - Schema migration from the legacy single-rack project shape.
 - JSON project export/import with validation and exact cross-browser restoration.
+- A Workspace demo-project picker backed by a validated static catalog under `public/projects/`; selected demos use the same migration, validation, activation, and IndexedDB persistence boundary as file imports.
 - URL patches load as unsaved drafts and never overwrite the local IndexedDB project without an explicit Save.
 - Link sharing detects modules containing local-only data, names the blocked modules, and directs the user to project export.
 - Module duplication while the transport is running.
@@ -25,6 +26,7 @@ Status: complete. Definition of Done accepted on 2026-08-24.
 - Production build initial JavaScript: 48.18 KiB gzip against the 200 KiB limit.
 - The 375 × 812 mobile visual pass has no horizontal overflow or runtime errors.
 - Production smoke test against `https://sequens-r.vercel.app/` after commit `e617f70`: cross-origin isolation remained active; seed `246802468` survived Mutate → Revert and IndexedDB reload exactly; the resulting shared link opened as a draft; Chrome reported no page errors.
+- The bundled demo catalog and project JSON are included in the service-worker precache, so the picker remains available after the PWA has cached the release.
 
 Run all gates with `npm run verify`.
 

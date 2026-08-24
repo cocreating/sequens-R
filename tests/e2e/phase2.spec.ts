@@ -3,6 +3,21 @@ import { expect, test } from '@playwright/test';
 
 test.use({ viewport: { width: 375, height: 667 } });
 
+test('lists and loads a bundled demo project', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('.workspace-utilities > summary').click();
+  await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Export' })).toBeVisible();
+  await expect(page.locator('.import-project')).toBeVisible();
+  await page.getByRole('button', { name: 'Demos projects' }).click();
+  await expect(page.getByRole('heading', { name: 'Demos projects' })).toBeVisible();
+  await page.getByRole('button', { name: /Basic Electro/u }).click();
+  await expect(page.getByText('Basic Electro demo loaded and saved locally')).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Basic Electro');
+  await expect(page.getByRole('listitem', { name: 'Drums' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Arp' })).toBeVisible();
+});
+
 test('slots, editable seeds, mutate, and revert stay deterministic', async ({ page }) => {
   await page.goto('/');
   const bass = page.getByRole('listitem', { name: 'Bass' });

@@ -16,6 +16,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Desktop studio with a sticky workspace rail and three parallel module lanes at 1440 CSS px.
 - Closed desktop Workspace state reduced to one accessible 44 px toolbox trigger, allowing the module lanes to reclaim the released width.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
+- A `Demos projects` action directly after project import, opening an accessible native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
 - Compact module headers with reorder/name/monitor/solo/mute/collapse plus a `⋯` actions disclosure for Help, duplicate, module MIDI export, and delete.
 - Desktop-only per-module full-width toggles that span all current lanes without changing saved project or playback state.
 - Musical-first module bodies: slots, mutation, grid/editor, and parameters precede `Output & advanced` routing, seed, and automatic mutation controls.
@@ -51,15 +52,15 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Automated acceptance
 
-The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 59 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 36 Chrome flows, and the axe serious/critical gates. Browser flows include Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module layout, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, round-trip, and accessibility coverage.
+The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 61 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 37 Chrome flows, and the axe serious/critical gates. Browser flows include demo discovery/loading, Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module layout, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, round-trip, and accessibility coverage.
 
 Latest execution on 2026-08-25 after the Phase 6 and desktop follow-up refinements:
 
 ```text
 svelte-check: 0 errors, 0 warnings
-Vitest: 13 files / 59 tests passed
-production PWA build: 10 entries / 269.39 KiB precached
-initial JavaScript: 78.68 KiB gzip / 200.00 KiB budget
-Playwright Chrome: 36 tests passed
+Vitest: 14 files / 61 tests passed
+production PWA build: 12 entries / 285.01 KiB precached
+initial JavaScript: 79.83 KiB gzip / 200.00 KiB budget
+Playwright Chrome: 37 tests passed
 axe: no serious or critical violations
 ```

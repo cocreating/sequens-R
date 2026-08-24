@@ -4,6 +4,7 @@ import type { ClockTickMessage, EngineSnapshot, ScheduledNote } from './types';
 const LOOK_AHEAD_SECONDS = 0.15;
 const START_DELAY_SECONDS = 0.05;
 const SNAPSHOT_BOUNDARY_BEATS = 4;
+const MIDI_CLOCKS_PER_BEAT = 24;
 
 interface PendingSnapshot {
   snapshot: EngineSnapshot;
@@ -21,13 +22,14 @@ export function collectWindowEvents(
   const scheduled: ScheduledNote[] = [];
 
   for (const module of snapshot.modules) {
-    if (module.type === 'mixer' || module.mute || !module.monitor || (anySolo && !module.solo)) continue;
-    const cycleBeats = module.pattern.lengthSteps / module.pattern.stepsPerBeat;
-    if (cycleBeats <= 0) continue;
-    const firstCycle = Math.floor(fromBeat / cycleBeats);
-    const finalCycle = Math.ceil(toBeat / cycleBeats);
-    for (let cycle = firstCycle; cycle <= finalCycle; cycle += 1) {
-      for (const event of module.pattern.events) {
+    if (module.type === 'mixer' || module.mute || (anySolo && !module.solo)) continue;
+    for (const event of module.pattern.events) {
+      const laneLength = event.lane === undefined ? undefined : module.pattern.laneLengths?.[event.lane];
+      const cycleBeats = (laneLength ?? module.pattern.lengthSteps) / module.pattern.stepsPerBeat;
+      if (cycleBeats <= 0) continue;
+      const firstCycle = Math.floor(fromBeat / cycleBeats);
+      const finalCycle = Math.ceil(toBeat / cycleBeats);
+      for (let cycle = firstCycle; cycle <= finalCycle; cycle += 1) {
         const eventBeat = cycle * cycleBeats + event.startStep / module.pattern.stepsPerBeat;
         if (eventBeat < fromBeat || eventBeat >= toBeat) continue;
         scheduled.push({
@@ -47,6 +49,8 @@ export class AudioScheduler {
   readonly #context: AudioContext;
   readonly #scheduleNote: (note: ScheduledNote) => void;
   readonly #onBar: ((bar: number) => void) | null;
+  readonly #scheduleClock: ((contextTime: number) => void) | null;
+  readonly #onPosition: ((beat: number | null) => void) | null;
   #clock: AudioWorkletNode | null = null;
   #snapshot: EngineSnapshot;
   #pending: PendingSnapshot | null = null;
@@ -55,13 +59,16 @@ export class AudioScheduler {
   #playing = false;
   readonly #timingOffsets: number[] = [];
   #lastReportedBar = -1;
+  #lastReportedStep = -1;
 
-  constructor(context: AudioContext, initialSnapshot: EngineSnapshot, scheduleNote: (note: ScheduledNote) => void, onBar: ((bar: number) => void) | null = null) {
+  constructor(context: AudioContext, initialSnapshot: EngineSnapshot, scheduleNote: (note: ScheduledNote) => void, onBar: ((bar: number) => void) | null = null, scheduleClock: ((contextTime: number) => void) | null = null, onPosition: ((beat: number | null) => void) | null = null) {
     assertBpm(initialSnapshot.bpm);
     this.#context = context;
     this.#snapshot = initialSnapshot;
     this.#scheduleNote = scheduleNote;
     this.#onBar = onBar;
+    this.#scheduleClock = scheduleClock;
+    this.#onPosition = onPosition;
   }
 
   attachClock(clock: AudioWorkletNode): void {
@@ -99,6 +106,8 @@ export class AudioScheduler {
     this.#originTime = this.#context.currentTime + START_DELAY_SECONDS;
     this.#scheduledUntil = this.#originTime;
     this.#lastReportedBar = -1;
+    this.#lastReportedStep = -1;
+    this.#onPosition?.(0);
     this.#tick(this.#context.currentTime);
   }
 
@@ -107,6 +116,8 @@ export class AudioScheduler {
     this.#pending = null;
     this.#scheduledUntil = 0;
     this.#lastReportedBar = -1;
+    this.#lastReportedStep = -1;
+    this.#onPosition?.(null);
   }
 
   get playing(): boolean {
@@ -128,6 +139,13 @@ export class AudioScheduler {
     for (const note of collectWindowEvents(this.#snapshot, fromBeat, toBeat, this.#originTime)) {
       this.#scheduleNote(note);
     }
+    if (this.#scheduleClock !== null) {
+      const firstTick = Math.ceil(fromBeat * MIDI_CLOCKS_PER_BEAT - 1e-9);
+      const finalTick = Math.ceil(toBeat * MIDI_CLOCKS_PER_BEAT - 1e-9);
+      for (let tick = firstTick; tick < finalTick; tick += 1) {
+        this.#scheduleClock(this.#beatToTime(tick / MIDI_CLOCKS_PER_BEAT));
+      }
+    }
   }
 
   #applyPending(boundaryTime: number): void {
@@ -141,10 +159,17 @@ export class AudioScheduler {
   #tick(contextTime: number): void {
     if (!this.#playing) return;
     if (contextTime >= this.#originTime) {
-      const currentBar = Math.floor(this.#timeToBeat(contextTime) / SNAPSHOT_BOUNDARY_BEATS);
+      const currentBeat = this.#timeToBeat(contextTime);
+      const currentBar = Math.floor(currentBeat / SNAPSHOT_BOUNDARY_BEATS);
       if (currentBar > this.#lastReportedBar) {
         this.#lastReportedBar = currentBar;
         this.#onBar?.(currentBar);
+      }
+      const stepsPerBeat = Math.max(1, ...this.#snapshot.modules.map((module) => module.pattern.stepsPerBeat));
+      const currentStep = Math.floor(currentBeat * stepsPerBeat);
+      if (currentStep !== this.#lastReportedStep) {
+        this.#lastReportedStep = currentStep;
+        this.#onPosition?.(currentBeat);
       }
     }
     const windowEnd = Math.max(contextTime, this.#context.currentTime) + LOOK_AHEAD_SECONDS;

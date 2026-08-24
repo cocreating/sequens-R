@@ -10,7 +10,7 @@ export class AcidVoice {
   readonly #envelope: GainNode;
   #lastFrequency = 110;
 
-  constructor(context: AudioContext, destination: AudioNode) {
+  constructor(context: BaseAudioContext, destination: AudioNode) {
     this.#oscillator = new OscillatorNode(context, { type: 'sawtooth', frequency: this.#lastFrequency });
     this.#filter = new BiquadFilterNode(context, { type: 'lowpass', frequency: 900, Q: 10 });
     this.#envelope = new GainNode(context, { gain: 0 });

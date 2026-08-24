@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from 'svelte';
   import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
   import { AudioEngine } from './lib/audio/engine';
-  import { SCALE_NAMES, type ModuleType, type ScaleName } from './lib/core/pattern';
+  import { CORE_MODULE_TYPES, isControlModule, SCALE_NAMES, type ModuleType, type Pattern, type ScaleName } from './lib/core/pattern';
   import {
     activeProjectRack,
     createProject,
@@ -28,6 +28,8 @@
     setMutationIntensity,
     setMutationSchedule,
     setRackKey,
+    setCcAutomation,
+    setManualPattern,
     toEngineSnapshot,
     toShareableRack,
     toggleDrumStep,
@@ -37,15 +39,30 @@
   import { RackHistory } from './lib/state/history';
   import ModulePlate from './lib/ui/ModulePlate.svelte';
   import Transport from './lib/ui/Transport.svelte';
+  import HardwarePanel from './lib/ui/HardwarePanel.svelte';
+  import DesktopStudioPanel from './lib/ui/DesktopStudioPanel.svelte';
+  import { createBrowserMidiEnvironment, midiSupported } from './lib/midi/environment';
+  import { MidiManager, type MidiManagerState } from './lib/midi/manager';
+  import { createSmfType1 } from './lib/export/smf';
+  import { binaryBlob, safeFileName, saveBlob } from './lib/export/download';
+  import { renderRackAudio } from './lib/export/bounce';
+  import { encodePcm16Wav } from './lib/export/wav';
+  import { createStoredZip } from './lib/export/zip';
 
-  const engine = new AudioEngine(handleBar);
-  const moduleLabels: Readonly<Record<ModuleType, string>> = { drums: 'Drums', bass: 'Bass', acid: 'Acid', chords: 'Chords', mixer: 'Mixer' };
+  let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
+  const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
+  const engine = new AudioEngine(handleBar, midi, handlePlayhead);
+  const moduleLabels: Readonly<Record<ModuleType, string>> = {
+    drums: 'Drums', bass: 'Bass', acid: 'Acid', chords: 'Chords', mixer: 'Mixer',
+    arp: 'Arp', euclid: 'Euclid', piano: 'Piano roll', cc: 'CC Control', mod: 'Mod',
+  };
   const initialRack = createRackState(STARTER_RACK);
 
   let rack = $state<RackState>(initialRack);
   let project = $state<ProjectDocument>(createProject(initialRack));
   const rackHistory = new RackHistory(initialRack);
   let playing = $state(false);
+  let playheadBeat = $state<number | null>(null);
   let selectedModuleType = $state<ModuleType>('acid');
   let status = $state('Starter rack ready');
   let error = $state('');
@@ -58,16 +75,62 @@
   let sharedDraft = $state(false);
   let canUndo = $state(false);
   let canRedo = $state(false);
+  let exportBars = $state(4);
+  let exportingAudio = $state(false);
+  let desktopSurface = $state(false);
+  let audioOutputs = $state<readonly MediaDeviceInfo[]>([]);
+  let selectedAudioOutputId = $state('');
+  let desktopMedia: MediaQueryList | null = null;
 
   onDestroy(() => {
     if (diagnosticTimer !== null) window.clearInterval(diagnosticTimer);
     if (saveTimer !== null) window.clearTimeout(saveTimer);
+    void engine.destroy();
+    midi.disconnect();
+    window.removeEventListener('keydown', handleKeyboardShortcut);
+    desktopMedia?.removeEventListener('change', handleDesktopChange);
   });
 
   onMount(() => {
-    supported = 'AudioContext' in window && 'AudioWorkletNode' in window;
+    supported = 'AudioContext' in window && 'AudioWorkletNode' in window && midiSupported();
+    if (supported) void midi.inspectPermission();
+    desktopMedia = window.matchMedia('(min-width: 64rem)');
+    desktopSurface = desktopMedia.matches;
+    desktopMedia.addEventListener('change', handleDesktopChange);
+    window.addEventListener('keydown', handleKeyboardShortcut);
     void initializeApp();
   });
+
+  function handleDesktopChange(event: MediaQueryListEvent): void {
+    desktopSurface = event.matches;
+    if (!desktopSurface && !CORE_MODULE_TYPES.includes(selectedModuleType as (typeof CORE_MODULE_TYPES)[number])) selectedModuleType = 'acid';
+  }
+
+  function isTypingTarget(target: EventTarget | null): boolean {
+    return target instanceof HTMLInputElement || target instanceof HTMLSelectElement || target instanceof HTMLTextAreaElement || (target instanceof HTMLElement && target.isContentEditable);
+  }
+
+  function handleKeyboardShortcut(event: KeyboardEvent): void {
+    if (!desktopSurface || isTypingTarget(event.target)) return;
+    if (event.code === 'Space') {
+      event.preventDefault();
+      if (playing) stop(); else void play();
+    } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
+      event.preventDefault();
+      if (event.shiftKey) redo(); else undo();
+    } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 's') {
+      event.preventDefault();
+      void saveProject();
+    } else if (!event.metaKey && !event.ctrlKey && event.key.toLowerCase() === 'r') {
+      replaceRack(randomizeRack(rack));
+      status = 'New deterministic seeds generated';
+    } else if (event.key === '[' || event.key === ']') {
+      const current = project.racks.findIndex(({ id }) => id === project.activeRackId);
+      const offset = event.key === '[' ? -1 : 1;
+      const next = (current + offset + project.racks.length) % project.racks.length;
+      switchRack(project.racks[next]!.id);
+    }
+  }
 
   async function initializeApp(): Promise<void> {
     try {
@@ -100,11 +163,11 @@
   }
 
   function rackSnapshot(value: RackState = rack): RackState {
-    return $state.snapshot(value);
+    return JSON.parse(JSON.stringify(value)) as unknown as RackState;
   }
 
   function projectSnapshot(): ProjectDocument {
-    return $state.snapshot(project);
+    return JSON.parse(JSON.stringify(project)) as unknown as ProjectDocument;
   }
 
   function syncHistoryButtons(): void {
@@ -165,6 +228,10 @@
     status = 'Scheduled mutation applied';
   }
 
+  function handlePlayhead(beat: number | null): void {
+    playheadBeat = beat;
+  }
+
   async function play(): Promise<void> {
     error = '';
     try {
@@ -198,7 +265,33 @@
   }
 
   function setParam(id: string, key: string, value: number): void {
+    const source = rack.modules.find((module) => module.id === id);
     updateModule(id, (module) => setModuleParams(module, { ...module.params, [key]: value }), `param:${id}:${key}`);
+    const control = source?.type === 'cc' ? /^value([1-4])$/u.exec(key) : null;
+    if (source !== undefined && control !== null) {
+      const index = Number(control[1]);
+      midi.control(source.midi, {
+        cc: source.params[`cc${index}`] ?? 0,
+        value,
+        channel: source.params[`channel${index}`] ?? 1,
+      }, performance.now());
+    }
+  }
+
+  function setPattern(id: string, pattern: Pattern): void {
+    updateModule(id, (module) => setManualPattern(module, pattern), `piano:${id}`);
+    endCoalescing();
+    status = 'Piano roll updated · project export required for sharing';
+  }
+
+  function addAutomationPoint(id: string, control: 1 | 2 | 3 | 4, step: number, value: number): void {
+    updateModule(id, (module) => setCcAutomation(module, [...module.automation, { control, step, value }]), `automation:${id}`);
+    status = 'CC movement recorded · project export required for sharing';
+  }
+
+  function clearAutomation(id: string): void {
+    updateModule(id, (module) => setCcAutomation(module, []));
+    status = 'CC automation cleared';
   }
 
   function setTempo(value: number): void {
@@ -214,6 +307,85 @@
   function setProjectName(name: string): void {
     project = { ...project, name: name.trimStart() || 'Untitled Project' };
     scheduleSave();
+  }
+
+  function currentProject(): ProjectDocument {
+    return updateProjectRack(projectSnapshot(), rackSnapshot());
+  }
+
+  function switchRack(id: string): void {
+    if (id === project.activeRackId) return;
+    const committed = currentProject();
+    const target = committed.racks.find((entry) => entry.id === id);
+    if (target === undefined) return;
+    project = { ...committed, activeRackId: id, updatedAt: new Date().getTime() };
+    rack = rackSnapshot(target.state);
+    rackHistory.reset(rackSnapshot());
+    syncHistoryButtons();
+    publish();
+    scheduleSave();
+    status = `${target.name} active`;
+  }
+
+  function renameRack(name: string): void {
+    const normalized = name.trimStart() || 'Untitled rack';
+    const committed = currentProject();
+    project = {
+      ...committed,
+      racks: committed.racks.map((entry) => entry.id === committed.activeRackId ? { ...entry, name: normalized } : entry),
+    };
+    scheduleSave();
+  }
+
+  function addRack(): void {
+    const committed = currentProject();
+    const id = crypto.randomUUID();
+    const state: RackState = { bpm: rack.bpm, key: { ...rack.key }, modules: [createModule('drums')] };
+    project = {
+      ...committed,
+      racks: [...committed.racks, { id, name: `Rack ${committed.racks.length + 1}`, state: rackSnapshot(state) }],
+      activeRackId: id,
+      updatedAt: new Date().getTime(),
+    };
+    rack = state;
+    rackHistory.reset(rackSnapshot());
+    syncHistoryButtons();
+    publish();
+    scheduleSave();
+    status = 'New rack added';
+  }
+
+  function duplicateRack(): void {
+    const committed = currentProject();
+    const source = activeProjectRack(committed);
+    const id = crypto.randomUUID();
+    project = {
+      ...committed,
+      racks: [...committed.racks, { id, name: `${source.name} copy`, state: rackSnapshot(source.state) }],
+      activeRackId: id,
+      updatedAt: new Date().getTime(),
+    };
+    rack = rackSnapshot(source.state);
+    rackHistory.reset(rackSnapshot());
+    syncHistoryButtons();
+    publish();
+    scheduleSave();
+    status = 'Rack duplicated';
+  }
+
+  function deleteRack(): void {
+    if (project.racks.length <= 1) return;
+    const committed = currentProject();
+    const currentIndex = committed.racks.findIndex(({ id }) => id === committed.activeRackId);
+    const racks = committed.racks.filter(({ id }) => id !== committed.activeRackId);
+    const target = racks[Math.min(currentIndex, racks.length - 1)]!;
+    project = { ...committed, racks, activeRackId: target.id, updatedAt: new Date().getTime() };
+    rack = rackSnapshot(target.state);
+    rackHistory.reset(rackSnapshot());
+    syncHistoryButtons();
+    publish();
+    scheduleSave();
+    status = 'Rack deleted';
   }
 
   function setSeed(id: string, seed: number): void {
@@ -250,7 +422,7 @@
     const index = rack.modules.findIndex((module) => module.id === id);
     if (index < 0 || rack.modules.length >= 16) return;
     const source = rack.modules[index]!;
-    const duplicate = structuredClone($state.snapshot(source));
+    const duplicate = JSON.parse(JSON.stringify(source)) as unknown as RackModule;
     duplicate.id = createModule(source.type).id;
     duplicate.name = `${source.name} copy`;
     replaceRack({ ...rack, modules: [...rack.modules.slice(0, index + 1), duplicate, ...rack.modules.slice(index + 1)] });
@@ -287,16 +459,12 @@
     }
   }
 
-  function exportProject(): void {
+  async function exportProject(): Promise<void> {
     project = updateProjectRack(projectSnapshot(), rackSnapshot());
     const blob = new Blob([projectToJson(projectSnapshot())], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = `${project.name.trim().replace(/[^a-z0-9]+/giu, '-').replace(/^-|-$/gu, '').toLowerCase() || 'sequens-r-project'}.sequens-r.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-    status = 'Project exported';
+    const fileName = `${project.name.trim().replace(/[^a-z0-9]+/giu, '-').replace(/^-|-$/gu, '').toLowerCase() || 'sequens-r-project'}.sequens-r.json`;
+    const destination = await saveBlob(blob, fileName, { description: 'sequens-R project', mime: 'application/json', extensions: ['.json'] });
+    status = destination === 'cancelled' ? 'Project export cancelled' : destination === 'file' ? 'Project saved to disk' : 'Project downloaded';
   }
 
   async function importProject(event: Event): Promise<void> {
@@ -336,6 +504,87 @@
       error = reason instanceof Error ? reason.message : 'The patch link could not be copied.';
     }
   }
+
+  async function connectMidi(): Promise<void> {
+    error = '';
+    try {
+      await midi.connect();
+      status = midiState.outputs.length === 0 ? 'MIDI connected · no outputs found' : `${midiState.outputs.length} MIDI output${midiState.outputs.length === 1 ? '' : 's'} ready`;
+    } catch (reason: unknown) {
+      error = reason instanceof DOMException && (reason.name === 'SecurityError' || reason.name === 'NotAllowedError')
+        ? 'MIDI access was denied. Allow MIDI devices in this site’s browser permissions, then try again.'
+        : reason instanceof Error ? reason.message : 'MIDI hardware could not be connected.';
+    }
+  }
+
+  async function exportMidi(module: RackModule | null = null): Promise<void> {
+    const bytes = createSmfType1(rackSnapshot(), exportBars, module?.id ?? null);
+    const baseName = safeFileName(module?.name ?? project.name, module === null ? 'sequens-r-rack' : 'sequens-r-module');
+    const destination = await saveBlob(binaryBlob(bytes, 'audio/midi'), `${baseName}-${exportBars}-bars.mid`, { description: 'MIDI file', mime: 'audio/midi', extensions: ['.mid'] });
+    status = destination === 'cancelled' ? 'MIDI export cancelled' : `${module?.name ?? 'Rack'} MIDI exported · ${exportBars} bars`;
+  }
+
+  async function bounceMix(): Promise<void> {
+    if (exportingAudio) return;
+    error = '';
+    exportingAudio = true;
+    status = 'Rendering WAV mix offline…';
+    try {
+      const audio = await renderRackAudio(rackSnapshot(), exportBars);
+      const wav = encodePcm16Wav(audio);
+      const destination = await saveBlob(binaryBlob(wav, 'audio/wav'), `${safeFileName(project.name, 'sequens-r-mix')}-${exportBars}-bars.wav`, { description: 'WAV audio', mime: 'audio/wav', extensions: ['.wav'] });
+      status = destination === 'cancelled' ? 'WAV export cancelled' : `WAV mix exported · ${exportBars} bars`;
+    } catch (reason: unknown) {
+      error = reason instanceof Error ? reason.message : 'The WAV mix could not be rendered.';
+    } finally {
+      exportingAudio = false;
+    }
+  }
+
+  async function bounceStems(): Promise<void> {
+    if (exportingAudio) return;
+    error = '';
+    exportingAudio = true;
+    status = 'Rendering WAV stems offline…';
+    try {
+      const modules = rack.modules.filter((module) => !isControlModule(module.type) && module.monitor);
+      if (modules.length === 0) throw new Error('No monitored sound modules are available to render.');
+      const snapshot = rackSnapshot();
+      const entries = await Promise.all(modules.map(async (module, index) => {
+        const audio = await renderRackAudio(snapshot, exportBars, module.id);
+        return { name: `${String(index + 1).padStart(2, '0')}-${safeFileName(module.name, module.type)}.wav`, data: encodePcm16Wav(audio) };
+      }));
+      const zip = createStoredZip(entries);
+      const destination = await saveBlob(binaryBlob(zip, 'application/zip'), `${safeFileName(project.name, 'sequens-r-stems')}-${exportBars}-bars-stems.zip`, { description: 'ZIP archive', mime: 'application/zip', extensions: ['.zip'] });
+      status = destination === 'cancelled' ? 'Stem export cancelled' : `${modules.length} WAV stems exported · ${exportBars} bars`;
+    } catch (reason: unknown) {
+      error = reason instanceof Error ? reason.message : 'The WAV stems could not be rendered.';
+    } finally {
+      exportingAudio = false;
+    }
+  }
+
+  async function refreshAudioOutputs(): Promise<void> {
+    error = '';
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      audioOutputs = devices.filter((device) => device.kind === 'audiooutput');
+      status = `${audioOutputs.length} audio output${audioOutputs.length === 1 ? '' : 's'} found`;
+    } catch (reason: unknown) {
+      error = reason instanceof Error ? reason.message : 'Audio outputs could not be enumerated.';
+    }
+  }
+
+  async function selectAudioOutput(deviceId: string): Promise<void> {
+    error = '';
+    try {
+      await engine.setOutputDevice(deviceId);
+      selectedAudioOutputId = deviceId;
+      status = deviceId === '' ? 'System audio output selected' : 'Desktop audio output selected';
+    } catch (reason: unknown) {
+      error = reason instanceof Error ? reason.message : 'The audio output could not be selected.';
+    }
+  }
 </script>
 
 <svelte:head><title>sequens-R · generative MIDI sequencer</title></svelte:head>
@@ -347,7 +596,7 @@
 </header>
 
 {#if !supported}
-  <main class="unsupported"><h2>This browser cannot run sequens-R.</h2><p>Use a current Chromium browser with AudioWorklet support.</p></main>
+  <main class="unsupported"><h2>This browser cannot run sequens-R.</h2><p>Use a current Chromium browser with AudioWorklet and Web MIDI support. iOS and WebKit are outside this instrument’s supported platform.</p></main>
 {:else if !initialized}
   <main class="loading" aria-busy="true"><p>Loading local project…</p></main>
 {:else}
@@ -358,12 +607,55 @@
       <button type="button" onclick={undo} disabled={!canUndo}>Undo</button>
       <button type="button" onclick={redo} disabled={!canRedo}>Redo</button>
       <button type="button" onclick={saveProject}>{sharedDraft ? 'Save draft' : 'Save'}</button>
-      <button type="button" onclick={exportProject}>Export</button>
+      <button type="button" onclick={() => void exportProject()}>Export</button>
       <label class="import-project" for="project-import">Import</label>
       <input id="project-import" class="visually-hidden" type="file" accept="application/json,.json" onchange={importProject} />
     </section>
 
+    {#if desktopSurface}
+      <section class="rack-switcher" aria-labelledby="rack-switcher-heading">
+        <div class="rack-switcher-heading">
+          <div><p>Project racks</p><h2 id="rack-switcher-heading">Studio lanes</h2></div>
+          <div class="rack-actions">
+            <button type="button" onclick={addRack}>New rack</button>
+            <button type="button" onclick={duplicateRack}>Duplicate rack</button>
+            <button type="button" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
+          </div>
+        </div>
+        <div class="rack-tabs" role="tablist" aria-label="Project racks">
+          {#each project.racks as projectRack, index (projectRack.id)}
+            <button type="button" role="tab" aria-selected={projectRack.id === project.activeRackId} aria-controls="module-lanes" onclick={() => switchRack(projectRack.id)}>{index + 1} · {projectRack.name}</button>
+          {/each}
+        </div>
+        <label for="rack-name">Active rack name</label>
+        <input id="rack-name" value={activeProjectRack(project).name} oninput={(event) => renameRack(event.currentTarget.value)} />
+      </section>
+    {/if}
+
     <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} {playing} onplay={play} onstop={stop} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+
+    <HardwarePanel state={midiState} onconnect={connectMidi} onclock={(portId, enabled) => midi.setClock(portId, enabled)} />
+
+    {#if desktopSurface}
+      <DesktopStudioPanel
+        {audioOutputs}
+        selectedOutputId={selectedAudioOutputId}
+        outputSelectionSupported={engine.outputSelectionSupported}
+        onrefreshoutputs={refreshAudioOutputs}
+        onselectoutput={selectAudioOutput}
+      />
+    {/if}
+
+    <section class="music-export" aria-labelledby="music-export-heading" aria-busy={exportingAudio}>
+      <div><h2 id="music-export-heading">Music export</h2><p>Render the current deterministic rack without connecting hardware.</p></div>
+      <label for="export-bars">Length</label>
+      <select id="export-bars" bind:value={exportBars}>
+        {#each [1, 2, 4, 8] as bars}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
+      </select>
+      <button type="button" onclick={() => void exportMidi()} disabled={exportingAudio}>Rack MIDI</button>
+      <button type="button" onclick={bounceMix} disabled={exportingAudio}>Mix WAV</button>
+      <button type="button" onclick={bounceStems} disabled={exportingAudio}>WAV stems</button>
+    </section>
 
     <section class="rack-tools" aria-label="Rack actions">
       <button type="button" class="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}>Random</button>
@@ -371,7 +663,7 @@
       <div class="add-module">
         <label for="module-type">New module</label>
         <select id="module-type" bind:value={selectedModuleType}>
-          {#each MODULE_TYPES as type}<option value={type}>{moduleLabels[type]}</option>{/each}
+          {#each (desktopSurface ? MODULE_TYPES : CORE_MODULE_TYPES) as type}<option value={type}>{moduleLabels[type]}</option>{/each}
         </select>
         <button type="button" onclick={addModule}>Add</button>
       </div>
@@ -385,6 +677,7 @@
 
     <section
       class="module-list"
+      id="module-lanes"
       aria-label="Rack modules"
       use:dragHandleZone={{ items: rack.modules, flipDurationMs: 0, zoneTabIndex: -1 }}
       onconsider={handleConsider}
@@ -394,6 +687,9 @@
         <ModulePlate
           {module}
           musicalKey={rack.key}
+          bpm={rack.bpm}
+          {playheadBeat}
+          {desktopSurface}
           onpatch={(modulePatch) => patchModule(module.id, modulePatch)}
           onparam={(key, value) => setParam(module.id, key, value)}
           onparamcommit={endCoalescing}
@@ -405,10 +701,15 @@
           onintensity={(intensity) => updateModule(module.id, (current) => setMutationIntensity(current, intensity))}
           onschedule={(on, everyNLoops) => updateModule(module.id, (current) => setMutationSchedule(current, on, everyNLoops))}
           onstep={(lane, step) => updateModule(module.id, (current) => toggleDrumStep(current, rack.key, lane, step))}
+          onpattern={(pattern) => setPattern(module.id, pattern)}
+          onautomation={(control, step, value) => addAutomationPoint(module.id, control, step, value)}
+          onclearautomation={() => clearAutomation(module.id)}
           onduplicate={() => duplicateModule(module.id)}
           ondelete={() => deleteModule(module.id)}
           rackModules={rack.modules}
           ontargetpatch={patchModule}
+          midiOutputs={midiState.outputs}
+          onexportmidi={() => { void exportMidi(module); }}
         />
       {/each}
     </section>

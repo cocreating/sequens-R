@@ -114,7 +114,7 @@ test('a project exports, imports identically elsewhere, and protects local-only 
   await bass.getByLabel('Seed', { exact: true }).blur();
 
   const downloadPromise = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Export' }).click();
+  await page.getByRole('button', { name: 'Export', exact: true }).click();
   const download = await downloadPromise;
   const path = await download.path();
   if (path === null) throw new Error('The exported project has no readable path.');

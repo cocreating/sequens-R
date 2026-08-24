@@ -1,4 +1,4 @@
-import type { ModuleType, MusicalKey, Pattern, ScaleName } from '../core/pattern';
+import { isControlModule, type ChordEvent, type ModuleType, type MusicalKey, type NoteEvent, type Pattern, type ScaleName } from '../core/pattern';
 import { GENERATORS, type NumericParams } from '../generators';
 import { normalizeRack } from '../share/codec';
 import type { ShareableRack } from '../share/types';
@@ -8,6 +8,14 @@ import { mutationSeed } from '../generators/shared';
 export interface PatternSlot {
   seed: number;
   params: NumericParams;
+  handEdited: boolean;
+  pattern: Pattern | null;
+}
+
+export interface CcAutomationPoint {
+  control: 1 | 2 | 3 | 4;
+  step: number;
+  value: number;
 }
 
 export interface MutationState {
@@ -32,6 +40,8 @@ export type RackModule = {
   solo: boolean;
   monitor: boolean;
   level: number;
+  midi: { portId: string | null; channel: number };
+  automation: CcAutomationPoint[];
 } & Record<string, unknown>;
 
 export interface RackState {
@@ -46,27 +56,35 @@ const DEFAULT_NAMES: Readonly<Record<ModuleType, string>> = {
   acid: 'Acid',
   chords: 'Chords',
   mixer: 'Mixer',
+  arp: 'Arp',
+  euclid: 'Euclid',
+  piano: 'Piano roll',
+  cc: 'CC Control',
+  mod: 'Mod',
 };
 
-let nextModuleId = 0;
-
 function createId(type: ModuleType): string {
-  nextModuleId += 1;
-  return `${type}-${nextModuleId}`;
+  return `${type}-${crypto.randomUUID()}`;
 }
 
 function randomSeed(): number {
   return crypto.getRandomValues(new Uint32Array(1))[0]!;
 }
 
-function cloneSlot(slot: PatternSlot): PatternSlot {
-  return { seed: slot.seed >>> 0, params: { ...slot.params } };
+function clonePattern(pattern: Pattern | null): Pattern | null {
+  return pattern === null ? null : JSON.parse(JSON.stringify(pattern)) as unknown as Pattern;
 }
 
-function createSlots(seed: number, params: NumericParams): PatternSlot[] {
+function cloneSlot(slot: PatternSlot): PatternSlot {
+  return { seed: slot.seed >>> 0, params: { ...slot.params }, handEdited: slot.handEdited, pattern: clonePattern(slot.pattern) };
+}
+
+function createSlots(type: ModuleType, seed: number, params: NumericParams): PatternSlot[] {
   return Array.from({ length: 8 }, (_, index) => ({
     seed: index === 0 ? seed >>> 0 : (seed ^ Math.imul(index, 0x9e3779b9)) >>> 0,
     params: { ...params },
+    handEdited: type === 'piano',
+    pattern: type === 'piano' ? GENERATORS.piano.generate(seed, params, { key: { root: 0, scale: 'major' }, bars: 1 }) : null,
   }));
 }
 
@@ -78,15 +96,17 @@ export function createModule(type: ModuleType, seed = randomSeed(), params?: Rea
     name: DEFAULT_NAMES[type],
     seed,
     params: normalizedParams,
-    slots: createSlots(seed, normalizedParams),
+    slots: createSlots(type, seed, normalizedParams),
     activeSlot: 0,
     mutation: { on: false, intensity: 2, everyNLoops: 1, revert: null },
-    shareable: true,
+    shareable: type !== 'piano',
     collapsed: false,
     mute: false,
     solo: false,
     monitor: true,
-    level: type === 'drums' ? 0.82 : type === 'mixer' ? 0 : 0.68,
+    level: type === 'drums' ? 0.82 : isControlModule(type) ? 0 : 0.68,
+    midi: { portId: null, channel: type === 'drums' ? 10 : 1 },
+    automation: [],
   };
 }
 
@@ -104,15 +124,21 @@ export function setModuleSlot(module: RackModule, index: number): RackModule {
 
 export function setModuleSeed(module: RackModule, seed: number): RackModule {
   if (!Number.isInteger(seed) || seed < 0 || seed > 0xffffffff) return module;
-  const slot = { seed: seed >>> 0, params: { ...module.params } };
+  const current = module.slots[module.activeSlot]!;
+  const slot = { seed: seed >>> 0, params: { ...module.params }, handEdited: current.handEdited, pattern: clonePattern(current.pattern) };
   const slots = module.slots.map((current, index) => index === module.activeSlot ? slot : cloneSlot(current));
   return { ...module, seed: slot.seed, slots };
 }
 
 export function setModuleParams(module: RackModule, params: NumericParams): RackModule {
-  const slot = { seed: module.seed, params: { ...params } };
+  const current = module.slots[module.activeSlot]!;
+  const nextPattern = module.type === 'piano' && current.pattern !== null
+    ? { ...current.pattern, lengthSteps: [16, 32, 64][params.length ?? 0] ?? 16, events: current.pattern.events.filter((event) => event.startStep < ([16, 32, 64][params.length ?? 0] ?? 16)) }
+    : clonePattern(current.pattern);
+  const slot = { seed: module.seed, params: { ...params }, handEdited: current.handEdited, pattern: nextPattern };
   const slots = module.slots.map((current, index) => index === module.activeSlot ? slot : cloneSlot(current));
-  return { ...module, params: slot.params, slots };
+  const updated = { ...module, params: slot.params, slots };
+  return module.type === 'cc' && module.automation.length > 0 ? setCcAutomation(updated, module.automation) : updated;
 }
 
 export function setMutationIntensity(module: RackModule, intensity: 1 | 2 | 3 | 4): RackModule {
@@ -126,7 +152,7 @@ export function setMutationSchedule(module: RackModule, on: boolean, everyNLoops
 
 export function mutateModule(module: RackModule): RackModule {
   if (module.type === 'mixer') return module;
-  const revert = { seed: module.seed, params: { ...module.params } };
+  const revert = cloneSlot(module.slots[module.activeSlot]!);
   const mutated = setModuleSeed(module, mutationSeed(module.seed, module.mutation.intensity));
   return { ...mutated, mutation: { ...module.mutation, revert } };
 }
@@ -147,8 +173,67 @@ export function createRackState(shared: ShareableRack): RackState {
   };
 }
 
-export function modulePattern(module: RackModule, key: MusicalKey): Pattern {
-  return GENERATORS[module.type].generate(module.seed, module.params, { key, bars: 1 });
+function chordContext(modules: readonly RackModule[], key: MusicalKey): readonly ChordEvent[] | undefined {
+  const chords = modules.find((candidate) => candidate.type === 'chords');
+  if (chords === undefined) return undefined;
+  const pattern = GENERATORS.chords.generate(chords.seed, chords.params, { key, bars: 1 });
+  const duration = Math.max(1, chords.params.duration ?? 16);
+  const count = Math.max(1, chords.params.length ?? 4);
+  return Array.from({ length: count }, (_, index) => {
+    const startStep = index * duration;
+    const pitches = pattern.events
+      .filter((event) => event.startStep >= startStep && event.startStep < startStep + Math.min(2, duration))
+      .map((event) => event.pitch);
+    return { startStep, durationSteps: duration, pitches };
+  }).filter(({ pitches }) => pitches.length > 0);
+}
+
+function ccAutomationPattern(module: RackModule): Pattern | null {
+  if (module.type !== 'cc' || module.automation.length === 0) return null;
+  const events: NoteEvent[] = module.automation.map((point) => ({
+    startStep: point.step,
+    durationSteps: 0.01,
+    pitch: 0,
+    velocity: 1,
+    cc: module.params[`cc${point.control}`] ?? 0,
+    value: point.value,
+    channel: module.params[`channel${point.control}`] ?? 1,
+    lane: point.control - 1,
+  }));
+  return { lengthSteps: (module.params.bars ?? 1) * 16, stepsPerBeat: 4, events: events.sort((left, right) => left.startStep - right.startStep) };
+}
+
+export function modulePattern(module: RackModule, key: MusicalKey, rackModules: readonly RackModule[] = []): Pattern {
+  if (module.type === 'piano') {
+    const slot = module.slots[module.activeSlot]!;
+    if (slot.handEdited && slot.pattern !== null) return clonePattern(slot.pattern)!;
+  }
+  const automation = ccAutomationPattern(module);
+  if (automation !== null) return automation;
+  const chords = module.type === 'arp' && module.params.followChords === 1 ? chordContext(rackModules, key) : undefined;
+  return GENERATORS[module.type].generate(module.seed, module.params, {
+    key,
+    bars: Math.max(1, module.params.bars ?? 1),
+    ...(chords === undefined ? {} : { chords }),
+  });
+}
+
+export function setManualPattern(module: RackModule, pattern: Pattern): RackModule {
+  if (module.type !== 'piano') return module;
+  const slot = { ...cloneSlot(module.slots[module.activeSlot]!), handEdited: true, pattern: clonePattern(pattern) };
+  return {
+    ...module,
+    shareable: false,
+    slots: module.slots.map((current, index) => index === module.activeSlot ? slot : cloneSlot(current)),
+  };
+}
+
+export function setCcAutomation(module: RackModule, automation: readonly CcAutomationPoint[]): RackModule {
+  if (module.type !== 'cc') return module;
+  const normalized = automation
+    .map((point) => ({ ...point, step: Math.max(0, Math.min((module.params.bars ?? 1) * 16 - 0.25, Math.round(point.step * 4) / 4)), value: Math.max(0, Math.min(127, Math.round(point.value))) }))
+    .sort((left, right) => left.step - right.step || left.control - right.control);
+  return { ...module, automation: normalized, shareable: normalized.length === 0 };
 }
 
 export function toEngineSnapshot(rack: RackState): EngineSnapshot {
@@ -157,11 +242,12 @@ export function toEngineSnapshot(rack: RackState): EngineSnapshot {
     modules: rack.modules.map((module) => Object.freeze({
       id: module.id,
       type: module.type,
-      pattern: Object.freeze(modulePattern(module, rack.key)),
+      pattern: Object.freeze(modulePattern(module, rack.key, rack.modules)),
       mute: module.mute,
       solo: module.solo,
       monitor: module.monitor,
       level: module.level,
+      midi: { ...module.midi },
     })),
   };
   Object.freeze(snapshot.modules);
@@ -179,7 +265,7 @@ export function toShareableRack(rack: RackState): ShareableRack {
 export function randomizeRack(rack: RackState): RackState {
   return {
     ...rack,
-    modules: rack.modules.map((module) => module.type === 'mixer' ? module : setModuleSeed(module, randomSeed())),
+    modules: rack.modules.map((module) => module.type === 'mixer' || module.type === 'piano' ? module : setModuleSeed(module, randomSeed())),
   };
 }
 

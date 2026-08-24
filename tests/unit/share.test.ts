@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
-import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
+import { CORE_MODULE_TYPES, SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { deserializeRack, normalizeRack, PATCH_SCHEMA_VERSION, serializeRack } from '../../src/lib/share/codec';
 import { loadRackFromFragment, rackToFragment } from '../../src/lib/share/fragment';
-import { MODULE_TYPES, PARAM_SCHEMAS } from '../../src/lib/share/schema';
+import { PARAM_SCHEMAS } from '../../src/lib/share/schema';
 import { STARTER_RACK } from '../../src/lib/share/starter';
 import type { ShareableModule, ShareableRack } from '../../src/lib/share/types';
 import { GENERATORS } from '../../src/lib/generators';
@@ -21,7 +21,7 @@ function randomRack(random: () => number): ShareableRack {
   return {
     bpm: randomInt(random, 200, 3000) / 10,
     key: { root: randomInt(random, 0, 11), scale: SCALE_NAMES[randomInt(random, 0, SCALE_NAMES.length - 1)]! },
-    modules: MODULE_TYPES.map((type) => randomModule(random, type)),
+    modules: CORE_MODULE_TYPES.map((type) => randomModule(random, type)),
   };
 }
 

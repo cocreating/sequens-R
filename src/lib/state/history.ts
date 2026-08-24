@@ -2,6 +2,12 @@ import type { RackState } from './rack';
 
 const HISTORY_LIMIT = 100;
 
+function cloneRack(value: RackState): RackState {
+  // Rack history contains only the versioned, JSON-safe project domain. This
+  // also strips framework proxies before entries cross the history boundary.
+  return JSON.parse(JSON.stringify(value)) as unknown as RackState;
+}
+
 export class RackHistory {
   #current: RackState;
   readonly #past: RackState[] = [];
@@ -9,11 +15,11 @@ export class RackHistory {
   #coalesceKey: string | null = null;
 
   constructor(initial: RackState) {
-    this.#current = structuredClone(initial);
+    this.#current = cloneRack(initial);
   }
 
   get current(): RackState {
-    return structuredClone(this.#current);
+    return cloneRack(this.#current);
   }
 
   get canUndo(): boolean {
@@ -25,7 +31,7 @@ export class RackHistory {
   }
 
   reset(value: RackState): void {
-    this.#current = structuredClone(value);
+    this.#current = cloneRack(value);
     this.#past.length = 0;
     this.#future.length = 0;
     this.#coalesceKey = null;
@@ -33,10 +39,10 @@ export class RackHistory {
 
   record(value: RackState, coalesceKey: string | null = null): RackState {
     if (coalesceKey === null || coalesceKey !== this.#coalesceKey) {
-      this.#past.push(structuredClone(this.#current));
+      this.#past.push(cloneRack(this.#current));
       if (this.#past.length > HISTORY_LIMIT) this.#past.shift();
     }
-    this.#current = structuredClone(value);
+    this.#current = cloneRack(value);
     this.#future.length = 0;
     this.#coalesceKey = coalesceKey;
     return this.current;
@@ -49,7 +55,7 @@ export class RackHistory {
   undo(): RackState | null {
     const previous = this.#past.pop();
     if (previous === undefined) return null;
-    this.#future.push(structuredClone(this.#current));
+    this.#future.push(cloneRack(this.#current));
     this.#current = previous;
     this.#coalesceKey = null;
     return this.current;
@@ -58,7 +64,7 @@ export class RackHistory {
   redo(): RackState | null {
     const next = this.#future.pop();
     if (next === undefined) return null;
-    this.#past.push(structuredClone(this.#current));
+    this.#past.push(cloneRack(this.#current));
     this.#current = next;
     this.#coalesceKey = null;
     return this.current;

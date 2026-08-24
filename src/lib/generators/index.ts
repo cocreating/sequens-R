@@ -4,6 +4,11 @@ import { bassGenerator } from './bass';
 import { chordsGenerator } from './chords';
 import { drumsGenerator } from './drums';
 import { mixerGenerator } from './mixer';
+import { arpGenerator } from './arp';
+import { euclidGenerator } from './euclid';
+import { pianoGenerator } from './piano';
+import { ccGenerator } from './cc';
+import { modGenerator } from './mod';
 
 export type NumericParams = Record<string, number>;
 
@@ -31,6 +36,11 @@ export const GENERATORS: Readonly<Record<ModuleType, RegisteredGenerator>> = {
   acid: register(acidGenerator),
   chords: register(chordsGenerator),
   mixer: register(mixerGenerator),
+  arp: register(arpGenerator),
+  euclid: register(euclidGenerator),
+  piano: register(pianoGenerator),
+  cc: register(ccGenerator),
+  mod: register(modGenerator),
 };
 
-export { acidGenerator, bassGenerator, chordsGenerator, drumsGenerator, mixerGenerator };
+export { acidGenerator, arpGenerator, bassGenerator, ccGenerator, chordsGenerator, drumsGenerator, euclidGenerator, mixerGenerator, modGenerator, pianoGenerator };

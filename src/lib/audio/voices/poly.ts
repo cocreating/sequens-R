@@ -13,7 +13,7 @@ function frequencyForMidi(pitch: number): number {
 export class PolyVoice {
   readonly #slots: VoiceSlot[];
 
-  constructor(context: AudioContext, destination: AudioNode, waveform: OscillatorType, voiceCount = 4) {
+  constructor(context: BaseAudioContext, destination: AudioNode, waveform: OscillatorType, voiceCount = 4) {
     this.#slots = Array.from({ length: voiceCount }, () => {
       const oscillator = new OscillatorNode(context, { type: waveform, frequency: 110 });
       const envelope = new GainNode(context, { gain: 0 });

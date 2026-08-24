@@ -3,7 +3,7 @@ import { decodeCbor, encodeCbor, type CborValue } from './cbor';
 import { MODULE_TYPES, PARAM_SCHEMAS, validateParams } from './schema';
 import type { ShareableModule, ShareableRack } from './types';
 
-export const PATCH_SCHEMA_VERSION = 1;
+export const PATCH_SCHEMA_VERSION = 2;
 const FORMAT = 'deflate-raw' as ConstructorParameters<typeof CompressionStream>[0];
 
 function expectArray(value: CborValue, label: string): readonly CborValue[] {
@@ -17,6 +17,7 @@ function expectInteger(value: CborValue | undefined, label: string): number {
 }
 
 function normalizeModule(module: ShareableModule): ShareableModule {
+  if (module.type === 'piano') throw new RangeError('Piano roll modules must be exported as a project, not shared by link.');
   if (!Number.isInteger(module.seed) || module.seed < 0 || module.seed > 0xffffffff) {
     throw new RangeError('Module seed must be a uint32.');
   }
@@ -110,7 +111,7 @@ export async function serializeRack(rack: ShareableRack): Promise<Uint8Array> {
 export async function deserializeRack(compressed: Uint8Array): Promise<ShareableRack> {
   const versioned = await transform(compressed, new DecompressionStream(FORMAT));
   const version = versioned[0];
-  if (version !== PATCH_SCHEMA_VERSION) throw new RangeError(`Unsupported patch schema version ${String(version)}.`);
+  if (version !== 1 && version !== PATCH_SCHEMA_VERSION) throw new RangeError(`Unsupported patch schema version ${String(version)}.`);
   return fromTuple(decodeCbor(versioned.subarray(1)));
 }
 

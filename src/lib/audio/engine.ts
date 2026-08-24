@@ -1,10 +1,12 @@
-import type { ModuleType } from '../core/pattern';
+import { isControlModule, type ModuleType } from '../core/pattern';
 import { AudioScheduler } from './scheduler';
 import type { EngineModuleSnapshot, EngineSnapshot, ScheduledNote } from './types';
 import { AcidVoice } from './voices/acid';
 import { DrumKitVoice } from './voices/drumkit';
 import { PolyVoice } from './voices/poly';
 import clockWorkletUrl from './clock.worklet.ts?worker&url';
+import { MidiTimeBridge } from '../midi/time-bridge';
+import type { MidiSink } from '../midi/types';
 
 interface ModuleVoice {
   type: ModuleType;
@@ -23,9 +25,15 @@ export class AudioEngine {
   #snapshot: EngineSnapshot = EMPTY_SNAPSHOT;
   readonly #voices = new Map<string, ModuleVoice>();
   readonly #onBar: ((bar: number) => void) | null;
+  readonly #onPosition: ((beat: number | null) => void) | null;
+  readonly #midi: MidiSink | null;
+  #midiTime: MidiTimeBridge | null = null;
+  #midiResyncTimer: number | null = null;
 
-  constructor(onBar: ((bar: number) => void) | null = null) {
+  constructor(onBar: ((bar: number) => void) | null = null, midi: MidiSink | null = null, onPosition: ((beat: number | null) => void) | null = null) {
     this.#onBar = onBar;
+    this.#midi = midi;
+    this.#onPosition = onPosition;
   }
 
   get ready(): boolean {
@@ -45,6 +53,17 @@ export class AudioEngine {
     return this.#scheduler?.messageJitterMs ?? null;
   }
 
+  get outputSelectionSupported(): boolean {
+    return typeof (AudioContext.prototype as AudioContext & { setSinkId?: unknown }).setSinkId === 'function';
+  }
+
+  async setOutputDevice(deviceId: string): Promise<void> {
+    await this.initialize();
+    const context = this.#context as AudioContext & { setSinkId?: (sinkId: string) => Promise<void> };
+    if (context.setSinkId === undefined) throw new Error('Audio output selection is not available in this browser.');
+    await context.setSinkId(deviceId);
+  }
+
   async initialize(): Promise<void> {
     if (this.#context !== null) {
       if (this.#context.state === 'suspended') await this.#context.resume();
@@ -60,7 +79,9 @@ export class AudioEngine {
       release: 0.12,
     });
     master.connect(context.destination);
-    const scheduler = new AudioScheduler(context, this.#snapshot, (note) => this.#schedule(note), this.#onBar);
+    this.#midiTime = new MidiTimeBridge(context);
+    this.#midiResyncTimer = window.setInterval(() => this.#midiTime?.resync(), 1000);
+    const scheduler = new AudioScheduler(context, this.#snapshot, (note) => this.#schedule(note), this.#onBar, (time) => this.#scheduleClock(time), this.#onPosition);
     const clock = new AudioWorkletNode(context, 'sequens-clock', { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [1] });
     const clockSink = new GainNode(context, { gain: 0 });
     clock.connect(clockSink).connect(context.destination);
@@ -74,19 +95,24 @@ export class AudioEngine {
   }
 
   publish(snapshot: EngineSnapshot): void {
+    this.#silenceMidiTransitions(this.#snapshot.modules, snapshot.modules);
     this.#snapshot = snapshot;
     this.#syncVoices(snapshot.modules);
     this.#scheduler?.publish(snapshot);
   }
 
   async play(): Promise<void> {
+    if (this.#scheduler?.playing === true) return;
     await this.initialize();
     await this.#context!.resume();
+    if (this.#scheduler!.playing) return;
+    this.#midi?.start(this.#toPerformanceTime(this.#context!.currentTime + 0.05));
     this.#scheduler!.start();
   }
 
   stop(): void {
     this.#scheduler?.stop();
+    this.#midi?.stop(this.#toPerformanceTime(this.#context?.currentTime ?? 0));
     this.panic();
   }
 
@@ -98,13 +124,68 @@ export class AudioEngine {
       module.voice?.panic(now);
     }
     this.#applyLevels(this.#snapshot.modules, now + 0.01);
+    this.#midi?.panic(this.#toPerformanceTime(now));
+  }
+
+  async destroy(): Promise<void> {
+    if (this.#context === null) return;
+    this.stop();
+    if (this.#midiResyncTimer !== null) window.clearInterval(this.#midiResyncTimer);
+    this.#midiResyncTimer = null;
+    this.#clock?.disconnect();
+    this.#clockSink?.disconnect();
+    this.#master?.disconnect();
+    for (const module of this.#voices.values()) module.bus.disconnect();
+    this.#voices.clear();
+    const context = this.#context;
+    this.#context = null;
+    this.#scheduler = null;
+    this.#clock = null;
+    this.#clockSink = null;
+    this.#master = null;
+    this.#midiTime = null;
+    await context.close();
   }
 
   #schedule(note: ScheduledNote): void {
     const module = this.#voices.get(note.moduleId);
-    if (module === undefined || module.voice === null) return;
+    const snapshot = this.#snapshot.modules.find((entry) => entry.id === note.moduleId);
+    const anySolo = this.#snapshot.modules.some((entry) => entry.solo);
+    if (snapshot === undefined || snapshot.mute || (anySolo && !snapshot.solo)) return;
+    if (note.event.cc === undefined) this.#midi?.note(snapshot.midi, note.event, this.#toPerformanceTime(note.time), note.duration * 1000);
+    else this.#midi?.control(snapshot.midi, note.event, this.#toPerformanceTime(note.time));
+    if (module === undefined || module.voice === null || !snapshot.monitor) return;
     if (module.voice instanceof DrumKitVoice) module.voice.trigger(note.event, note.time);
     else module.voice.trigger(note.event, note.time, note.duration);
+  }
+
+  #scheduleClock(contextTime: number): void {
+    this.#midi?.clock(this.#toPerformanceTime(contextTime));
+  }
+
+  #silenceMidiTransitions(previous: readonly EngineModuleSnapshot[], next: readonly EngineModuleSnapshot[]): void {
+    if (this.#context === null || this.#midi === null) return;
+    const nextById = new Map(next.map((module) => [module.id, module]));
+    const nextHasSolo = next.some((module) => module.solo);
+    const previousHadSolo = previous.some((module) => module.solo);
+    const timestamp = this.#toPerformanceTime(this.#context.currentTime);
+    for (const module of previous) {
+      const replacement = nextById.get(module.id);
+      const routeChanged = replacement !== undefined && (replacement.midi.portId !== module.midi.portId || replacement.midi.channel !== module.midi.channel);
+      const wasActive = !module.mute && (!previousHadSolo || module.solo);
+      const remainsActive = replacement !== undefined && !replacement.mute && (!nextHasSolo || replacement.solo);
+      if (replacement === undefined || routeChanged || (wasActive && !remainsActive)) {
+        const channels = new Set([module.midi.channel]);
+        for (const event of module.pattern.events) {
+          if (event.cc === undefined) channels.add(event.channel ?? module.midi.channel + (event.channelOffset ?? 0));
+        }
+        for (const channel of channels) this.#midi.silence({ ...module.midi, channel: Math.max(1, Math.min(16, channel)) }, timestamp);
+      }
+    }
+  }
+
+  #toPerformanceTime(contextTime: number): number {
+    return this.#midiTime?.toPerformanceTime(contextTime) ?? performance.now();
   }
 
   #makeVoice(module: EngineModuleSnapshot): ModuleVoice {
@@ -115,7 +196,7 @@ export class AudioEngine {
       ? new DrumKitVoice(context, bus)
       : module.type === 'acid'
         ? new AcidVoice(context, bus)
-        : module.type === 'mixer'
+        : isControlModule(module.type)
           ? null
           : new PolyVoice(context, bus, module.type === 'bass' ? 'square' : 'triangle');
     return { type: module.type, bus, voice };

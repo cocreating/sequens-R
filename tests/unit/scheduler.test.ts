@@ -11,7 +11,7 @@ const pattern = {
 function snapshot(overrides: Partial<EngineSnapshot['modules'][number]> = {}): EngineSnapshot {
   return {
     bpm: 120,
-    modules: [{ id: 'bass-1', type: 'bass', pattern, mute: false, solo: false, monitor: true, level: 1, ...overrides }],
+    modules: [{ id: 'bass-1', type: 'bass', pattern, mute: false, solo: false, monitor: true, level: 1, midi: { portId: null, channel: 1 }, ...overrides }],
   };
 }
 
@@ -22,9 +22,9 @@ describe('look-ahead event collection', () => {
     expect(notes.every((note) => note.duration === 0.125)).toBe(true);
   });
 
-  it('honours monitor, mute, and solo in the immutable snapshot', () => {
+  it('honours mute and solo while keeping monitor independent from MIDI scheduling', () => {
     expect(collectWindowEvents(snapshot({ mute: true }), 0, 1, 0)).toEqual([]);
-    expect(collectWindowEvents(snapshot({ monitor: false }), 0, 1, 0)).toEqual([]);
+    expect(collectWindowEvents(snapshot({ monitor: false }), 0, 1, 0)).toHaveLength(1);
     const withSolo: EngineSnapshot = {
       bpm: 120,
       modules: [

@@ -12,7 +12,11 @@ export const SCALE_NAMES = [
 ] as const;
 
 export type ScaleName = (typeof SCALE_NAMES)[number];
-export type ModuleType = 'drums' | 'bass' | 'acid' | 'chords' | 'mixer';
+export const CORE_MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'mixer'] as const;
+export const DESKTOP_MODULE_TYPES = ['arp', 'euclid', 'piano', 'cc', 'mod'] as const;
+export type CoreModuleType = (typeof CORE_MODULE_TYPES)[number];
+export type DesktopModuleType = (typeof DESKTOP_MODULE_TYPES)[number];
+export type ModuleType = CoreModuleType | DesktopModuleType;
 
 export interface MusicalKey {
   root: number;
@@ -33,6 +37,13 @@ export interface NoteEvent {
   slide?: boolean;
   accent?: boolean;
   lane?: number;
+  /** Absolute MIDI channel for control modules, 1..16. */
+  channel?: number;
+  /** Offset from the module route channel, used by multi-channel generators. */
+  channelOffset?: number;
+  /** Present when the event is a MIDI Control Change rather than a note. */
+  cc?: number;
+  value?: number;
 }
 
 export interface ChordEvent {
@@ -45,6 +56,16 @@ export interface Pattern {
   lengthSteps: number;
   stepsPerBeat: number;
   events: readonly NoteEvent[];
+  /** Optional independent cycle length for each lane (Euclidean rings). */
+  laneLengths?: readonly number[];
+}
+
+export function isDesktopModule(type: ModuleType): type is DesktopModuleType {
+  return (DESKTOP_MODULE_TYPES as readonly ModuleType[]).includes(type);
+}
+
+export function isControlModule(type: ModuleType): boolean {
+  return type === 'mixer' || type === 'cc' || type === 'mod';
 }
 
 export interface ParamDefinition {

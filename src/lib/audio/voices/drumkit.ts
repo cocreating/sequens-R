@@ -1,6 +1,6 @@
 import type { NoteEvent } from '../../core/pattern';
 
-function createSample(context: AudioContext, lane: number): AudioBuffer {
+function createSample(context: BaseAudioContext, lane: number): AudioBuffer {
   const duration = lane === 0 ? 0.45 : 0.18 + lane * 0.015;
   const length = Math.ceil(context.sampleRate * duration);
   const buffer = context.createBuffer(1, length, context.sampleRate);
@@ -24,12 +24,12 @@ function createSample(context: AudioContext, lane: number): AudioBuffer {
 }
 
 export class DrumKitVoice {
-  readonly #context: AudioContext;
+  readonly #context: BaseAudioContext;
   readonly #destination: AudioNode;
   readonly #samples: readonly AudioBuffer[];
   readonly #active = new Set<AudioBufferSourceNode>();
 
-  constructor(context: AudioContext, destination: AudioNode) {
+  constructor(context: BaseAudioContext, destination: AudioNode) {
     this.#context = context;
     this.#destination = destination;
     this.#samples = Array.from({ length: 8 }, (_, lane) => createSample(context, lane));

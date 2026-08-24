@@ -8,6 +8,7 @@ export interface EngineModuleSnapshot {
   solo: boolean;
   monitor: boolean;
   level: number;
+  midi: { portId: string | null; channel: number };
 }
 
 export interface EngineSnapshot {

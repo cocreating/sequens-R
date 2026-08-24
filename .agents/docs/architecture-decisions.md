@@ -54,7 +54,7 @@ Status: accepted on 2026-08-24.
 
 Status: accepted on 2026-08-24.
 
-- The desktop studio surface activates through the same `64rem` (1024 CSS px) media query in JavaScript and CSS. Core modules keep their existing mobile surface; desktop-only modules render a concise playback-only plate below that threshold.
+- The desktop studio surface activates through the same `64rem` (1024 CSS px) media query in JavaScript and CSS. Core modules keep their existing mobile surface; Phase 4 desktop modules render a concise playback-only plate below that threshold. This playback-only restriction is the historical Phase 4 behavior and is superseded by the planned Phase 6 mobile editors in AD-009.
 - The patch schema is version 2. Version 1 links remain readable because the five original module indexes are unchanged. New shareable desktop generators append indexes; Piano roll is rejected at the codec boundary and must travel in a project file.
 - The project schema is version 2 and migrates version 1 documents. Piano-roll notes live in their active `PatternSlot` as `handEdited` pattern data. Recorded CC motion lives on its module. Either kind of local authored data makes the module non-shareable until the automation is cleared where applicable.
 - Rack, history, and persistence boundaries clone the JSON-safe project domain explicitly. This strips Svelte proxies while preserving manual patterns and automation before they cross undo/history, IndexedDB, or audio snapshot boundaries.
@@ -90,7 +90,7 @@ Status: accepted on 2026-08-24.
 
 Status: accepted on 2026-08-24.
 
-- The next product phase remains undefined until the existing studio hierarchy is consolidated. This change is a cross-phase UI correction and does not claim completion of a new SDD phase.
+- At the time of this decision, the next product phase remained undefined until the existing studio hierarchy was consolidated. That consolidation is complete; AD-009 now defines Phase 6 as mobile editing parity.
 - Transport, Random, Share, and module creation are the permanent performance path. Mobile keeps the global workspace closed by default so the first rack plate follows immediately; desktop opens the same workspace as a sticky utility rail beside three module lanes.
 - Pause captures the scheduler's exact current beat, freezes every compositor playhead at that position, cancels internal and Web MIDI look-ahead, and sends MIDI Stop; Play reconstructs the audio-time origin from that beat and sends MIDI Continue. Stop remains a distinct reset-to-zero and panic action that hides the playheads.
 - Tap BPM is an explicit post-SDD transport refinement. A native header button averages recent valid tap intervals and writes an integer from 20–300 BPM; the tempo field adds native minus/plus buttons for one-BPM changes and manual edits also write integers. Existing project/share decoders retain tenth-BPM compatibility so older saved patches remain readable.
@@ -100,3 +100,15 @@ Status: accepted on 2026-08-24.
 - `ParamDefinition.control` is the single source of UI control selection. Continuous performance parameters use rotary ranges, bounded integer parameters use steppers, short enumerations use segmented buttons, binary modes use switches, named modes use selects, and mixer levels become vertical faders on desktop. Every custom presentation retains a native input or button surface and the existing generator schema remains module-agnostic.
 - Drum lanes expose instrument names while retaining horizontal scrolling and native pressed buttons. All controls keep the 44 CSS px target, visible focus, labels, reduced-motion behavior, and automated axe coverage.
 - Recognizable frequent actions use a compact icon-only command language across transport, sharing, creation, persistence, capture, hardware, and export. Every icon is decorative and every control keeps an explicit accessible name and 44 CSS px target. Ambiguous, destructive, recording, mutation, launch, routing, and module-menu commands retain visible text so compactness does not obscure consequence or state.
+
+## AD-009 · Phase 6 mobile editing parity
+
+Status: planned and accepted on 2026-08-25.
+
+- Arp, Euclid, Piano roll, CC Control, and Mod become addable and editable below 1024 CSS px. The existing module types, parameter schemas, generators, project documents, patch indexes, scheduler snapshots, and audio/MIDI paths remain shared with desktop.
+- Responsive presentation replaces capability gating. Desktop retains parallel lanes, global shortcuts, `AudioContext.setSinkId()`, and File System Access enhancements; those are not requirements for mobile parity.
+- Dense mobile editors use progressive disclosure. The rack remains vertical and collapsible, only one dense body is expanded at a time, and Piano roll opens in a dedicated full-screen editing surface with explicit close and focus restoration.
+- Horizontal scrolling is local to musical grids and editors, never the document. All critical actions retain native semantics or an accessible equivalent, visible focus, reduced-motion behavior, and 44 CSS px touch targets.
+- UI visibility never controls audio or MIDI lifetime. Collapsed, off-screen, or temporarily hidden modules remain in the immutable engine snapshot and continue playing.
+- The phase is accepted only with real Android evidence at 375 CSS px, including all ten module types and the C10 16-module/140-BPM load scenario. Desktop behavior and deterministic outputs must remain unchanged.
+- The user's explicit 2026-08-25 amendment authorizes Phase 6 implementation while the already documented physical Phase 3 and Phase 5 acceptance evidence remains pending. It does not waive or mark those earlier gates complete.

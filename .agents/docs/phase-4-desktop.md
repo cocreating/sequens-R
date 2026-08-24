@@ -19,6 +19,8 @@ Status: automated Definition of Done accepted on 2026-08-24.
 - Per-module desktop contextual Help mode. Its pressed-state toggle exposes a stable help readout, and delegated pointer-hover or keyboard-focus interest updates specific copy for module switches, MIDI routing, pattern slots, mutation, step and piano editors, mixer controls, CC automation, and every visible schema-generated parameter. Controls remain operational while Help is active, and the compact module-header layout keeps all seven actions visible in two- and three-lane dispositions.
 - Shareable desktop generators survive link round trips and reproduce on mobile. Mobile replaces their editor with a playback-only plate explaining the 1024 px requirement. Piano roll and recorded CC motion are blocked from link sharing with an exact project-export alternative.
 
+The mobile playback-only plate is the accepted historical Phase 4 behavior. Phase 6 is now planned to replace it with adaptive mobile editors for all five modules while preserving these deterministic and sharing contracts.
+
 ## Determinism and migration
 
 - Golden hashes at seed `0x504834`:

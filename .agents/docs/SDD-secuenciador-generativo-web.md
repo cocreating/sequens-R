@@ -19,7 +19,7 @@ El usuario apila **módulos** en un *rack*. Cada módulo genera una parte musica
 
 La generación es **local, algorítmica y determinista a partir de una semilla**. Sin nube, sin modelo de IA, sin cuenta de usuario, sin telemetría.
 
-**Nombre de trabajo:** `«NOMBRE»` — sustitúyelo. No uses "Sequentia": es un producto existente y esto es una obra distinta, no un clon de marca.
+**Nombre del producto:** `sequens-R`. No uses "Sequentia": es un producto existente y esto es una obra distinta, no un clon de marca.
 
 **Referencia conceptual:** Sequentia (iOS). Se toma de ella el *modelo de interacción* (rack modular, random/mutate, tempo y tonalidad globales, ruteo por módulo). **No** se copian su nombre, su identidad visual, sus textos, sus librerías de contenido ni sus assets.
 
@@ -49,14 +49,14 @@ Todo se guarda en IndexedDB / OPFS en el dispositivo. Existe **exportar todo** (
 Vanilla CSS. Nada de Tailwind, Bootstrap, UnoCSS, styled-components ni librerías de componentes. Se permiten: custom properties, `@layer`, nesting nativo, container queries, `oklch()`. Un único fichero de tokens es la fuente de verdad de color, espaciado, tipografía y radios.
 
 ### C6 · Dos superficies, un núcleo
-Sin App Store, la distribución es por enlace, y los enlaces se abren en el móvil. Pero el hardware está en una mesa. Son dos momentos distintos, no dos versiones del mismo producto:
+Sin App Store, la distribución es por enlace, y los enlaces se abren en el móvil. Pero el hardware está en una mesa. Son dos disposiciones del mismo producto, adaptadas a contextos distintos:
 
-- **Móvil = superficie de captación.** Abrir un enlace, oírlo, Random, mover cuatro knobs, compartir, exportar. Nada más.
-- **Escritorio (≥ 1024 px) = superficie de estudio.** Todos los módulos, ruteo MIDI, carriles en paralelo, atajos de teclado, racks múltiples.
+- **Móvil = superficie de captación y edición compacta.** Abrir un enlace, oírlo, Random/Mutate, editar cualquiera de los módulos, compartir y exportar. Los editores densos usan revelado progresivo o una superficie dedicada; nunca se comprime el estudio de escritorio dentro del viewport.
+- **Escritorio (≥ 1024 px) = superficie de estudio expandida.** Los mismos módulos en carriles paralelos, más atajos de teclado y capacidades dependientes del dispositivo como selección de salida y File System Access.
 
 **El núcleo compartido se diseña a 375 × 667 CSS px, en vertical, con una sola mano.** Transporte, placa de módulo, rejilla de pasos, knob, Random/Mutate, slots, selector de preset. La restricción del pulgar mejora esas primitivas de verdad, y por eso se mantiene entera: área táctil mínima 44 × 44 px, nada crítico detrás de un `hover`, nada crítico en la zona de la barra de gestos.
 
-El escritorio **ensancha** el núcleo, no lo reemplaza. Una función de escritorio ausente en el móvil no es un bug.
+El escritorio **ensancha** el núcleo, no lo reemplaza. Tras la fase 6, que un módulo no pueda editarse en móvil es un bug. Una capacidad realmente dependiente del dispositivo o del layout de estudio —por ejemplo `setSinkId`, File System Access, atajos globales o carriles paralelos— puede seguir siendo exclusiva de escritorio.
 
 **Corolario de latencia:** el móvil no es para tocar con los dedos. En v1 **no se construye nada que dependa de latencia ajustada entre gesto y sonido** — ni teclado tocable, ni tap tempo por sensación, ni finger drumming. Eso neutraliza el techo de latencia de Android en lugar de pelearlo. Si algún día se quiere, es una función de escritorio.
 
@@ -155,7 +155,7 @@ De principio a fin, en un móvil, **en menos de diez segundos y con un solo perm
 
 > **Sobre el Acid.** Lo musicalmente valioso es la **generación** con slide y accent, no el modelado de circuito. En v1 la voz es sierra + biquad resonante + envolvente de decay, y basta. El filtro escalera de retardo cero (TPT) es la parte más lenta de todo el DSP del proyecto y **no es lo que hace útil la app el primer día**: se difiere a la fase 5, detrás de la misma interfaz de voz, para poder sustituirlo sin tocar nada más.
 
-**Ampliación de escritorio — fase 4.** Estos módulos solo aparecen en viewport ≥ 1024 px. En móvil, un patch que los contenga los reproduce pero no los edita, y lo indica.
+**Ampliación introducida en escritorio — fase 4; paridad de edición móvil — fase 6.** La fase 4 incorporó estos módulos inicialmente para viewport ≥ 1024 px y dejó su reproducción móvil en modo de solo lectura. La fase 6 debe permitir añadirlos y editarlos también en móvil mediante superficies adaptativas, sin duplicar el modelo, los generadores, el scheduler ni la serialización.
 
 | ID | Módulo | Núcleo |
 |---|---|---|
@@ -555,7 +555,7 @@ export function sfc32(seed: number) {
 
 Ejecuta **una fase por vez**. No empieces la siguiente sin que la DoD de la anterior esté demostrada con evidencia (test que pasa, medición, o captura).
 
-> **Secuencia.** Las fases 0–3 construyen **solo el núcleo móvil de cinco módulos**. Eso ya es un producto completo y compartible por sí mismo. La capa de escritorio llega en la fase 4, cuando exista evidencia de que alguien lo usa. No se construyen dos superficies a la vez: se construye una y luego se ensancha.
+> **Secuencia.** Las fases 0–3 construyen el núcleo móvil original de cinco módulos. La fase 4 ensancha el producto con la superficie de estudio y cinco módulos adicionales; la fase 5 profundiza el instrumento. La fase 6 devuelve esos cinco módulos a la superficie móvil con editores adaptativos. No se crean dos motores ni dos modelos de módulo: cambia la presentación, no el dominio. Por enmienda explícita del usuario del 2026-08-25, la implementación de fase 6 puede comenzar mientras la evidencia física pendiente de las fases 3 y 5 sigue registrada; esos gates no se consideran aprobados por ello.
 
 ### Fase 0 — Cimientos
 1. Vite + Svelte 5 + TS estricto + Vitest + Playwright (`channel: 'chrome'`) + `vite-plugin-pwa`.
@@ -607,7 +607,7 @@ Ejecuta **una fase por vez**. No empieces la siguiente sin que la DoD de la ante
 26. Módulos de ampliación: Arp, Euclid, Piano roll, CC Control, Mod.
 27. Ruteo MIDI por módulo en la UI, `setSinkId` (solo escritorio), File System Access con fallback a descarga.
 28. Atajos de teclado y racks múltiples.
-29. En móvil, un patch con módulos de escritorio se reproduce pero no se edita, y lo indica.
+29. En móvil, un patch con módulos de escritorio se reproduce pero no se edita, y lo indica. Este es el comportamiento histórico aceptado de fase 4; la fase 6 lo sustituye por edición móvil adaptativa.
 
 **DoD por módulo:** tests golden del generador + su UI se construye desde `paramSchema` sin código a medida. **DoD de fase:** el núcleo móvil no ha perdido ninguna capacidad.
 
@@ -622,6 +622,20 @@ Ejecuta **una fase por vez**. No empieces la siguiente sin que la DoD de la ante
 37. Verificación de los presupuestos de **C10** con evidencia numérica en el dispositivo de referencia.
 
 **DoD:** los siete presupuestos de C10 medidos y documentados en un Android de gama media con Chrome. Lighthouse PWA installable ✓. Navegación completa por teclado. Cada API de §3.6 verificada con su fallback desactivando la nativa.
+
+### Fase 6 — Paridad de edición móvil
+38. Sustituir la clasificación de “módulo de escritorio” por una clasificación de presentación. Arp, Euclid, Piano roll, CC Control y Mod conservan exactamente sus tipos, generadores, slots, snapshots y formatos persistidos.
+39. Permitir añadir, duplicar, borrar, reordenar y editar Arp y Euclid desde móvil con los mismos `paramSchema`, golden tests y resultados que en escritorio.
+40. Crear superficies móviles para CC Control y Mod. La grabación de CC, los tres LFO, el ruteo por control y los estados mute/solo deben seguir operativos sin depender de `hover`.
+41. Crear un editor móvil dedicado a pantalla completa para Piano roll, con entrada, selección, movimiento, redimensionado y borrado táctiles; `In Key` / `Chromatic` y 16/32/64 pasos; salida explícita que restaura el foco al módulo.
+42. Mantener el rack vertical y colapsable. En viewports compactos se edita como máximo un cuerpo de módulo denso a la vez; cerrar u ocultar su UI nunca detiene su audio o MIDI.
+43. Confinar el desplazamiento horizontal a Step Grid, Euclid y Piano roll. La página no puede tener overflow horizontal. Todos los objetivos táctiles siguen siendo ≥ 44 × 44 CSS px y ninguna acción crítica depende de un gesto sin alternativa accesible.
+44. Contener o diferir el renderizado de módulos fuera de pantalla sin desmontar el estado musical. No modificar el `AudioEngine`, el scheduler, el puente de tiempo MIDI ni los contratos de determinismo salvo que una medición demuestre un defecto independiente.
+45. Añadir tests unitarios y Playwright para creación y edición de los cinco módulos ampliados a 375 × 667 y 375 × 812, apertura móvil de patches/proyectos creados en escritorio, persistencia, sharing cuando corresponda, reproducción durante la edición, foco, teclado, axe y ausencia de overflow de página.
+
+**DoD funcional:** en Chrome Android, una persona puede añadir y editar los diez tipos de módulo sin cambiar a modo escritorio. Un patch de escritorio con Arp, Euclid o Mod se abre, se edita y vuelve a compartir con resultado determinista idéntico. Piano roll y automatización CC conservan su contrato de exportación/importación de proyecto cuando no caben en enlace. Añadir, editar, colapsar, reordenar y borrar cualquier tipo durante la reproducción no produce clicks, cortes ni notas colgadas.
+
+**DoD de interfaz y rendimiento:** recorrido completo a 375 × 667 sin overflow horizontal de página, sin controles solapados y con objetivos táctiles ≥ 44 × 44 CSS px. Navegación por teclado, foco restaurado al cerrar editores dedicados, reducción de movimiento y axe sin violaciones serias/críticas. En el Android de referencia, 16 módulos activos a 140 BPM mantienen 0 xruns, `renderCapacity` medio ≤ 0.5/pico ≤ 0.8 cuando exista y frames de UI ≤ 8 ms mientras se desplaza y edita el rack. Los presupuestos de tamaño de C10 siguen verdes.
 
 ---
 

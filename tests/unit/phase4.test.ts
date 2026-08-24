@@ -14,6 +14,7 @@ import {
   setModuleParams,
 } from '../../src/lib/state/rack';
 import { STARTER_RACK } from '../../src/lib/share/starter';
+import { moduleHelpFor } from '../../src/lib/ui/module-help';
 
 const context = Object.freeze({ key: Object.freeze({ root: 2, scale: 'dorian' as const }), bars: 4 });
 
@@ -28,6 +29,16 @@ function hashPattern(value: unknown): string {
 }
 
 describe('Phase 4 desktop generators', () => {
+  it('provides specific contextual help for every visible generator parameter', () => {
+    for (const type of Object.keys(GENERATORS) as ModuleType[]) {
+      for (const definition of GENERATORS[type].paramSchema.filter(({ control }) => control !== 'hidden')) {
+        const help = moduleHelpFor(`param:${definition.key}`, type, type, definition);
+        expect(help.title).toBe(definition.label);
+        expect(help.body).not.toContain('Changes this generator parameter');
+      }
+    }
+  });
+
   it.each([
     ['arp', 'acfe8b56'],
     ['euclid', '3df4f16e'],

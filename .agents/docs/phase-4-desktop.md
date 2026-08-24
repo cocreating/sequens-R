@@ -16,6 +16,7 @@ Status: automated Definition of Done accepted on 2026-08-24.
 - Multiple rack creation, duplication, naming, switching, deletion, persistence, and active-rack publishing.
 - Collision-resistant UUID-backed module identities across restored, imported, duplicated, and newly created racks.
 - Desktop keyboard commands for transport, Random, undo/redo, Save, and previous/next rack.
+- Per-module desktop contextual Help mode. Its pressed-state toggle exposes a stable help readout, and delegated pointer-hover or keyboard-focus interest updates specific copy for module switches, MIDI routing, pattern slots, mutation, step and piano editors, mixer controls, CC automation, and every visible schema-generated parameter. Controls remain operational while Help is active, and the compact module-header layout keeps all seven actions visible in two- and three-lane dispositions.
 - Shareable desktop generators survive link round trips and reproduce on mobile. Mobile replaces their editor with a playback-only plate explaining the 1024 px requirement. Piano roll and recorded CC motion are blocked from link sharing with an exact project-export alternative.
 
 ## Determinism and migration
@@ -40,21 +41,22 @@ npm run check
   svelte-check: 0 errors, 0 warnings
 
 npm test
-  10 files, 47 tests passed
+  11 files, 52 tests passed
 
 npm run build
-  production build passed
+  production PWA build passed; 10 entries / 229.15 KiB precached
 
 npm run check:bundle
-  61.82 KiB gzip / 200.00 KiB budget
+  70.91 KiB initial JavaScript gzip / 200.00 KiB budget
 
 npm run test:e2e
-  16 Chrome tests passed
-  Phase 4 desktop tests: 4 passed
+  22 Chrome tests passed
+  Phase 4 spec: 5 passed
+  contextual Help pointer/focus flow: passed
+  axe: no serious or critical violations
   Existing mobile, persistence, MIDI/export, drag, and isolation flows: all passed
-  Observed automated scheduler message jitter: 0.612 ms sigma
 ```
 
-The Phase 4 Chrome flows cover parallel lanes, all five module editors, piano note entry, CC recording/non-shareability, multiple-rack persistence, shortcuts, mocked `setSinkId`, mocked File System Access writes, link sharing, and mobile playback-only rendering. A 1440 × 1100 production build was also visually inspected with all five desktop modules added.
+The Phase 4 Chrome flows cover parallel lanes, all five module editors, piano note entry, CC recording/non-shareability, multiple-rack persistence, shortcuts, mocked `setSinkId`, mocked File System Access writes, link sharing, mobile playback-only rendering, and Help activation/deactivation with pointer and keyboard-driven copy changes. A 1440 × 1100 desktop surface was visually inspected with all three starter modules visible; the active Help readout and seven-button module header fit the three-lane disposition without clipping.
 
 Physical MIDI clock/jitter and DAW-import checks remain part of the Phase 3 gate and were deliberately not reclassified by this phase.

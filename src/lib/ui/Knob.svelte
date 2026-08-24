@@ -23,7 +23,7 @@
   }
 </script>
 
-<div class="knob-control">
+<div class="knob-control" data-help-key={`param:${definition.key}`}>
   <label for={id}>{definition.label}</label>
   {#if definition.options}
     <select {id} name={definition.key} value={value} onchange={update}>

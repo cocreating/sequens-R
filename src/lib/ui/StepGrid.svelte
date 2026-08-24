@@ -21,7 +21,7 @@
 </script>
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard access to the horizontal scroll region) -->
-<div class="step-grid" style:--step-count={pattern.lengthSteps} role="group" tabindex="0" aria-label="Pattern steps">
+<div class="step-grid" data-help-key="step-grid" style:--step-count={pattern.lengthSteps} role="group" tabindex="0" aria-label="Pattern steps">
   <div class="step-grid-content">
   <CompositorPlayhead {playing} {bpm} beats={pattern.lengthSteps / pattern.stepsPerBeat} {syncBeat} />
   {#each Array(lanes) as _, lane}

@@ -103,6 +103,30 @@ test.describe('Phase 4 desktop studio', () => {
     await expect.poll(() => page.evaluate(() => (window as typeof window & { __phase4Apis: { fileName: string } }).__phase4Apis.fileName)).toMatch(/\.mid$/u);
     await expect.poll(() => page.evaluate(() => (window as typeof window & { __phase4Apis: { fileSize: number } }).__phase4Apis.fileSize)).toBeGreaterThan(20);
   });
+
+  test('provides per-module contextual help for pointer and keyboard users', async ({ page }) => {
+    await page.goto('/');
+    const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
+    const help = drums.locator('.module-help-panel');
+
+    await drums.getByRole('button', { name: 'Turn on help for Drums' }).click();
+    await expect(help).toBeVisible();
+    await expect(help).toContainText('Hover a control or move to it with the keyboard');
+
+    await drums.getByRole('button', { name: 'Mute Drums' }).hover();
+    await expect(help.getByRole('heading')).toHaveText('Mute');
+    await expect(help).toContainText('scheduled notes or control events');
+
+    await drums.getByLabel('Steps', { exact: true }).hover();
+    await expect(help.getByRole('heading')).toHaveText('Steps');
+    await expect(help).toContainText('16 or 32 sixteenth-note steps');
+
+    await drums.getByLabel('Mutation').focus();
+    await expect(help.getByRole('heading')).toHaveText('Mutation level');
+
+    await drums.getByRole('button', { name: 'Turn off help for Drums' }).click();
+    await expect(help).toBeHidden();
+  });
 });
 
 test('mobile reproduces a shared desktop module but keeps it read-only', async ({ browser }) => {

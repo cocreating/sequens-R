@@ -9,7 +9,7 @@ Status: implementation and automated acceptance complete on 2026-08-24. The phas
 - Progressive Chrome layer: View Transitions for module changes, `content-visibility: auto` and intrinsic sizing for module plates, compositor `transform` playheads with once-per-bar correction, and `scheduler.postTask({ priority: 'background' })` for debounced persistence.
 - A four-stage zero-delay-feedback TPT ladder in the Acid AudioWorklet, retaining monophonic slide and accent behavior and the same voice interface. Offline bounce loads the same processor.
 - An internal diagnostics panel for audio state, `baseLatency + outputLatency`, scheduler jitter, active voices, `renderCapacity` average/peak load and underrun ratio when exposed, and cross-origin isolation.
-- Accessibility pass: proper rack tabs with roving focus and arrow/Home/End navigation, keyboard piano-note creation/move/resize/delete, semantic groups and pressed states, focus recovery after module deletion, keyboard-accessible horizontal grids, visible focus, reduced-motion behavior, and axe coverage.
+- Accessibility pass: proper rack tabs with roving focus and arrow/Home/End navigation, keyboard piano-note creation/move/resize/delete, semantic groups and pressed states, focus recovery after module deletion, keyboard-accessible horizontal grids, visible focus, reduced-motion behavior, contextual module help for pointer and keyboard interest, and axe coverage.
 - No Phase 5 backlog module was added. RF-030 through RF-033 remain gated on demonstrated product usage as required by the SDD.
 
 ## Progressive-enhancement evidence
@@ -27,16 +27,16 @@ npm run check
   svelte-check: 0 errors, 0 warnings
 
 npm test
-  11 files, 51 tests passed
+  11 files, 52 tests passed
 
 npm run build
-  production PWA build passed; 10 entries / 216.04 KiB precached
+  production PWA build passed; 10 entries / 229.15 KiB precached
 
 npm run check:bundle
-  67.14 KiB initial JavaScript gzip / 200.00 KiB budget
+  70.91 KiB initial JavaScript gzip / 200.00 KiB budget
 
 npm run test:e2e
-  21 Chrome tests passed
+  22 Chrome tests passed
   axe: no serious or critical violations
   native Phase 5 API path and forced fallbacks: passed
 ```
@@ -47,8 +47,8 @@ Two size budgets and the local synthetic TTI proxy have automated evidence. The 
 
 | Budget | Current evidence | Gate status |
 |---|---|---|
-| Initial JavaScript ≤ 200 KiB gzip | 67.14 KiB | Pass |
-| Total initial load ≤ 400 KiB | 73 KiB Lighthouse transfer; 216.04 KiB full precache | Pass |
+| Initial JavaScript ≤ 200 KiB gzip | 70.91 KiB | Pass |
+| Total initial load ≤ 400 KiB | 73 KiB Lighthouse transfer; 229.15 KiB full precache | Pass |
 | TTI ≤ 2.5 s on simulated 4G | Lighthouse desktop FCP 1.3 s/LCP 1.7 s/TBT 20 ms | Android 4G run required |
 | 0 audio xruns, 16 active modules at 140 BPM | Panel records underrun ratio where supported | Physical run required |
 | Render Capacity average ≤ 0.5, peak ≤ 0.8 | Panel and feature-detected fallback verified | Physical run required if API exists |

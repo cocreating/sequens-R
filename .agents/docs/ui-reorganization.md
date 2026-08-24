@@ -20,6 +20,7 @@ This is the UI consolidation requested before the next SDD phase is defined. It 
   - selects for named styles, qualities, shapes, rates, and longer enumerations;
   - vertical native range faders for desktop mixer levels.
 - Named Kick, Snare, Closed hat, Open hat, Clap, Tom, Rim, and Perc drum lanes.
+- Selective text-plus-emoticon affordances for Play/Stop, Random/Share, Workspace, project persistence, rack creation/duplication, scene capture, hardware refresh/connect, and music exports. Compact state, stepper, slot, Add, Undo/Redo, and destructive controls remain text-only to avoid visual noise and mobile crowding.
 
 ## Accessibility and behavior
 
@@ -28,6 +29,7 @@ This is the UI consolidation requested before the next SDD phase is defined. It 
 - Segmented choices use a labelled group of pressed-state buttons; binary controls use native checkboxes.
 - Workspace and advanced disclosures preserve their user-selected open state through rack edits and asynchronous status updates.
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
+- Emoticons are marked `aria-hidden="true"`; visible text remains the accessible button name, so the visual cues do not duplicate or replace control labels.
 
 ## Visual evidence
 
@@ -36,6 +38,8 @@ This is the UI consolidation requested before the next SDD phase is defined. It 
 - Final mobile: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-ui-implementation/08-mobile-final.png`
 - Final desktop comparison: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-ui-implementation/09-desktop-comparison-final.png`
 - Final mobile comparison: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-ui-implementation/10-mobile-comparison-final.png`
+- Emoticon pass, desktop: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-emoticon-review/03-desktop-after.png`
+- Emoticon pass, mobile: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-emoticon-review/04-mobile-after.png`
 
 ## Automated acceptance
 
@@ -46,8 +50,8 @@ Executed on 2026-08-24:
 ```text
 svelte-check: 0 errors, 0 warnings
 Vitest: 11 files / 52 tests passed
-production PWA build: 10 entries / 252.00 KiB precached
-initial JavaScript: 75.21 KiB gzip / 200.00 KiB budget
+production PWA build: 10 entries / 253.63 KiB precached
+initial JavaScript: 75.48 KiB gzip / 200.00 KiB budget
 Playwright Chrome: 23 tests passed
 axe: no serious or critical violations
 ```

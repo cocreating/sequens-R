@@ -15,7 +15,7 @@
     <h2 id="hardware-heading">Hardware MIDI</h2>
     <p>MIDI access is optional. Internal sound and exports work without it.</p>
   </div>
-  <button type="button" data-app-help-key="connect-hardware" onclick={onconnect}>{state.connected ? 'Refresh hardware' : 'Connect hardware'}</button>
+  <button type="button" class="has-emoticon" data-app-help-key="connect-hardware" onclick={onconnect}><span class="button-emoticon" aria-hidden="true">{state.connected ? '🔄' : '🎛️'}</span>{state.connected ? 'Refresh hardware' : 'Connect hardware'}</button>
   {#if state.permission === 'denied'}
     <p class="midi-recovery" role="alert">MIDI access is blocked. Open this site’s permissions in the browser address bar, allow MIDI devices, then try again.</p>
   {/if}

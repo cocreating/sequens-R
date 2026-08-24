@@ -757,8 +757,8 @@
     <div class="performance-deck">
       <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} {playing} onplay={play} onstop={stop} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
       <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
-        <button type="button" class="random" data-app-help-key="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}>Random</button>
-        <button type="button" data-app-help-key="share" onclick={share}>Share</button>
+        <button type="button" class="random has-emoticon" data-app-help-key="random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><span class="button-emoticon" aria-hidden="true">🎲</span>Random</button>
+        <button type="button" class="has-emoticon" data-app-help-key="share" onclick={share}><span class="button-emoticon" aria-hidden="true">🔗</span>Share</button>
         <div class="add-module">
           <label for="module-type" data-app-help-key="module-type">New module</label>
           <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
@@ -778,16 +778,16 @@
 
     <div class="studio-workspace">
       <details class="workspace-utilities" bind:open={workspaceOpen}>
-        <summary><span>Workspace</span><small>{project.name}</small></summary>
+        <summary><span class="workspace-summary-label"><span class="button-emoticon" aria-hidden="true">🧰</span>Workspace</span><small>{project.name}</small></summary>
         <div class="utility-stack">
           <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
             <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
             <button type="button" data-app-help-key="undo" onclick={undo} disabled={!canUndo}>Undo</button>
             <button type="button" data-app-help-key="redo" onclick={redo} disabled={!canRedo}>Redo</button>
-            <button type="button" data-app-help-key="save" onclick={saveProject}>{sharedDraft ? 'Save draft' : 'Save'}</button>
-            <button type="button" data-app-help-key="export-project" onclick={() => void exportProject()}>Export</button>
-            <label class="import-project" data-app-help-key="import-project" for="project-import">Import</label>
+            <button type="button" class="has-emoticon" data-app-help-key="save" onclick={saveProject}><span class="button-emoticon" aria-hidden="true">💾</span>{sharedDraft ? 'Save draft' : 'Save'}</button>
+            <button type="button" class="has-emoticon" data-app-help-key="export-project" onclick={() => void exportProject()}><span class="button-emoticon" aria-hidden="true">📤</span>Export</button>
+            <label class="import-project has-emoticon" data-app-help-key="import-project" for="project-import"><span class="button-emoticon" aria-hidden="true">📥</span>Import</label>
             <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
           </section>
 
@@ -796,8 +796,8 @@
               <div class="rack-switcher-heading">
                 <div><p>Project racks</p><h2 id="rack-switcher-heading">Studio lanes</h2></div>
                 <div class="rack-actions">
-                  <button type="button" data-app-help-key="new-rack" onclick={addRack}>New rack</button>
-                  <button type="button" data-app-help-key="duplicate-rack" onclick={duplicateRack}>Duplicate rack</button>
+                  <button type="button" class="has-emoticon" data-app-help-key="new-rack" onclick={addRack}><span class="button-emoticon" aria-hidden="true">➕</span>New rack</button>
+                  <button type="button" class="has-emoticon" data-app-help-key="duplicate-rack" onclick={duplicateRack}><span class="button-emoticon" aria-hidden="true">📑</span>Duplicate rack</button>
                   <button type="button" data-app-help-key="delete-rack" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
                 </div>
               </div>
@@ -840,9 +840,9 @@
             <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
               {#each [1, 2, 4, 8] as bars}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
             </select>
-            <button type="button" data-app-help-key="rack-midi" onclick={() => void exportMidi()} disabled={exportingAudio}>Rack MIDI</button>
-            <button type="button" data-app-help-key="mix-wav" onclick={bounceMix} disabled={exportingAudio}>Mix WAV</button>
-            <button type="button" data-app-help-key="wav-stems" onclick={bounceStems} disabled={exportingAudio}>WAV stems</button>
+            <button type="button" class="has-emoticon" data-app-help-key="rack-midi" onclick={() => void exportMidi()} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎼</span>Rack MIDI</button>
+            <button type="button" class="has-emoticon" data-app-help-key="mix-wav" onclick={bounceMix} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎧</span>Mix WAV</button>
+            <button type="button" class="has-emoticon" data-app-help-key="wav-stems" onclick={bounceStems} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎚️</span>WAV stems</button>
           </section>
           <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
         </div>

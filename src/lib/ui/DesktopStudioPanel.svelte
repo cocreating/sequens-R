@@ -23,7 +23,7 @@
         <option value={output.deviceId}>{output.label || `Audio output ${output.deviceId.slice(0, 6)}`}</option>
       {/each}
     </select>
-    <button type="button" data-app-help-key="refresh-outputs" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}>Refresh outputs</button>
+    <button type="button" class="has-emoticon" data-app-help-key="refresh-outputs" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}><span class="button-emoticon" aria-hidden="true">🔄</span>Refresh outputs</button>
     {#if !outputSelectionSupported}<p>Audio output selection is unavailable; the system default remains active.</p>{/if}
   </div>
   <details data-app-help-key="shortcuts">

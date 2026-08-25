@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ParamDefinition } from '../core/pattern';
+  import RotaryKnob from './RotaryKnob.svelte';
 
   interface Props {
     id: string;
@@ -10,8 +11,6 @@
   }
 
   let { id, definition, value, onchange, oncommit }: Props = $props();
-  let percentage = $derived((value - definition.min) / Math.max(1, definition.max - definition.min) * 100);
-  let angle = $derived(-135 + percentage * 2.7);
   let displayValue = $derived(definition.options?.[optionIndex(value)] ?? `${value}${definition.unit ? ` ${definition.unit}` : ''}`);
 
   function optionValue(index: number): number {
@@ -42,12 +41,28 @@
   }
 </script>
 
-<div class:knob-layout={definition.control === 'knob'} class="knob-control" data-help-key={`param:${definition.key}`}>
+{#if definition.control === 'knob'}
+  <RotaryKnob
+    {id}
+    name={definition.key}
+    label={definition.label}
+    min={definition.min}
+    max={definition.max}
+    step={definition.step}
+    {value}
+    defaultValue={definition.defaultValue}
+    helpKey={`param:${definition.key}`}
+    formatValue={(next) => `${next}${definition.unit ? ` ${definition.unit}` : ''}`}
+    oninput={onchange}
+    oncommit={oncommit}
+  />
+{:else}
+<div class="knob-control" data-help-key={`param:${definition.key}`}>
   {#if definition.control === 'segmented' && definition.options}
     <span id={`${id}-label`} class="parameter-label">{definition.label}</span>
     <output aria-hidden="true">{displayValue}</output>
     <div class="segmented-control" role="group" aria-labelledby={`${id}-label`}>
-      {#each definition.options as option, index}
+      {#each definition.options as option, index (option)}
         <button type="button" aria-pressed={value === optionValue(index)} onclick={() => setValue(optionValue(index))}>{option}</button>
       {/each}
     </div>
@@ -67,7 +82,7 @@
   {:else if definition.options}
     <label for={id}>{definition.label}</label>
     <select {id} name={definition.key} value={value} onchange={update}>
-      {#each definition.options as option, index}
+      {#each definition.options as option, index (option)}
         <option value={optionValue(index)}>{option}</option>
       {/each}
     </select>
@@ -90,24 +105,6 @@
       />
       <button type="button" aria-label={`Increase ${definition.label}`} disabled={value >= definition.max} onclick={() => setValue(value + definition.step)}>+</button>
     </div>
-  {:else if definition.control === 'knob'}
-    <label for={id}>{definition.label}</label>
-    <output for={id}>{displayValue}</output>
-    <div class="knob-face" style:--knob-angle={`${angle}deg`}>
-      <span aria-hidden="true"></span>
-      <input
-        {id}
-        name={definition.key}
-        type="range"
-        min={definition.min}
-        max={definition.max}
-        step={definition.step}
-        value={value}
-        aria-valuetext={displayValue}
-        oninput={update}
-        onchange={oncommit}
-      />
-    </div>
   {:else}
     <label for={id}>{definition.label}</label>
     <output for={id}>{displayValue}</output>
@@ -125,3 +122,4 @@
     />
   {/if}
 </div>
+{/if}

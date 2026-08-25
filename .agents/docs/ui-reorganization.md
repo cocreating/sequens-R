@@ -27,12 +27,14 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
   - switches for binary Follow chords and LFO enable states;
   - selects for named styles, qualities, shapes, rates, and longer enumerations;
   - vertical native range faders for desktop mixer levels.
+- Rotary parameters delegate to an independent Svelte 5 `RotaryKnob` component. Its SVG arc and indicator remain visual decoration around a native range input; vertical Pointer Events dragging uses pointer capture, Shift increases pixels per domain step, and double click restores the schema default. Component-specific CSS properties keep the visual layer themeable without coupling it to generator definitions or adding a runtime dependency.
 - Named Kick, Snare, Closed hat, Open hat, Clap, Tom, Rim, and Perc drum lanes.
 - Icon-only affordances for recognizable frequent actions: Play/Pause, Stop, Share, General Help, Random, Add, Undo/Redo, Save, project export/import, rack creation/duplication, scene capture, hardware connect/refresh, music exports, and piano-note creation. Ambiguous or higher-consequence controls such as Delete, Mutate/Revert, scene launch, recording, advanced routing, and module-menu commands retain visible text.
 
 ## Accessibility and behavior
 
 - Rotary controls retain `input[type=range]`, value text, arrow-key semantics, a visible focus ring on the rotary face, and native input/change events.
+- Rotary pointer and touch gestures snap to the schema step, commit once at the gesture boundary, retain horizontal touch panning, and preserve the existing coalesced undo contract.
 - Steppers combine labelled number inputs with 44 px decrement/increment buttons and disabled boundaries.
 - Segmented choices use a labelled group of pressed-state buttons; binary controls use native checkboxes.
 - Workspace and advanced disclosures preserve their user-selected open state through rack edits and asynchronous status updates.
@@ -52,15 +54,15 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Automated acceptance
 
-The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 61 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 37 Chrome flows, and the axe serious/critical gates. Browser flows include demo discovery/loading, Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module layout, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, round-trip, and accessibility coverage.
+The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 61 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 38 Chrome flows, and the axe serious/critical gates. Browser flows include demo discovery/loading, Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module layout, accessible rotary drag/keyboard/reset with separate Undo boundaries, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, round-trip, and accessibility coverage.
 
 Latest execution on 2026-08-25 after the Phase 6 and desktop follow-up refinements:
 
 ```text
 svelte-check: 0 errors, 0 warnings
 Vitest: 14 files / 61 tests passed
-production PWA build: 12 entries / 285.01 KiB precached
-initial JavaScript: 79.83 KiB gzip / 200.00 KiB budget
-Playwright Chrome: 37 tests passed
+production PWA build: 12 entries / 290.56 KiB precached
+initial JavaScript: 81.03 KiB gzip / 200.00 KiB budget
+Playwright Chrome: 38 tests passed
 axe: no serious or critical violations
 ```

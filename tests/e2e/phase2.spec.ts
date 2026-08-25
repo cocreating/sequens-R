@@ -68,6 +68,43 @@ test('continuous parameter input is one undo step', async ({ page }) => {
   await expect(density).toHaveValue('73');
 });
 
+test('rotary parameters support fine drag, keyboard input, reset, and undo boundaries', async ({ page }) => {
+  await page.goto('/');
+  const density = page.getByRole('listitem', { name: 'Bass' }).getByLabel('Density');
+  await expect(density).toHaveAttribute('type', 'range');
+  await expect(density).toHaveAttribute('aria-valuetext', '55 %');
+  await density.scrollIntoViewIfNeeded();
+
+  const bounds = await density.boundingBox();
+  if (bounds === null) throw new Error('The Density knob is not measurable.');
+  const centerX = bounds.x + bounds.width / 2;
+  const centerY = bounds.y + bounds.height / 2;
+
+  await page.mouse.move(centerX, centerY);
+  await page.mouse.down();
+  await page.keyboard.down('Shift');
+  await page.mouse.move(centerX, centerY - 20, { steps: 4 });
+  await page.keyboard.up('Shift');
+  await page.mouse.up();
+  await expect(density).toHaveValue('57');
+  await expect(density).toHaveAttribute('aria-valuetext', '57 %');
+
+  await density.focus();
+  await page.keyboard.press('ArrowUp');
+  await expect(density).toHaveValue('58');
+
+  await density.dblclick();
+  await expect(density).toHaveValue('55');
+
+  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(density).toHaveValue('58');
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(density).toHaveValue('57');
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(density).toHaveValue('55');
+});
+
 test('saving restores the exact project after reload', async ({ page }) => {
   await page.goto('/');
   await page.locator('.workspace-utilities > summary').click();

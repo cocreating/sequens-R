@@ -13,11 +13,13 @@ import {
   DEFAULT_RACK_MIX,
   SOUND_PARAM_SCHEMAS,
   SOUND_PRESETS,
+  presetsFor,
   soundForPreset,
   validatePresetCatalog,
 } from '../../src/lib/audio/sound';
 import { VOICE_FACTORY } from '../../src/lib/audio/voice-factory';
 import { createSoftClipCurve, delaySecondsFor } from '../../src/lib/audio/rack-graph';
+import { DRUM_KITS, drumVariationIndex, drumVelocityGain, renderProceduralDrumLane } from '../../src/lib/audio/voices/procedural-drums';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
@@ -240,5 +242,75 @@ describe('Phase 7.1 shared rack graph', () => {
       expect(Math.abs(character[index]!)).toBeLessThanOrEqual(1);
     }
     expect(character[192]!).toBeGreaterThan(neutral[192]!);
+  });
+});
+
+describe('Phase 7.2 procedural drums', () => {
+  it('keeps the legacy preset and appends six original procedural kits', () => {
+    const presets = presetsFor('drums');
+    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
+    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(DRUM_KITS.map(({ id }) => id));
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(7);
+    expect(VOICE_FACTORY.identify({ type: 'drums', sound: soundForPreset('drums', 'drums-core-v2') }).implementationId).toBe('procedural-drums-v2');
+    expect(VOICE_FACTORY.identify({ type: 'drums', sound: soundForPreset('drums', 'legacy-drums-v1') }).implementationId).toBe('legacy-drums-v1');
+  });
+
+  it('round-trips every appended drum kit without changing earlier preset indexes', async () => {
+    expect(SOUND_PRESETS.slice(0, 4).map(({ id }) => id)).toEqual(['legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2']);
+    for (const kit of DRUM_KITS) {
+      const rack = createRackState(STARTER_RACK);
+      rack.modules[0] = { ...rack.modules[0]!, sound: soundForPreset('drums', kit.id) };
+      const shareable = toShareableRack(rack);
+      const encoded = await serializeRack(shareable);
+      expect(await deserializeRack(encoded)).toEqual(normalizeRack(shareable));
+      expect(encoded.byteLength).toBeLessThanOrEqual(400);
+    }
+  });
+
+  it('renders every kit/lane deterministically with finite bounded PCM, negligible DC, and distinct lane signatures', () => {
+    const kitSignatures = new Set<string>();
+    for (const kit of DRUM_KITS) {
+      const signatures = new Set<string>();
+      for (let lane = 0; lane < 8; lane += 1) {
+        for (let variant = 0; variant < 2; variant += 1) {
+          const first = renderProceduralDrumLane(kit.id, lane, 44_100, variant);
+          const repeated = renderProceduralDrumLane(kit.id, lane, 44_100, variant);
+          expect(first).toEqual(repeated);
+          let finite = true;
+          let peak = 0;
+          let sum = 0;
+          let crossings = 0;
+          for (let index = 0; index < first.length; index += 1) {
+            const sample = first[index]!;
+            finite &&= Number.isFinite(sample);
+            peak = Math.max(peak, Math.abs(sample));
+            sum += sample;
+            if (index > 0 && Math.sign(sample) !== Math.sign(first[index - 1]!)) crossings += 1;
+          }
+          expect(finite).toBe(true);
+          expect(peak).toBeLessThanOrEqual(0.981);
+          expect(Math.abs(sum / first.length)).toBeLessThan(0.000_001);
+          if (variant === 0) signatures.add(`${first.length}:${Math.round(peak * 1_000)}:${Math.round(crossings / first.length * 10_000)}`);
+        }
+      }
+      expect(signatures.size).toBe(8);
+      const kick = renderProceduralDrumLane(kit.id, 0, 44_100, 0);
+      kitSignatures.add(Array.from(kick.subarray(0, 2_048)).reduce((sum, sample, index) => sum + sample * (index + 1), 0).toFixed(5));
+    }
+    expect(kitSignatures.size).toBe(6);
+  });
+
+  it('chooses deterministic micro-variations and allocates no reusable lane nodes in trigger()', () => {
+    const event = { startStep: 0, durationSteps: 0.5, pitch: 42, velocity: 96, lane: 6 };
+    const sequence = Array.from({ length: 16 }, (_, index) => drumVariationIndex('drums-core-v2', 6, event, index));
+    expect(sequence).toEqual(Array.from({ length: 16 }, (_, index) => drumVariationIndex('drums-core-v2', 6, event, index)));
+    expect(new Set(sequence)).toEqual(new Set([0, 1]));
+    expect(drumVelocityGain(1)).toBeLessThan(drumVelocityGain(64));
+    expect(drumVelocityGain(64)).toBeLessThan(drumVelocityGain(127));
+    expect(drumVelocityGain(127)).toBeLessThanOrEqual(1);
+    const source = readFileSync(new URL('../../src/lib/audio/voices/procedural-drums.ts', import.meta.url), 'utf8');
+    const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
+    expect(triggerBody).toContain('new AudioBufferSourceNode');
+    expect(triggerBody).not.toMatch(/new (GainNode|BiquadFilterNode|StereoPannerNode)/u);
   });
 });

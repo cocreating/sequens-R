@@ -9,6 +9,10 @@ test('sound state has one accessible mobile shell independent from generator con
   await drums.getByText('Sound', { exact: true }).click();
 
   await expect(drums.getByLabel('Kit')).toHaveValue('drums-core-v2');
+  await expect(drums.getByLabel('Kit').getByRole('option')).toHaveCount(7);
+  expect(await drums.getByLabel('Kit').getByRole('option').allTextContents()).toEqual([
+    'Legacy Drums', 'Foundation', 'Fracture', 'Solar', 'Voltage', 'Weight', 'Tilt',
+  ]);
   await expect(drums.getByLabel('Tone')).toBeVisible();
   await expect(drums.getByLabel('Punch')).toBeVisible();
   await expect(drums.getByLabel('Decay')).toBeVisible();

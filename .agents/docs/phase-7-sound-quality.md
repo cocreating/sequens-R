@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 is accepted. Phase 7.1 implementation and automated evidence completed on 2026-08-25; its loudness-matched human A/B and physical Android C10 gates remain open, so Phase 7.2 has not started. Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7” instruction authorizes this phase-boundary exception without approving or waiving either physical gate.
+Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; mixer/Drum human listening and physical Android C10 gates remain open, so Phase 7.3 has not started. Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7” and subsequent “adelante” instructions authorize these phase-boundary exceptions without approving or waiving any physical gate.
 
 ## 1. Outcome
 
@@ -491,3 +491,36 @@ Audition/analysis evidence is generated locally and intentionally ignored by Git
 The files have distinct SHA-256 hashes. Neutral, space, and loudness-matched character are ready for the required human A/B. Phase 7.1 is not marked accepted until that listening result and the physical 16-module/140 BPM Android C10 run are recorded. Specialized voice work and the legacy purge therefore remain gated.
 
 User amendment recorded on 2026-08-25: once Drums, Bass, Acid, Chords, Arp, Piano, and Euclid all have approved replacements, Phase 7.11 will remove the temporary legacy DSP/preset paths and perform a one-time local project and PWA cache invalidation so startup uses only the new instruments and parameters. This supersedes the earlier permanent-legacy compatibility requirement, but deliberately does not execute the purge while current bootstrap presets still depend on legacy DSP.
+
+## 13. Phase 7.2 evidence · procedural Drums
+
+Implemented on 2026-08-25:
+
+- New engine-version-2 Drum presets use `ProceduralDrumVoice`; `legacy-drums-v1` alone retains the temporary old adapter. The original first 20 preset indexes remain unchanged and the five additional kits are appended, preserving compact-link compatibility during the replacement period.
+- The six original kits align with the established Four, Broken, Latin, Electro, Half-time, and Odd pattern families: Foundation, Fracture, Solar, Voltage, Weight, and Tilt.
+- Eight deterministic procedural lane renderers provide kick, snare, closed hat, open hat, clap, tom, rim, and a distinct FM-like percussion voice. Kick uses a phase-accumulated pitch envelope, transient/body blend, and bounded saturation; snare combines two tuned modes with high-passed noise; hats use six inharmonic metallic oscillators and high-pass shaping; clap uses three bursts plus a tail.
+- Every voice preallocates eight gain/filter/velocity/pan lane chains. A scheduled hit creates only the required one-shot `AudioBufferSourceNode`. Velocity maps monotonically through the preallocated lane gain; tone, punch, and decay affect the actual monitor DSP and use bounded parameter ramps.
+- Closed hat ramps the shared open-hat lane to silence over 3 ms, stops every active open-hat source at 4 ms, then restores the lane for its next attack. Panic and disposal stop tracked sources and disconnect all reusable buses.
+- Live monitoring and offline bounce select the same `procedural-drums-v2` factory implementation. Muted/non-solo modules are now also excluded correctly from offline mix and stem voices.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings;
+- unit/property tests: 77 passed across 15 files;
+- all 96 generated lane buffers (six kits × eight lanes × two deterministic variants) are finite, bounded to 0.981, repeat exactly, have negligible DC, and produce distinct lane/kit signatures;
+- every appended kit round-trips through patch v3 within 400 bytes without moving earlier preset indexes;
+- production PWA build/offline precache and bundle gate: passed at 90.68 KiB initial JavaScript gzip / 200 KiB;
+- Playwright: 42 passed. The Phase 7.2 browser test renders all six real offline WAV paths, decodes PCM16, and applies the project BS.1770/true-peak/DC analyzer.
+
+Generated audition files are local and ignored by Git under `test-results/phase7.2/`:
+
+| Kit / pattern family | LUFS-I | True peak |
+| --- | ---: | ---: |
+| Foundation / Four | −18.0 | −4.3 dBTP |
+| Fracture / Broken | −18.2 | −3.5 dBTP |
+| Solar / Latin | −17.9 | −2.2 dBTP |
+| Voltage / Electro | −17.7 | −4.6 dBTP |
+| Weight / Half-time | −17.9 | −3.3 dBTP |
+| Tilt / Odd | −18.4 | −1.3 dBTP |
+
+Every file has a distinct SHA-256 digest; all pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.2 is not marked accepted until the user listens to the six references and Android C10 confirms the expanded procedural voice remains inside the load budget. Phase 7.3 Bass and the final legacy/cache purge remain gated.

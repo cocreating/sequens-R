@@ -119,7 +119,7 @@ Status: implemented with automated acceptance on 2026-08-25; physical Android ac
 
 ## AD-010 · Phase 7 sound identity and mix
 
-Status: specified and accepted on 2026-08-25; Phase 7.0 accepted and Phase 7.1 implementation/automated evidence completed on 2026-08-25. Phase 7.1 listening and physical Android C10 gates, plus later voice subphases, remain open.
+Status: specified and accepted on 2026-08-25; Phase 7.0 accepted and Phase 7.1–7.2 implementation/automated evidence completed on 2026-08-25. Mixer/Drum listening and physical Android C10 gates, plus later voice subphases, remain open.
 
 - Phase 7 improves the internal monitor without changing deterministic pattern generation, Web MIDI events, MIDI clock, or SMF output. Generator parameters and sound parameters become separate validated contracts.
 - Project schema 4 and patch schema 3 add versioned sound state and rack mix state. Earlier documents/links select append-only `legacy-<type>-v1` presets; new timbres are never imposed silently on saved work. A deliberate sound-upgrade action is reversible through Undo.

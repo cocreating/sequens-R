@@ -117,11 +117,11 @@ function defaultsFor(type: ModuleType): Readonly<Record<string, number>> {
   return Object.freeze(Object.fromEntries(SOUND_PARAM_SCHEMAS[type].map((definition) => [definition.key, definition.defaultValue])));
 }
 
-type PresetRow = Omit<SoundPreset, 'engineVersion' | 'outputTrimDb' | 'provenance'>;
+type PresetRow = Omit<SoundPreset, 'engineVersion' | 'outputTrimDb' | 'provenance'> & { outputTrimDb?: number };
 
 const PRESET_ROWS = [
   { id: 'legacy-drums-v1', moduleType: 'drums', label: 'Legacy Drums', params: defaultsFor('drums') },
-  { id: 'drums-core-v2', moduleType: 'drums', label: 'Core Kit', params: defaultsFor('drums') },
+  { id: 'drums-core-v2', moduleType: 'drums', label: 'Foundation', params: { tone: 55, punch: 65, decay: 45 }, outputTrimDb: 6 },
   { id: 'legacy-bass-v1', moduleType: 'bass', label: 'Legacy Bass', params: defaultsFor('bass') },
   { id: 'bass-core-v2', moduleType: 'bass', label: 'Core Bass', params: defaultsFor('bass') },
   { id: 'legacy-acid-v1', moduleType: 'acid', label: 'Legacy Acid', params: defaultsFor('acid') },
@@ -140,12 +140,17 @@ const PRESET_ROWS = [
   { id: 'silent-cc-v2', moduleType: 'cc', label: 'Silent control', params: defaultsFor('cc') },
   { id: 'legacy-mod-v1', moduleType: 'mod', label: 'Legacy silent control', params: defaultsFor('mod') },
   { id: 'silent-mod-v2', moduleType: 'mod', label: 'Silent control', params: defaultsFor('mod') },
+  { id: 'drums-broken-v2', moduleType: 'drums', label: 'Fracture', params: { tone: 70, punch: 52, decay: 32 }, outputTrimDb: 9 },
+  { id: 'drums-latin-v2', moduleType: 'drums', label: 'Solar', params: { tone: 62, punch: 45, decay: 38 }, outputTrimDb: 8 },
+  { id: 'drums-electro-v2', moduleType: 'drums', label: 'Voltage', params: { tone: 78, punch: 72, decay: 50 }, outputTrimDb: 6.5 },
+  { id: 'drums-halftime-v2', moduleType: 'drums', label: 'Weight', params: { tone: 38, punch: 78, decay: 70 }, outputTrimDb: 6.5 },
+  { id: 'drums-odd-v2', moduleType: 'drums', label: 'Tilt', params: { tone: 65, punch: 58, decay: 42 }, outputTrimDb: 7.5 },
 ] satisfies readonly PresetRow[];
 
 export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({
   ...preset,
   engineVersion: SOUND_ENGINE_VERSION,
-  outputTrimDb: 0,
+  outputTrimDb: preset.outputTrimDb ?? 0,
   provenance: 'procedural' as const,
 })));
 export const SOUND_PRESET_IDS: readonly string[] = Object.freeze(SOUND_PRESETS.map(({ id }) => id));

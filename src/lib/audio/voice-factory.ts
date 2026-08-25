@@ -4,6 +4,7 @@ import { validateSoundState } from './sound';
 import { AcidVoice } from './voices/acid';
 import { DrumKitVoice } from './voices/drumkit';
 import { PolyVoice } from './voices/poly';
+import { ProceduralDrumVoice } from './voices/procedural-drums';
 
 export interface VoiceModuleSnapshot {
   type: ModuleType;
@@ -21,7 +22,7 @@ export interface InternalVoice {
 export interface VoiceIdentity {
   moduleType: ModuleType;
   presetId: string;
-  implementationId: 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
+  implementationId: 'procedural-drums-v2' | 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
 }
 
 type LegacyVoice = AcidVoice | DrumKitVoice | PolyVoice;
@@ -60,6 +61,9 @@ export class VoiceFactory {
   create(context: BaseAudioContext, module: VoiceModuleSnapshot, destination: AudioNode): InternalVoice | null {
     validateSoundState(module.type, module.sound as SoundState);
     if (isControlModule(module.type)) return null;
+    if (module.type === 'drums' && module.sound.presetId !== 'legacy-drums-v1') {
+      return new ProceduralDrumVoice(context, destination, module.sound);
+    }
     const voice = module.type === 'drums'
       ? new DrumKitVoice(context, destination)
       : module.type === 'acid'
@@ -73,7 +77,7 @@ export class VoiceFactory {
     const implementationId = isControlModule(module.type)
       ? 'silent-control-v1'
       : module.type === 'drums'
-        ? 'legacy-drums-v1'
+        ? module.sound.presetId === 'legacy-drums-v1' ? 'legacy-drums-v1' : 'procedural-drums-v2'
         : module.type === 'acid'
           ? 'legacy-acid-v1'
           : module.type === 'bass'

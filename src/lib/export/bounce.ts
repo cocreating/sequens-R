@@ -21,7 +21,12 @@ export async function renderRackAudio(rack: RackState, bars: number, moduleId: s
   await context.audioWorklet.addModule(acidWorkletUrl);
   const source = toEngineSnapshot(rack);
   const sounds = toSoundSnapshot(rack);
-  const modules = source.modules.filter((module) => !isControlModule(module.type) && module.monitor && (moduleId === null || module.id === moduleId));
+  const anySolo = source.modules.some((module) => module.solo);
+  const modules = source.modules.filter((module) => !isControlModule(module.type)
+    && module.monitor
+    && !module.mute
+    && (!anySolo || module.solo)
+    && (moduleId === null || module.id === moduleId));
   const snapshot: EngineSnapshot = { bpm: source.bpm, modules };
   const graph = new RackAudioGraph(context, context.destination, rack.bpm, sounds.mix);
   const voices = new Map<string, InternalVoice>();

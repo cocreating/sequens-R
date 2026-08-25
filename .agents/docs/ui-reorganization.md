@@ -16,7 +16,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Desktop studio with a sticky workspace rail and three parallel module lanes at 1440 CSS px.
 - Closed desktop Workspace state reduced to one accessible 44 px toolbox trigger, allowing the module lanes to reclaim the released width.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
-- A `Demos projects` action directly after project import, opening an accessible native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
+- An icon-only 📂 `Demos projects` action directly after project import, retaining its explicit accessible name while opening a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
 - Compact module headers whose first row follows reorder → desktop full-width → collapse → `⋯` actions → top-right editable name; monitor, solo, and mute occupy a balanced second row. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
 - Desktop-only per-module full-width toggles that span all current lanes without changing saved project or playback state.
 - Musical-first module bodies: slots, mutation, grid/editor, and parameters precede `Output & advanced` routing, seed, and automatic mutation controls.
@@ -29,7 +29,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
   - vertical native range faders for desktop mixer levels.
 - Rotary parameters delegate to an independent Svelte 5 `RotaryKnob` component. Its SVG arc and indicator remain visual decoration around a native range input; vertical Pointer Events dragging uses pointer capture, Shift increases pixels per domain step, and double click restores the schema default. Component-specific CSS properties keep the visual layer themeable without coupling it to generator definitions or adding a runtime dependency.
 - Named Kick, Snare, Closed hat, Open hat, Clap, Tom, Rim, and Perc drum lanes.
-- Icon-only affordances for recognizable frequent actions: Play/Pause, Stop, Share, General Help, Random, Add, Undo/Redo, Save, project export/import, rack creation/duplication, scene capture, hardware connect/refresh, music exports, and piano-note creation. Ambiguous or higher-consequence controls such as Delete, Mutate/Revert, scene launch, recording, advanced routing, and module-menu commands retain visible text.
+- Icon-only affordances for recognizable frequent actions: Play/Pause, Stop, Share, General Help, Random, Add, Undo/Redo, Save, project export/import/demo discovery, rack creation/duplication, scene capture, hardware connect/refresh, music exports, and piano-note creation. Ambiguous or higher-consequence controls such as Delete, Mutate/Revert, scene launch, recording, advanced routing, and module-menu commands retain visible text.
 
 ## Accessibility and behavior
 

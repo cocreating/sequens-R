@@ -977,7 +977,7 @@
             <button type="button" class="has-emoticon icon-only" data-app-help-key="export-project" aria-label="Export" onclick={() => void exportProject()}><span class="button-emoticon" aria-hidden="true">📤</span></button>
             <label class="import-project has-emoticon icon-only" data-app-help-key="import-project" for="project-import"><span class="button-emoticon" aria-hidden="true">📥</span><span class="visually-hidden">Import</span></label>
             <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
-            <button type="button" class="demo-projects-trigger has-emoticon" data-app-help-key="demo-projects" popovertarget="demo-projects-popover" onclick={() => void loadDemoProjectIndex()}><span class="button-emoticon" aria-hidden="true">📂</span>Demos projects</button>
+            <button type="button" class="demo-projects-trigger has-emoticon icon-only" data-app-help-key="demo-projects" popovertarget="demo-projects-popover" aria-label="Demos projects" onclick={() => void loadDemoProjectIndex()}><span class="button-emoticon" aria-hidden="true">📂</span></button>
           </section>
 
           <div bind:this={demoProjectsPopover} class="demo-projects-popover" id="demo-projects-popover" popover aria-labelledby="demo-projects-heading">

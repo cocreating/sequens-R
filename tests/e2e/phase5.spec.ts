@@ -231,6 +231,7 @@ test.describe('Phase 5 polish', () => {
       ['Redo', '↪️'],
       ['Save', '💾'],
       ['Export', '📤'],
+      ['Demos projects', '📂'],
       ['New rack', '➕'],
       ['Duplicate rack', '📑'],
       ['Capture scene', '📸'],

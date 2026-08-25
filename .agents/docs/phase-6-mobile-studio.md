@@ -55,6 +55,8 @@ On the reference mid-range Android device with stable Chrome:
 
 Phase 6 is complete only when both automated and physical Android evidence are appended here. Pending physical evidence from Phases 3 and 5 remains independently open and is not waived by starting this phase.
 
+The next planned product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its implementation does not form part of Phase 6 and remains subject to this phase's physical gate or a new explicit phase-boundary amendment.
+
 ## Implemented surface
 
 - All ten module types are available from the same mobile creation control used by desktop; no generator, project, patch, engine, routing, or export fork was introduced.

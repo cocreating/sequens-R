@@ -116,3 +116,18 @@ Status: implemented with automated acceptance on 2026-08-25; physical Android ac
 - UI visibility never controls audio or MIDI lifetime. Collapsed, off-screen, or temporarily hidden modules remain in the immutable engine snapshot and continue playing.
 - The phase is accepted only with real Android evidence at 375 CSS px, including all ten module types and the C10 16-module/140-BPM load scenario. Desktop behavior and deterministic outputs must remain unchanged.
 - The user's explicit 2026-08-25 amendment authorizes Phase 6 implementation while the already documented physical Phase 3 and Phase 5 acceptance evidence remains pending. It does not waive or mark those earlier gates complete.
+
+## AD-010 · Phase 7 sound identity and mix
+
+Status: specified and accepted on 2026-08-25; implementation has not started.
+
+- Phase 7 improves the internal monitor without changing deterministic pattern generation, Web MIDI events, MIDI clock, or SMF output. Generator parameters and sound parameters become separate validated contracts.
+- Project schema 4 and patch schema 3 add versioned sound state and rack mix state. Earlier documents/links select append-only `legacy-<type>-v1` presets; new timbres are never imposed silently on saved work. A deliberate sound-upgrade action is reversible through Undo.
+- `RackModule.level` remains top-level for compatibility. `SoundState` adds engine version, stable preset ID, quantized macros, pan, and shared delay/reverb sends. `RackMixState` owns the single delay, reverb, and master configuration even when multiple Mixer UI modules exist.
+- One `VoiceFactory` accepts `BaseAudioContext` and is the only voice mapping used by live monitoring and offline bounce. Continuous sound updates use short AudioParam ramps; topology/preset changes prepare outside scheduler callbacks and enter at the next note attack with a bounded crossfade.
+- Bass, Acid, Chords, Arp, Piano, Drums, and Euclid receive specialized voices in independent gated subphases. Mixer edits one shared graph. CC Control and Mod remain silent and do not gain internal modulation targets.
+- The procedural engine is the acceptance baseline. Optional sample/impulse assets must be local, provenance-documented, legally redistributable, and removable without breaking the phase DoD.
+- Released presets target −18 LUFS-I ±1 LU and ≤ −1 dBTP on deterministic eight-bar family phrases, using ITU-R BS.1770-5 measurements. Loudness matching precedes mandatory human A/B approval.
+- The final catalog contains 12 Acid presets, 40 non-Acid presets (Bass 8, Chords 10, Arp 8, Piano 8, Euclid 6), and six Drum kits. Preset IDs/share indexes are append-only.
+- Native Web Audio remains the engine. Tone.js, a second transport, cloud assets, user sampling, per-module convolution, and internal CC/Mod destinations are outside Phase 7.
+- Phase 7 cannot be accepted without the existing C10 Android scenario at 16 active modules/140 BPM, all bundle/offline gates, live/bounce parity, migration/share evidence, and explicit listening approval for every audible family.

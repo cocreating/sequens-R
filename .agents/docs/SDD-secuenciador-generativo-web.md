@@ -178,12 +178,18 @@ De principio a fin, en un móvil, **en menos de diez segundos y con un solo perm
 
 | ID | Requisito | Criterios de aceptación |
 |---|---|---|
-| RF-040 | Cada módulo generador tiene una voz interna. Play produce sonido sin ninguna configuración | Primera visita, un solo toque en Play → se oye música |
-| RF-041 | Banco de presets: ≥ 12 voces acid (motor 303), ≥ 40 politimbrales, ≥ 6 kits de batería | Todos los presets están **nivelados** en loudness percibida (±1 LU) |
+| RF-040 | Cada módulo que emite notas tiene una voz interna; Mixer, CC Control y Mod son silenciosos por contrato. Play produce sonido sin ninguna configuración | Primera visita, un solo toque en Play → se oye música; añadir un módulo de control no crea una voz |
+| RF-041 | Banco de presets: ≥ 12 voces Acid, ≥ 40 voces no-Acid repartidas entre Bass/Chords/Arp/Piano/Euclid y ≥ 6 kits de batería | Todos los presets están **nivelados** en loudness percibida (±1 LU) |
 | RF-042 | Cambio de preset en caliente, sin cortar la reproducción | El cambio ocurre en el siguiente límite de nota, sin click |
-| RF-043 | Cada módulo abre con un preset distinto y coherente con lo que genera | Seis módulos añadidos seguidos no suenan como el mismo instrumento seis veces |
+| RF-043 | Cada tipo de módulo audible abre con un preset coherente con lo que genera | Bass, Acid, Chords, Arp, Piano y Euclid se distinguen por timbre sin mirar la UI |
 | RF-044 | El bus máster lleva un limitador | Con 16 módulos a tope no hay clipping digital |
 | RF-045 | El motor interno **es gratis y está activo por defecto** | — |
+| RF-046 | Los parámetros generativos y los de sonido son contratos separados | Cambiar preset, panorama, macros o sends no cambia ningún `NoteEvent`, MIDI enviado ni SMF exportado |
+| RF-047 | Reproducción en vivo y bounce comparten la misma fábrica de voces, presets y grafo | La misma frase y preset cumplen tolerancias de duración, loudness, pico, DC y envolvente espectral en ambos caminos |
+| RF-048 | Los controles de sonido responden en vivo con suavizado de `AudioParam` | Barrer cualquier macro durante reproducción no produce clicks ni zipper noise; los cambios de topología/preset entran en el siguiente ataque de nota |
+| RF-049 | Todo preset es local, versionado y con procedencia documentada | Cero CDN/runtime fetch. Assets externos sin licencia compatible o procedencia verificable no entran; el motor procedural cumple la DoD sin samples opcionales |
+
+**Objetivo de calidad de la fase 7.** Los presets se nivelan con una frase de referencia de ocho compases por familia a **−18 LUFS-I ±1 LU**, medidos según ITU-R BS.1770-5, y a **≤ −1 dBTP**. Es un objetivo de comparación de presets, no una normalización destructiva del máster del usuario. Cada subfase requiere además una escucha A/B a loudness igualada; sonar “más fuerte” no cuenta como sonar mejor.
 
 ### 2.7 MIDI y compatibilidad de plataforma
 
@@ -204,7 +210,7 @@ Firefox y Samsung Internet funcionan —tienen Web MIDI y AudioWorklet— pero p
 
 **Lo que esto ahorra:** un camino de UI paralelo, una matriz de tests duplicada, y todo el trabajo específico de WebKit (`navigator.audioSession`, sus rarezas con `AudioContext`, sus límites de almacenamiento). Ese presupuesto se gasta en profundidad, no en cobertura.
 
-**Lo que NO ahorra:** el motor de audio interno sigue siendo obligatorio y sigue siendo el camino por defecto. La razón original era iOS, y ha desaparecido; pero quedan dos que no: el permiso MIDI de Chrome 124+ obliga a que la app sea plenamente útil **antes** de concederlo, y el usuario U2 (§2.1) nunca enchufa nada. RF-040 a RF-045 no se tocan.
+**Lo que NO ahorra:** el motor de audio interno sigue siendo obligatorio y sigue siendo el camino por defecto. La razón original era iOS, y ha desaparecido; pero quedan dos que no: el permiso MIDI de Chrome 124+ obliga a que la app sea plenamente útil **antes** de concederlo, y el usuario U2 (§2.1) nunca enchufa nada. RF-040 a RF-049 no se tocan.
 
 | ID | Requisito | Criterios de aceptación |
 |---|---|---|
@@ -283,8 +289,10 @@ src/
       engine.ts           # grafo, buses, limitador
       clock.worklet.ts    # fuente de reloj sample-accurate
       scheduler.ts        # look-ahead, encola eventos
-      voices/             # acid303.worklet.ts, poly.ts, drumkit.ts
-      presets/            # definiciones de patches (datos, no código)
+      voices/             # una voz especializada por familia + contratos compartidos
+      effects/            # delay/reverb compartidos, saturación y máster
+      presets/            # catálogo append-only, schemas y definiciones de patches
+      analysis/           # loudness, true peak, DC y rasgos espectrales de tests offline
     midi/
       access.ts  ports.ts  clock.ts  out.ts  learn.ts  smf.ts
     state/
@@ -329,6 +337,24 @@ data/
 - **Pool de voces por módulo** con robo de voz por la más antigua. Techo global de voces configurable (defecto 64).
 - **Nunca** `createGain()` dentro del callback de scheduling: pre-asignar.
 
+#### 3.3.1 Grafo y contratos de sonido — fase 7
+
+```text
+voz especializada → trim/insert del módulo → panorama ─┬→ bus dry ───────────────┐
+                                                       ├→ send delay compartido ─┤
+                                                       └→ send reverb compartido ┤
+                                                                                 ▼
+                                                         headroom → DC/EQ → soft clip → limitador → meter → out
+```
+
+- `PatternSnapshot` y `SoundSnapshot` son objetos inmutables distintos. El primero cambia notas/MIDI y mantiene la cuantización musical existente; el segundo solo cambia monitorización interna.
+- Macros continuas se aplican con rampas de 15–30 ms. Un preset que cambia topología se prepara fuera del callback del scheduler y se activa en el siguiente ataque con crossfade corto; nunca se construye un grafo pesado dentro de `trigger()`.
+- `VoiceFactory` acepta `BaseAudioContext`, por lo que `AudioContext` y `OfflineAudioContext` instancian exactamente las mismas voces, inserts y returns.
+- Bass, Acid, Chords, Arp y Piano tienen voces propias. Euclid tiene tres voces percusivas independientes. Drums conserva ocho carriles con choke groups. Mixer no genera notas. CC Control y Mod siguen siendo módulos de control silenciosos.
+- Delay y reverb son returns únicos y preasignados para todo el rack. No se crea una instancia por módulo. Los efectos se incluyen de forma determinista en bounce y stems.
+- El limitador no compensa una mezcla sin headroom. El grafo reserva ganancia antes del máster, elimina DC y mide pico/RMS; oversampling solo entra en bloques no lineales si C10 sigue verde en Android.
+- El motor procedural es el baseline obligatorio. Samples opcionales deben ser originales o tener licencia compatible documentada, estar autoalojados y conservar arranque offline y presupuestos C10.
+
 ### 3.4 El puente de tiempo MIDI ⇄ audio (detalle crítico)
 
 `MIDIOutput.send(data, timestamp)` usa el dominio de `performance.now()`. El scheduler trabaja en `AudioContext.currentTime`. Programarlo mal produce un desfase audible y variable entre el sonido interno y el hardware.
@@ -358,7 +384,7 @@ Todo evento MIDI se envía con `send(bytes, toPerfTime(evento.contextTime))`. Na
   Fallback fuera de Chrome: `requestAnimationFrame` escribiendo `style.setProperty('--playhead', …)`.
 - **`content-visibility: auto` + `contain-intrinsic-size`** en las placas de módulo plegadas o fuera de pantalla. Con un rack de 16 módulos esto es la diferencia entre cumplir y no cumplir el presupuesto de frame.
 - Los pasos de la rejilla son elementos estables con `{#each ... (key)}`; solo cambia una clase de estado.
-- Knobs: Pointer Events + `setPointerCapture` + `touch-action: none`. Arrastre vertical, `shift` para fino, doble toque = reset. `role="slider"` con `aria-valuenow`, `aria-valuetext` (valor formateado con unidad) y flechas del teclado.
+- Knobs: `input[type="range"]` nativo como control semántico, rodeado por un SVG puramente decorativo. Pointer Events + `setPointerCapture` + `touch-action: pan-x` añaden arrastre vertical sin bloquear el paneo horizontal; `Shift` reduce la sensibilidad y doble clic restaura el default. El input conserva rol/valor nativos, flechas/Home/End y expone `aria-valuetext` con la unidad formateada. El gesto agrupa sus cambios en un solo paso de Undo y termina con un único commit.
 - Menús de módulo como *bottom sheet* con `dialog` nativo, no como modal centrado: alcance del pulgar.
 - Librerías de contenido (grooves, progresiones) por `import()` dinámico, fuera del bundle inicial.
 
@@ -457,7 +483,18 @@ interface Project {
   updatedAt: number;
 }
 
-interface Rack { id: string; name: string; moduleIds: string[]; }
+interface Rack {
+  id: string;
+  name: string;
+  moduleIds: string[];
+  mix: {
+    delayDivision: number;
+    delayFeedback: number;
+    delayReturn: number;
+    reverbReturn: number;
+    masterCharacter: number;
+  };
+}
 
 interface Module {
   id: string;
@@ -468,7 +505,15 @@ interface Module {
   solo: boolean;
   monitor: boolean | 'auto';                 // 'auto' = off si hay destino MIDI
   midi: { portId: string | null; channel: number };  // 1..16
-  sound: { presetId: string; level: number };        // level 0..1
+  level: number;                              // 0..1; se conserva fuera de sound por compatibilidad
+  sound: {
+    engineVersion: 2;
+    presetId: string;                         // ID estable y append-only
+    params: Record<string, number>;           // enteros cuantizados por SoundParamSchema
+    pan: number;                              // -100..100
+    delaySend: number;                        // 0..100
+    reverbSend: number;                       // 0..100
+  };
   slots: [PatternSlot, ...PatternSlot[]];            // exactamente 8
   activeSlot: number;
   mutate: { on: boolean; intensity: 1|2|3|4; everyNLoops: number };
@@ -502,6 +547,8 @@ interface Scene { id: string; name: string; assignments: Record<string, number>;
 **Invariante:** `cache` es siempre reconstruible con `generate(seed, params, key)`. Si se pierde, se regenera. Un patrón dibujado a mano (Piano roll) es la excepción y se marca con `handEdited: true`, momento en el que el patrón pasa a ser la verdad y la semilla queda inerte.
 
 **Corolario de C12:** ese invariante es exactamente lo que permite que un rack quepa en una URL. Un `PatternSlot` con `handEdited: true` —o un módulo con samples propios— **rompe la serialización a enlace**, porque ya no basta la semilla. Esos módulos exponen `shareable = false` y disparan el aviso de RF-008.
+
+**Migración de sonido de fase 7:** el proyecto pasa a schema v4 y el patch compartible a schema v3. Proyectos v1–v3 y patches v1–v2 reciben un preset `legacy-<tipo>-v1` que conserva la voz anterior; no se reinterpretan silenciosamente con un timbre nuevo. Los módulos creados tras la migración usan `engineVersion: 2`. El catálogo de IDs y sus índices compactos es append-only. Un proyecto legacy puede actualizarse mediante una acción explícita, reversible por Undo.
 
 **Regla para módulos nuevos:** un generador que necesite guardar su patrón para reproducirse no es un generador, es un editor. Puede existir, pero cae fuera del mecanismo de distribución y hay que decirlo en su spec.
 
@@ -555,7 +602,7 @@ export function sfc32(seed: number) {
 
 Ejecuta **una fase por vez**. No empieces la siguiente sin que la DoD de la anterior esté demostrada con evidencia (test que pasa, medición, o captura).
 
-> **Secuencia.** Las fases 0–3 construyen el núcleo móvil original de cinco módulos. La fase 4 ensancha el producto con la superficie de estudio y cinco módulos adicionales; la fase 5 profundiza el instrumento. La fase 6 devuelve esos cinco módulos a la superficie móvil con editores adaptativos. No se crean dos motores ni dos modelos de módulo: cambia la presentación, no el dominio. Por enmienda explícita del usuario del 2026-08-25, la implementación de fase 6 puede comenzar mientras la evidencia física pendiente de las fases 3 y 5 sigue registrada; esos gates no se consideran aprobados por ello.
+> **Secuencia.** Las fases 0–3 construyen el núcleo móvil original de cinco módulos. La fase 4 ensancha el producto con la superficie de estudio y cinco módulos adicionales; la fase 5 profundiza el instrumento. La fase 6 devuelve esos cinco módulos a la superficie móvil con editores adaptativos. La fase 7 mejora la identidad sonora módulo por módulo y consolida la mezcla sin crear un segundo motor. No se crean dos motores ni dos modelos de módulo: cambia la presentación o la voz, no el dominio compartido. Por enmienda explícita del usuario del 2026-08-25, la implementación de fase 6 puede comenzar mientras la evidencia física pendiente de las fases 3 y 5 sigue registrada; esos gates no se consideran aprobados por ello. Salvo nueva enmienda explícita, la fase 7 comienza después de aprobar el gate físico de la fase 6.
 
 ### Fase 0 — Cimientos
 1. Vite + Svelte 5 + TS estricto + Vitest + Playwright (`channel: 'chrome'`) + `vite-plugin-pwa`.
@@ -636,6 +683,51 @@ Ejecuta **una fase por vez**. No empieces la siguiente sin que la DoD de la ante
 **DoD funcional:** en Chrome Android, una persona puede añadir y editar los diez tipos de módulo sin cambiar a modo escritorio. Un patch de escritorio con Arp, Euclid o Mod se abre, se edita y vuelve a compartir con resultado determinista idéntico. Piano roll y automatización CC conservan su contrato de exportación/importación de proyecto cuando no caben en enlace. Añadir, editar, colapsar, reordenar y borrar cualquier tipo durante la reproducción no produce clicks, cortes ni notas colgadas.
 
 **DoD de interfaz y rendimiento:** recorrido completo a 375 × 667 sin overflow horizontal de página, sin controles solapados y con objetivos táctiles ≥ 44 × 44 CSS px. Navegación por teclado, foco restaurado al cerrar editores dedicados, reducción de movimiento y axe sin violaciones serias/críticas. En el Android de referencia, 16 módulos activos a 140 BPM mantienen 0 xruns, `renderCapacity` medio ≤ 0.5/pico ≤ 0.8 cuando exista y frames de UI ≤ 8 ms mientras se desplaza y edita el rack. Los presupuestos de tamaño de C10 siguen verdes.
+
+### Fase 7 — Identidad sonora y mezcla
+
+La fase se ejecuta como subfases secuenciales. Cada una termina con tests, métricas y escucha A/B aceptada antes de comenzar la siguiente. El detalle normativo vive en `phase-7-sound-quality.md`.
+
+#### Fase 7.0 — Contrato y banco de pruebas
+46. Separar estado generativo y estado de sonido; `SoundParamSchema`, catálogo de presets, `SoundSnapshot`, migración proyecto v4/patch v3 y presets legacy.
+47. Extraer una `VoiceFactory` única para live/offline, un rack de referencia y análisis offline de loudness, true peak, DC, duración y envolvente espectral.
+
+#### Fase 7.1 — Mixer y máster
+48. Gain staging con headroom, panorama/sends por módulo, delay y reverb compartidos, DC blocker, soft clip, limitador y medidores. El Mixer expone estos controles sin generar sonido.
+
+#### Fase 7.2 — Drums
+49. Sustituir los ocho buffers básicos por ocho instrumentos procedurales diseñados, con choke, velocity, variación determinista y seis kits nivelados. Samples originales son una capa opcional, no el baseline.
+
+#### Fase 7.3 — Bass
+50. Voz monofónica dedicada: oscilador + sub, filtro/envolvente, glide y drive real. Ocho presets nivelados.
+
+#### Fase 7.4 — Acid
+51. Completar el worklet TPT con oscilador antialias, saw/square, cutoff, resonance, env amount, decay, accent, slide y drive. Doce presets nivelados; oversampling condicionado a C10.
+
+#### Fase 7.5 — Chords
+52. Voz polifónica dedicada de ocho voces, ADSR, filtro, anchura/chorus y reverb send. Diez presets; ningún acorde soportado pierde notas por un pool insuficiente.
+
+#### Fase 7.6 — Arp
+53. Voz pluck dedicada, articulación por velocity/gate, filtro y delay sincronizado. Ocho presets.
+
+#### Fase 7.7 — Piano
+54. Voz de piano eléctrico FM ligera con tremolo y dinámica por velocity. Ocho presets. Un multisample solo entra tras aprobar procedencia, tamaño y rendimiento.
+
+#### Fase 7.8 — Euclid
+55. Tres voces percusivas independientes, con afinación, decay y panorama por anillo. Seis paletas niveladas.
+
+#### Fase 7.9 — CC Control
+56. Auditar que CC Control permanece silencioso, no crea voces y que sus automatizaciones no alteran accidentalmente el grafo interno. No se añaden destinos de modulación interna en esta fase.
+
+#### Fase 7.10 — Mod
+57. Auditar que Mod permanece silencioso, mantiene timing/valores MIDI y no consume voces. Modular parámetros internos queda fuera de alcance.
+
+#### Fase 7.11 — Integración y aceptación
+58. Completar los 12 presets Acid, 40 presets no-Acid (Bass 8, Chords 10, Arp 8, Piano 8, Euclid 6) y seis kits; nivelar; verificar live/bounce, migraciones, share, exports, accesibilidad, bundle y Android.
+
+**DoD por subfase sonora:** output MIDI/SMF y golden de patrón idénticos antes/después; live y offline dentro de tolerancias; ningún click, NaN, DC persistente o voz colgada; preset/macros accesibles en móvil y escritorio; C10 sin regresión; escucha A/B a loudness igualada aceptada y documentada.
+
+**DoD de fase:** RF-040–RF-049 demostrados. Los 58 presets/kits están versionados y nivelados a −18 LUFS-I ±1 LU con true peak ≤ −1 dBTP sobre sus frases de referencia. Un rack de 16 módulos a 140 BPM cumple todos los presupuestos C10 en el Android de referencia. Bounce y live comparten el grafo, los proyectos/enlaces legacy conservan su preset legacy, nuevos enlaces siguen ≤ 400 bytes y no existe runtime network. La fase no se completa únicamente con tests automáticos: requiere aceptación auditiva explícita de cada familia.
 
 ---
 

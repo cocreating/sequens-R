@@ -11,7 +11,9 @@ import {
 import {
   createDefaultSound,
   DEFAULT_RACK_MIX,
+  RACK_MIX_SCHEMA,
   SOUND_PARAM_SCHEMAS,
+  SOUND_OUTPUT_SCHEMA,
   SOUND_PRESETS,
   presetsFor,
   soundForPreset,
@@ -312,5 +314,19 @@ describe('Phase 7.2 procedural drums', () => {
     const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
     expect(triggerBody).toContain('new AudioBufferSourceNode');
     expect(triggerBody).not.toMatch(/new (GainNode|BiquadFilterNode|StereoPannerNode)/u);
+  });
+});
+
+describe('Phase 7 sound control language', () => {
+  it('uses knobs for continuous sound/mix macros while preserving discrete selectors', () => {
+    for (const schema of Object.values(SOUND_PARAM_SCHEMAS)) {
+      for (const definition of schema) {
+        if (definition.options === undefined) expect(definition.control).toBe('knob');
+        else expect(definition.control).toBe('segmented');
+      }
+    }
+    expect(SOUND_OUTPUT_SCHEMA.every(({ control }) => control === 'knob')).toBe(true);
+    expect(RACK_MIX_SCHEMA[0]?.control).toBe('select');
+    expect(RACK_MIX_SCHEMA.slice(1).every(({ control }) => control === 'knob')).toBe(true);
   });
 });

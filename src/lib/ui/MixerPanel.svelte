@@ -1,8 +1,12 @@
 <script lang="ts">
-  import { RACK_MIX_SCHEMA, type RackMixState } from '../audio/sound';
+  import { RACK_MIX_SCHEMA, SOUND_OUTPUT_SCHEMA, type RackMixState } from '../audio/sound';
   import type { MeterReading } from '../audio/rack-graph';
   import type { RackModule } from '../state/rack';
   import Knob from './Knob.svelte';
+
+  const PAN_DEFINITION = SOUND_OUTPUT_SCHEMA.find(({ key }) => key === 'pan')!;
+  const DELAY_DEFINITION = SOUND_OUTPUT_SCHEMA.find(({ key }) => key === 'delaySend')!;
+  const REVERB_DEFINITION = SOUND_OUTPUT_SCHEMA.find(({ key }) => key === 'reverbSend')!;
 
   interface Props {
     id: string;
@@ -42,12 +46,11 @@
         <div class="mixer-channel-controls">
           <label for={`${id}-mix-level-${target.id}`}>Level</label>
           <input id={`${id}-mix-level-${target.id}`} data-help-key="mixer-level" type="range" min="0" max="1" step="0.01" value={target.level} aria-valuetext={`${Math.round(target.level * 100)} percent`} oninput={(event) => onpatch(target.id, { level: valueOf(event) })} onchange={oncommit} />
-          <label for={`${id}-mix-pan-${target.id}`}>Pan</label>
-          <input id={`${id}-mix-pan-${target.id}`} type="range" min="-100" max="100" step="1" value={target.sound.pan} oninput={(event) => onsound(target.id, 'pan', valueOf(event))} onchange={oncommit} />
-          <label for={`${id}-mix-delay-${target.id}`}>Delay</label>
-          <input id={`${id}-mix-delay-${target.id}`} type="range" min="0" max="100" step="1" value={target.sound.delaySend} oninput={(event) => onsound(target.id, 'delaySend', valueOf(event))} onchange={oncommit} />
-          <label for={`${id}-mix-reverb-${target.id}`}>Reverb</label>
-          <input id={`${id}-mix-reverb-${target.id}`} type="range" min="0" max="100" step="1" value={target.sound.reverbSend} oninput={(event) => onsound(target.id, 'reverbSend', valueOf(event))} onchange={oncommit} />
+        </div>
+        <div class="mixer-channel-knobs">
+          <Knob id={`${id}-mix-pan-${target.id}`} definition={PAN_DEFINITION} value={target.sound.pan} onchange={(value) => onsound(target.id, 'pan', value)} {oncommit} />
+          <Knob id={`${id}-mix-delay-${target.id}`} definition={DELAY_DEFINITION} value={target.sound.delaySend} onchange={(value) => onsound(target.id, 'delaySend', value)} {oncommit} />
+          <Knob id={`${id}-mix-reverb-${target.id}`} definition={REVERB_DEFINITION} value={target.sound.reverbSend} onchange={(value) => onsound(target.id, 'reverbSend', value)} {oncommit} />
         </div>
       </section>
     {/each}

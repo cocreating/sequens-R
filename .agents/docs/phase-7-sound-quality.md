@@ -467,6 +467,7 @@ Implemented on 2026-08-25:
 - One shared cross-feedback stereo delay follows the six supported beat divisions and ramps BPM/division/feedback changes over 20–30 ms. One deterministic 1.35-second procedural stereo convolution impulse is shared by the rack. Returns are linear and remain part of mix and isolated-stem bounces.
 - The common master provides −6 dB input headroom, an 18 Hz DC blocker, a gentle 280 Hz corrective bell, a compensated bounded soft-character curve, a final limiter, and a fixed −1.5 dB output ceiling. Live channel/master meters update through existing bounded diagnostics polling.
 - Every Mixer module displays the same per-channel level/pan/sends and the same five `RackMixState` controls; adding Mixer modules does not create another delay, reverb, master, or internal voice.
+- Continuous sound macros, panorama, sends, feedback, returns, and master character use the shared accessible rotary knob. Channel level remains a fader, while wave and delay-division choices retain discrete segmented/select controls.
 - Preset replacement still uses a 12 ms crossfade. Mute, solo, panic, deletion, and continuous mixer changes ramp `AudioParam` values; shared effect energy decays in the common return after a source strip is removed.
 - Offline renders schedule only the requested musical bars, retain a deterministic maximum two-second effect tail, and fade the final 20 ms. The one-bar 118 BPM evidence files are 4.0339 seconds long.
 
@@ -506,10 +507,10 @@ Implemented on 2026-08-25:
 Automated verification:
 
 - strict Svelte/TypeScript: 0 errors and 0 warnings;
-- unit/property tests: 77 passed across 15 files;
+- unit/property tests: 78 passed across 15 files;
 - all 96 generated lane buffers (six kits × eight lanes × two deterministic variants) are finite, bounded to 0.981, repeat exactly, have negligible DC, and produce distinct lane/kit signatures;
 - every appended kit round-trips through patch v3 within 400 bytes without moving earlier preset indexes;
-- production PWA build/offline precache and bundle gate: passed at 90.68 KiB initial JavaScript gzip / 200 KiB;
+- production PWA build/offline precache and bundle gate: passed at 90.64 KiB initial JavaScript gzip / 200 KiB;
 - Playwright: 42 passed. The Phase 7.2 browser test renders all six real offline WAV paths, decodes PCM16, and applies the project BS.1770/true-peak/DC analyzer.
 
 Generated audition files are local and ignored by Git under `test-results/phase7.2/`:

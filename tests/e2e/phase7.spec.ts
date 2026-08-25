@@ -19,6 +19,8 @@ test('sound state has one accessible mobile shell independent from generator con
   await expect(drums.getByLabel('Pan')).toBeVisible();
   await expect(drums.getByLabel('Delay send')).toBeVisible();
   await expect(drums.getByLabel('Reverb send')).toBeVisible();
+  expect(await drums.getByLabel('Tone').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(true);
+  expect(await drums.getByLabel('Pan').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(true);
 
   await drums.getByLabel('Kit').selectOption('legacy-drums-v1');
   await expect(page.locator('.session-status')).toHaveText('Legacy Drums selected');
@@ -67,9 +69,12 @@ test('mixer exposes channel sends, pan, rack returns, character, and live meters
   await expect(drums.getByLabel('Pan')).toBeVisible();
   await expect(drums.getByLabel('Delay')).toBeVisible();
   await expect(drums.getByLabel('Reverb')).toBeVisible();
+  expect(await drums.getByLabel('Pan').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(true);
+  expect(await drums.getByLabel('Level').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(false);
   await drums.getByLabel('Pan').fill('35');
   await expect(drums.getByLabel('Pan')).toHaveValue('35');
   await expect(drums.locator('.mix-meter')).toHaveAttribute('aria-label', /Drums peak/);
+  expect(await mixer.getByLabel('Delay return').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(true);
 
   await page.getByLabel('New module').selectOption('mixer');
   await page.getByRole('button', { name: 'Add', exact: true }).click();

@@ -255,11 +255,19 @@
   .mobile-piano-roll .piano-roll-viewport { min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
   .mobile-piano-roll .piano-roll-surface { width: max(100%, calc(var(--piano-steps) * 1.5rem)); height: calc(var(--piano-rows) * 1.5rem); }
   .mobile-piano-roll .piano-note { min-width: 1.5rem; min-height: 1.5rem; }
-  .mixer-panel { display: grid; gap: var(--space-2); }
-  .mixer-channel { display: grid; grid-template-columns: minmax(5rem, 1fr) auto auto; gap: var(--space-2); align-items: center; padding-block-end: var(--space-2); border-block-end: 1px solid var(--color-surface-raised); }
-  .mixer-channel > span { font-weight: 750; }
-  .mixer-channel label { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
-  .mixer-channel input { grid-column: 2 / -1; width: 100%; }
+  .mixer-panel { display: grid; gap: var(--space-4); }
+  .mixer-channels { display: grid; gap: var(--space-2); }
+  .mixer-channel, .rack-master { display: grid; gap: var(--space-2); padding: var(--space-2); border: 1px solid var(--color-surface-raised); border-radius: var(--radius-control); }
+  .mixer-channel-heading, .rack-master-heading { display: grid; grid-template-columns: minmax(5rem, 1fr) auto auto; gap: var(--space-2); align-items: center; }
+  .rack-master-heading { grid-template-columns: minmax(5rem, 1fr) auto; }
+  .rack-master-heading output { color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+  .mix-meter { height: 0.4rem; overflow: hidden; border-radius: 999px; background: var(--color-surface-raised); }
+  .mix-meter > span { display: block; height: 100%; border-radius: inherit; background: var(--color-accent); transition: width 80ms linear; }
+  .mix-meter.master > span { background: var(--color-success, var(--color-accent)); }
+  .mixer-channel-controls { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-1) var(--space-2); align-items: center; }
+  .mixer-channel-controls label { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
+  .mixer-channel-controls input { width: 100%; }
+  .rack-master-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: var(--space-2); }
   .unsupported, .loading { padding-block: 20vh; }
   .visually-hidden:where(:not(:focus-within, :active)) { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; clip-path: inset(50%) !important; overflow: hidden !important; white-space: nowrap !important; }
   @media (max-width: 47.999rem) {
@@ -312,11 +320,7 @@
     .module-header { grid-template-columns: auto minmax(5rem, 1fr) auto; }
     .module-switches { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); }
     .parameters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .mixer-panel { grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr)); align-items: end; }
-    .mixer-channel { grid-template-columns: 1fr auto auto; justify-items: center; }
-    .mixer-channel > span { grid-column: 1 / -1; width: 100%; overflow: hidden; text-align: center; text-overflow: ellipsis; white-space: nowrap; }
-    .mixer-channel label { grid-column: 1 / -1; }
-    .mixer-channel input { grid-column: 1 / -1; width: var(--touch-target); height: 8rem; writing-mode: vertical-lr; direction: rtl; }
+    .mixer-channels { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); align-items: start; }
   }
   @media (min-width: 90rem) {
     .module-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }

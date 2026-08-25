@@ -17,6 +17,7 @@ import {
   validatePresetCatalog,
 } from '../../src/lib/audio/sound';
 import { VOICE_FACTORY } from '../../src/lib/audio/voice-factory';
+import { createSoftClipCurve, delaySecondsFor } from '../../src/lib/audio/rack-graph';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
@@ -215,5 +216,29 @@ describe('Phase 7.0 analysis and reference bench', () => {
     for (const rack of fixtures.racks) {
       for (const module of rack.modules) expect(() => ({ ...GENERATORS[module.type].defaults, ...module.params })).not.toThrow();
     }
+  });
+});
+
+describe('Phase 7.1 shared rack graph', () => {
+  it('maps musical delay divisions deterministically and clamps tempo', () => {
+    expect(delaySecondsFor(120, 0)).toBeCloseTo(0.5, 6);
+    expect(delaySecondsFor(120, 2)).toBeCloseTo(0.375, 6);
+    expect(delaySecondsFor(120, 3)).toBeCloseTo(1 / 6, 6);
+    expect(delaySecondsFor(1, 0)).toBeCloseTo(3, 6);
+    expect(delaySecondsFor(999, 0)).toBeCloseTo(0.2, 6);
+  });
+
+  it('keeps neutral soft clipping linear and character curves finite, bounded, and monotonic', () => {
+    const neutral = createSoftClipCurve(0, 257);
+    const character = createSoftClipCurve(100, 257);
+    expect(neutral[0]).toBeCloseTo(-1, 6);
+    expect(neutral[128]).toBeCloseTo(0, 6);
+    expect(neutral[256]).toBeCloseTo(1, 6);
+    for (let index = 1; index < character.length; index += 1) {
+      expect(Number.isFinite(character[index])).toBe(true);
+      expect(character[index]).toBeGreaterThanOrEqual(character[index - 1]!);
+      expect(Math.abs(character[index]!)).toBeLessThanOrEqual(1);
+    }
+    expect(character[192]!).toBeGreaterThan(neutral[192]!);
   });
 });

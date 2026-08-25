@@ -10,6 +10,8 @@
   import PianoRoll from './PianoRoll.svelte';
   import { moduleHelpFor } from './module-help';
   import SoundPanel from './SoundPanel.svelte';
+  import type { RackMixState } from '../audio/sound';
+  import type { MeterReading } from '../audio/rack-graph';
 
   interface Props {
     module: RackModule;
@@ -37,6 +39,11 @@
     ondelete: () => void;
     rackModules?: readonly RackModule[];
     ontargetpatch?: (id: string, patch: Partial<RackModule>) => void;
+    rackMix?: RackMixState;
+    meters?: Readonly<Record<string, MeterReading>>;
+    masterMeter?: MeterReading;
+    ontargetsound?: (id: string, key: string, value: number) => void;
+    onmixparam?: (key: keyof RackMixState, value: number) => void;
     midiOutputs?: readonly MidiPortInfo[];
     onexportmidi: () => void;
     onpattern: (pattern: Pattern) => void;
@@ -44,7 +51,7 @@
     onclearautomation: () => void;
   }
 
-  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onupgradesound, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
+  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onupgradesound, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, rackMix, meters = {}, masterMeter = { peakDbfs: -120, rmsDbfs: -120 }, ontargetsound, onmixparam, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
   let pattern = $derived(modulePattern(module, musicalKey, rackModules));
   let schema = $derived(GENERATORS[module.type].paramSchema.filter((definition) => definition.control !== 'hidden'));
   let recordingCc = $state(false);
@@ -164,7 +171,9 @@
   {#if !module.collapsed}
     <div class="module-body">
       {#if module.type === 'mixer'}
-        <MixerPanel modules={rackModules} onpatch={(id, patch) => ontargetpatch?.(id, patch)} />
+        {#if rackMix !== undefined}
+          <MixerPanel id={module.id} modules={rackModules} mix={rackMix} {meters} {masterMeter} onpatch={(id, patch) => ontargetpatch?.(id, patch)} onsound={(id, key, value) => ontargetsound?.(id, key, value)} onmix={(key, value) => onmixparam?.(key, value)} oncommit={onparamcommit} />
+        {/if}
       {:else}
         {#if module.type === 'cc'}
           <div class="automation-tools">

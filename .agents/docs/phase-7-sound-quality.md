@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 implementation and automated acceptance completed on 2026-08-25. Phase 6 physical Android acceptance remains open; the user's explicit “empezamos phase 7” instruction on 2026-08-25 authorizes this phase-boundary exception without approving or waiving that physical gate. Phase 7.1–7.11 and every listening/physical gate remain open.
+Status: Phase 7.0 is accepted. Phase 7.1 implementation and automated evidence completed on 2026-08-25; its loudness-matched human A/B and physical Android C10 gates remain open, so Phase 7.2 has not started. Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7” instruction authorizes this phase-boundary exception without approving or waiving either physical gate.
 
 ## 1. Outcome
 
@@ -458,3 +458,36 @@ Automated verification:
 - Playwright: 40 passed, including the two Phase 7.0 mobile flows and all prior phase regressions.
 
 Phase 7.0 is accepted automatically. It does not claim improved timbre: the current v2 bootstrap presets deliberately use the unchanged legacy DSP until their module subphases. Phase 7 overall remains open. Before specialized voices, Phase 7.1 must implement the shared mixer/master and retain C10 on the physical Android reference device; that physical evidence is not supplied by browser automation.
+
+## 12. Phase 7.1 evidence · mixer and master
+
+Implemented on 2026-08-25:
+
+- `RackAudioGraph` is the single rack-level topology used by `AudioEngine` and `renderRackAudio`. Each audible module owns one strip with preset trim, smoothed level, stereo pan, squared delay/reverb sends, and a peak/RMS tap. Mixer, CC, and Mod modules allocate neither a voice nor a strip.
+- One shared cross-feedback stereo delay follows the six supported beat divisions and ramps BPM/division/feedback changes over 20–30 ms. One deterministic 1.35-second procedural stereo convolution impulse is shared by the rack. Returns are linear and remain part of mix and isolated-stem bounces.
+- The common master provides −6 dB input headroom, an 18 Hz DC blocker, a gentle 280 Hz corrective bell, a compensated bounded soft-character curve, a final limiter, and a fixed −1.5 dB output ceiling. Live channel/master meters update through existing bounded diagnostics polling.
+- Every Mixer module displays the same per-channel level/pan/sends and the same five `RackMixState` controls; adding Mixer modules does not create another delay, reverb, master, or internal voice.
+- Preset replacement still uses a 12 ms crossfade. Mute, solo, panic, deletion, and continuous mixer changes ramp `AudioParam` values; shared effect energy decays in the common return after a source strip is removed.
+- Offline renders schedule only the requested musical bars, retain a deterministic maximum two-second effect tail, and fade the final 20 ms. The one-bar 118 BPM evidence files are 4.0339 seconds long.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings;
+- unit/property tests: 73 passed across 15 files, including musical delay mapping and neutral/bounded/finite soft-clip curves;
+- production PWA build and offline precache: passed;
+- initial JavaScript: 88.29 KiB gzip / 200 KiB budget;
+- Playwright: 41 passed, including accessible mixer channel/master controls, live playback changes, mix WAV/stem export, and all prior regressions;
+- Svelte autofixer: no issues in the three edited Svelte components; only pre-existing `bind:this` modernization suggestions remain.
+
+Audition/analysis evidence is generated locally and intentionally ignored by Git under `test-results/phase7.1/`:
+
+| File | Configuration | LUFS-I | True peak | DC / invalid PCM |
+| --- | --- | ---: | ---: | --- |
+| `01-neutral.wav` | Neutral sends/returns/character | −24.7 | −8.1 dBTP | 0.000000 / none |
+| `02-space.wav` | Per-channel sends, delay return 38%, reverb return 32% | −24.7 | −8.1 dBTP | 0.000000 / none |
+| `03-character.wav` | Space setup plus character 55% | −21.5 | −7.2 dBTP | 0.000001 / none |
+| `03-character-matched.wav` | Character render gain-matched to neutral | −24.7 | −10.4 dBTP | 0.000001 / none |
+
+The files have distinct SHA-256 hashes. Neutral, space, and loudness-matched character are ready for the required human A/B. Phase 7.1 is not marked accepted until that listening result and the physical 16-module/140 BPM Android C10 run are recorded. Specialized voice work and the legacy purge therefore remain gated.
+
+User amendment recorded on 2026-08-25: once Drums, Bass, Acid, Chords, Arp, Piano, and Euclid all have approved replacements, Phase 7.11 will remove the temporary legacy DSP/preset paths and perform a one-time local project and PWA cache invalidation so startup uses only the new instruments and parameters. This supersedes the earlier permanent-legacy compatibility requirement, but deliberately does not execute the purge while current bootstrap presets still depend on legacy DSP.

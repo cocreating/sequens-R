@@ -68,7 +68,7 @@
   import DiagnosticsPanel from './lib/ui/DiagnosticsPanel.svelte';
   import type { AudioDiagnostics } from './lib/audio/engine';
   import { appHelpFor } from './lib/ui/app-help';
-  import { DEFAULT_RACK_MIX, presetById } from './lib/audio/sound';
+  import { DEFAULT_RACK_MIX, presetById, type RackMixState } from './lib/audio/sound';
 
   let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
   const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
@@ -416,6 +416,10 @@
       ...rack,
       modules: rack.modules.map((module) => module.id === id ? setModuleSoundParam(module, key, value) : module),
     }, `sound:${id}:${key}`);
+  }
+
+  function setRackMixParam(key: keyof RackMixState, value: number): void {
+    replaceSoundRack({ ...rack, mix: { ...rack.mix, [key]: value } }, `mix:${key}`);
   }
 
   function selectSoundPreset(id: string, presetId: string): void {
@@ -1094,6 +1098,11 @@
           ondelete={() => deleteModule(module.id)}
           rackModules={rack.modules}
           ontargetpatch={patchModule}
+          rackMix={rack.mix}
+          meters={audioDiagnostics.moduleMeters}
+          masterMeter={audioDiagnostics.masterMeter}
+          ontargetsound={setSoundParam}
+          onmixparam={setRackMixParam}
           midiOutputs={midiState.outputs}
           onexportmidi={() => { void exportMidi(module); }}
         />

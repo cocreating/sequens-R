@@ -1,4 +1,4 @@
-import type { ModuleType } from '../core/pattern';
+import { isControlModule, type ModuleType } from '../core/pattern';
 import { AudioScheduler } from './scheduler';
 import type { EngineModuleSnapshot, EngineSnapshot, RackSoundSnapshot, ScheduledNote, SoundModuleSnapshot } from './types';
 import clockWorkletUrl from './clock.worklet.ts?worker&url';
@@ -7,10 +7,11 @@ import { MidiTimeBridge } from '../midi/time-bridge';
 import type { MidiSink } from '../midi/types';
 import { createDefaultSound, DEFAULT_RACK_MIX } from './sound';
 import { VOICE_FACTORY, type InternalVoice } from './voice-factory';
+import { RackAudioGraph, type MeterReading, type RackModuleStrip } from './rack-graph';
 
 interface ModuleVoice {
   type: ModuleType;
-  bus: GainNode;
+  strip: RackModuleStrip | null;
   voice: InternalVoice | null;
   presetId: string;
   crossfadeUntil: number;
@@ -40,6 +41,8 @@ export interface AudioDiagnostics {
   averageRenderLoad: number | null;
   peakRenderLoad: number | null;
   underrunRatio: number | null;
+  masterMeter: MeterReading;
+  moduleMeters: Readonly<Record<string, MeterReading>>;
 }
 
 const EMPTY_SNAPSHOT: EngineSnapshot = { bpm: 118, modules: [] };
@@ -50,7 +53,7 @@ export class AudioEngine {
   #scheduler: AudioScheduler | null = null;
   #clock: AudioWorkletNode | null = null;
   #clockSink: GainNode | null = null;
-  #master: DynamicsCompressorNode | null = null;
+  #graph: RackAudioGraph | null = null;
   #snapshot: EngineSnapshot = EMPTY_SNAPSHOT;
   #soundSnapshot: RackSoundSnapshot = EMPTY_SOUND_SNAPSHOT;
   readonly #voices = new Map<string, ModuleVoice>();
@@ -93,7 +96,11 @@ export class AudioEngine {
 
   get diagnostics(): AudioDiagnostics {
     let activeVoices = 0;
-    for (const module of this.#voices.values()) activeVoices += module.voice?.activeVoiceCount ?? 0;
+    const moduleMeters: Record<string, MeterReading> = {};
+    for (const [id, module] of this.#voices) {
+      activeVoices += module.voice?.activeVoiceCount ?? 0;
+      if (module.strip !== null) moduleMeters[id] = module.strip.readMeter();
+    }
     return {
       state: this.state,
       latencySeconds: this.latencySeconds,
@@ -103,6 +110,8 @@ export class AudioEngine {
       averageRenderLoad: this.#averageRenderLoad,
       peakRenderLoad: this.#peakRenderLoad,
       underrunRatio: this.#underrunRatio,
+      masterMeter: this.#graph?.readMasterMeter() ?? { peakDbfs: -120, rmsDbfs: -120 },
+      moduleMeters,
     };
   }
 
@@ -128,14 +137,7 @@ export class AudioEngine {
     }
     const context = new AudioContext({ latencyHint: 'interactive' });
     await Promise.all([context.audioWorklet.addModule(clockWorkletUrl), context.audioWorklet.addModule(acidWorkletUrl)]);
-    const master = new DynamicsCompressorNode(context, {
-      threshold: -3,
-      knee: 3,
-      ratio: 20,
-      attack: 0.003,
-      release: 0.12,
-    });
-    master.connect(context.destination);
+    const graph = new RackAudioGraph(context, context.destination, this.#snapshot.bpm, this.#soundSnapshot.mix);
     this.#midiTime = new MidiTimeBridge(context);
     this.#midiResyncTimer = window.setInterval(() => this.#midiTime?.resync(), 1000);
     const scheduler = new AudioScheduler(context, this.#snapshot, (note) => this.#schedule(note), this.#onBar, (time) => this.#scheduleClock(time), this.#onPosition);
@@ -144,7 +146,7 @@ export class AudioEngine {
     clock.connect(clockSink).connect(context.destination);
     scheduler.attachClock(clock);
     this.#context = context;
-    this.#master = master;
+    this.#graph = graph;
     this.#scheduler = scheduler;
     this.#clock = clock;
     this.#clockSink = clockSink;
@@ -155,6 +157,7 @@ export class AudioEngine {
       renderCapacity.start({ updateInterval: 1 });
     }
     this.#syncVoices(this.#snapshot.modules);
+    graph.applyMix(this.#soundSnapshot.mix, this.#snapshot.bpm, context.currentTime);
   }
 
   publish(snapshot: EngineSnapshot, soundSnapshot: RackSoundSnapshot = this.#soundSnapshot): void {
@@ -162,12 +165,14 @@ export class AudioEngine {
     this.#snapshot = snapshot;
     this.#soundSnapshot = soundSnapshot;
     this.#syncVoices(snapshot.modules);
+    this.#graph?.applyMix(soundSnapshot.mix, snapshot.bpm, this.#context?.currentTime ?? 0);
     this.#scheduler?.publish(snapshot);
   }
 
   publishSound(snapshot: RackSoundSnapshot): void {
     this.#soundSnapshot = snapshot;
     this.#syncVoices(this.#snapshot.modules);
+    this.#graph?.applyMix(snapshot.mix, this.#snapshot.bpm, this.#context?.currentTime ?? 0);
   }
 
   async play(): Promise<void> {
@@ -201,8 +206,7 @@ export class AudioEngine {
   panic(): void {
     const now = this.#context?.currentTime ?? 0;
     for (const module of this.#voices.values()) {
-      module.bus.gain.cancelScheduledValues(now);
-      module.bus.gain.setValueAtTime(0, now);
+      module.strip?.cancelAndFade(0, now, now + 0.005);
       module.voice?.panic(now);
     }
     this.#applyLevels(this.#snapshot.modules, now + 0.01);
@@ -219,18 +223,18 @@ export class AudioEngine {
     this.#renderCapacity = null;
     this.#clock?.disconnect();
     this.#clockSink?.disconnect();
-    this.#master?.disconnect();
     for (const module of this.#voices.values()) {
       module.voice?.dispose(this.#context.currentTime);
-      module.bus.disconnect();
+      module.strip?.disconnect();
     }
+    this.#graph?.dispose();
     this.#voices.clear();
     const context = this.#context;
     this.#context = null;
     this.#scheduler = null;
     this.#clock = null;
     this.#clockSink = null;
-    this.#master = null;
+    this.#graph = null;
     this.#midiTime = null;
     await context.close();
   }
@@ -293,19 +297,19 @@ export class AudioEngine {
   #makeVoice(module: EngineModuleSnapshot, initialGain = module.level): ModuleVoice {
     const context = this.#context!;
     const soundModule = this.#soundFor(module);
-    const bus = new GainNode(context, { gain: initialGain });
-    bus.connect(this.#master!);
-    const voice = VOICE_FACTORY.create(context, soundModule, bus);
-    return { type: module.type, bus, voice, presetId: soundModule.sound.presetId, crossfadeUntil: 0 };
+    if (isControlModule(module.type)) return { type: module.type, strip: null, voice: null, presetId: soundModule.sound.presetId, crossfadeUntil: 0 };
+    const strip = this.#graph!.createModuleStrip(soundModule.sound, initialGain);
+    const voice = VOICE_FACTORY.create(context, soundModule, strip.input);
+    return { type: module.type, strip, voice, presetId: soundModule.sound.presetId, crossfadeUntil: 0 };
   }
 
   #applyLevels(modules: readonly EngineModuleSnapshot[], time: number): void {
     const anySolo = modules.some((module) => module.solo);
     for (const module of modules) {
       const voice = this.#voices.get(module.id);
-      if (voice === undefined) continue;
+      if (voice?.strip === null || voice === undefined) continue;
       const audible = module.monitor && !module.mute && (!anySolo || module.solo);
-      voice.bus.gain.setValueAtTime(audible ? module.level : 0, Math.max(time, voice.crossfadeUntil));
+      voice.strip.applyLevel(audible ? module.level : 0, Math.max(time, voice.crossfadeUntil));
     }
   }
 
@@ -316,12 +320,11 @@ export class AudioEngine {
       if (!moduleIds.has(id)) {
         const now = this.#context.currentTime;
         const disconnectAt = now + 0.008;
-        module.bus.gain.cancelAndHoldAtTime(now);
-        module.bus.gain.linearRampToValueAtTime(0, disconnectAt);
+        module.strip?.cancelAndFade(0, now, disconnectAt);
         module.voice?.panic(disconnectAt);
         window.setTimeout(() => {
           module.voice?.dispose(disconnectAt);
-          module.bus.disconnect();
+          module.strip?.disconnect();
         }, 12);
         this.#voices.delete(id);
       }
@@ -334,17 +337,17 @@ export class AudioEngine {
       } else if (current.type !== module.type || current.presetId !== sound.sound.presetId) {
         const now = this.#context.currentTime;
         const crossfadeEnd = now + 0.012;
-        current.bus.gain.cancelAndHoldAtTime(now);
-        current.bus.gain.linearRampToValueAtTime(0, crossfadeEnd);
+        current.strip?.cancelAndFade(0, now, crossfadeEnd);
         const replacement = this.#makeVoice(module, 0);
         replacement.crossfadeUntil = crossfadeEnd;
-        replacement.bus.gain.linearRampToValueAtTime(module.level, crossfadeEnd);
+        replacement.strip?.cancelAndFade(module.level, now, crossfadeEnd);
         this.#voices.set(module.id, replacement);
         window.setTimeout(() => {
           current.voice?.dispose(crossfadeEnd);
-          current.bus.disconnect();
+          current.strip?.disconnect();
         }, 16);
       } else {
+        current.strip?.applySound(sound.sound, this.#context.currentTime);
         current.voice?.applySound(sound.sound, this.#context.currentTime);
       }
     }

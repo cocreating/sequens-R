@@ -44,3 +44,33 @@ test('legacy projects expose a reversible upgrade and control modules stay silen
   await expect(control.getByText('Silent control module')).toBeVisible();
   await expect(control.getByLabel('Pan')).toHaveCount(0);
 });
+
+test('mixer exposes channel sends, pan, rack returns, character, and live meters', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  await page.getByLabel('New module').selectOption('mixer');
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  const mixer = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'mixer module name' }) });
+  await expect(mixer.getByRole('region', { name: 'Drums channel' })).toBeVisible();
+  await expect(mixer.getByLabel('Rack master')).toBeVisible();
+  await expect(mixer.getByLabel('Delay division')).toBeVisible();
+  await expect(mixer.getByLabel('Delay feedback')).toBeVisible();
+  await expect(mixer.getByLabel('Delay return')).toBeVisible();
+  await expect(mixer.getByLabel('Reverb return')).toBeVisible();
+  await expect(mixer.getByLabel('Master character')).toBeVisible();
+
+  const drums = mixer.getByRole('region', { name: 'Drums channel' });
+  await expect(drums.getByLabel('Pan')).toBeVisible();
+  await expect(drums.getByLabel('Delay')).toBeVisible();
+  await expect(drums.getByLabel('Reverb')).toBeVisible();
+  await drums.getByLabel('Pan').fill('35');
+  await expect(drums.getByLabel('Pan')).toHaveValue('35');
+  await expect(drums.locator('.mix-meter')).toHaveAttribute('aria-label', /Drums peak/);
+
+  await page.getByLabel('New module').selectOption('mixer');
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  const mixers = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'mixer module name' }) });
+  await expect(mixers).toHaveCount(2);
+  await mixers.nth(0).getByLabel('Delay return').fill('41');
+  await expect(mixers.nth(1).getByLabel('Delay return')).toHaveValue('41');
+});

@@ -119,7 +119,7 @@ Status: implemented with automated acceptance on 2026-08-25; physical Android ac
 
 ## AD-010 · Phase 7 sound identity and mix
 
-Status: specified and accepted on 2026-08-25; Phase 7.0 implemented and automatically accepted on 2026-08-25. Later sound/mix subphases remain open.
+Status: specified and accepted on 2026-08-25; Phase 7.0 accepted and Phase 7.1 implementation/automated evidence completed on 2026-08-25. Phase 7.1 listening and physical Android C10 gates, plus later voice subphases, remain open.
 
 - Phase 7 improves the internal monitor without changing deterministic pattern generation, Web MIDI events, MIDI clock, or SMF output. Generator parameters and sound parameters become separate validated contracts.
 - Project schema 4 and patch schema 3 add versioned sound state and rack mix state. Earlier documents/links select append-only `legacy-<type>-v1` presets; new timbres are never imposed silently on saved work. A deliberate sound-upgrade action is reversible through Undo.
@@ -131,3 +131,4 @@ Status: specified and accepted on 2026-08-25; Phase 7.0 implemented and automati
 - The final catalog contains 12 Acid presets, 40 non-Acid presets (Bass 8, Chords 10, Arp 8, Piano 8, Euclid 6), and six Drum kits. Preset IDs/share indexes are append-only.
 - Native Web Audio remains the engine. Tone.js, a second transport, cloud assets, user sampling, per-module convolution, and internal CC/Mod destinations are outside Phase 7.
 - Phase 7 cannot be accepted without the existing C10 Android scenario at 16 active modules/140 BPM, all bundle/offline gates, live/bounce parity, migration/share evidence, and explicit listening approval for every audible family.
+- Amendment, 2026-08-25: after every audible family has an accepted v2 replacement, the final library pass removes the temporary legacy DSP/presets and performs a one-time local project/PWA cache invalidation. Until then legacy remains operational because deleting it now would leave the v2 bootstrap presets without replacement voices. This amendment supersedes the original final requirement to ship permanent legacy playback compatibility; it does not waive the gated replacement, listening, export, or Android checks.

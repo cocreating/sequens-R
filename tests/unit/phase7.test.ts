@@ -22,6 +22,7 @@ import {
 import { VOICE_FACTORY } from '../../src/lib/audio/voice-factory';
 import { createSoftClipCurve, delaySecondsFor } from '../../src/lib/audio/rack-graph';
 import { DRUM_KITS, drumVariationIndex, drumVelocityGain, renderProceduralDrumLane } from '../../src/lib/audio/voices/procedural-drums';
+import { bassCutoffHz, bassVelocityGain, createBassDriveCurve, frequencyForBassMidi, planBassTrigger } from '../../src/lib/audio/voices/bass';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
@@ -40,6 +41,7 @@ import {
   toShareableRack,
   toSoundSnapshot,
 } from '../../src/lib/state/rack';
+import { moduleHelpFor } from '../../src/lib/ui/module-help';
 
 const LINK_TYPES = MODULE_TYPES.filter((type) => type !== 'piano');
 
@@ -314,6 +316,92 @@ describe('Phase 7.2 procedural drums', () => {
     const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
     expect(triggerBody).toContain('new AudioBufferSourceNode');
     expect(triggerBody).not.toMatch(/new (GainNode|BiquadFilterNode|StereoPannerNode)/u);
+  });
+});
+
+describe('Phase 7.3 monophonic Bass', () => {
+  const presetIds = [
+    'bass-core-v2', 'bass-clean-v2', 'bass-pluck-v2', 'bass-sub-v2',
+    'bass-driven-v2', 'bass-animated-v2', 'bass-square-v2', 'bass-deep-v2',
+  ] as const;
+
+  it('keeps the legacy voice and exposes eight original Bass presets through one factory identity', () => {
+    const presets = presetsFor('bass');
+    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
+    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(9);
+    expect(VOICE_FACTORY.identify({ type: 'bass', sound: soundForPreset('bass', 'bass-core-v2') }).implementationId).toBe('procedural-bass-v2');
+    expect(VOICE_FACTORY.identify({ type: 'bass', sound: soundForPreset('bass', 'legacy-bass-v1') }).implementationId).toBe('legacy-poly-square-v1');
+  });
+
+  it('round-trips every appended Bass preset without changing earlier compact indexes', async () => {
+    expect(SOUND_PRESETS.slice(0, 4).map(({ id }) => id)).toEqual(['legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2']);
+    for (const presetId of presetIds) {
+      const rack = createRackState(STARTER_RACK);
+      rack.modules[1] = { ...rack.modules[1]!, sound: soundForPreset('bass', presetId) };
+      const shareable = toShareableRack(rack);
+      const encoded = await serializeRack(shareable);
+      expect(await deserializeRack(encoded)).toEqual(normalizeRack(shareable));
+      expect(encoded.byteLength).toBeLessThanOrEqual(400);
+    }
+  });
+
+  it('adds measurable waveshaper harmonics while Sound Drive leaves pattern and MIDI bytes unchanged', () => {
+    const curve = createBassDriveCurve(4_096);
+    const sampleCount = 4_096;
+    const shaped = Float32Array.from({ length: sampleCount }, (_, index) => {
+      const input = Math.sin(2 * Math.PI * 8 * index / sampleCount) * 0.32;
+      const position = (input + 1) / 2 * (curve.length - 1);
+      const lower = Math.floor(position);
+      const fraction = position - lower;
+      return curve[lower]! * (1 - fraction) + curve[Math.min(curve.length - 1, lower + 1)]! * fraction;
+    });
+    const magnitude = (harmonic: number): number => {
+      let real = 0;
+      let imaginary = 0;
+      for (let index = 0; index < sampleCount; index += 1) {
+        const angle = 2 * Math.PI * 8 * harmonic * index / sampleCount;
+        real += shaped[index]! * Math.cos(angle);
+        imaginary -= shaped[index]! * Math.sin(angle);
+      }
+      return Math.hypot(real, imaginary) / sampleCount;
+    };
+    const upperHarmonics = Array.from({ length: 7 }, (_, index) => magnitude(index + 2)).reduce((sum, value) => sum + value, 0);
+    expect(upperHarmonics / magnitude(1)).toBeGreaterThan(0.08);
+
+    const rack = createRackState(STARTER_RACK);
+    const beforePattern = modulePattern(rack.modules[1]!, rack.key, rack.modules);
+    const beforeSmf = createSmfType1(rack, 4);
+    const changedBass = setModuleSoundParam(rack.modules[1]!, 'drive', 100);
+    const changed = { ...rack, modules: rack.modules.map((module, index) => index === 1 ? changedBass : module) };
+    expect(modulePattern(changed.modules[1]!, changed.key, changed.modules)).toEqual(beforePattern);
+    expect(createSmfType1(changed, 4)).toEqual(beforeSmf);
+  });
+
+  it('glides only overlapping gates, retriggers separate notes, and keeps pitch/velocity/filter mappings bounded', () => {
+    expect(planBassTrigger(1, 1, 100)).toEqual({ legato: false, retrigger: true, glideSeconds: 0 });
+    const legato = planBassTrigger(1.2, 1, 100);
+    expect(legato.legato).toBe(true);
+    expect(legato.retrigger).toBe(false);
+    expect(legato.glideSeconds).toBeCloseTo(0.182, 6);
+    expect(planBassTrigger(1.2, 1, 0).glideSeconds).toBeCloseTo(0.002, 6);
+    expect(frequencyForBassMidi(0)).toBeGreaterThan(8);
+    expect(frequencyForBassMidi(127)).toBeLessThan(13_000);
+    expect(bassVelocityGain(1)).toBeLessThan(bassVelocityGain(64));
+    expect(bassVelocityGain(64)).toBeLessThan(bassVelocityGain(127));
+    expect(bassVelocityGain(127)).toBeLessThan(1);
+    expect(bassCutoffHz(-1)).toBe(bassCutoffHz(0));
+    expect(bassCutoffHz(101)).toBe(bassCutoffHz(100));
+  });
+
+  it('preallocates one persistent monophonic slot and describes actual Bass DSP in contextual help', () => {
+    const source = readFileSync(new URL('../../src/lib/audio/voices/bass.ts', import.meta.url), 'utf8');
+    const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
+    expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|WaveShaperNode)/u);
+    expect(source).not.toMatch(/slots|voiceIndex|stealVoice/u);
+    expect(moduleHelpFor('sound:bass:drive', 'bass', 'Bass').body).toMatch(/waveshaper/u);
+    expect(moduleHelpFor('sound:bass:drive', 'bass', 'Bass').body).toMatch(/MIDI velocity unchanged/u);
+    expect(moduleHelpFor('param:drive', 'bass', 'Bass', GENERATORS.bass.paramSchema.find(({ key }) => key === 'drive')).body).not.toMatch(/waveshaper/u);
   });
 });
 

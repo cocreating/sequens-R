@@ -123,7 +123,7 @@ const PRESET_ROWS = [
   { id: 'legacy-drums-v1', moduleType: 'drums', label: 'Legacy Drums', params: defaultsFor('drums') },
   { id: 'drums-core-v2', moduleType: 'drums', label: 'Foundation', params: { tone: 55, punch: 65, decay: 45 }, outputTrimDb: 6 },
   { id: 'legacy-bass-v1', moduleType: 'bass', label: 'Legacy Bass', params: defaultsFor('bass') },
-  { id: 'bass-core-v2', moduleType: 'bass', label: 'Core Bass', params: defaultsFor('bass') },
+  { id: 'bass-core-v2', moduleType: 'bass', label: 'Roundhouse', params: { wave: 1, cutoff: 55, resonance: 18, envelope: 42, drive: 10, glide: 8, sub: 38 }, outputTrimDb: 7 },
   { id: 'legacy-acid-v1', moduleType: 'acid', label: 'Legacy Acid', params: defaultsFor('acid') },
   { id: 'acid-core-v2', moduleType: 'acid', label: 'Core Acid', params: defaultsFor('acid') },
   { id: 'legacy-chords-v1', moduleType: 'chords', label: 'Legacy Chords', params: defaultsFor('chords') },
@@ -145,6 +145,13 @@ const PRESET_ROWS = [
   { id: 'drums-electro-v2', moduleType: 'drums', label: 'Voltage', params: { tone: 78, punch: 72, decay: 50 }, outputTrimDb: 6.5 },
   { id: 'drums-halftime-v2', moduleType: 'drums', label: 'Weight', params: { tone: 38, punch: 78, decay: 70 }, outputTrimDb: 6.5 },
   { id: 'drums-odd-v2', moduleType: 'drums', label: 'Tilt', params: { tone: 65, punch: 58, decay: 42 }, outputTrimDb: 7.5 },
+  { id: 'bass-clean-v2', moduleType: 'bass', label: 'Clearline', params: { wave: 0, cutoff: 72, resonance: 10, envelope: 30, drive: 0, glide: 5, sub: 20 }, outputTrimDb: 10.7 },
+  { id: 'bass-pluck-v2', moduleType: 'bass', label: 'Shortwood', params: { wave: 2, cutoff: 48, resonance: 28, envelope: 78, drive: 8, glide: 0, sub: 18 }, outputTrimDb: 11 },
+  { id: 'bass-sub-v2', moduleType: 'bass', label: 'Undertow', params: { wave: 0, cutoff: 32, resonance: 8, envelope: 20, drive: 0, glide: 18, sub: 85 }, outputTrimDb: 9.9 },
+  { id: 'bass-driven-v2', moduleType: 'bass', label: 'Ember', params: { wave: 2, cutoff: 58, resonance: 35, envelope: 55, drive: 68, glide: 10, sub: 35 }, outputTrimDb: 6.3 },
+  { id: 'bass-animated-v2', moduleType: 'bass', label: 'Orbit', params: { wave: 2, cutoff: 62, resonance: 48, envelope: 70, drive: 25, glide: 55, sub: 25 }, outputTrimDb: 8 },
+  { id: 'bass-square-v2', moduleType: 'bass', label: 'Block', params: { wave: 1, cutoff: 44, resonance: 22, envelope: 38, drive: 18, glide: 4, sub: 45 }, outputTrimDb: 5.8 },
+  { id: 'bass-deep-v2', moduleType: 'bass', label: 'Nightfloor', params: { wave: 0, cutoff: 40, resonance: 42, envelope: 50, drive: 32, glide: 28, sub: 65 }, outputTrimDb: 5.9 },
 ] satisfies readonly PresetRow[];
 
 export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({

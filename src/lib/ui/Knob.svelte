@@ -6,12 +6,14 @@
     id: string;
     definition: ParamDefinition;
     value: number;
+    helpKey?: string;
     onchange: (value: number) => void;
     oncommit: () => void;
   }
 
-  let { id, definition, value, onchange, oncommit }: Props = $props();
+  let { id, definition, value, helpKey, onchange, oncommit }: Props = $props();
   let displayValue = $derived(definition.options?.[optionIndex(value)] ?? `${value}${definition.unit ? ` ${definition.unit}` : ''}`);
+  let resolvedHelpKey = $derived(helpKey ?? `param:${definition.key}`);
 
   function optionValue(index: number): number {
     if (definition.min === 0 && definition.max === (definition.options?.length ?? 1) - 1) return index;
@@ -51,13 +53,13 @@
     step={definition.step}
     {value}
     defaultValue={definition.defaultValue}
-    helpKey={`param:${definition.key}`}
+    helpKey={resolvedHelpKey}
     formatValue={(next) => `${next}${definition.unit ? ` ${definition.unit}` : ''}`}
     oninput={onchange}
     oncommit={oncommit}
   />
 {:else}
-<div class="knob-control" data-help-key={`param:${definition.key}`}>
+<div class="knob-control" data-help-key={resolvedHelpKey}>
   {#if definition.control === 'segmented' && definition.options}
     <span id={`${id}-label`} class="parameter-label">{definition.label}</span>
     <output aria-hidden="true">{displayValue}</output>

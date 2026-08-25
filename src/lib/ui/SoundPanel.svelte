@@ -53,6 +53,7 @@
           <Knob
             id={`${moduleId}-sound-${definition.key}`}
             {definition}
+            helpKey={`sound:${moduleType}:${definition.key}`}
             value={sound.params[definition.key] ?? definition.defaultValue}
             onchange={(value) => onparam(definition.key, value)}
             {oncommit}
@@ -62,6 +63,7 @@
           <Knob
             id={`${moduleId}-sound-${definition.key}`}
             {definition}
+            helpKey={`sound:output:${definition.key}`}
             value={sound[definition.key as 'pan' | 'delaySend' | 'reverbSend']}
             onchange={(value) => onparam(definition.key, value)}
             {oncommit}

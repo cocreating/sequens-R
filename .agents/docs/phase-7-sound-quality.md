@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; mixer/Drum human listening and physical Android C10 gates remain open, so Phase 7.3 has not started. Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7” and subsequent “adelante” instructions authorize these phase-boundary exceptions without approving or waiving any physical gate.
+Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25, and the user explicitly approved the six Drum kits by listening that day. Phase 7.3 Bass implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instruction to continue the sequence authorize these phase-boundary exceptions without approving or waiving any physical gate.
 
 ## 1. Outcome
 
@@ -524,4 +524,37 @@ Generated audition files are local and ignored by Git under `test-results/phase7
 | Weight / Half-time | −17.9 | −3.3 dBTP |
 | Tilt / Odd | −18.4 | −1.3 dBTP |
 
-Every file has a distinct SHA-256 digest; all pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.2 is not marked accepted until the user listens to the six references and Android C10 confirms the expanded procedural voice remains inside the load budget. Phase 7.3 Bass and the final legacy/cache purge remain gated.
+Every file has a distinct SHA-256 digest; all pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. On 2026-08-25 the user confirmed that the six kits are audible and instructed the Phase 7 sequence to continue, closing the required Drum listening gate. Physical Android C10 remains open, as does the final legacy/cache purge.
+
+## 14. Phase 7.3 evidence · monophonic Bass
+
+Implemented on 2026-08-25:
+
+- New engine-version-2 Bass presets use a dedicated `BassVoice`; `legacy-bass-v1` alone retains the temporary square-poly adapter. The first 20 preset indexes and the previously appended Drum indexes remain unchanged; seven additional Bass records are appended after them.
+- One persistent monophonic slot preallocates selectable sine, square, and saw oscillators plus an octave-below sine sub oscillator. A resonant low-pass, amplitude and filter envelopes, velocity-to-level/timbre response, an 18 Hz DC blocker, and bounded parameter smoothing complete the voice.
+- Gate overlap, rather than release tail, controls legato. Overlapping notes glide without retrigger; separated notes retrigger immediately. Glide ranges from 2 to 182 ms and no reusable audio node is allocated in `trigger()`.
+- Sound Drive crossfades into an asymmetric fixed waveshaper and measurably adds upper harmonics. It remains separate from generator Drive, which deliberately changes note/MIDI velocity; contextual help now states that distinction.
+- The eight original roles are Roundhouse, Clearline, Shortwood, Undertow, Ember, Orbit, Block, and Nightfloor, spanning round, clean, plucked, sub-heavy, driven, animated, square, and deep directions.
+- Live monitoring and offline bounce select the same `procedural-bass-v2` factory implementation. Compact patch round trips remain at or below 400 bytes.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings; Svelte autofixer reports no issues in the edited control components;
+- unit/property tests: 83 passed across 15 files, including harmonic-content, unchanged pattern/SMF, overlap/retrigger, bounded mapping, append-only catalog, compact-link, factory identity, and single-slot architecture checks;
+- production PWA build/offline precache and bundle gate: passed at 92.86 KiB initial JavaScript gzip / 200 KiB;
+- Playwright: 43 passed. The Phase 7.3 browser test renders all eight real offline WAV paths, decodes PCM16, and applies the project BS.1770/true-peak/DC analyzer.
+
+Generated audition files are local and ignored by Git under `test-results/phase7.3/`:
+
+| Preset | Role | LUFS-I | True peak |
+| --- | --- | ---: | ---: |
+| Roundhouse | Round | −17.9 | −6.9 dBTP |
+| Clearline | Clean | −18.0 | −10.0 dBTP |
+| Shortwood | Plucked | −18.0 | −4.7 dBTP |
+| Undertow | Sub | −18.0 | −7.3 dBTP |
+| Ember | Driven | −18.0 | −6.8 dBTP |
+| Orbit | Animated/glide | −18.0 | −5.4 dBTP |
+| Block | Square | −18.0 | −7.3 dBTP |
+| Nightfloor | Deep | −18.0 | −8.8 dBTP |
+
+Every file has a distinct SHA-256 digest; all pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.3 awaits user listening approval and physical Android C10. Phase 7.4 Acid must not start until the user reviews these Bass references; the final legacy/cache purge remains deferred until every audible family has an approved replacement.

@@ -9,7 +9,7 @@ describe('bundled example projects', () => {
     const modules = project.racks[0]?.state.modules;
 
     expect(project.name).toBe('Basic Electro');
-    expect(project.schemaVersion).toBe(3);
+    expect(project.schemaVersion).toBe(4);
     expect(project.racks[0]?.state.bpm).toBe(110);
     expect(modules?.map(({ type }) => type)).toEqual(['drums', 'arp']);
   });

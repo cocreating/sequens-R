@@ -1,0 +1,8 @@
+{
+  "standard": "ITU-R BS.1770-5",
+  "sampleRate": 48000,
+  "fixtures": {
+    "oneKhzMinus23DbfsRms": { "frequency": 1000, "rmsDbfs": -23, "expectedLufs": -23, "toleranceLu": 0.2 },
+    "phase7PresetGate": { "targetLufs": -18, "toleranceLu": 1, "maxTruePeakDbtp": -1, "maxDcDbfs": -60 }
+  }
+}

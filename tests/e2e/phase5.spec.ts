@@ -195,7 +195,7 @@ test.describe('Phase 5 polish', () => {
     await page.getByRole('button', { name: 'Play', exact: true }).click();
     await expect(page.getByRole('button', { name: 'Pause', exact: true })).toHaveText('⏸');
     await expect(page.getByText('Transport playing')).toBeVisible();
-    await page.waitForTimeout(250);
+    await expect.poll(async () => Number(await page.locator('.bar-progress').getAttribute('data-sync-beat'))).toBeGreaterThan(0);
     await page.getByRole('button', { name: 'Pause', exact: true }).click();
     const pausedBeat = Number(await page.locator('.bar-progress').getAttribute('data-sync-beat'));
     expect(pausedBeat).toBeGreaterThan(0);

@@ -183,6 +183,15 @@
   .auto-mutate input { width: 1rem; height: 1rem; min-height: 0; }
   .mutation-loop-select { grid-column: 2 / -1; width: 100%; }
   .module-advanced { margin-block-start: var(--space-3); border-block-start: 1px solid var(--color-surface-raised); }
+  .sound-panel { margin-block-start: var(--space-3); border-block-start: 1px solid var(--color-surface-raised); }
+  .sound-panel > summary { min-height: var(--touch-target); padding-block: var(--space-2); cursor: pointer; color: var(--color-text-muted); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+  .sound-panel-content { padding-block: var(--space-2); }
+  .sound-preset-row { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2); align-items: center; }
+  .sound-preset-row label { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
+  .sound-preset-row select { width: 100%; }
+  .sound-preset-row .upgrade-sound { grid-column: 1 / -1; width: 100%; }
+  .sound-parameters { padding-block-start: var(--space-2); }
+  .silent-sound-note { margin: var(--space-2) 0 0; color: var(--color-text-muted); font-size: 0.78rem; }
   .module-advanced > summary { min-height: var(--touch-target); padding-block: var(--space-2); cursor: pointer; color: var(--color-text-muted); font-size: 0.78rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
   .module-advanced-content { padding-block-start: var(--space-2); }
   .advanced-pattern-tools { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-2); align-items: center; }

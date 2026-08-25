@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "bars": 8,
+  "description": "Deterministic Phase 7 family phrases. Parameter overrides are merged with generator defaults.",
+  "racks": [
+    { "id": "drums-reference", "family": "drums", "bpm": 124, "root": 0, "scale": "minor", "modules": [{ "type": "drums", "seed": 1397051649, "params": { "steps": 32, "groove": 1, "swing": 54, "humanize": 12 } }] },
+    { "id": "bass-reference", "family": "bass", "bpm": 112, "root": 0, "scale": "minor", "modules": [{ "type": "bass", "seed": 1397051650, "params": { "style": 1, "steps": 32, "range": 2, "density": 72, "octave": 1, "gate": 88 } }] },
+    { "id": "acid-reference", "family": "acid", "bpm": 132, "root": 2, "scale": "dorian", "modules": [{ "type": "acid", "seed": 1397051651, "params": { "fill": 78, "steps": 32, "range": 3, "decay": 62 } }] },
+    { "id": "chords-reference", "family": "chords", "bpm": 96, "root": 5, "scale": "major", "modules": [{ "type": "chords", "seed": 1397051652, "params": { "length": 4, "quality": 2, "duration": 8, "strum": 45 } }] },
+    { "id": "arp-reference", "family": "arp", "bpm": 128, "root": 7, "scale": "mixolydian", "modules": [{ "type": "chords", "seed": 1397051653, "params": { "length": 4, "duration": 16 } }, { "type": "arp", "seed": 1397051654, "params": { "direction": 3, "rate": 1, "span": 3, "gate": 82, "followChords": 1, "octave": 2 } }] },
+    { "id": "piano-reference", "family": "piano", "bpm": 88, "root": 9, "scale": "minor", "modules": [{ "type": "piano", "seed": 1397051655, "params": { "length": 2, "inKey": 1 } }] },
+    { "id": "euclid-reference", "family": "euclid", "bpm": 120, "root": 0, "scale": "minor", "modules": [{ "type": "euclid", "seed": 1397051656, "params": {} }] },
+    {
+      "id": "stress-16x140",
+      "family": "stress",
+      "bpm": 140,
+      "root": 0,
+      "scale": "minor",
+      "modules": [
+        { "type": "drums", "seed": 1397051664, "params": {} },
+        { "type": "bass", "seed": 1397051665, "params": {} },
+        { "type": "acid", "seed": 1397051666, "params": {} },
+        { "type": "chords", "seed": 1397051667, "params": {} },
+        { "type": "arp", "seed": 1397051668, "params": {} },
+        { "type": "euclid", "seed": 1397051669, "params": {} },
+        { "type": "piano", "seed": 1397051670, "params": {} },
+        { "type": "drums", "seed": 1397051671, "params": {} },
+        { "type": "bass", "seed": 1397051672, "params": {} },
+        { "type": "acid", "seed": 1397051673, "params": {} },
+        { "type": "chords", "seed": 1397051674, "params": {} },
+        { "type": "arp", "seed": 1397051675, "params": {} },
+        { "type": "euclid", "seed": 1397051676, "params": {} },
+        { "type": "piano", "seed": 1397051677, "params": {} },
+        { "type": "cc", "seed": 1397051678, "params": {} },
+        { "type": "mod", "seed": 1397051679, "params": {} }
+      ]
+    }
+  ]
+}

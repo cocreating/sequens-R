@@ -1,6 +1,7 @@
 import { SCALE_NAMES, type NoteEvent, type Pattern, type ScaleName } from '../core/pattern';
 import { MODULE_TYPES, validateParams } from '../share/schema';
 import type { ShareableRack } from '../share/types';
+import { createLegacySound, DEFAULT_RACK_MIX, normalizeRackMixState, normalizeSoundState } from '../audio/sound';
 import {
   createModule,
   createRackState,
@@ -11,7 +12,7 @@ import {
   type RackState,
 } from '../state/rack';
 
-export const PROJECT_SCHEMA_VERSION = 3;
+export const PROJECT_SCHEMA_VERSION = 4;
 export const DEFAULT_PROJECT_NAME = 'New Project';
 const LEGACY_DEFAULT_PROJECT_NAME = 'Untitled Project';
 
@@ -108,7 +109,7 @@ function normalizeMutation(value: unknown, type: RackModule['type']): MutationSt
   return { on: Boolean(value.on), intensity, everyNLoops, revert: value.revert === null || value.revert === undefined ? null : normalizeSlot(value.revert, type) };
 }
 
-function normalizeModule(value: unknown): RackModule {
+function normalizeModule(value: unknown, legacySound: boolean): RackModule {
   if (!isRecord(value)) throw new TypeError('Project module must be an object.');
   const type = value.type;
   if (typeof type !== 'string' || !MODULE_TYPES.includes(type as RackModule['type'])) throw new RangeError('Unknown module type.');
@@ -119,7 +120,8 @@ function normalizeModule(value: unknown): RackModule {
   const activeSlot = expectNumber(value.activeSlot, 'Active slot');
   if (!Number.isInteger(activeSlot) || activeSlot < 0 || activeSlot > 7) throw new RangeError('Active slot must be 0 to 7.');
   const active = slots[activeSlot]!;
-  const module = createModule(normalizedType, active.seed, active.params);
+  const sound = legacySound ? createLegacySound(normalizedType) : normalizeSoundState(normalizedType, value.sound);
+  const module = createModule(normalizedType, active.seed, active.params, sound);
   const automation = Array.isArray(value.automation) ? value.automation.map((entry) => {
     if (!isRecord(entry)) throw new TypeError('CC automation point must be an object.');
     const control = expectNumber(entry.control, 'CC automation control');
@@ -141,6 +143,7 @@ function normalizeModule(value: unknown): RackModule {
     solo: Boolean(value.solo),
     monitor: value.monitor === undefined ? true : Boolean(value.monitor),
     level: Math.max(0, Math.min(1, expectNumber(value.level, 'Module level'))),
+    sound,
     midi: normalizeMidiRoute(value.midi, type === 'drums' ? 10 : 1),
     shareable: normalizedType !== 'piano' && automation.length === 0 && (value.shareable === undefined ? true : Boolean(value.shareable)),
     automation,
@@ -158,16 +161,17 @@ function normalizeMidiRoute(value: unknown, defaultChannel: number): { portId: s
   return { portId, channel };
 }
 
-function normalizeRackState(value: unknown): RackState {
+function normalizeRackState(value: unknown, legacySound: boolean): RackState {
   if (!isRecord(value) || !isRecord(value.key) || !Array.isArray(value.modules)) throw new TypeError('Rack state is malformed.');
   const bpm = expectNumber(value.bpm, 'BPM');
   if (bpm < 20 || bpm > 300 || Math.round(bpm * 10) !== bpm * 10) throw new RangeError('Invalid BPM.');
   const root = expectNumber(value.key.root, 'Key root');
   const scale = value.key.scale;
   if (!Number.isInteger(root) || root < 0 || root > 11 || typeof scale !== 'string' || !SCALE_NAMES.includes(scale as ScaleName)) throw new RangeError('Invalid musical key.');
-  const modules = value.modules.map(normalizeModule);
+  const modules = value.modules.map((module) => normalizeModule(module, legacySound));
   if (modules.length < 1 || modules.length > 16) throw new RangeError('A rack must contain 1 to 16 modules.');
-  return { bpm, key: { root, scale: scale as ScaleName }, modules };
+  const mix = legacySound ? structuredClone(DEFAULT_RACK_MIX) : normalizeRackMixState(value.mix);
+  return { bpm, key: { root, scale: scale as ScaleName }, modules, mix };
 }
 
 function normalizeScene(value: unknown): ProjectScene {
@@ -214,17 +218,18 @@ export function updateProjectRack(project: ProjectDocument, rack: RackState, nam
 
 function migrateLegacyProject(value: Record<string, unknown>): ProjectDocument {
   const rack = value.rack as ShareableRack;
-  return createProject(createRackState(rack), typeof value.name === 'string' ? value.name : 'Imported Project');
+  return createProject(createRackState(rack, 'legacy'), typeof value.name === 'string' ? value.name : 'Imported Project');
 }
 
 export function migrateProject(value: unknown): ProjectDocument {
   if (!isRecord(value)) throw new TypeError('Project file must contain an object.');
   if (value.schemaVersion === 0) return migrateLegacyProject(value);
-  if (value.schemaVersion !== 1 && value.schemaVersion !== 2 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
+  if (value.schemaVersion !== 1 && value.schemaVersion !== 2 && value.schemaVersion !== 3 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
+  const legacySound = value.schemaVersion !== PROJECT_SCHEMA_VERSION;
   if (!Array.isArray(value.racks) || value.racks.length < 1) throw new RangeError('A project must contain at least one rack.');
   const racks = value.racks.map((entry): ProjectRack => {
     if (!isRecord(entry)) throw new TypeError('Project rack must be an object.');
-    return { id: expectString(entry.id, 'Rack id'), name: expectString(entry.name, 'Rack name'), state: normalizeRackState(entry.state) };
+    return { id: expectString(entry.id, 'Rack id'), name: expectString(entry.name, 'Rack name'), state: normalizeRackState(entry.state, legacySound) };
   });
   const activeRackId = expectString(value.activeRackId, 'Active rack id');
   const projectName = expectString(value.name, 'Project name');

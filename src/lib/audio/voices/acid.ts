@@ -32,6 +32,12 @@ export class AcidVoice {
     this.#node.port.postMessage({ type: 'panic', time });
   }
 
+  dispose(time: number): void {
+    this.panic(time);
+    this.#node.disconnect();
+    this.#node.port.close();
+  }
+
   get activeVoiceCount(): number {
     return this.#context.currentTime < this.#activeUntil ? 1 : 0;
   }

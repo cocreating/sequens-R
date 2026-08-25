@@ -38,7 +38,11 @@
     setRackKey,
     setCcAutomation,
     setManualPattern,
+    selectModulePreset,
+    setModuleSoundParam,
+    upgradeModuleSound,
     toEngineSnapshot,
+    toSoundSnapshot,
     toShareableRack,
     toggleDrumStep,
     type RackModule,
@@ -64,6 +68,7 @@
   import DiagnosticsPanel from './lib/ui/DiagnosticsPanel.svelte';
   import type { AudioDiagnostics } from './lib/audio/engine';
   import { appHelpFor } from './lib/ui/app-help';
+  import { DEFAULT_RACK_MIX, presetById } from './lib/audio/sound';
 
   let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
   const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
@@ -243,7 +248,7 @@
   }
 
   function publish(): void {
-    engine.publish(toEngineSnapshot(rack));
+    engine.publish(toEngineSnapshot(rack), toSoundSnapshot(rack));
   }
 
   function rackSnapshot(value: RackState = rack): RackState {
@@ -279,6 +284,13 @@
     rack = rackHistory.record(rackSnapshot(next), coalesceKey);
     syncHistoryButtons();
     publish();
+    scheduleSave();
+  }
+
+  function replaceSoundRack(next: RackState, coalesceKey: string | null = null): void {
+    rack = rackHistory.record(rackSnapshot(next), coalesceKey);
+    syncHistoryButtons();
+    engine.publishSound(toSoundSnapshot(rack));
     scheduleSave();
   }
 
@@ -399,6 +411,31 @@
     }
   }
 
+  function setSoundParam(id: string, key: string, value: number): void {
+    replaceSoundRack({
+      ...rack,
+      modules: rack.modules.map((module) => module.id === id ? setModuleSoundParam(module, key, value) : module),
+    }, `sound:${id}:${key}`);
+  }
+
+  function selectSoundPreset(id: string, presetId: string): void {
+    replaceSoundRack({
+      ...rack,
+      modules: rack.modules.map((module) => module.id === id ? selectModulePreset(module, presetId) : module),
+    });
+    status = `${presetById(presetId).label} selected`;
+  }
+
+  function upgradeSound(id: string): void {
+    const source = rack.modules.find((module) => module.id === id);
+    if (source === undefined) return;
+    replaceSoundRack({
+      ...rack,
+      modules: rack.modules.map((module) => module.id === id ? upgradeModuleSound(module) : module),
+    });
+    status = `${source.name} sound upgraded · Undo is available`;
+  }
+
   function setPattern(id: string, pattern: Pattern): void {
     updateModule(id, (module) => setManualPattern(module, pattern), `piano:${id}`);
     endCoalescing();
@@ -496,7 +533,7 @@
   function addRack(): void {
     const committed = currentProject();
     const id = crypto.randomUUID();
-    const state: RackState = { bpm: rack.bpm, key: { ...rack.key }, modules: [createModule('drums')] };
+    const state: RackState = { bpm: rack.bpm, key: { ...rack.key }, modules: [createModule('drums')], mix: structuredClone(DEFAULT_RACK_MIX) };
     project = {
       ...committed,
       racks: [...committed.racks, { id, name: `Rack ${committed.racks.length + 1}`, state: rackSnapshot(state) }],
@@ -909,7 +946,7 @@
         <div class="add-module">
           <label for="module-type" data-app-help-key="module-type">New module</label>
           <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
-            {#each MODULE_TYPES as type}<option value={type}>{moduleLabels[type]}</option>{/each}
+            {#each MODULE_TYPES as type (type)}<option value={type}>{moduleLabels[type]}</option>{/each}
           </select>
           <button id="add-module-button" type="button" class="has-emoticon icon-only" data-app-help-key="add-module" aria-label="Add" onclick={addModule} disabled={rack.modules.length >= 16}><span class="button-emoticon" aria-hidden="true">➕</span></button>
         </div>
@@ -1006,7 +1043,7 @@
             <div><h2 id="music-export-heading">Music export</h2><p>Render the current deterministic rack without connecting hardware.</p></div>
             <label for="export-bars" data-app-help-key="export-length">Length</label>
             <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
-              {#each [1, 2, 4, 8] as bars}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
+              {#each [1, 2, 4, 8] as bars (bars)}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
             </select>
             <button type="button" class="has-emoticon icon-only" data-app-help-key="rack-midi" aria-label="Rack MIDI" onclick={() => void exportMidi()} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎼</span></button>
             <button type="button" class="has-emoticon icon-only" data-app-help-key="mix-wav" aria-label="Mix WAV" onclick={bounceMix} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎧</span></button>
@@ -1037,6 +1074,9 @@
           {desktopSurface}
           onpatch={(modulePatch) => patchModule(module.id, modulePatch)}
           onparam={(key, value) => setParam(module.id, key, value)}
+          onsoundparam={(key, value) => setSoundParam(module.id, key, value)}
+          onsoundpreset={(presetId) => selectSoundPreset(module.id, presetId)}
+          onupgradesound={() => upgradeSound(module.id)}
           onparamcommit={endCoalescing}
           onseed={(seed) => setSeed(module.id, seed)}
           oncopyseed={() => copySeed(module.seed)}

@@ -52,6 +52,10 @@ export class DrumKitVoice {
     this.#active.clear();
   }
 
+  dispose(time = this.#context.currentTime): void {
+    this.panic(time);
+  }
+
   get activeVoiceCount(): number {
     return this.#active.size;
   }

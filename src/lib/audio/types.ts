@@ -1,4 +1,5 @@
 import type { ModuleType, NoteEvent, Pattern } from '../core/pattern';
+import type { RackMixState, SoundState } from './sound';
 
 export interface EngineModuleSnapshot {
   id: string;
@@ -14,6 +15,17 @@ export interface EngineModuleSnapshot {
 export interface EngineSnapshot {
   bpm: number;
   modules: readonly EngineModuleSnapshot[];
+}
+
+export interface SoundModuleSnapshot {
+  id: string;
+  type: ModuleType;
+  sound: Readonly<SoundState>;
+}
+
+export interface RackSoundSnapshot {
+  mix: Readonly<RackMixState>;
+  modules: readonly Readonly<SoundModuleSnapshot>[];
 }
 
 export interface ScheduledNote {

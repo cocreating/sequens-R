@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: specification accepted on 2026-08-25; implementation has not started. Phase 6 physical Android acceptance remains open. Phase 7 must not start until that gate passes or the user explicitly authorizes another phase-boundary exception.
+Status: Phase 7.0 implementation and automated acceptance completed on 2026-08-25. Phase 6 physical Android acceptance remains open; the user's explicit “empezamos phase 7” instruction on 2026-08-25 authorizes this phase-boundary exception without approving or waiving that physical gate. Phase 7.1–7.11 and every listening/physical gate remain open.
 
 ## 1. Outcome
 
@@ -434,3 +434,27 @@ DoD:
 4. Stop after every subphase DoD and provide metrics plus loudness-matched audition artifacts.
 5. Do not author the full preset count until the user accepts one of the three prototype sound directions for that family.
 6. Do not mark Phase 7 complete without physical Android C10 measurements and explicit listening approval.
+
+## 11. Phase 7.0 evidence · sound contract and test bench
+
+Implemented on 2026-08-25:
+
+- Project schema v4 and patch schema v3 persist an engine-version-2 `SoundState` per module and one `RackMixState` per rack. Generator state remains separate.
+- The append-only preset registry contains an explicit legacy and current bootstrap record for every module type. Catalog validation rejects duplicate IDs, wrong module/parameter contracts, bad quantization, non-finite trims, and incomplete asset provenance.
+- Project schemas v1–v3 and patch schemas v1–v2 select `legacy-<type>-v1`; they do not silently select a new timbre. Newly created modules select current v2 bootstrap presets. The visible per-module “Upgrade sound” action records one normal rack-history entry and is reversible with Undo.
+- The compact v3 tuple stores preset indexes, positional sound parameters, pan/sends, and rack mix values. The 200-rack randomized full-sound property test round-trips deeply and remains within the 400-byte compressed-patch gate.
+- `RackSoundSnapshot` is deeply copied and frozen separately from `EngineSnapshot`. Sound-only UI edits publish through the sound path and leave generated patterns, scheduled/MIDI event snapshots, and SMF bytes deeply/byte identical.
+- One `VoiceFactory` is now the only module/preset-to-voice mapping used by live monitoring and offline bounce. Preset topology changes replace the graph on the control thread with a 12 ms crossfade. The intentionally unchanged legacy Drum, Acid, square Bass, and triangle poly paths prove migration behavior; CC, Mod, and Mixer return no voice.
+- Every module exposes a native Sound disclosure driven by sound schemas. Audible modules show preset/macros/pan/delay/reverb; CC, Mod, and Mixer show a validated silent indicator without meaningless pan or sends. Mobile migration, selection, upgrade, and Undo behavior have Playwright coverage.
+- Deterministic eight-bar reference descriptors exist for Drums, Bass, Acid, Chords, Arp, Piano, and Euclid, plus the 16-module/140-BPM stress rack. Generated audition WAVs remain uncommitted test output.
+- The offline analysis bench validates finite PCM, ITU-R BS.1770-5 integrated loudness with absolute/relative gating, 4× reconstructed true peak, sample peak, RMS/envelope, DC, and coarse spectral bands. It can loudness-match audition copies and emit stable JSON reports. A committed 48 kHz/1 kHz calibration fixture measures within 0.2 LU and failure fixtures reject NaN, excessive loudness, true peak, and DC.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings;
+- unit/property tests: 71 passed across 15 files;
+- production PWA build and offline precache: passed;
+- initial JavaScript: 85.38 KiB gzip / 200 KiB budget;
+- Playwright: 40 passed, including the two Phase 7.0 mobile flows and all prior phase regressions.
+
+Phase 7.0 is accepted automatically. It does not claim improved timbre: the current v2 bootstrap presets deliberately use the unchanged legacy DSP until their module subphases. Phase 7 overall remains open. Before specialized voices, Phase 7.1 must implement the shared mixer/master and retain C10 on the physical Android reference device; that physical evidence is not supplied by browser automation.

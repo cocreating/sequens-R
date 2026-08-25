@@ -9,6 +9,7 @@
   import type { MidiPortInfo } from '../midi/types';
   import PianoRoll from './PianoRoll.svelte';
   import { moduleHelpFor } from './module-help';
+  import SoundPanel from './SoundPanel.svelte';
 
   interface Props {
     module: RackModule;
@@ -20,6 +21,9 @@
     onpatch: (patch: Partial<RackModule>) => void;
     onparam: (key: string, value: number) => void;
     onparamcommit: () => void;
+    onsoundparam: (key: string, value: number) => void;
+    onsoundpreset: (presetId: string) => void;
+    onupgradesound: () => void;
     onseed: (seed: number) => void;
     oncopyseed: () => void;
     onslot: (index: number) => void;
@@ -40,7 +44,7 @@
     onclearautomation: () => void;
   }
 
-  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
+  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onupgradesound, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
   let pattern = $derived(modulePattern(module, musicalKey, rackModules));
   let schema = $derived(GENERATORS[module.type].paramSchema.filter((definition) => definition.control !== 'hidden'));
   let recordingCc = $state(false);
@@ -172,13 +176,13 @@
         {#if module.type !== 'piano' && !isControlModule(module.type)}
         <div class="pattern-tools">
           <div class="slot-picker" data-help-key="pattern-slots" role="group" aria-label={`${module.name} pattern slots`}>
-            {#each module.slots as _, index}
+            {#each module.slots as _, index (`${module.id}-slot-${index}`)}
               <button type="button" aria-label={`${module.name} slot ${index + 1}`} aria-pressed={module.activeSlot === index} onclick={() => onslot(index)}>{index + 1}</button>
             {/each}
           </div>
           <label for={`${module.id}-mutation-intensity`} data-help-key="mutation-intensity">Mutation</label>
           <select id={`${module.id}-mutation-intensity`} data-help-key="mutation-intensity" value={module.mutation.intensity} onchange={(event) => onintensity(Number(event.currentTarget.value) as 1 | 2 | 3 | 4)}>
-            {#each [1, 2, 3, 4] as intensity}<option value={intensity}>Level {intensity}</option>{/each}
+            {#each [1, 2, 3, 4] as intensity (intensity)}<option value={intensity}>Level {intensity}</option>{/each}
           </select>
           <button type="button" data-help-key="mutate" onclick={onmutate}>Mutate</button>
           <button type="button" data-help-key="revert" onclick={onrevert} disabled={module.mutation.revert === null}>Revert</button>
@@ -225,7 +229,7 @@
                 <Knob id={`${module.id}-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
               {/each}
             </div>
-            {#each ccParameterGroups as group, index}
+            {#each ccParameterGroups as group, index (`cc-${index}`)}
               <details open={index === 0}>
                 <summary>Control {index + 1}</summary>
                 <div class="parameters">
@@ -243,7 +247,7 @@
                 <Knob id={`${module.id}-${definition.key}`} {definition} value={module.params[definition.key] ?? definition.defaultValue} onchange={(value) => changeParam(definition.key, value)} oncommit={onparamcommit} />
               {/each}
             </div>
-            {#each modParameterGroups as group, index}
+            {#each modParameterGroups as group, index (`mod-${index}`)}
               <details open={index === 0}>
                 <summary>LFO {index + 1}</summary>
                 <div class="parameters">
@@ -262,6 +266,15 @@
         </div>
         {/if}
       {/if}
+      <SoundPanel
+        moduleId={module.id}
+        moduleType={module.type}
+        sound={module.sound}
+        onparam={onsoundparam}
+        oncommit={onparamcommit}
+        onpreset={onsoundpreset}
+        onupgrade={onupgradesound}
+      />
       <details class="module-advanced">
         <summary>Output &amp; advanced</summary>
         <div class="module-advanced-content">
@@ -276,7 +289,7 @@
             </select>
             <label for={`${module.id}-midi-channel`} data-help-key="midi-channel">Channel</label>
             <select id={`${module.id}-midi-channel`} data-help-key="midi-channel" value={module.midi.channel} onchange={(event) => onpatch({ midi: { ...module.midi, channel: Number(event.currentTarget.value) } })}>
-              {#each Array.from({ length: 16 }, (_, index) => index + 1) as channel}<option value={channel}>{channel}</option>{/each}
+              {#each Array.from({ length: 16 }, (_, index) => index + 1) as channel (channel)}<option value={channel}>{channel}</option>{/each}
             </select>
           </div>
           {#if module.type !== 'piano' && !isControlModule(module.type)}
@@ -287,7 +300,7 @@
               <label class="auto-mutate" data-help-key="auto-mutate"><input type="checkbox" checked={module.mutation.on} onchange={(event) => onschedule(event.currentTarget.checked, module.mutation.everyNLoops)} /> Auto mutate</label>
               <label for={`${module.id}-mutation-loops`} data-help-key="mutation-frequency">Every</label>
               <select class="mutation-loop-select" id={`${module.id}-mutation-loops`} data-help-key="mutation-frequency" value={module.mutation.everyNLoops} onchange={(event) => onschedule(module.mutation.on, Number(event.currentTarget.value))}>
-                {#each [1, 2, 4, 8, 16] as loops}<option value={loops}>{loops} {loops === 1 ? 'loop' : 'loops'}</option>{/each}
+                {#each [1, 2, 4, 8, 16] as loops (loops)}<option value={loops}>{loops} {loops === 1 ? 'loop' : 'loops'}</option>{/each}
               </select>
             </div>
           {/if}

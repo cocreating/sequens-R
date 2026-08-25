@@ -48,6 +48,15 @@ export class PolyVoice {
     }
   }
 
+  dispose(time: number): void {
+    this.panic(time);
+    for (const slot of this.#slots) {
+      try { slot.oscillator.stop(time); } catch { /* Oscillator may already be stopped. */ }
+      slot.oscillator.disconnect();
+      slot.envelope.disconnect();
+    }
+  }
+
   get activeVoiceCount(): number {
     return this.#slots.filter((slot) => slot.availableAt > this.#context.currentTime).length;
   }

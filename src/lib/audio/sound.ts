@@ -1,0 +1,277 @@
+import type { ModuleType, ParamDefinition, ParamSchema } from '../core/pattern';
+
+export const SOUND_ENGINE_VERSION = 2 as const;
+
+export interface SoundState {
+  engineVersion: typeof SOUND_ENGINE_VERSION;
+  presetId: string;
+  params: Record<string, number>;
+  pan: number;
+  delaySend: number;
+  reverbSend: number;
+}
+
+export interface RackMixState {
+  delayDivision: number;
+  delayFeedback: number;
+  delayReturn: number;
+  reverbReturn: number;
+  masterCharacter: number;
+}
+
+export interface SoundPreset {
+  id: string;
+  engineVersion: typeof SOUND_ENGINE_VERSION;
+  moduleType: ModuleType;
+  label: string;
+  params: Readonly<Record<string, number>>;
+  outputTrimDb: number;
+  provenance: 'procedural' | { assetId: string; license: string; source: string };
+}
+
+export const DEFAULT_RACK_MIX: Readonly<RackMixState> = Object.freeze({
+  delayDivision: 2,
+  delayFeedback: 35,
+  delayReturn: 0,
+  reverbReturn: 0,
+  masterCharacter: 0,
+});
+
+export const RACK_MIX_SCHEMA: ParamSchema = Object.freeze([
+  { key: 'delayDivision', label: 'Delay division', min: 0, max: 5, step: 1, defaultValue: 2, options: ['1/4', '1/8', '1/8 dotted', '1/8 triplet', '1/16', '1/16 dotted'], control: 'select' },
+  { key: 'delayFeedback', label: 'Delay feedback', min: 0, max: 90, step: 1, defaultValue: 35, unit: '%', control: 'range' },
+  { key: 'delayReturn', label: 'Delay return', min: 0, max: 100, step: 1, defaultValue: 0, unit: '%', control: 'range' },
+  { key: 'reverbReturn', label: 'Reverb return', min: 0, max: 100, step: 1, defaultValue: 0, unit: '%', control: 'range' },
+  { key: 'masterCharacter', label: 'Master character', min: 0, max: 100, step: 1, defaultValue: 0, unit: '%', control: 'range' },
+]);
+
+const COMMON_OUTPUT_SCHEMA = Object.freeze({
+  pan: { key: 'pan', label: 'Pan', min: -100, max: 100, step: 1, defaultValue: 0, unit: '%', control: 'range' },
+  delaySend: { key: 'delaySend', label: 'Delay send', min: 0, max: 100, step: 1, defaultValue: 0, unit: '%', control: 'range' },
+  reverbSend: { key: 'reverbSend', label: 'Reverb send', min: 0, max: 100, step: 1, defaultValue: 0, unit: '%', control: 'range' },
+} satisfies Record<'pan' | 'delaySend' | 'reverbSend', ParamDefinition>);
+
+export const SOUND_OUTPUT_SCHEMA: ParamSchema = Object.freeze(Object.values(COMMON_OUTPUT_SCHEMA));
+
+const silentSchema: ParamSchema = Object.freeze([]);
+
+function defineSchema(definitions: ParamDefinition[]): ParamSchema {
+  return Object.freeze(definitions);
+}
+
+export const SOUND_PARAM_SCHEMAS: Readonly<Record<ModuleType, ParamSchema>> = Object.freeze({
+  drums: defineSchema([
+    { key: 'tone', label: 'Tone', min: 0, max: 100, step: 1, defaultValue: 50, unit: '%', control: 'range' },
+    { key: 'punch', label: 'Punch', min: 0, max: 100, step: 1, defaultValue: 50, unit: '%', control: 'range' },
+    { key: 'decay', label: 'Decay', min: 0, max: 100, step: 1, defaultValue: 50, unit: '%', control: 'range' },
+  ]),
+  bass: defineSchema([
+    { key: 'wave', label: 'Wave', min: 0, max: 2, step: 1, defaultValue: 1, options: ['Sine', 'Square', 'Saw'], control: 'segmented' },
+    { key: 'cutoff', label: 'Cutoff', min: 0, max: 100, step: 1, defaultValue: 58, unit: '%', control: 'range' },
+    { key: 'resonance', label: 'Resonance', min: 0, max: 100, step: 1, defaultValue: 18, unit: '%', control: 'range' },
+    { key: 'envelope', label: 'Envelope', min: 0, max: 100, step: 1, defaultValue: 46, unit: '%', control: 'range' },
+    { key: 'drive', label: 'Drive', min: 0, max: 100, step: 1, defaultValue: 0, unit: '%', control: 'range' },
+    { key: 'glide', label: 'Glide', min: 0, max: 100, step: 1, defaultValue: 12, unit: '%', control: 'range' },
+    { key: 'sub', label: 'Sub', min: 0, max: 100, step: 1, defaultValue: 35, unit: '%', control: 'range' },
+  ]),
+  acid: defineSchema([
+    { key: 'wave', label: 'Wave', min: 0, max: 1, step: 1, defaultValue: 0, options: ['Saw', 'Square'], control: 'segmented' },
+    { key: 'cutoff', label: 'Cutoff', min: 0, max: 100, step: 1, defaultValue: 52, unit: '%', control: 'range' },
+    { key: 'resonance', label: 'Resonance', min: 0, max: 100, step: 1, defaultValue: 62, unit: '%', control: 'range' },
+    { key: 'envAmount', label: 'Env amount', min: 0, max: 100, step: 1, defaultValue: 58, unit: '%', control: 'range' },
+    { key: 'decay', label: 'Decay', min: 0, max: 100, step: 1, defaultValue: 48, unit: '%', control: 'range' },
+    { key: 'accent', label: 'Accent', min: 0, max: 100, step: 1, defaultValue: 65, unit: '%', control: 'range' },
+    { key: 'slide', label: 'Slide', min: 0, max: 100, step: 1, defaultValue: 35, unit: '%', control: 'range' },
+    { key: 'drive', label: 'Drive', min: 0, max: 100, step: 1, defaultValue: 10, unit: '%', control: 'range' },
+  ]),
+  chords: defineSchema([
+    { key: 'tone', label: 'Tone', min: 0, max: 100, step: 1, defaultValue: 48, unit: '%', control: 'range' },
+    { key: 'attack', label: 'Attack', min: 0, max: 100, step: 1, defaultValue: 28, unit: '%', control: 'range' },
+    { key: 'release', label: 'Release', min: 0, max: 100, step: 1, defaultValue: 62, unit: '%', control: 'range' },
+    { key: 'width', label: 'Width', min: 0, max: 100, step: 1, defaultValue: 55, unit: '%', control: 'range' },
+    { key: 'chorus', label: 'Chorus', min: 0, max: 100, step: 1, defaultValue: 24, unit: '%', control: 'range' },
+  ]),
+  mixer: silentSchema,
+  arp: defineSchema([
+    { key: 'tone', label: 'Tone', min: 0, max: 100, step: 1, defaultValue: 52, unit: '%', control: 'range' },
+    { key: 'brightness', label: 'Brightness', min: 0, max: 100, step: 1, defaultValue: 58, unit: '%', control: 'range' },
+    { key: 'decay', label: 'Decay', min: 0, max: 100, step: 1, defaultValue: 42, unit: '%', control: 'range' },
+    { key: 'character', label: 'Character', min: 0, max: 100, step: 1, defaultValue: 22, unit: '%', control: 'range' },
+  ]),
+  euclid: defineSchema([
+    { key: 'tone', label: 'Tone', min: 0, max: 100, step: 1, defaultValue: 50, unit: '%', control: 'range' },
+    { key: 'decay', label: 'Decay', min: 0, max: 100, step: 1, defaultValue: 45, unit: '%', control: 'range' },
+    { key: 'spread', label: 'Spread', min: 0, max: 100, step: 1, defaultValue: 42, unit: '%', control: 'range' },
+  ]),
+  piano: defineSchema([
+    { key: 'tone', label: 'Tone', min: 0, max: 100, step: 1, defaultValue: 52, unit: '%', control: 'range' },
+    { key: 'bell', label: 'Bell', min: 0, max: 100, step: 1, defaultValue: 34, unit: '%', control: 'range' },
+    { key: 'decay', label: 'Decay', min: 0, max: 100, step: 1, defaultValue: 58, unit: '%', control: 'range' },
+    { key: 'tremolo', label: 'Tremolo', min: 0, max: 100, step: 1, defaultValue: 12, unit: '%', control: 'range' },
+  ]),
+  cc: silentSchema,
+  mod: silentSchema,
+});
+
+function defaultsFor(type: ModuleType): Readonly<Record<string, number>> {
+  return Object.freeze(Object.fromEntries(SOUND_PARAM_SCHEMAS[type].map((definition) => [definition.key, definition.defaultValue])));
+}
+
+type PresetRow = Omit<SoundPreset, 'engineVersion' | 'outputTrimDb' | 'provenance'>;
+
+const PRESET_ROWS = [
+  { id: 'legacy-drums-v1', moduleType: 'drums', label: 'Legacy Drums', params: defaultsFor('drums') },
+  { id: 'drums-core-v2', moduleType: 'drums', label: 'Core Kit', params: defaultsFor('drums') },
+  { id: 'legacy-bass-v1', moduleType: 'bass', label: 'Legacy Bass', params: defaultsFor('bass') },
+  { id: 'bass-core-v2', moduleType: 'bass', label: 'Core Bass', params: defaultsFor('bass') },
+  { id: 'legacy-acid-v1', moduleType: 'acid', label: 'Legacy Acid', params: defaultsFor('acid') },
+  { id: 'acid-core-v2', moduleType: 'acid', label: 'Core Acid', params: defaultsFor('acid') },
+  { id: 'legacy-chords-v1', moduleType: 'chords', label: 'Legacy Chords', params: defaultsFor('chords') },
+  { id: 'chords-core-v2', moduleType: 'chords', label: 'Core Chords', params: defaultsFor('chords') },
+  { id: 'legacy-mixer-v1', moduleType: 'mixer', label: 'Legacy silent control', params: defaultsFor('mixer') },
+  { id: 'silent-mixer-v2', moduleType: 'mixer', label: 'Silent control', params: defaultsFor('mixer') },
+  { id: 'legacy-arp-v1', moduleType: 'arp', label: 'Legacy Arp', params: defaultsFor('arp') },
+  { id: 'arp-core-v2', moduleType: 'arp', label: 'Core Arp', params: defaultsFor('arp') },
+  { id: 'legacy-euclid-v1', moduleType: 'euclid', label: 'Legacy Euclid', params: defaultsFor('euclid') },
+  { id: 'euclid-core-v2', moduleType: 'euclid', label: 'Core Palette', params: defaultsFor('euclid') },
+  { id: 'legacy-piano-v1', moduleType: 'piano', label: 'Legacy Piano', params: defaultsFor('piano') },
+  { id: 'piano-core-v2', moduleType: 'piano', label: 'Core Piano', params: defaultsFor('piano') },
+  { id: 'legacy-cc-v1', moduleType: 'cc', label: 'Legacy silent control', params: defaultsFor('cc') },
+  { id: 'silent-cc-v2', moduleType: 'cc', label: 'Silent control', params: defaultsFor('cc') },
+  { id: 'legacy-mod-v1', moduleType: 'mod', label: 'Legacy silent control', params: defaultsFor('mod') },
+  { id: 'silent-mod-v2', moduleType: 'mod', label: 'Silent control', params: defaultsFor('mod') },
+] satisfies readonly PresetRow[];
+
+export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({
+  ...preset,
+  engineVersion: SOUND_ENGINE_VERSION,
+  outputTrimDb: 0,
+  provenance: 'procedural' as const,
+})));
+export const SOUND_PRESET_IDS: readonly string[] = Object.freeze(SOUND_PRESETS.map(({ id }) => id));
+
+const DEFAULT_PRESET_IDS: Readonly<Record<ModuleType, string>> = Object.freeze({
+  drums: 'drums-core-v2', bass: 'bass-core-v2', acid: 'acid-core-v2', chords: 'chords-core-v2', mixer: 'silent-mixer-v2',
+  arp: 'arp-core-v2', euclid: 'euclid-core-v2', piano: 'piano-core-v2', cc: 'silent-cc-v2', mod: 'silent-mod-v2',
+});
+
+function legacyPresetId(type: ModuleType): string {
+  return `legacy-${type}-v1`;
+}
+
+function assertQuantized(value: number, definition: ParamDefinition, label: string): void {
+  if (!Number.isInteger(value) || value < definition.min || value > definition.max || (value - definition.min) % definition.step !== 0) {
+    throw new RangeError(`${label} is outside its sound schema.`);
+  }
+}
+
+export function presetsFor(type: ModuleType): readonly SoundPreset[] {
+  return SOUND_PRESETS.filter((preset) => preset.moduleType === type);
+}
+
+export function presetById(id: string): SoundPreset {
+  const preset = SOUND_PRESETS.find((candidate) => candidate.id === id);
+  if (preset === undefined) throw new RangeError(`Unknown sound preset ${id}.`);
+  return preset;
+}
+
+export function validatePresetCatalog(catalog: readonly SoundPreset[]): void {
+  const ids = new Set<string>();
+  for (const preset of catalog) {
+    if (ids.has(preset.id)) throw new RangeError(`Duplicate sound preset id ${preset.id}.`);
+    ids.add(preset.id);
+    if (preset.engineVersion !== SOUND_ENGINE_VERSION) throw new RangeError(`${preset.id} has an unsupported engine version.`);
+    if (!Number.isFinite(preset.outputTrimDb)) throw new RangeError(`${preset.id} has a non-finite output trim.`);
+    if (preset.provenance !== 'procedural') {
+      if (preset.provenance.assetId.trim() === '' || preset.provenance.license.trim() === '' || preset.provenance.source.trim() === '') {
+        throw new RangeError(`${preset.id} has incomplete asset provenance.`);
+      }
+    }
+    validateSoundParams(preset.moduleType, preset.params);
+  }
+}
+
+export function validateSoundParams(type: ModuleType, params: Readonly<Record<string, number>>): void {
+  const schema = SOUND_PARAM_SCHEMAS[type];
+  const expected = new Set(schema.map(({ key }) => key));
+  for (const key of Object.keys(params)) if (!expected.has(key)) throw new RangeError(`${type}.${key} is not a known sound parameter.`);
+  for (const definition of schema) {
+    if (!(definition.key in params)) throw new RangeError(`${type}.${definition.key} is missing from sound state.`);
+    assertQuantized(params[definition.key]!, definition, `${type}.${definition.key}`);
+  }
+}
+
+export function validateSoundState(type: ModuleType, sound: SoundState): void {
+  if (sound.engineVersion !== SOUND_ENGINE_VERSION) throw new RangeError('Unsupported sound engine version.');
+  const preset = presetById(sound.presetId);
+  if (preset.moduleType !== type) throw new RangeError(`${sound.presetId} cannot be used by ${type}.`);
+  validateSoundParams(type, sound.params);
+  assertQuantized(sound.pan, COMMON_OUTPUT_SCHEMA.pan, `${type}.pan`);
+  assertQuantized(sound.delaySend, COMMON_OUTPUT_SCHEMA.delaySend, `${type}.delaySend`);
+  assertQuantized(sound.reverbSend, COMMON_OUTPUT_SCHEMA.reverbSend, `${type}.reverbSend`);
+  if ((type === 'mixer' || type === 'cc' || type === 'mod') && (sound.pan !== 0 || sound.delaySend !== 0 || sound.reverbSend !== 0)) {
+    throw new RangeError(`${type} is silent and cannot use audio sends or pan.`);
+  }
+}
+
+export function validateRackMixState(mix: RackMixState): void {
+  for (const definition of RACK_MIX_SCHEMA) assertQuantized(mix[definition.key as keyof RackMixState], definition, `mix.${definition.key}`);
+}
+
+export function soundForPreset(type: ModuleType, presetId: string, output?: Pick<SoundState, 'pan' | 'delaySend' | 'reverbSend'>): SoundState {
+  const preset = presetById(presetId);
+  if (preset.moduleType !== type) throw new RangeError(`${presetId} cannot be used by ${type}.`);
+  const silent = type === 'mixer' || type === 'cc' || type === 'mod';
+  return {
+    engineVersion: SOUND_ENGINE_VERSION,
+    presetId,
+    params: { ...preset.params },
+    pan: silent ? 0 : output?.pan ?? 0,
+    delaySend: silent ? 0 : output?.delaySend ?? 0,
+    reverbSend: silent ? 0 : output?.reverbSend ?? 0,
+  };
+}
+
+export function createDefaultSound(type: ModuleType): SoundState {
+  return soundForPreset(type, DEFAULT_PRESET_IDS[type]);
+}
+
+export function createLegacySound(type: ModuleType): SoundState {
+  return soundForPreset(type, legacyPresetId(type));
+}
+
+export function isLegacySound(sound: SoundState): boolean {
+  return sound.presetId.startsWith('legacy-') && sound.presetId.endsWith('-v1');
+}
+
+export function normalizeSoundState(type: ModuleType, value: unknown): SoundState {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new TypeError(`${type} sound state must be an object.`);
+  const source = value as Record<string, unknown>;
+  if (source.engineVersion !== SOUND_ENGINE_VERSION || typeof source.presetId !== 'string' || typeof source.params !== 'object' || source.params === null || Array.isArray(source.params)) {
+    throw new TypeError(`${type} sound state is malformed.`);
+  }
+  const params = Object.fromEntries(Object.entries(source.params as Record<string, unknown>).map(([key, entry]) => {
+    if (typeof entry !== 'number') throw new TypeError(`${type}.${key} must be numeric.`);
+    return [key, entry];
+  }));
+  const sound: SoundState = {
+    engineVersion: SOUND_ENGINE_VERSION,
+    presetId: source.presetId,
+    params,
+    pan: Number(source.pan),
+    delaySend: Number(source.delaySend),
+    reverbSend: Number(source.reverbSend),
+  };
+  validateSoundState(type, sound);
+  return sound;
+}
+
+export function normalizeRackMixState(value: unknown): RackMixState {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new TypeError('Rack mix state must be an object.');
+  const source = value as Record<string, unknown>;
+  const mix = Object.fromEntries(RACK_MIX_SCHEMA.map(({ key }) => [key, Number(source[key])])) as unknown as RackMixState;
+  validateRackMixState(mix);
+  return mix;
+}
+
+validatePresetCatalog(SOUND_PRESETS);

@@ -5,6 +5,16 @@ import type { ShareableRack } from '../share/types';
 import type { EngineSnapshot } from '../audio/types';
 import { mutationSeed } from '../generators/shared';
 import type { ProjectScene } from '../project/model';
+import {
+  createDefaultSound,
+  createLegacySound,
+  DEFAULT_RACK_MIX,
+  soundForPreset,
+  validateSoundState,
+  type RackMixState,
+  type SoundState,
+} from '../audio/sound';
+import type { RackSoundSnapshot } from '../audio/types';
 
 export interface PatternSlot {
   seed: number;
@@ -41,6 +51,7 @@ export type RackModule = {
   solo: boolean;
   monitor: boolean;
   level: number;
+  sound: SoundState;
   midi: { portId: string | null; channel: number };
   automation: CcAutomationPoint[];
 } & Record<string, unknown>;
@@ -49,6 +60,7 @@ export interface RackState {
   bpm: number;
   key: MusicalKey;
   modules: RackModule[];
+  mix: RackMixState;
 }
 
 const DEFAULT_NAMES: Readonly<Record<ModuleType, string>> = {
@@ -89,8 +101,9 @@ function createSlots(type: ModuleType, seed: number, params: NumericParams): Pat
   }));
 }
 
-export function createModule(type: ModuleType, seed = randomSeed(), params?: Readonly<Record<string, number>>): RackModule {
+export function createModule(type: ModuleType, seed = randomSeed(), params?: Readonly<Record<string, number>>, sound: SoundState = createDefaultSound(type)): RackModule {
   const normalizedParams = { ...GENERATORS[type].defaults, ...params };
+  validateSoundState(type, sound);
   return {
     id: createId(type),
     type,
@@ -106,6 +119,7 @@ export function createModule(type: ModuleType, seed = randomSeed(), params?: Rea
     solo: false,
     monitor: true,
     level: type === 'drums' ? 0.82 : isControlModule(type) ? 0 : 0.68,
+    sound: structuredClone(sound),
     midi: { portId: null, channel: type === 'drums' ? 10 : 1 },
     automation: [],
   };
@@ -165,12 +179,18 @@ export function revertModule(module: RackModule): RackModule {
   return { ...restored, mutation: { ...module.mutation, revert: null } };
 }
 
-export function createRackState(shared: ShareableRack): RackState {
+export function createRackState(shared: ShareableRack, soundMode: 'current' | 'legacy' = 'current'): RackState {
   const rack = normalizeRack(shared);
   return {
     bpm: rack.bpm,
     key: { ...rack.key },
-    modules: rack.modules.map((module) => createModule(module.type, module.seed, module.params)),
+    modules: rack.modules.map((module) => createModule(
+      module.type,
+      module.seed,
+      module.params,
+      module.sound ?? (soundMode === 'legacy' ? createLegacySound(module.type) : createDefaultSound(module.type)),
+    )),
+    mix: structuredClone(rack.mix ?? DEFAULT_RACK_MIX),
   };
 }
 
@@ -237,6 +257,26 @@ export function setCcAutomation(module: RackModule, automation: readonly CcAutom
   return { ...module, automation: normalized, shareable: normalized.length === 0 };
 }
 
+export function setModuleSound(module: RackModule, sound: SoundState): RackModule {
+  validateSoundState(module.type, sound);
+  return { ...module, sound: structuredClone(sound) };
+}
+
+export function setModuleSoundParam(module: RackModule, key: string, value: number): RackModule {
+  const next = key === 'pan' || key === 'delaySend' || key === 'reverbSend'
+    ? { ...module.sound, [key]: value }
+    : { ...module.sound, params: { ...module.sound.params, [key]: value } };
+  return setModuleSound(module, next);
+}
+
+export function selectModulePreset(module: RackModule, presetId: string): RackModule {
+  return setModuleSound(module, soundForPreset(module.type, presetId, module.sound));
+}
+
+export function upgradeModuleSound(module: RackModule): RackModule {
+  return setModuleSound(module, createDefaultSound(module.type));
+}
+
 export function toEngineSnapshot(rack: RackState): EngineSnapshot {
   const snapshot: EngineSnapshot = {
     bpm: rack.bpm,
@@ -255,11 +295,30 @@ export function toEngineSnapshot(rack: RackState): EngineSnapshot {
   return Object.freeze(snapshot);
 }
 
+export function toSoundSnapshot(rack: RackState): RackSoundSnapshot {
+  const snapshot: RackSoundSnapshot = {
+    mix: Object.freeze({ ...rack.mix }),
+    modules: rack.modules.map((module) => Object.freeze({
+      id: module.id,
+      type: module.type,
+      sound: Object.freeze({ ...module.sound, params: Object.freeze({ ...module.sound.params }) }),
+    })),
+  };
+  Object.freeze(snapshot.modules);
+  return Object.freeze(snapshot);
+}
+
 export function toShareableRack(rack: RackState): ShareableRack {
   return {
     bpm: rack.bpm,
     key: { ...rack.key },
-    modules: rack.modules.map((module) => ({ type: module.type, seed: module.seed, params: { ...module.params } })),
+    modules: rack.modules.map((module) => ({
+      type: module.type,
+      seed: module.seed,
+      params: { ...module.params },
+      sound: { ...module.sound, params: { ...module.sound.params } },
+    })),
+    mix: { ...rack.mix },
   };
 }
 

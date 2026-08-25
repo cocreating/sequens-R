@@ -1,18 +1,19 @@
-import { isControlModule, type ModuleType } from '../core/pattern';
+import type { ModuleType } from '../core/pattern';
 import { AudioScheduler } from './scheduler';
-import type { EngineModuleSnapshot, EngineSnapshot, ScheduledNote } from './types';
-import { AcidVoice } from './voices/acid';
-import { DrumKitVoice } from './voices/drumkit';
-import { PolyVoice } from './voices/poly';
+import type { EngineModuleSnapshot, EngineSnapshot, RackSoundSnapshot, ScheduledNote, SoundModuleSnapshot } from './types';
 import clockWorkletUrl from './clock.worklet.ts?worker&url';
 import acidWorkletUrl from './acid.worklet.ts?worker&url';
 import { MidiTimeBridge } from '../midi/time-bridge';
 import type { MidiSink } from '../midi/types';
+import { createDefaultSound, DEFAULT_RACK_MIX } from './sound';
+import { VOICE_FACTORY, type InternalVoice } from './voice-factory';
 
 interface ModuleVoice {
   type: ModuleType;
   bus: GainNode;
-  voice: AcidVoice | DrumKitVoice | PolyVoice | null;
+  voice: InternalVoice | null;
+  presetId: string;
+  crossfadeUntil: number;
 }
 
 interface RenderCapacityUpdate extends Event {
@@ -42,6 +43,7 @@ export interface AudioDiagnostics {
 }
 
 const EMPTY_SNAPSHOT: EngineSnapshot = { bpm: 118, modules: [] };
+const EMPTY_SOUND_SNAPSHOT: RackSoundSnapshot = { mix: DEFAULT_RACK_MIX, modules: [] };
 
 export class AudioEngine {
   #context: AudioContext | null = null;
@@ -50,6 +52,7 @@ export class AudioEngine {
   #clockSink: GainNode | null = null;
   #master: DynamicsCompressorNode | null = null;
   #snapshot: EngineSnapshot = EMPTY_SNAPSHOT;
+  #soundSnapshot: RackSoundSnapshot = EMPTY_SOUND_SNAPSHOT;
   readonly #voices = new Map<string, ModuleVoice>();
   readonly #onBar: ((bar: number) => void) | null;
   readonly #onPosition: ((beat: number | null) => void) | null;
@@ -154,11 +157,17 @@ export class AudioEngine {
     this.#syncVoices(this.#snapshot.modules);
   }
 
-  publish(snapshot: EngineSnapshot): void {
+  publish(snapshot: EngineSnapshot, soundSnapshot: RackSoundSnapshot = this.#soundSnapshot): void {
     this.#silenceMidiTransitions(this.#snapshot.modules, snapshot.modules);
     this.#snapshot = snapshot;
+    this.#soundSnapshot = soundSnapshot;
     this.#syncVoices(snapshot.modules);
     this.#scheduler?.publish(snapshot);
+  }
+
+  publishSound(snapshot: RackSoundSnapshot): void {
+    this.#soundSnapshot = snapshot;
+    this.#syncVoices(this.#snapshot.modules);
   }
 
   async play(): Promise<void> {
@@ -211,7 +220,10 @@ export class AudioEngine {
     this.#clock?.disconnect();
     this.#clockSink?.disconnect();
     this.#master?.disconnect();
-    for (const module of this.#voices.values()) module.bus.disconnect();
+    for (const module of this.#voices.values()) {
+      module.voice?.dispose(this.#context.currentTime);
+      module.bus.disconnect();
+    }
     this.#voices.clear();
     const context = this.#context;
     this.#context = null;
@@ -238,8 +250,7 @@ export class AudioEngine {
     if (note.event.cc === undefined) this.#midi?.note(snapshot.midi, note.event, this.#toPerformanceTime(note.time), note.duration * 1000);
     else this.#midi?.control(snapshot.midi, note.event, this.#toPerformanceTime(note.time));
     if (module === undefined || module.voice === null || !snapshot.monitor) return;
-    if (module.voice instanceof DrumKitVoice) module.voice.trigger(note.event, note.time);
-    else module.voice.trigger(note.event, note.time, note.duration);
+    module.voice.trigger(note.event, note.time, note.duration);
   }
 
   #scheduleClock(contextTime: number): void {
@@ -271,18 +282,21 @@ export class AudioEngine {
     return this.#midiTime?.toPerformanceTime(contextTime) ?? performance.now();
   }
 
-  #makeVoice(module: EngineModuleSnapshot): ModuleVoice {
+  #soundFor(module: EngineModuleSnapshot): SoundModuleSnapshot {
+    return this.#soundSnapshot.modules.find((candidate) => candidate.id === module.id) ?? {
+      id: module.id,
+      type: module.type,
+      sound: createDefaultSound(module.type),
+    };
+  }
+
+  #makeVoice(module: EngineModuleSnapshot, initialGain = module.level): ModuleVoice {
     const context = this.#context!;
-    const bus = new GainNode(context, { gain: module.level });
+    const soundModule = this.#soundFor(module);
+    const bus = new GainNode(context, { gain: initialGain });
     bus.connect(this.#master!);
-    const voice = module.type === 'drums'
-      ? new DrumKitVoice(context, bus)
-      : module.type === 'acid'
-        ? new AcidVoice(context, bus)
-        : isControlModule(module.type)
-          ? null
-          : new PolyVoice(context, bus, module.type === 'bass' ? 'square' : 'triangle');
-    return { type: module.type, bus, voice };
+    const voice = VOICE_FACTORY.create(context, soundModule, bus);
+    return { type: module.type, bus, voice, presetId: soundModule.sound.presetId, crossfadeUntil: 0 };
   }
 
   #applyLevels(modules: readonly EngineModuleSnapshot[], time: number): void {
@@ -291,7 +305,7 @@ export class AudioEngine {
       const voice = this.#voices.get(module.id);
       if (voice === undefined) continue;
       const audible = module.monitor && !module.mute && (!anySolo || module.solo);
-      voice.bus.gain.setValueAtTime(audible ? module.level : 0, time);
+      voice.bus.gain.setValueAtTime(audible ? module.level : 0, Math.max(time, voice.crossfadeUntil));
     }
   }
 
@@ -305,15 +319,33 @@ export class AudioEngine {
         module.bus.gain.cancelAndHoldAtTime(now);
         module.bus.gain.linearRampToValueAtTime(0, disconnectAt);
         module.voice?.panic(disconnectAt);
-        window.setTimeout(() => module.bus.disconnect(), 12);
+        window.setTimeout(() => {
+          module.voice?.dispose(disconnectAt);
+          module.bus.disconnect();
+        }, 12);
         this.#voices.delete(id);
       }
     }
     for (const module of modules) {
       const current = this.#voices.get(module.id);
-      if (current === undefined || current.type !== module.type) {
-        current?.bus.disconnect();
+      const sound = this.#soundFor(module);
+      if (current === undefined) {
         this.#voices.set(module.id, this.#makeVoice(module));
+      } else if (current.type !== module.type || current.presetId !== sound.sound.presetId) {
+        const now = this.#context.currentTime;
+        const crossfadeEnd = now + 0.012;
+        current.bus.gain.cancelAndHoldAtTime(now);
+        current.bus.gain.linearRampToValueAtTime(0, crossfadeEnd);
+        const replacement = this.#makeVoice(module, 0);
+        replacement.crossfadeUntil = crossfadeEnd;
+        replacement.bus.gain.linearRampToValueAtTime(module.level, crossfadeEnd);
+        this.#voices.set(module.id, replacement);
+        window.setTimeout(() => {
+          current.voice?.dispose(crossfadeEnd);
+          current.bus.disconnect();
+        }, 16);
+      } else {
+        current.voice?.applySound(sound.sound, this.#context.currentTime);
       }
     }
     this.#applyLevels(modules, this.#context.currentTime);

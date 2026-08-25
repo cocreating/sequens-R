@@ -4,6 +4,11 @@
       "name": "Basic Electro",
       "file": "basic-electro.sequens-r.json",
       "description": "A 110 BPM C minor demo with Drums and Arp modules."
+    },
+    {
+      "name": "Basic Electro 2",
+      "file": "basic-electro2.sequens-r.json",
+      "description": "A 110 BPM C minor demo featuring Mixer, Bass, Drums, and Arp modules."
     }
   ]
 }

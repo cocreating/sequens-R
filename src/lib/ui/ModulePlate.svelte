@@ -87,6 +87,14 @@
     activeHelpKey = helpActive ? 'help-toggle' : 'module';
   }
 
+  function selectHelpAction(event: MouseEvent): void {
+    toggleHelp();
+    const menu = (event.currentTarget as HTMLElement).closest('details');
+    if (!(menu instanceof HTMLDetailsElement)) return;
+    menu.open = false;
+    menu.querySelector<HTMLElement>('summary')?.focus();
+  }
+
   function showContextualHelp(event: PointerEvent | FocusEvent): void {
     if (!desktopSurface || !helpActive || !(event.target instanceof Element)) return;
     const target = event.target.closest<HTMLElement>('[data-help-key]');
@@ -122,38 +130,38 @@
   <div class="module-progress" aria-hidden="true"></div>
   <header class="module-header">
     <span use:dragHandle class="drag-handle" data-help-key="reorder" aria-label={`Reorder ${module.name}`}>⠿</span>
-    <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
     {#if desktopSurface}
       <button type="button" class="module-width-toggle has-emoticon icon-only" data-help-key="module-width" aria-label={`Full-width layout for ${module.name}`} aria-pressed={fullWidth} onclick={() => { fullWidth = !fullWidth; }}><span class="button-emoticon" aria-hidden="true">↔️</span></button>
     {/if}
+    <button type="button" class="module-collapse-toggle" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}>{module.collapsed ? '+' : '−'}</button>
+    <details class="module-menu">
+      <summary aria-label={`${module.name} actions`}>⋯</summary>
+      <div class="module-menu-popover">
+        {#if desktopSurface}
+          <button
+            type="button"
+            class="module-help-toggle"
+            data-help-key="help-toggle"
+            aria-label={`${helpActive ? 'Turn off' : 'Turn on'} help for ${module.name}`}
+            aria-pressed={helpActive}
+            aria-controls={`${module.id}-help`}
+            onclick={selectHelpAction}
+          ><span aria-hidden="true">?</span> Help</button>
+        {/if}
+        <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={onduplicate}>Duplicate</button>
+        {#if !desktopSurface}
+          <button type="button" aria-label={`Move ${module.name} earlier`} onclick={() => onmove(-1)}>Move earlier</button>
+          <button type="button" aria-label={`Move ${module.name} later`} onclick={() => onmove(1)}>Move later</button>
+        {/if}
+        {#if module.type !== 'mixer'}<button type="button" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>{/if}
+        <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>Delete</button>
+      </div>
+    </details>
+    <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
     <div class="module-switches">
       <button type="button" data-help-key="monitor" aria-label={`Monitor ${module.name}`} aria-pressed={module.monitor} onclick={() => onpatch({ monitor: !module.monitor })}>◖</button>
       <button type="button" data-help-key="solo" aria-label={`Solo ${module.name}`} aria-pressed={module.solo} onclick={() => onpatch({ solo: !module.solo })}>S</button>
       <button type="button" data-help-key="mute" aria-label={`Mute ${module.name}`} aria-pressed={module.mute} onclick={() => onpatch({ mute: !module.mute })}>M</button>
-      <button type="button" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}>{module.collapsed ? '+' : '−'}</button>
-      <details class="module-menu">
-        <summary aria-label={`${module.name} actions`}>⋯</summary>
-        <div class="module-menu-popover">
-          {#if desktopSurface}
-            <button
-              type="button"
-              class="module-help-toggle"
-              data-help-key="help-toggle"
-              aria-label={`${helpActive ? 'Turn off' : 'Turn on'} help for ${module.name}`}
-              aria-pressed={helpActive}
-              aria-controls={`${module.id}-help`}
-              onclick={toggleHelp}
-            ><span aria-hidden="true">?</span> Help</button>
-          {/if}
-          <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={onduplicate}>Duplicate</button>
-          {#if !desktopSurface}
-            <button type="button" aria-label={`Move ${module.name} earlier`} onclick={() => onmove(-1)}>Move earlier</button>
-            <button type="button" aria-label={`Move ${module.name} later`} onclick={() => onmove(1)}>Move later</button>
-          {/if}
-          {#if module.type !== 'mixer'}<button type="button" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>{/if}
-          <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>Delete</button>
-        </div>
-      </details>
     </div>
   </header>
 

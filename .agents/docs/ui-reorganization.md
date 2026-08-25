@@ -17,7 +17,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Closed desktop Workspace state reduced to one accessible 44 px toolbox trigger, allowing the module lanes to reclaim the released width.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
 - A `Demos projects` action directly after project import, opening an accessible native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
-- Compact module headers with reorder/name/monitor/solo/mute/collapse plus a `⋯` actions disclosure for Help, duplicate, module MIDI export, and delete.
+- Compact module headers whose first row follows reorder → desktop full-width → collapse → `⋯` actions → top-right editable name; monitor, solo, and mute occupy a balanced second row. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
 - Desktop-only per-module full-width toggles that span all current lanes without changing saved project or playback state.
 - Musical-first module bodies: slots, mutation, grid/editor, and parameters precede `Output & advanced` routing, seed, and automatic mutation controls.
 - Schema-driven control language:
@@ -38,6 +38,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Steppers combine labelled number inputs with 44 px decrement/increment buttons and disabled boundaries.
 - Segmented choices use a labelled group of pressed-state buttons; binary controls use native checkboxes.
 - Workspace and advanced disclosures preserve their user-selected open state through rack edits and asynchronous status updates.
+- Selecting module Help closes the actions disclosure and restores focus to its summary, preventing the relocated panel from obscuring the second-row switches.
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
 - Decorative emoticons are marked `aria-hidden="true"`; text-labelled controls keep their visible name while icon-only controls use explicit accessible names.
 - Icon-only controls retain explicit accessible names, pressed state where applicable, and 44 px touch targets.
@@ -54,15 +55,15 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Automated acceptance
 
-The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 61 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 38 Chrome flows, and the axe serious/critical gates. Browser flows include demo discovery/loading, Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module layout, accessible rotary drag/keyboard/reset with separate Undo boundaries, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, round-trip, and accessibility coverage.
+The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 84 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 43 Chrome flows, and the axe serious/critical gates. Browser flows include both bundled demos, Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module/header layout, accessible rotary drag/keyboard/reset with separate Undo boundaries, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, Phase 7 sound, round-trip, and accessibility coverage.
 
 Latest execution on 2026-08-25 after the Phase 6 and desktop follow-up refinements:
 
 ```text
 svelte-check: 0 errors, 0 warnings
-Vitest: 14 files / 61 tests passed
-production PWA build: 12 entries / 290.56 KiB precached
-initial JavaScript: 81.03 KiB gzip / 200.00 KiB budget
-Playwright Chrome: 38 tests passed
+Vitest: 15 files / 84 tests passed
+production PWA build: 13 entries / 351.53 KiB precached
+initial JavaScript: 92.93 KiB gzip / 200.00 KiB budget
+Playwright Chrome: 43 tests passed
 axe: no serious or critical violations
 ```

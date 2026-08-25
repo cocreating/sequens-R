@@ -65,6 +65,24 @@ test.describe('Phase 4 desktop studio', () => {
     const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
     const bass = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'bass module name' }) });
     const widthToggle = drums.getByRole('button', { name: 'Full-width layout for Drums' });
+    const collapseToggle = drums.getByRole('button', { name: 'Collapse Drums' });
+    const moduleMenu = drums.locator('.module-menu > summary');
+    const moduleName = drums.getByRole('textbox', { name: 'drums module name' });
+
+    const [widthBox, collapseBox, menuBox, nameBox] = await Promise.all([
+      widthToggle.boundingBox(),
+      collapseToggle.boundingBox(),
+      moduleMenu.boundingBox(),
+      moduleName.boundingBox(),
+    ]);
+    expect(widthBox).not.toBeNull();
+    expect(collapseBox).not.toBeNull();
+    expect(menuBox).not.toBeNull();
+    expect(nameBox).not.toBeNull();
+    expect(collapseBox!.x).toBeGreaterThanOrEqual(widthBox!.x + widthBox!.width);
+    expect(menuBox!.x).toBeGreaterThanOrEqual(collapseBox!.x + collapseBox!.width);
+    expect(nameBox!.x).toBeGreaterThanOrEqual(menuBox!.x + menuBox!.width);
+    expect(Math.abs(nameBox!.y - widthBox!.y)).toBeLessThan(1);
 
     await widthToggle.click();
     await expect(widthToggle).toHaveAttribute('aria-pressed', 'true');
@@ -152,7 +170,7 @@ test.describe('Phase 4 desktop studio', () => {
     await drums.locator('.module-menu > summary').click();
     await drums.getByRole('button', { name: 'Turn on help for Drums' }).click();
     await expect(help).toBeVisible();
-    await expect(help).toContainText('Hover a control or move to it with the keyboard');
+    await expect(help).toContainText('Contextual help');
 
     await drums.getByRole('button', { name: 'Mute Drums' }).hover();
     await expect(help.getByRole('heading')).toHaveText('Mute');
@@ -165,6 +183,7 @@ test.describe('Phase 4 desktop studio', () => {
     await drums.getByLabel('Mutation').focus();
     await expect(help.getByRole('heading')).toHaveText('Mutation level');
 
+    await drums.locator('.module-menu > summary').click();
     await drums.getByRole('button', { name: 'Turn off help for Drums' }).click();
     await expect(help).toBeHidden();
   });

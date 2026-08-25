@@ -11,7 +11,8 @@ test('lists and loads a bundled demo project', async ({ page }) => {
   await expect(page.locator('.import-project')).toBeVisible();
   await page.getByRole('button', { name: 'Demos projects' }).click();
   await expect(page.getByRole('heading', { name: 'Demos projects' })).toBeVisible();
-  await page.getByRole('button', { name: /Basic Electro/u }).click();
+  await expect(page.getByRole('button', { name: /Basic Electro 2/u })).toBeVisible();
+  await page.locator('.demo-projects-list button').filter({ has: page.getByText('Basic Electro', { exact: true }) }).click();
   await expect(page.getByText('Basic Electro demo loaded and saved locally')).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Basic Electro');
   await expect(page.getByRole('listitem', { name: 'Drums' })).toBeVisible();

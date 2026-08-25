@@ -40,7 +40,7 @@ Decision: persist a versioned project document in native IndexedDB through a sma
 - Project import runs through the same migration and validation path as IndexedDB restoration.
 - `navigator.storage.persist()` is requested from the explicit Save gesture; ordinary edits still autosave without prompting.
 - New documents use `New Project` as their default name. Migration rewrites only the former exact default `Untitled Project`, preserving every user-authored project name.
-- Versioned example documents may ship under `public/projects/` and enter the app only through the ordinary import/migration boundary. A validated `public/projects/index.json` catalog drives the Workspace demo picker; both the catalog and its project documents are precached for offline use. `basic-electro.sequens-r.json` is the first such schema-version-3 example.
+- Versioned example documents may ship under `public/projects/` and enter the app only through the ordinary import/migration boundary. A validated `public/projects/index.json` catalog drives the Workspace demo picker; both the catalog and its project documents are precached for offline use. The catalog currently includes the migrated `Basic Electro` example and the schema-version-4, engine-version-2 `Basic Electro 2` project.
 
 ## AD-004 · Phase 3 export contract
 
@@ -86,7 +86,7 @@ Status: accepted on 2026-08-24.
 - General Help uses a fixed top-right readout so guidance remains visible while the user moves through the page. Module Help uses a stable readout inside its plate. Both avoid moving pointer-positioned tooltips, keep dense controls unobscured, and make longer explanations readable.
 - General Help delegates `pointermove` and `focusin` through semantic `data-app-help-key` markers. Actual pointer movement is used so layout scrolling cannot overwrite a keyboard-focused description. Module Help delegates its local pointer/focus interest through `data-help-key`; schema-driven parameters resolve through their generator definition.
 - Both Help buttons expose pressed state and persistent `aria-controls` relationships. Readouts are deliberately not live regions: keyboard users can reach the same controls and visible copy without generating noisy announcements on every pointer movement. Escape closes General Help even when focus is inside an input.
-- The desktop module header places its seven actions in a full-width grid below the module name, preventing Help from clipping existing monitor, solo, mute, duplicate, collapse, or delete actions in two- and three-lane layouts.
+- The module header keeps DOM and visual focus order aligned: reorder, desktop full-width, collapse, and the actions disclosure lead the first row, while the editable name occupies its flexible top-right track. Monitor, solo, and mute share the second row. Selecting Help closes its disclosure and restores focus to the summary before contextual pointer/focus tracking resumes.
 
 ## AD-008 · Performance-first studio hierarchy and schema-driven controls
 
@@ -98,7 +98,7 @@ Status: accepted on 2026-08-24.
 - Tap BPM is an explicit post-SDD transport refinement. A native header button averages recent valid tap intervals and writes an integer from 20–300 BPM; the tempo field adds native minus/plus buttons for one-BPM changes and manual edits also write integers. Existing project/share decoders retain tenth-BPM compatibility so older saved patches remain readable.
 - Project persistence, rack management, scenes, hardware, audio output, exports, shortcuts, and diagnostics remain fully available inside one `Workspace` disclosure. Its open state is explicit Svelte state so edits and status updates cannot collapse a user-open disclosure.
 - On desktop, a closed Workspace contracts to one accessible 44 CSS px toolbox trigger so the studio lanes reclaim the remaining width without removing the native disclosure semantics.
-- Module headers retain reorder, monitor, solo, mute, and collapse as immediate controls. Help, duplicate, module MIDI export, and delete move into one native per-module action disclosure.
+- Module headers retain reorder, monitor, solo, mute, and collapse as immediate controls. The desktop full-width toggle, collapse, and native per-module action disclosure are adjacent before the top-right name input; Help, duplicate, module MIDI export, and delete remain inside that disclosure.
 - A desktop-only full-width toggle lets one module span every current lane for dense editing. It is local presentation state and does not alter the project document, generator output, or engine snapshot.
 - Module plates present slots, mutation, pattern editing, and musical parameters before routing. MIDI output/channel, seed, copy, and automatic mutation scheduling live in `Output & advanced`; this is a presentation change only and does not alter project or patch schemas.
 - `ParamDefinition.control` is the single source of UI control selection. Continuous performance parameters use rotary ranges, bounded integer parameters use steppers, short enumerations use segmented buttons, binary modes use switches, named modes use selects, and mixer levels become vertical faders on desktop. Every custom presentation retains a native input or button surface and the existing generator schema remains module-agnostic.

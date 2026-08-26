@@ -39,17 +39,20 @@ export async function renderRackAudio(rack: RackState, bars: number, moduleId: s
     const voice = VOICE_FACTORY.create(context, sound, strip.input);
     if (voice !== null) voices.set(module.id, voice);
   }
-  await Promise.all(Array.from(voices.values(), (voice) => voice.ready));
-  for (const note of collectWindowEvents(snapshot, 0, bars * BEATS_PER_BAR, 0)) {
-    const voice = voices.get(note.moduleId);
-    voice?.trigger(note.event, note.time, note.duration);
+  try {
+    await Promise.all(Array.from(voices.values(), (voice) => voice.ready));
+    for (const note of collectWindowEvents(snapshot, 0, bars * BEATS_PER_BAR, 0)) {
+      const voice = voices.get(note.moduleId);
+      voice?.trigger(note.event, note.time, note.duration);
+    }
+    await Promise.all(Array.from(voices.values(), (voice) => voice.sync?.()));
+    graph.fadeOut(duration - 0.02, duration);
+    return await context.startRendering();
+  } finally {
+    for (const voice of voices.values()) voice.dispose(duration);
+    for (const strip of strips) strip.disconnect();
+    graph.dispose();
   }
-  graph.fadeOut(duration - 0.02, duration);
-  const rendered = await context.startRendering();
-  for (const voice of voices.values()) voice.dispose(duration);
-  for (const strip of strips) strip.disconnect();
-  graph.dispose();
-  return rendered;
 }
 
 export async function renderRackAnalysis(rack: RackState, bars: number, moduleId: string | null = null): Promise<AudioAnalysis> {

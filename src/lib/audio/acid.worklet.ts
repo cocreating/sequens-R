@@ -33,7 +33,12 @@ interface AcidLegacyChange {
   type: 'legacy';
 }
 
-type AcidMessage = AcidTrigger | AcidSoundChange | AcidPanic | AcidLegacyChange;
+interface AcidSync {
+  type: 'sync';
+  id: number;
+}
+
+type AcidMessage = AcidTrigger | AcidSoundChange | AcidPanic | AcidLegacyChange | AcidSync;
 
 class SequensAcidProcessor extends AudioWorkletProcessor {
   readonly #events: AcidTrigger[] = [];
@@ -63,9 +68,10 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
     this.port.onmessage = (message: MessageEvent<AcidMessage>) => {
       if (message.data.type === 'legacy') {
         this.#legacy = true;
+      } else if (message.data.type === 'sync') {
+        this.port.postMessage({ type: 'synced', id: message.data.id });
       } else if (message.data.type === 'panic') {
         this.#events.length = 0;
-        this.#soundChanges.length = 0;
         this.#panicTime = message.data.time;
       } else if (message.data.type === 'sound') {
         this.#soundChanges.push(message.data);
@@ -157,8 +163,7 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
   #smoothParams(): void {
     const coefficient = 1 - Math.exp(-1 / (sampleRate * 0.012));
     for (const key of Object.keys(this.#currentParams) as Array<keyof AcidDspParams>) {
-      if (key === 'wave') this.#currentParams.wave = this.#targetParams.wave;
-      else this.#currentParams[key] += (this.#targetParams[key] - this.#currentParams[key]) * coefficient;
+      this.#currentParams[key] += (this.#targetParams[key] - this.#currentParams[key]) * coefficient;
     }
   }
 

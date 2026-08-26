@@ -23,7 +23,7 @@ import { VOICE_FACTORY } from '../../src/lib/audio/voice-factory';
 import { createSoftClipCurve, delaySecondsFor } from '../../src/lib/audio/rack-graph';
 import { DRUM_KITS, drumVariationIndex, drumVelocityGain, renderProceduralDrumLane } from '../../src/lib/audio/voices/procedural-drums';
 import { bassCutoffHz, bassVelocityGain, createBassDriveCurve, frequencyForBassMidi, planBassTrigger } from '../../src/lib/audio/voices/bass';
-import { AcidDspKernel, acidAccentDepth, acidAmplitudePeak, acidCutoffHz, acidDecaySeconds, acidFilterEnvelopePeak, acidSlideSeconds, polyBlep, type AcidDspParams } from '../../src/lib/audio/acid-dsp';
+import { AcidDspKernel, acidAccentDepth, acidAmplitudePeak, acidCutoffHz, acidDcBlockCoefficient, acidDecaySeconds, acidFilterEnvelopePeak, acidSlideSeconds, polyBlep, type AcidDspParams } from '../../src/lib/audio/acid-dsp';
 import { frequencyForAcidMidi, planAcidTransition } from '../../src/lib/audio/voices/acid';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
@@ -445,6 +445,7 @@ describe('Phase 7.4 AudioWorklet Acid', () => {
       { wave: 1, cutoff: 100, resonance: 100, envAmount: 100, decay: 100, accent: 100, slide: 100, drive: 100 },
     ];
     for (const rate of [8_000, 44_100, 48_000, 96_000, 192_000]) {
+      expect(-Math.log(acidDcBlockCoefficient(rate)) * rate / (2 * Math.PI)).toBeCloseTo(18, 10);
       for (const params of extremes) {
         const kernel = new AcidDspKernel(rate);
         let peak = 0;
@@ -479,10 +480,13 @@ describe('Phase 7.4 AudioWorklet Acid', () => {
   it('benchmarks 1x below 2x nonlinear processing and keeps 1x as the worklet default', () => {
     const params = soundForPreset('acid', 'acid-driven-v2').params as unknown as AcidDspParams;
     const benchmark = (oversampling: 1 | 2): number => {
-      const kernel = new AcidDspKernel(48_000);
-      const started = performance.now();
-      for (let index = 0; index < 80_000; index += 1) kernel.process(55 + index % 330, 0.8, 0.7, index % 7 === 0, params, oversampling);
-      return performance.now() - started;
+      const durations = Array.from({ length: 3 }, () => {
+        const kernel = new AcidDspKernel(48_000);
+        const started = performance.now();
+        for (let index = 0; index < 80_000; index += 1) kernel.process(55 + index % 330, 0.8, 0.7, index % 7 === 0, params, oversampling);
+        return performance.now() - started;
+      });
+      return durations.sort((left, right) => left - right)[1]!;
     };
     benchmark(1);
     benchmark(2);
@@ -493,9 +497,16 @@ describe('Phase 7.4 AudioWorklet Acid', () => {
     expect(source).toContain('this.#currentParams, 1)');
     expect(source).toContain("this.port.postMessage({ type: 'ready' })");
     expect(source).toContain('this.#soundChanges.sort');
+    expect(source).not.toContain('this.#soundChanges.length = 0');
     expect(source).toContain('Math.exp(-1 / (sampleRate * 0.012))');
+    expect(source).not.toContain("if (key === 'wave')");
+    const dspSource = readFileSync(new URL('../../src/lib/audio/acid-dsp.ts', import.meta.url), 'utf8');
+    expect(dspSource).toContain('const oscillator = saw + (square - saw) * waveMix');
+    expect(dspSource).toContain('if (!Number.isFinite(blocked))');
     const bounceSource = readFileSync(new URL('../../src/lib/export/bounce.ts', import.meta.url), 'utf8');
     expect(bounceSource).toContain('await Promise.all(Array.from(voices.values(), (voice) => voice.ready))');
+    expect(bounceSource).toContain('await Promise.all(Array.from(voices.values(), (voice) => voice.sync?.()))');
+    expect(bounceSource).toContain('} finally {');
     expect(moduleHelpFor('sound:acid:drive', 'acid', 'Acid').body).toMatch(/before and after/u);
     expect(moduleHelpFor('param:decay', 'acid', 'Acid', GENERATORS.acid.paramSchema.find(({ key }) => key === 'decay')).body).toMatch(/MIDI note length/u);
   });

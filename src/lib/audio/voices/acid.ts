@@ -36,17 +36,44 @@ abstract class WorkletAcidVoice {
   readonly ready: Promise<void>;
   readonly #context: BaseAudioContext;
   readonly #node: AudioWorkletNode;
+  readonly #syncWaiters = new Map<number, { resolve: () => void; reject: (error: Error) => void }>();
+  #nextSyncId = 1;
+  #failure: Error | null = null;
   #activeUntil = 0;
 
   constructor(context: BaseAudioContext, destination: AudioNode) {
     this.#context = context;
     this.#node = new AudioWorkletNode(context, 'sequens-acid', { numberOfInputs: 0, numberOfOutputs: 1, outputChannelCount: [1] });
-    this.ready = new Promise((resolve) => {
+    let readySettled = false;
+    let rejectReady: (error: Error) => void = () => undefined;
+    const readiness = new Promise<void>((resolve, reject) => {
+      rejectReady = reject;
       this.#node.port.onmessage = (message: MessageEvent<{ type?: string }>) => {
-        if (message.data.type === 'ready') resolve();
+        if (message.data.type === 'ready' && !readySettled) {
+          readySettled = true;
+          resolve();
+          return;
+        }
+        if (message.data.type !== 'synced') return;
+        const id = (message.data as { id?: unknown }).id;
+        if (typeof id !== 'number') return;
+        this.#syncWaiters.get(id)?.resolve();
+        this.#syncWaiters.delete(id);
+      };
+      this.#node.onprocessorerror = () => {
+        const error = new Error('The Acid AudioWorklet processor stopped unexpectedly.');
+        console.error(error.message);
+        this.#failure = error;
+        if (!readySettled) {
+          readySettled = true;
+          rejectReady(error);
+        }
+        for (const waiter of this.#syncWaiters.values()) waiter.reject(error);
+        this.#syncWaiters.clear();
       };
     });
-    this.#node.onprocessorerror = () => console.error('The Acid AudioWorklet processor stopped unexpectedly.');
+    this.ready = readiness;
+    void readiness.catch(() => undefined);
     this.#node.connect(destination);
   }
 
@@ -56,6 +83,17 @@ abstract class WorkletAcidVoice {
 
   protected useLegacyMode(): void {
     this.#node.port.postMessage({ type: 'legacy' });
+  }
+
+  sync(): Promise<void> {
+    if (this.#failure !== null) return Promise.reject(this.#failure);
+    const id = this.#nextSyncId;
+    this.#nextSyncId += 1;
+    const synced = new Promise<void>((resolve, reject) => {
+      this.#syncWaiters.set(id, { resolve, reject });
+    });
+    this.#node.port.postMessage({ type: 'sync', id });
+    return synced;
   }
 
   trigger(event: NoteEvent, time: number, duration: number): void {
@@ -77,6 +115,9 @@ abstract class WorkletAcidVoice {
 
   dispose(time: number): void {
     this.panic(time);
+    const error = new Error('The Acid voice was disposed before synchronization completed.');
+    for (const waiter of this.#syncWaiters.values()) waiter.reject(error);
+    this.#syncWaiters.clear();
     this.#node.disconnect();
     this.#node.port.close();
   }

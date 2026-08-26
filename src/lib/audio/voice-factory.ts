@@ -14,6 +14,7 @@ export interface VoiceModuleSnapshot {
 
 export interface InternalVoice {
   readonly ready?: Promise<void>;
+  sync?(): Promise<void>;
   trigger(event: NoteEvent, time: number, duration: number): void;
   applySound(sound: Readonly<SoundState>, time: number): void;
   panic(time: number): void;

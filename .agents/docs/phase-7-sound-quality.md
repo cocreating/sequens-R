@@ -564,19 +564,20 @@ Every file has a distinct SHA-256 digest; all pass −18 LUFS-I ±1, ≤ −1 dB
 Implemented on 2026-08-26:
 
 - New engine-version-2 Acid presets select `procedural-acid-v2`; `legacy-acid-v1` retains the original fixed-saw/fixed-envelope worklet path until the final approved legacy purge. The released first 20 indexes plus appended Drum and Bass records remain fixed, with eleven additional Acid records appended after them.
-- The monophonic processor uses antialiased PolyBLEP saw and square sources, bounded saturation before and after the existing four-stage trapezoidal-integrator/TPT ladder, a smoothed base cutoff/resonance/envelope/decay contract, and a final DC blocker.
+- The monophonic processor uses antialiased PolyBLEP saw and square sources with a 12 ms continuous morph, bounded saturation before and after the existing four-stage trapezoidal-integrator/TPT ladder, a smoothed base cutoff/resonance/envelope/decay contract, and an 18 Hz DC blocker derived from the active sample rate.
 - Accent depth measurably raises amplitude and filter-envelope movement. A note slides only when the preceding event requests slide and its gate overlaps the new attack; separate notes retrigger. Slide time spans 4–220 ms.
-- Worklet sound changes are time-ordered and smoothed over 12 ms. A processor-ready handshake is part of the optional voice contract, so offline bounce waits for the `MessagePort` before scheduling events; this fixes nondeterministic silent Acid exports without changing live scheduling.
+- Worklet sound changes are time-ordered and smoothed over 12 ms. Panic cancels notes without discarding later queued sound changes. A processor-ready handshake is part of the optional voice contract, so offline bounce waits for the `MessagePort` before scheduling events; a second synchronization barrier confirms that the processor has consumed every queued note before `startRendering()`. Processor failure rejects readiness/synchronization, and bounce always disposes voices and the shared graph in `finally`. This fixes nondeterministic silent Acid exports under parallel load and failure-path leaks without changing live scheduling.
 - The 12 original presets are Pulsewire, Clearcut, Hollow, Razorleaf, Rubberline, Neoncoil, Nighttrace, Scorch, Liquidstep, Pinpoint, Lowcurrent, and Glasswire.
 - A direct nonlinear benchmark compares `1x` and `2x`; `1x` is faster and remains the default. `2x` is not enabled before physical Android C10 can prove the ≤0.8 peak-load budget.
 - Contextual help now distinguishes generator Decay, which changes generated/MIDI note length, from internal Sound Decay and explains the actual waveform, filter, envelope, accent, slide, and drive DSP.
 - During full regression, the mobile move announcement was found to precede its View Transition. Status now publishes only after the transition completes, restoring deterministic DOM/order and assistive feedback.
+- A post-implementation review on 2026-08-26 corrected five edge cases before listening approval: sample-rate-dependent DC cutoff, an abrupt Saw/Square switch, panic queue loss, unreleased offline graphs when processor readiness failed, and an offline message race exposed by the six-worker regression. The Acid DSP also resets to a finite state if an unexpected non-finite sample reaches its output.
 
 Automated verification:
 
 - strict Svelte/TypeScript: 0 errors and 0 warnings; Svelte autofixer reports no issue in the edited `App.svelte` logic (one unrelated pre-existing `bind:this` modernization suggestion remains);
 - unit/property tests: 89 passed across 15 files, including PolyBLEP correction, five supported sample rates from 8–192 kHz, finite/bounded/DC behavior at extreme macros, accent/slide/retrigger rules, `1x`/`2x` cost, queue smoothing/readiness, append-only catalog, compact links, and factory identity;
-- production PWA build/offline precache and bundle gate: passed at 95.40 KiB initial JavaScript gzip / 200 KiB;
+- production PWA build/offline precache and bundle gate: passed at 95.73 KiB initial JavaScript gzip / 200 KiB;
 - Playwright: 44 passed. The Acid browser test uses one fixed generator seed, renders all 12 real offline WAV paths in isolated contexts, decodes PCM16, and applies the project BS.1770/true-peak/DC analyzer.
 
 Generated audition files are local and ignored by Git under `test-results/phase7.4/`:
@@ -585,7 +586,7 @@ Generated audition files are local and ignored by Git under `test-results/phase7
 | --- | ---: | ---: |
 | Pulsewire | −18.0 | −3.7 dBTP |
 | Clearcut | −18.0 | −5.2 dBTP |
-| Hollow | −18.0 | −5.9 dBTP |
+| Hollow | −18.0 | −5.8 dBTP |
 | Razorleaf | −18.0 | −8.0 dBTP |
 | Rubberline | −18.0 | −6.5 dBTP |
 | Neoncoil | −18.0 | −7.4 dBTP |

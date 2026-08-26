@@ -48,6 +48,10 @@ export function acidFilterEnvelopePeak(accented: boolean): number {
   return accented ? 1.2 : 1;
 }
 
+export function acidDcBlockCoefficient(sampleRate: number): number {
+  return Math.exp(-2 * Math.PI * 18 / clampAcid(sampleRate, 8_000, 192_000));
+}
+
 export function polyBlep(phase: number, phaseIncrement: number): number {
   if (phase < phaseIncrement) {
     const normalized = phase / phaseIncrement;
@@ -62,6 +66,7 @@ export function polyBlep(phase: number, phaseIncrement: number): number {
 
 export class AcidDspKernel {
   readonly #sampleRate: number;
+  readonly #dcCoefficient: number;
   readonly #filterState = new Float64Array(4);
   #phase = 0;
   #dcInput = 0;
@@ -69,6 +74,7 @@ export class AcidDspKernel {
 
   constructor(sampleRate: number) {
     this.#sampleRate = clampAcid(sampleRate, 8_000, 192_000);
+    this.#dcCoefficient = acidDcBlockCoefficient(this.#sampleRate);
   }
 
   process(frequency: number, amplitude: number, filterEnvelope: number, accented: boolean, params: Readonly<AcidDspParams>, oversampling: 1 | 2 = 1): number {
@@ -78,14 +84,12 @@ export class AcidDspKernel {
       const safeFrequency = clampAcid(frequency, 8, internalRate * 0.225);
       const increment = safeFrequency / internalRate;
       this.#phase = (this.#phase + increment) % 1;
-      let oscillator: number;
-      if (Math.round(params.wave) === 1) {
-        oscillator = this.#phase < 0.5 ? 1 : -1;
-        oscillator += polyBlep(this.#phase, increment);
-        oscillator -= polyBlep((this.#phase + 0.5) % 1, increment);
-      } else {
-        oscillator = this.#phase * 2 - 1 - polyBlep(this.#phase, increment);
-      }
+      const saw = this.#phase * 2 - 1 - polyBlep(this.#phase, increment);
+      const square = (this.#phase < 0.5 ? 1 : -1)
+        + polyBlep(this.#phase, increment)
+        - polyBlep((this.#phase + 0.5) % 1, increment);
+      const waveMix = clampAcid(params.wave, 0, 1);
+      const oscillator = saw + (square - saw) * waveMix;
 
       const drive = clampAcid(params.drive, 0, 100) / 100;
       const preDriven = Math.tanh(oscillator * (1 + drive * 5.5));
@@ -97,7 +101,11 @@ export class AcidDspKernel {
       sum += Math.tanh(filtered * (1 + drive * 3.2)) * (0.72 - drive * 0.18);
     }
     const input = sum / oversampling * clampAcid(amplitude, 0, 1.5);
-    const blocked = input - this.#dcInput + 0.9975 * this.#dcOutput;
+    const blocked = input - this.#dcInput + this.#dcCoefficient * this.#dcOutput;
+    if (!Number.isFinite(blocked)) {
+      this.reset();
+      return 0;
+    }
     this.#dcInput = input;
     this.#dcOutput = blocked;
     return clampAcid(blocked * 4, -1.2, 1.2);

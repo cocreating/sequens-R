@@ -16,6 +16,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Desktop studio with three full-width parallel module lanes at 1440 CSS px.
 - Workspace utilities live in a top-layer floating panel opened by an icon-only toolbox button immediately after TAP. The native popover supports light dismiss and Escape, restores focus to its trigger, and scrolls internally within the viewport.
 - The rack mixer is an always-available full-width top-layer panel opened by the header button beside Workspace. It exposes the existing shared rack mix without requiring a Mixer module in the rack; saved Mixer modules remain compatible duplicate views. Channel gain uses keyboard-accessible native vertical faders with hardware-style caps and bottom-up fill; channels and the rack master pair them with live 12-segment green/amber/red dBFS LED ladders.
+- The floating mixer starts with PAN and SENDS hidden to prioritize channel levels. Two pressed-state toggles in its heading reveal or hide PAN and both send controls across every channel. Its responsive grid fits up to six channels per row: four, five, or six as desktop and mobile-landscape space permits, while narrow portrait layouts retain their compact two- or three-channel rows.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
 - An icon-only 📂 `Demos projects` action directly after project import, retaining its explicit accessible name while opening a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
 - Compact module headers whose first row follows reorder → desktop full-width → collapse → `⋯` actions → top-right editable name; monitor, solo, and mute occupy a balanced second row. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
@@ -45,6 +46,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
 - Decorative emoticons are marked `aria-hidden="true"`; text-labelled controls keep their visible name while icon-only controls use explicit accessible names.
 - Icon-only controls retain explicit accessible names, pressed state where applicable, and 44 px touch targets.
+- Mixer PAN and SENDS visibility toggles expose dynamic Show/Hide accessible names and pressed state; hiding either group removes its controls from the keyboard and accessibility trees.
 
 ## Visual evidence
 

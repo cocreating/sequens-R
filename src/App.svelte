@@ -121,6 +121,8 @@
   let demoProjectLoadingFile = $state<string | null>(null);
   let demoProjectsError = $state('');
   let demoProjectsPopover = $state<HTMLDivElement>();
+  let mixerPanVisible = $state(false);
+  let mixerSendsVisible = $state(false);
   let appHelp = $derived(appHelpFor(appHelpKey));
 
   onDestroy(() => {
@@ -978,7 +980,13 @@
           <h2 id="mixer-heading">Mixer</h2>
           <small>{activeProjectRack(project).name}</small>
         </div>
-        <button type="button" aria-label="Close mixer" popovertarget="studio-mixer" popovertargetaction="hide">×</button>
+        <div class="mixer-heading-actions">
+          <div class="mixer-heading-toggles" role="group" aria-label="Mixer channel controls">
+            <button class="mixer-heading-toggle" type="button" aria-label={mixerPanVisible ? 'Hide PAN controls' : 'Show PAN controls'} aria-pressed={mixerPanVisible} onclick={() => { mixerPanVisible = !mixerPanVisible; }}>PAN</button>
+            <button class="mixer-heading-toggle" type="button" aria-label={mixerSendsVisible ? 'Hide SENDS controls' : 'Show SENDS controls'} aria-pressed={mixerSendsVisible} onclick={() => { mixerSendsVisible = !mixerSendsVisible; }}>SENDS</button>
+          </div>
+          <button type="button" aria-label="Close mixer" popovertarget="studio-mixer" popovertargetaction="hide">×</button>
+        </div>
       </header>
       <div class="studio-mixer-content">
         <MixerPanel
@@ -991,6 +999,8 @@
           onsound={setSoundParam}
           onmix={setRackMixParam}
           oncommit={endCoalescing}
+          showPan={mixerPanVisible}
+          showSends={mixerSendsVisible}
           ariaLabel="Rack mixer controls"
         />
       </div>

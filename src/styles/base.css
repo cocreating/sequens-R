@@ -135,6 +135,8 @@
   .workspace-heading h2 { display: inline; margin: 0; font-size: 1.05rem; }
   .workspace-heading small { margin-inline-start: var(--space-2); color: var(--color-text-muted); font: 0.7rem var(--font-data); }
   .workspace-heading button { padding-inline: var(--space-2); font-size: 1.35rem; line-height: 1; }
+  .mixer-heading-actions, .mixer-heading-toggles { display: flex; align-items: center; gap: var(--space-1); }
+  .workspace-heading .mixer-heading-toggle { font: 750 0.68rem/1 var(--font-data); letter-spacing: 0.04em; }
   .workspace-utilities { min-width: 0; min-height: 0; background: var(--color-surface); overflow-y: auto; }
   .studio-mixer-content { min-width: 0; min-height: 0; padding: var(--space-3); background: var(--color-surface); overflow-y: auto; }
   .utility-stack { display: grid; gap: var(--space-2); padding: var(--space-2); }
@@ -269,13 +271,14 @@
   .mobile-piano-roll .piano-roll-surface { width: max(100%, calc(var(--piano-steps) * 1.5rem)); height: calc(var(--piano-rows) * 1.5rem); }
   .mobile-piano-roll .piano-note { min-width: 1.5rem; min-height: 1.5rem; }
   .mixer-panel { display: grid; gap: var(--space-4); }
-  .mixer-channels { display: grid; gap: var(--space-2); }
+  .mixer-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(6.5rem, calc((100% - 1.25rem) / 6)), 1fr)); gap: var(--space-1); align-items: start; }
   .mixer-channel, .rack-master { display: grid; gap: var(--space-2); padding: var(--space-2); border: 1px solid var(--color-surface-raised); border-radius: var(--radius-control); }
-  .mixer-channel-heading, .rack-master-heading { display: grid; grid-template-columns: minmax(5rem, 1fr) auto auto; gap: var(--space-2); align-items: center; }
+  .mixer-channel-heading, .rack-master-heading { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--space-1); align-items: center; }
+  .mixer-channel-heading strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rack-master-heading { grid-template-columns: minmax(5rem, 1fr) auto; }
   .rack-master-heading output { color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
-  .mixer-channel-knobs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-1); align-items: start; }
-  .mixer-channel-level { display: grid; grid-template-columns: minmax(4.5rem, 1fr) 1.1rem; gap: var(--space-4); justify-content: center; min-height: 12rem; border-block-start: 1px solid var(--color-surface-raised); padding: var(--space-3) var(--space-4) var(--space-1); }
+  .mixer-channel-knobs { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-1); align-items: start; }
+  .mixer-channel-level { display: grid; grid-template-columns: auto auto; gap: var(--space-1); justify-content: center; min-height: 12rem; border-block-start: 1px solid var(--color-surface-raised); padding: var(--space-3) var(--space-1) var(--space-1); }
   .mixer-level-control { display: grid; grid-template-rows: auto minmax(8rem, 1fr) auto; justify-items: center; gap: var(--space-1); min-width: 0; min-height: 11rem; }
   .mixer-level-control label, .rack-master-meter > span { color: var(--color-text-muted); font-size: 0.68rem; letter-spacing: 0.04em; text-transform: uppercase; }
   .mixer-level-control output { color: var(--color-text); font: 0.72rem var(--font-data); font-variant-numeric: tabular-nums; }
@@ -294,6 +297,13 @@
   .rack-master-meter .level-led-meter { height: 7rem; }
   .unsupported, .loading { padding-block: 20vh; }
   .visually-hidden:where(:not(:focus-within, :active)) { position: absolute !important; width: 1px !important; height: 1px !important; margin: -1px !important; padding: 0 !important; border: 0 !important; clip-path: inset(50%) !important; overflow: hidden !important; white-space: nowrap !important; }
+  @media (max-width: 63.999rem) {
+    .mixer-channel { padding: var(--space-1); }
+    .mixer-channel-heading { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mixer-channel-heading strong { grid-column: 1 / -1; }
+    .mixer-channel-heading button { min-width: 0; padding-inline: var(--space-1); }
+    .mixer-channel-knobs { --rotary-knob-label-size: 0.65rem; --rotary-knob-padding: var(--space-1); --rotary-knob-size: 3.75rem; }
+  }
   @media (max-width: 47.999rem) {
     .app-help-readout { position: sticky; inset: var(--space-2) auto auto; width: min(100% - 1rem, 70rem); margin: var(--space-2) auto 0; }
   }
@@ -339,7 +349,10 @@
     .module-header { grid-template-columns: auto auto auto auto minmax(5rem, 1fr); }
     .module-switches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .parameters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .mixer-channels { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); align-items: start; }
+    .mixer-channels { grid-template-columns: repeat(auto-fit, minmax(max(14rem, calc((100% - 2.5rem) / 6)), 1fr)); gap: var(--space-2); }
+    .mixer-channel-heading { grid-template-columns: minmax(5rem, 1fr) auto auto; gap: var(--space-2); }
+    .mixer-channel-knobs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .mixer-channel-knobs[data-pan-visible="true"] > :first-child { grid-column: 1 / -1; }
   }
   @media (min-width: 90rem) {
     .module-list { column-count: 3; }

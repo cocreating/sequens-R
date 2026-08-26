@@ -1,7 +1,7 @@
 import { isControlModule, type ModuleType, type NoteEvent } from '../core/pattern';
 import type { SoundState } from './sound';
 import { validateSoundState } from './sound';
-import { AcidVoice } from './voices/acid';
+import { AcidVoice, LegacyAcidVoice } from './voices/acid';
 import { DrumKitVoice } from './voices/drumkit';
 import { PolyVoice } from './voices/poly';
 import { ProceduralDrumVoice } from './voices/procedural-drums';
@@ -13,6 +13,7 @@ export interface VoiceModuleSnapshot {
 }
 
 export interface InternalVoice {
+  readonly ready?: Promise<void>;
   trigger(event: NoteEvent, time: number, duration: number): void;
   applySound(sound: Readonly<SoundState>, time: number): void;
   panic(time: number): void;
@@ -23,10 +24,10 @@ export interface InternalVoice {
 export interface VoiceIdentity {
   moduleType: ModuleType;
   presetId: string;
-  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
+  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
 }
 
-type LegacyVoice = AcidVoice | DrumKitVoice | PolyVoice;
+type LegacyVoice = LegacyAcidVoice | DrumKitVoice | PolyVoice;
 
 class LegacyVoiceAdapter implements InternalVoice {
   readonly #voice: LegacyVoice;
@@ -68,10 +69,13 @@ export class VoiceFactory {
     if (module.type === 'bass' && module.sound.presetId !== 'legacy-bass-v1') {
       return new BassVoice(context, destination, module.sound);
     }
+    if (module.type === 'acid' && module.sound.presetId !== 'legacy-acid-v1') {
+      return new AcidVoice(context, destination, module.sound);
+    }
     const voice = module.type === 'drums'
       ? new DrumKitVoice(context, destination)
       : module.type === 'acid'
-        ? new AcidVoice(context, destination)
+        ? new LegacyAcidVoice(context, destination)
         : new PolyVoice(context, destination, module.type === 'bass' ? 'square' : 'triangle');
     return new LegacyVoiceAdapter(voice);
   }
@@ -83,7 +87,7 @@ export class VoiceFactory {
       : module.type === 'drums'
         ? module.sound.presetId === 'legacy-drums-v1' ? 'legacy-drums-v1' : 'procedural-drums-v2'
         : module.type === 'acid'
-          ? 'legacy-acid-v1'
+          ? module.sound.presetId === 'legacy-acid-v1' ? 'legacy-acid-v1' : 'procedural-acid-v2'
           : module.type === 'bass'
             ? module.sound.presetId === 'legacy-bass-v1' ? 'legacy-poly-square-v1' : 'procedural-bass-v2'
             : 'legacy-poly-triangle-v1';

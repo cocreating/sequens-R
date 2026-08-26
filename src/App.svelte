@@ -683,8 +683,9 @@
     void runViewTransition(async () => {
       replaceRack({ ...rack, modules });
       await tick();
+    }).then(() => {
+      status = `${module.name} moved ${offset < 0 ? 'earlier' : 'later'}`;
     });
-    status = `${module.name} moved ${offset < 0 ? 'earlier' : 'later'}`;
   }
 
   function deleteModule(id: string): void {

@@ -125,7 +125,7 @@ const PRESET_ROWS = [
   { id: 'legacy-bass-v1', moduleType: 'bass', label: 'Legacy Bass', params: defaultsFor('bass') },
   { id: 'bass-core-v2', moduleType: 'bass', label: 'Roundhouse', params: { wave: 1, cutoff: 55, resonance: 18, envelope: 42, drive: 10, glide: 8, sub: 38 }, outputTrimDb: 7 },
   { id: 'legacy-acid-v1', moduleType: 'acid', label: 'Legacy Acid', params: defaultsFor('acid') },
-  { id: 'acid-core-v2', moduleType: 'acid', label: 'Core Acid', params: defaultsFor('acid') },
+  { id: 'acid-core-v2', moduleType: 'acid', label: 'Pulsewire', params: { wave: 0, cutoff: 55, resonance: 64, envAmount: 60, decay: 45, accent: 65, slide: 35, drive: 12 }, outputTrimDb: 14.2 },
   { id: 'legacy-chords-v1', moduleType: 'chords', label: 'Legacy Chords', params: defaultsFor('chords') },
   { id: 'chords-core-v2', moduleType: 'chords', label: 'Core Chords', params: defaultsFor('chords') },
   { id: 'legacy-mixer-v1', moduleType: 'mixer', label: 'Legacy silent control', params: defaultsFor('mixer') },
@@ -152,6 +152,17 @@ const PRESET_ROWS = [
   { id: 'bass-animated-v2', moduleType: 'bass', label: 'Orbit', params: { wave: 2, cutoff: 62, resonance: 48, envelope: 70, drive: 25, glide: 55, sub: 25 }, outputTrimDb: 8 },
   { id: 'bass-square-v2', moduleType: 'bass', label: 'Block', params: { wave: 1, cutoff: 44, resonance: 22, envelope: 38, drive: 18, glide: 4, sub: 45 }, outputTrimDb: 5.8 },
   { id: 'bass-deep-v2', moduleType: 'bass', label: 'Nightfloor', params: { wave: 0, cutoff: 40, resonance: 42, envelope: 50, drive: 32, glide: 28, sub: 65 }, outputTrimDb: 5.9 },
+  { id: 'acid-clean-v2', moduleType: 'acid', label: 'Clearcut', params: { wave: 0, cutoff: 72, resonance: 30, envAmount: 45, decay: 30, accent: 40, slide: 15, drive: 5 }, outputTrimDb: 15.7 },
+  { id: 'acid-hollow-v2', moduleType: 'acid', label: 'Hollow', params: { wave: 1, cutoff: 35, resonance: 75, envAmount: 60, decay: 62, accent: 55, slide: 42, drive: 8 }, outputTrimDb: 12.5 },
+  { id: 'acid-sharp-v2', moduleType: 'acid', label: 'Razorleaf', params: { wave: 0, cutoff: 68, resonance: 82, envAmount: 75, decay: 28, accent: 80, slide: 25, drive: 20 }, outputTrimDb: 12.9 },
+  { id: 'acid-rubber-v2', moduleType: 'acid', label: 'Rubberline', params: { wave: 1, cutoff: 48, resonance: 58, envAmount: 52, decay: 70, accent: 50, slide: 68, drive: 12 }, outputTrimDb: 11 },
+  { id: 'acid-animated-v2', moduleType: 'acid', label: 'Neoncoil', params: { wave: 0, cutoff: 62, resonance: 72, envAmount: 88, decay: 52, accent: 85, slide: 55, drive: 30 }, outputTrimDb: 12.4 },
+  { id: 'acid-dark-v2', moduleType: 'acid', label: 'Nighttrace', params: { wave: 1, cutoff: 28, resonance: 88, envAmount: 70, decay: 78, accent: 60, slide: 75, drive: 18 }, outputTrimDb: 10 },
+  { id: 'acid-driven-v2', moduleType: 'acid', label: 'Scorch', params: { wave: 0, cutoff: 58, resonance: 52, envAmount: 48, decay: 36, accent: 75, slide: 20, drive: 78 }, outputTrimDb: 7.1 },
+  { id: 'acid-liquid-v2', moduleType: 'acid', label: 'Liquidstep', params: { wave: 1, cutoff: 45, resonance: 68, envAmount: 82, decay: 65, accent: 70, slide: 90, drive: 22 }, outputTrimDb: 11 },
+  { id: 'acid-short-v2', moduleType: 'acid', label: 'Pinpoint', params: { wave: 1, cutoff: 76, resonance: 38, envAmount: 35, decay: 18, accent: 90, slide: 8, drive: 35 }, outputTrimDb: 9.1 },
+  { id: 'acid-low-v2', moduleType: 'acid', label: 'Lowcurrent', params: { wave: 0, cutoff: 25, resonance: 60, envAmount: 40, decay: 85, accent: 45, slide: 50, drive: 15 }, outputTrimDb: 12.2 },
+  { id: 'acid-bright-v2', moduleType: 'acid', label: 'Glasswire', params: { wave: 0, cutoff: 85, resonance: 92, envAmount: 65, decay: 40, accent: 70, slide: 32, drive: 45 }, outputTrimDb: 13.9 },
 ] satisfies readonly PresetRow[];
 
 export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({

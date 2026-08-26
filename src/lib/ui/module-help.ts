@@ -151,7 +151,7 @@ const PARAMETER_HELP: Readonly<Record<string, string>> = {
   'acid.fill': 'Controls how densely the acid line fills the available steps.',
   'acid.steps': 'Sets the acid pattern length in sixteenth-note steps.',
   'acid.range': 'Sets the available pitch span in octaves.',
-  'acid.decay': 'Sets the decay time of the internal acid voice; outgoing MIDI notes are unchanged.',
+  'acid.decay': 'Sets generated Acid note duration, including outgoing MIDI note length. Use Sound Decay for the internal envelope.',
   'chords.length': 'Sets how many chord events are generated in the progression.',
   'chords.quality': 'Chooses the chord voicing family: triad, seventh, ninth, suspended second, or suspended fourth.',
   'chords.duration': 'Sets the duration of each generated chord in sixteenth-note steps.',
@@ -197,6 +197,38 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
   'bass.sub': {
     title: 'Sub oscillator',
     body: 'Sets the level of the internal sine oscillator one octave below the main Bass waveform.',
+  },
+  'acid.wave': {
+    title: 'Acid waveform',
+    body: 'Selects an antialiased PolyBLEP saw or square source inside the Acid AudioWorklet without changing generated notes.',
+  },
+  'acid.cutoff': {
+    title: 'Acid cutoff',
+    body: 'Sets the smoothed base frequency of the four-stage TPT low-pass filter. The filter envelope and accents open it further.',
+  },
+  'acid.resonance': {
+    title: 'Acid resonance',
+    body: 'Sets bounded feedback around the TPT filter cutoff, from subdued to strongly resonant.',
+  },
+  'acid.envAmount': {
+    title: 'Acid envelope amount',
+    body: 'Sets how many octaves the internal decay envelope opens the filter. Generated notes and MIDI remain unchanged.',
+  },
+  'acid.decay': {
+    title: 'Acid sound decay',
+    body: 'Sets the internal amplitude and filter-envelope decay while leaving generated and outgoing MIDI note duration unchanged.',
+  },
+  'acid.accent': {
+    title: 'Acid accent depth',
+    body: 'Sets the extra amplitude, filter movement, and envelope persistence applied to generated accent events.',
+  },
+  'acid.slide': {
+    title: 'Acid slide time',
+    body: 'Sets continuous portamento time when an outgoing slide event overlaps the following note. Non-slide notes retrigger.',
+  },
+  'acid.drive': {
+    title: 'Acid audio drive',
+    body: 'Adds bounded saturation before and after the internal resonant filter. It changes harmonics without changing MIDI velocity.',
   },
   'output.pan': {
     title: 'Sound panorama',

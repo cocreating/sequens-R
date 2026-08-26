@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25, and the user explicitly approved the six Drum kits by listening that day. Phase 7.3 Bass implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instruction to continue the sequence authorize these phase-boundary exceptions without approving or waiving any physical gate.
+Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. Phase 7.4 Acid implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
 
 ## 1. Outcome
 
@@ -557,4 +557,43 @@ Generated audition files are local and ignored by Git under `test-results/phase7
 | Block | Square | −18.0 | −7.3 dBTP |
 | Nightfloor | Deep | −18.0 | −8.8 dBTP |
 
-Every file has a distinct SHA-256 digest; all pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.3 awaits user listening approval and physical Android C10. Phase 7.4 Acid must not start until the user reviews these Bass references; the final legacy/cache purge remains deferred until every audible family has an approved replacement.
+Every file has a distinct SHA-256 digest; all pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. On 2026-08-26 the user instructed work to continue to the next phase after receiving the local Bass references, closing the Bass listening gate. Physical Android C10 and the final legacy/cache purge remain open.
+
+## 15. Phase 7.4 evidence · AudioWorklet Acid
+
+Implemented on 2026-08-26:
+
+- New engine-version-2 Acid presets select `procedural-acid-v2`; `legacy-acid-v1` retains the original fixed-saw/fixed-envelope worklet path until the final approved legacy purge. The released first 20 indexes plus appended Drum and Bass records remain fixed, with eleven additional Acid records appended after them.
+- The monophonic processor uses antialiased PolyBLEP saw and square sources, bounded saturation before and after the existing four-stage trapezoidal-integrator/TPT ladder, a smoothed base cutoff/resonance/envelope/decay contract, and a final DC blocker.
+- Accent depth measurably raises amplitude and filter-envelope movement. A note slides only when the preceding event requests slide and its gate overlaps the new attack; separate notes retrigger. Slide time spans 4–220 ms.
+- Worklet sound changes are time-ordered and smoothed over 12 ms. A processor-ready handshake is part of the optional voice contract, so offline bounce waits for the `MessagePort` before scheduling events; this fixes nondeterministic silent Acid exports without changing live scheduling.
+- The 12 original presets are Pulsewire, Clearcut, Hollow, Razorleaf, Rubberline, Neoncoil, Nighttrace, Scorch, Liquidstep, Pinpoint, Lowcurrent, and Glasswire.
+- A direct nonlinear benchmark compares `1x` and `2x`; `1x` is faster and remains the default. `2x` is not enabled before physical Android C10 can prove the ≤0.8 peak-load budget.
+- Contextual help now distinguishes generator Decay, which changes generated/MIDI note length, from internal Sound Decay and explains the actual waveform, filter, envelope, accent, slide, and drive DSP.
+- During full regression, the mobile move announcement was found to precede its View Transition. Status now publishes only after the transition completes, restoring deterministic DOM/order and assistive feedback.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings; Svelte autofixer reports no issue in the edited `App.svelte` logic (one unrelated pre-existing `bind:this` modernization suggestion remains);
+- unit/property tests: 89 passed across 15 files, including PolyBLEP correction, five supported sample rates from 8–192 kHz, finite/bounded/DC behavior at extreme macros, accent/slide/retrigger rules, `1x`/`2x` cost, queue smoothing/readiness, append-only catalog, compact links, and factory identity;
+- production PWA build/offline precache and bundle gate: passed at 95.40 KiB initial JavaScript gzip / 200 KiB;
+- Playwright: 44 passed. The Acid browser test uses one fixed generator seed, renders all 12 real offline WAV paths in isolated contexts, decodes PCM16, and applies the project BS.1770/true-peak/DC analyzer.
+
+Generated audition files are local and ignored by Git under `test-results/phase7.4/`:
+
+| Preset | LUFS-I | True peak |
+| --- | ---: | ---: |
+| Pulsewire | −18.0 | −3.7 dBTP |
+| Clearcut | −18.0 | −5.2 dBTP |
+| Hollow | −18.0 | −5.9 dBTP |
+| Razorleaf | −18.0 | −8.0 dBTP |
+| Rubberline | −18.0 | −6.5 dBTP |
+| Neoncoil | −18.0 | −7.4 dBTP |
+| Nighttrace | −18.0 | −6.8 dBTP |
+| Scorch | −18.0 | −5.8 dBTP |
+| Liquidstep | −18.0 | −8.0 dBTP |
+| Pinpoint | −18.0 | −5.7 dBTP |
+| Lowcurrent | −17.9 | −4.2 dBTP |
+| Glasswire | −18.0 | −7.7 dBTP |
+
+All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.4 awaits user listening approval and physical Android C10. Phase 7.5 Chords remains paused until these Acid references are reviewed; the final legacy/cache purge remains deferred until every audible family has an approved replacement.

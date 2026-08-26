@@ -39,6 +39,7 @@ export async function renderRackAudio(rack: RackState, bars: number, moduleId: s
     const voice = VOICE_FACTORY.create(context, sound, strip.input);
     if (voice !== null) voices.set(module.id, voice);
   }
+  await Promise.all(Array.from(voices.values(), (voice) => voice.ready));
   for (const note of collectWindowEvents(snapshot, 0, bars * BEATS_PER_BAR, 0)) {
     const voice = voices.get(note.moduleId);
     voice?.trigger(note.event, note.time, note.duration);

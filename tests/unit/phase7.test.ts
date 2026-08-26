@@ -23,6 +23,8 @@ import { VOICE_FACTORY } from '../../src/lib/audio/voice-factory';
 import { createSoftClipCurve, delaySecondsFor } from '../../src/lib/audio/rack-graph';
 import { DRUM_KITS, drumVariationIndex, drumVelocityGain, renderProceduralDrumLane } from '../../src/lib/audio/voices/procedural-drums';
 import { bassCutoffHz, bassVelocityGain, createBassDriveCurve, frequencyForBassMidi, planBassTrigger } from '../../src/lib/audio/voices/bass';
+import { AcidDspKernel, acidAccentDepth, acidAmplitudePeak, acidCutoffHz, acidDecaySeconds, acidFilterEnvelopePeak, acidSlideSeconds, polyBlep, type AcidDspParams } from '../../src/lib/audio/acid-dsp';
+import { frequencyForAcidMidi, planAcidTransition } from '../../src/lib/audio/voices/acid';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
@@ -402,6 +404,100 @@ describe('Phase 7.3 monophonic Bass', () => {
     expect(moduleHelpFor('sound:bass:drive', 'bass', 'Bass').body).toMatch(/waveshaper/u);
     expect(moduleHelpFor('sound:bass:drive', 'bass', 'Bass').body).toMatch(/MIDI velocity unchanged/u);
     expect(moduleHelpFor('param:drive', 'bass', 'Bass', GENERATORS.bass.paramSchema.find(({ key }) => key === 'drive')).body).not.toMatch(/waveshaper/u);
+  });
+});
+
+describe('Phase 7.4 AudioWorklet Acid', () => {
+  const presetIds = [
+    'acid-core-v2', 'acid-clean-v2', 'acid-hollow-v2', 'acid-sharp-v2',
+    'acid-rubber-v2', 'acid-animated-v2', 'acid-dark-v2', 'acid-driven-v2',
+    'acid-liquid-v2', 'acid-short-v2', 'acid-low-v2', 'acid-bright-v2',
+  ] as const;
+
+  it('keeps legacy isolated and exposes 12 original presets through the shared factory', () => {
+    const presets = presetsFor('acid');
+    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
+    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(13);
+    expect(VOICE_FACTORY.identify({ type: 'acid', sound: soundForPreset('acid', 'acid-core-v2') }).implementationId).toBe('procedural-acid-v2');
+    expect(VOICE_FACTORY.identify({ type: 'acid', sound: soundForPreset('acid', 'legacy-acid-v1') }).implementationId).toBe('legacy-acid-v1');
+  });
+
+  it('round-trips every appended Acid preset without moving released compact indexes', async () => {
+    expect(SOUND_PRESETS.slice(0, 4).map(({ id }) => id)).toEqual(['legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2']);
+    for (const presetId of presetIds) {
+      const rack = createRackState(STARTER_RACK);
+      const acid = rack.modules.find(({ type }) => type === 'acid') ?? createRackState({ ...STARTER_RACK, modules: [{ type: 'acid', seed: 0x7400_0001, params: {} }] }).modules[0]!;
+      const acidWithPreset = { ...acid, sound: soundForPreset('acid', presetId) };
+      const shareable = toShareableRack({ ...rack, modules: [...rack.modules, acidWithPreset] });
+      const encoded = await serializeRack(shareable);
+      expect(await deserializeRack(encoded)).toEqual(normalizeRack(shareable));
+      expect(encoded.byteLength).toBeLessThanOrEqual(400);
+    }
+  });
+
+  it('uses PolyBLEP correction and keeps extreme DSP finite, bounded, and DC-blocked at supported rates', () => {
+    expect(polyBlep(0, 0.01)).toBeCloseTo(-1, 6);
+    expect(polyBlep(0.5, 0.01)).toBe(0);
+    expect(polyBlep(0.999, 0.01)).toBeGreaterThan(0);
+    const extremes: AcidDspParams[] = [
+      { wave: 0, cutoff: 0, resonance: 0, envAmount: 0, decay: 0, accent: 0, slide: 0, drive: 0 },
+      { wave: 1, cutoff: 100, resonance: 100, envAmount: 100, decay: 100, accent: 100, slide: 100, drive: 100 },
+    ];
+    for (const rate of [8_000, 44_100, 48_000, 96_000, 192_000]) {
+      for (const params of extremes) {
+        const kernel = new AcidDspKernel(rate);
+        let peak = 0;
+        let tailSum = 0;
+        const length = Math.round(rate * 0.12);
+        for (let index = 0; index < length; index += 1) {
+          const sample = kernel.process(110, 1, 1, true, params);
+          expect(Number.isFinite(sample)).toBe(true);
+          peak = Math.max(peak, Math.abs(sample));
+          if (index >= length / 2) tailSum += sample;
+        }
+        expect(peak).toBeLessThanOrEqual(1.2);
+        expect(Math.abs(tailSum / (length / 2))).toBeLessThan(0.02);
+      }
+    }
+  });
+
+  it('makes accent deeper, slides only from an overlapping outgoing slide, and bounds macro mappings', () => {
+    expect(acidAmplitudePeak(true, 100)).toBeGreaterThan(acidAmplitudePeak(false, 100));
+    expect(acidFilterEnvelopePeak(true)).toBeGreaterThan(acidFilterEnvelopePeak(false));
+    expect(acidAccentDepth(true, 100)).toBe(1);
+    expect(planAcidTransition(1.2, true, 1, 100)).toEqual({ overlaps: true, glides: true, retriggers: false, glideSeconds: 0.22 });
+    expect(planAcidTransition(1.2, false, 1, 100)).toEqual({ overlaps: true, glides: false, retriggers: true, glideSeconds: 0 });
+    expect(planAcidTransition(1, true, 1, 100).glides).toBe(false);
+    expect(acidCutoffHz(-1)).toBe(acidCutoffHz(0));
+    expect(acidDecaySeconds(101)).toBe(acidDecaySeconds(100));
+    expect(acidSlideSeconds(101)).toBe(acidSlideSeconds(100));
+    expect(frequencyForAcidMidi(0)).toBeGreaterThan(8);
+    expect(frequencyForAcidMidi(127)).toBeLessThan(13_000);
+  });
+
+  it('benchmarks 1x below 2x nonlinear processing and keeps 1x as the worklet default', () => {
+    const params = soundForPreset('acid', 'acid-driven-v2').params as unknown as AcidDspParams;
+    const benchmark = (oversampling: 1 | 2): number => {
+      const kernel = new AcidDspKernel(48_000);
+      const started = performance.now();
+      for (let index = 0; index < 80_000; index += 1) kernel.process(55 + index % 330, 0.8, 0.7, index % 7 === 0, params, oversampling);
+      return performance.now() - started;
+    };
+    benchmark(1);
+    benchmark(2);
+    const oneX = benchmark(1);
+    const twoX = benchmark(2);
+    expect(oneX).toBeLessThan(twoX);
+    const source = readFileSync(new URL('../../src/lib/audio/acid.worklet.ts', import.meta.url), 'utf8');
+    expect(source).toContain('this.#currentParams, 1)');
+    expect(source).toContain("this.port.postMessage({ type: 'ready' })");
+    expect(source).toContain('this.#soundChanges.sort');
+    expect(source).toContain('Math.exp(-1 / (sampleRate * 0.012))');
+    const bounceSource = readFileSync(new URL('../../src/lib/export/bounce.ts', import.meta.url), 'utf8');
+    expect(bounceSource).toContain('await Promise.all(Array.from(voices.values(), (voice) => voice.ready))');
+    expect(moduleHelpFor('sound:acid:drive', 'acid', 'Acid').body).toMatch(/before and after/u);
+    expect(moduleHelpFor('param:decay', 'acid', 'Acid', GENERATORS.acid.paramSchema.find(({ key }) => key === 'decay')).body).toMatch(/MIDI note length/u);
   });
 });
 

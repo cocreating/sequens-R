@@ -119,13 +119,14 @@ Status: implemented with automated acceptance on 2026-08-25; physical Android ac
 
 ## AD-010 · Phase 7 sound identity and mix
 
-Status: specified and accepted on 2026-08-25; Phase 7.0 accepted, Phase 7.1–7.2 implementation/automated evidence completed, Drum and Bass listening approved, and Phase 7.4 Acid implementation/objective evidence completed by 2026-08-26. Mixer/Acid listening, physical Android C10, and later voice subphases remain open.
+Status: specified and accepted on 2026-08-25; Phase 7.0 accepted, Phase 7.1–7.2 implementation/automated evidence completed, Drum, Bass, and Acid listening approved, and Phase 7.5 Chords implementation/objective evidence completed by 2026-08-26. Mixer/Chords listening, physical Android C10, and later voice subphases remain open.
 
 - Phase 7 improves the internal monitor without changing deterministic pattern generation, Web MIDI events, MIDI clock, or SMF output. Generator parameters and sound parameters become separate validated contracts.
 - Project schema 4 and patch schema 3 add versioned sound state and rack mix state. Earlier documents/links select append-only `legacy-<type>-v1` presets; new timbres are never imposed silently on saved work. A deliberate sound-upgrade action is reversible through Undo.
 - `RackModule.level` remains top-level for compatibility. `SoundState` adds engine version, stable preset ID, quantized macros, pan, and shared delay/reverb sends. `RackMixState` owns the single delay, reverb, and master configuration even when multiple Mixer UI modules exist.
 - One `VoiceFactory` accepts `BaseAudioContext` and is the only voice mapping used by live monitoring and offline bounce. Continuous sound updates use short AudioParam ramps; topology/preset changes prepare outside scheduler callbacks and enter at the next note attack with a bounded crossfade.
 - AudioWorklet voices expose readiness and a post-scheduling message barrier to offline rendering. Readiness/synchronization failure rejects deterministically, bounce releases every voice and shared graph through `finally`, and transport panic preserves future time-ordered sound changes while cancelling active notes.
+- Chords uses eight persistent dual-oscillator/filter/envelope slots and one shared chorus contribution. Allocation selects an available slot, otherwise the quietest and then oldest voice, while protecting new attacks so supported five-note voicings remain intact.
 - Bass, Acid, Chords, Arp, Piano, Drums, and Euclid receive specialized voices in independent gated subphases. Mixer edits one shared graph. CC Control and Mod remain silent and do not gain internal modulation targets.
 - The procedural engine is the acceptance baseline. Optional sample/impulse assets must be local, provenance-documented, legally redistributable, and removable without breaking the phase DoD.
 - Released presets target −18 LUFS-I ±1 LU and ≤ −1 dBTP on deterministic eight-bar family phrases, using ITU-R BS.1770-5 measurements. Loudness matching precedes mandatory human A/B approval.

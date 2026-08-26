@@ -25,6 +25,7 @@ import { DRUM_KITS, drumVariationIndex, drumVelocityGain, renderProceduralDrumLa
 import { bassCutoffHz, bassVelocityGain, createBassDriveCurve, frequencyForBassMidi, planBassTrigger } from '../../src/lib/audio/voices/bass';
 import { AcidDspKernel, acidAccentDepth, acidAmplitudePeak, acidCutoffHz, acidDcBlockCoefficient, acidDecaySeconds, acidFilterEnvelopePeak, acidSlideSeconds, polyBlep, type AcidDspParams } from '../../src/lib/audio/acid-dsp';
 import { frequencyForAcidMidi, planAcidTransition } from '../../src/lib/audio/voices/acid';
+import { chordAttackSeconds, chordCutoffHz, chordEnvelopeLevelAt, chordReleaseSeconds, chordVelocityGain, frequencyForChordMidi, selectChordVoiceSlot, type ChordVoiceAllocationState } from '../../src/lib/audio/voices/chords';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
@@ -509,6 +510,90 @@ describe('Phase 7.4 AudioWorklet Acid', () => {
     expect(bounceSource).toContain('} finally {');
     expect(moduleHelpFor('sound:acid:drive', 'acid', 'Acid').body).toMatch(/before and after/u);
     expect(moduleHelpFor('param:decay', 'acid', 'Acid', GENERATORS.acid.paramSchema.find(({ key }) => key === 'decay')).body).toMatch(/MIDI note length/u);
+  });
+});
+
+describe('Phase 7.5 polyphonic Chords', () => {
+  const presetIds = [
+    'chords-core-v2', 'chords-pad-v2', 'chords-keys-v2', 'chords-organ-v2', 'chords-glass-v2',
+    'chords-muted-v2', 'chords-wide-v2', 'chords-dark-v2', 'chords-bright-v2', 'chords-drift-v2',
+  ] as const;
+
+  it('keeps legacy isolated and exposes ten original Chords presets through one factory identity', () => {
+    const presets = presetsFor('chords');
+    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
+    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(11);
+    expect(VOICE_FACTORY.identify({ type: 'chords', sound: soundForPreset('chords', 'chords-core-v2') }).implementationId).toBe('procedural-chords-v2');
+    expect(VOICE_FACTORY.identify({ type: 'chords', sound: soundForPreset('chords', 'legacy-chords-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
+  });
+
+  it('round-trips every appended preset without moving released compact indexes', async () => {
+    expect(SOUND_PRESETS.slice(0, 8).map(({ id }) => id)).toEqual([
+      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
+      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
+    ]);
+    for (const presetId of presetIds) {
+      const rack = createRackState(STARTER_RACK);
+      rack.modules[2] = { ...rack.modules[2]!, sound: soundForPreset('chords', presetId) };
+      const shareable = toShareableRack(rack);
+      const encoded = await serializeRack(shareable);
+      expect(await deserializeRack(encoded)).toEqual(normalizeRack(shareable));
+      expect(encoded.byteLength).toBeLessThanOrEqual(400);
+    }
+  });
+
+  it('uses deterministic quietest/oldest stealing and bounded musical mappings', () => {
+    const slots: ChordVoiceAllocationState[] = Array.from({ length: 8 }, (_, index) => ({
+      startedAt: index,
+      attackEnd: index + 0.01,
+      gateEnd: 20,
+      releaseEnd: 21,
+      peak: index === 5 ? 0.08 : 0.2,
+    }));
+    expect(selectChordVoiceSlot(slots, 10)).toBe(5);
+    slots[5] = { ...slots[5]!, peak: 0.2 };
+    expect(selectChordVoiceSlot(slots, 10)).toBe(0);
+    const overlap: ChordVoiceAllocationState[] = Array.from({ length: 8 }, (_, index) => ({
+      startedAt: index < 5 ? 0 : Number.NEGATIVE_INFINITY,
+      attackEnd: index < 5 ? 0.1 : 0,
+      gateEnd: index < 5 ? 9.5 : 0,
+      releaseEnd: index < 5 ? 11 : 0,
+      peak: index < 5 ? 0.18 : 0,
+    }));
+    const allocated: number[] = [];
+    for (let note = 0; note < 5; note += 1) {
+      const selected = selectChordVoiceSlot(overlap, 10);
+      allocated.push(selected);
+      overlap[selected] = { startedAt: 10, attackEnd: 10.2, gateEnd: 11, releaseEnd: 12, peak: 0.25 };
+    }
+    expect(new Set(allocated).size).toBe(5);
+    expect(chordEnvelopeLevelAt({ startedAt: 0, attackEnd: 1, gateEnd: 2, releaseEnd: 3, peak: 1 }, 0.5)).toBeCloseTo(0.5, 6);
+    expect(chordAttackSeconds(-1)).toBe(chordAttackSeconds(0));
+    expect(chordReleaseSeconds(101)).toBe(chordReleaseSeconds(100));
+    expect(chordCutoffHz(-1)).toBe(chordCutoffHz(0));
+    expect(chordCutoffHz(101)).toBe(chordCutoffHz(100));
+    expect(frequencyForChordMidi(0)).toBeGreaterThan(8);
+    expect(frequencyForChordMidi(127)).toBeLessThan(13_000);
+    expect(chordVelocityGain(1)).toBeLessThan(chordVelocityGain(64));
+    expect(chordVelocityGain(64)).toBeLessThan(chordVelocityGain(127));
+  });
+
+  it('preallocates eight slots and leaves generator patterns and MIDI bytes unchanged', () => {
+    const source = readFileSync(new URL('../../src/lib/audio/voices/chords.ts', import.meta.url), 'utf8');
+    expect(source).toContain('Array.from({ length: 8 }');
+    const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
+    expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|StereoPannerNode|DelayNode)/u);
+    expect(source.match(/new DelayNode/g)).toHaveLength(2);
+    expect(moduleHelpFor('sound:chords:chorus', 'chords', 'Chords').body).toMatch(/all eight voices/u);
+
+    const rack = createRackState(STARTER_RACK);
+    const beforePattern = modulePattern(rack.modules[2]!, rack.key, rack.modules);
+    const beforeSmf = createSmfType1(rack, 4);
+    const changedChords = setModuleSoundParam(rack.modules[2]!, 'width', 100);
+    const changed = { ...rack, modules: rack.modules.map((module, index) => index === 2 ? changedChords : module) };
+    expect(modulePattern(changed.modules[2]!, changed.key, changed.modules)).toEqual(beforePattern);
+    expect(createSmfType1(changed, 4)).toEqual(beforeSmf);
   });
 });
 

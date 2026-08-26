@@ -127,7 +127,7 @@ const PRESET_ROWS = [
   { id: 'legacy-acid-v1', moduleType: 'acid', label: 'Legacy Acid', params: defaultsFor('acid') },
   { id: 'acid-core-v2', moduleType: 'acid', label: 'Pulsewire', params: { wave: 0, cutoff: 55, resonance: 64, envAmount: 60, decay: 45, accent: 65, slide: 35, drive: 12 }, outputTrimDb: 14.2 },
   { id: 'legacy-chords-v1', moduleType: 'chords', label: 'Legacy Chords', params: defaultsFor('chords') },
-  { id: 'chords-core-v2', moduleType: 'chords', label: 'Core Chords', params: defaultsFor('chords') },
+  { id: 'chords-core-v2', moduleType: 'chords', label: 'Velvetframe', params: { tone: 48, attack: 28, release: 62, width: 55, chorus: 24 }, outputTrimDb: 10.6 },
   { id: 'legacy-mixer-v1', moduleType: 'mixer', label: 'Legacy silent control', params: defaultsFor('mixer') },
   { id: 'silent-mixer-v2', moduleType: 'mixer', label: 'Silent control', params: defaultsFor('mixer') },
   { id: 'legacy-arp-v1', moduleType: 'arp', label: 'Legacy Arp', params: defaultsFor('arp') },
@@ -163,6 +163,15 @@ const PRESET_ROWS = [
   { id: 'acid-short-v2', moduleType: 'acid', label: 'Pinpoint', params: { wave: 1, cutoff: 76, resonance: 38, envAmount: 35, decay: 18, accent: 90, slide: 8, drive: 35 }, outputTrimDb: 9.1 },
   { id: 'acid-low-v2', moduleType: 'acid', label: 'Lowcurrent', params: { wave: 0, cutoff: 25, resonance: 60, envAmount: 40, decay: 85, accent: 45, slide: 50, drive: 15 }, outputTrimDb: 12.2 },
   { id: 'acid-bright-v2', moduleType: 'acid', label: 'Glasswire', params: { wave: 0, cutoff: 85, resonance: 92, envAmount: 65, decay: 40, accent: 70, slide: 32, drive: 45 }, outputTrimDb: 13.9 },
+  { id: 'chords-pad-v2', moduleType: 'chords', label: 'Slowbloom', params: { tone: 38, attack: 72, release: 82, width: 68, chorus: 46 }, outputTrimDb: 9.4 },
+  { id: 'chords-keys-v2', moduleType: 'chords', label: 'Softpress', params: { tone: 58, attack: 8, release: 34, width: 38, chorus: 12 }, outputTrimDb: 8.5 },
+  { id: 'chords-organ-v2', moduleType: 'chords', label: 'Drawline', params: { tone: 42, attack: 0, release: 48, width: 18, chorus: 20 }, outputTrimDb: 10.8 },
+  { id: 'chords-glass-v2', moduleType: 'chords', label: 'Prismveil', params: { tone: 88, attack: 3, release: 74, width: 72, chorus: 38 }, outputTrimDb: 11.1 },
+  { id: 'chords-muted-v2', moduleType: 'chords', label: 'Feltcut', params: { tone: 30, attack: 2, release: 8, width: 32, chorus: 5 }, outputTrimDb: 10.6 },
+  { id: 'chords-wide-v2', moduleType: 'chords', label: 'Horizon', params: { tone: 62, attack: 36, release: 70, width: 100, chorus: 72 }, outputTrimDb: 8.7 },
+  { id: 'chords-dark-v2', moduleType: 'chords', label: 'Undercanopy', params: { tone: 18, attack: 52, release: 88, width: 64, chorus: 34 }, outputTrimDb: 7.5 },
+  { id: 'chords-bright-v2', moduleType: 'chords', label: 'Daybreak', params: { tone: 78, attack: 12, release: 46, width: 58, chorus: 18 }, outputTrimDb: 10.7 },
+  { id: 'chords-drift-v2', moduleType: 'chords', label: 'Cloudcurrent', params: { tone: 52, attack: 60, release: 96, width: 86, chorus: 90 }, outputTrimDb: 9.7 },
 ] satisfies readonly PresetRow[];
 
 export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({

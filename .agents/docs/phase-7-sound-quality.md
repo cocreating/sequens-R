@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. Phase 7.4 Acid implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
+Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. On 2026-08-26 the user also opened the next phase after the 12 Acid references, closing the Phase 7.4 listening gate. Phase 7.5 Chords implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
 
 ## 1. Outcome
 
@@ -597,4 +597,39 @@ Generated audition files are local and ignored by Git under `test-results/phase7
 | Lowcurrent | −17.9 | −4.2 dBTP |
 | Glasswire | −18.0 | −7.7 dBTP |
 
-All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.4 awaits user listening approval and physical Android C10. Phase 7.5 Chords remains paused until these Acid references are reviewed; the final legacy/cache purge remains deferred until every audible family has an approved replacement.
+All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. On 2026-08-26 the user requested the next phase after reviewing these references, closing the Acid listening gate. Physical Android C10 and the final legacy/cache purge remain open.
+
+## 16. Phase 7.5 evidence · eight-slot Chords
+
+Implemented on 2026-08-26:
+
+- New engine-version-2 Chords presets select `procedural-chords-v2`; `legacy-chords-v1` remains isolated on the original four-slot triangle voice until the final approved legacy purge. The existing `chords-core-v2` compact index remains fixed and nine presets are appended after the Acid bank.
+- One Chords module preallocates eight persistent slots. Every slot has a bounded triangle/saw dual oscillator, velocity-sensitive amplitude and low-pass filter envelopes, and a deterministic stereo position. Trigger scheduling creates no audio nodes.
+- Allocation first uses an available slot; at the global ceiling it steals the quietest voice and resolves ties by oldest attack. Newly assigned attacks are protected from appearing artificially quiet, so current triads, sevenths, and ninths retain all their notes while older release tails yield first.
+- Tone controls oscillator blend and filter range; Attack and Release affect only the internal envelope; Width scales deterministic slot panorama; Chorus feeds all voices into one shared dual-delay/LFO contribution. The dry path remains present at every setting for mono compatibility.
+- The ten original presets are Velvetframe, Slowbloom, Softpress, Drawline, Prismveil, Feltcut, Horizon, Undercanopy, Daybreak, and Cloudcurrent, covering core/pad, keys, organ-like, glass, muted, wide, dark, bright, and drifting roles.
+- Generator algorithms, pattern goldens, outgoing MIDI note timing/velocity, and SMF bytes remain unchanged. Live monitoring and offline bounce select the same factory implementation.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings;
+- unit/property tests: 93 passed across 15 files, including append-only catalog/share round trips, bounded parameter mappings, velocity response, eight-slot allocation, five-note overlap protection, zero trigger-time node construction, contextual help, and byte-identical generator/MIDI behavior;
+- production PWA build/offline precache and bundle gate: passed at 97.77 KiB initial JavaScript gzip / 200 KiB;
+- Playwright: 45 passed. The Chords browser test renders all ten real WAV paths, cycles through triad/seventh/ninth/suspended voicings, verifies distinct SHA-256 digests, and applies loudness, true-peak, DC, and mono-retention gates.
+
+Generated audition files are local and ignored by Git under `test-results/phase7.5/`:
+
+| Preset | LUFS-I | True peak |
+| --- | ---: | ---: |
+| Velvetframe | −18.0 | −9.9 dBTP |
+| Slowbloom | −18.0 | −9.7 dBTP |
+| Softpress | −18.0 | −8.3 dBTP |
+| Drawline | −18.0 | −9.8 dBTP |
+| Prismveil | −18.0 | −9.6 dBTP |
+| Feltcut | −18.0 | −9.9 dBTP |
+| Horizon | −18.0 | −10.2 dBTP |
+| Undercanopy | −18.0 | −9.2 dBTP |
+| Daybreak | −18.0 | −9.6 dBTP |
+| Cloudcurrent | −18.0 | −9.4 dBTP |
+
+All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, ≤ −60 dBFS DC, and mono-retention gates. Phase 7.5 awaits user listening approval and physical Android C10. Phase 7.6 Arp remains paused until these Chords references are reviewed; the final legacy/cache purge remains deferred until every audible family has an approved replacement.

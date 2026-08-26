@@ -6,6 +6,7 @@ import { DrumKitVoice } from './voices/drumkit';
 import { PolyVoice } from './voices/poly';
 import { ProceduralDrumVoice } from './voices/procedural-drums';
 import { BassVoice } from './voices/bass';
+import { ChordVoice } from './voices/chords';
 
 export interface VoiceModuleSnapshot {
   type: ModuleType;
@@ -25,7 +26,7 @@ export interface InternalVoice {
 export interface VoiceIdentity {
   moduleType: ModuleType;
   presetId: string;
-  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
+  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'procedural-chords-v2' | 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
 }
 
 type LegacyVoice = LegacyAcidVoice | DrumKitVoice | PolyVoice;
@@ -73,6 +74,9 @@ export class VoiceFactory {
     if (module.type === 'acid' && module.sound.presetId !== 'legacy-acid-v1') {
       return new AcidVoice(context, destination, module.sound);
     }
+    if (module.type === 'chords' && module.sound.presetId !== 'legacy-chords-v1') {
+      return new ChordVoice(context, destination, module.sound);
+    }
     const voice = module.type === 'drums'
       ? new DrumKitVoice(context, destination)
       : module.type === 'acid'
@@ -89,6 +93,8 @@ export class VoiceFactory {
         ? module.sound.presetId === 'legacy-drums-v1' ? 'legacy-drums-v1' : 'procedural-drums-v2'
         : module.type === 'acid'
           ? module.sound.presetId === 'legacy-acid-v1' ? 'legacy-acid-v1' : 'procedural-acid-v2'
+          : module.type === 'chords'
+            ? module.sound.presetId === 'legacy-chords-v1' ? 'legacy-poly-triangle-v1' : 'procedural-chords-v2'
           : module.type === 'bass'
             ? module.sound.presetId === 'legacy-bass-v1' ? 'legacy-poly-square-v1' : 'procedural-bass-v2'
             : 'legacy-poly-triangle-v1';

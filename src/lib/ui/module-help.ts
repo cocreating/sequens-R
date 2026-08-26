@@ -230,6 +230,26 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
     title: 'Acid audio drive',
     body: 'Adds bounded saturation before and after the internal resonant filter. It changes harmonics without changing MIDI velocity.',
   },
+  'chords.tone': {
+    title: 'Chord tone',
+    body: 'Blends the bounded dual oscillators and sets the base low-pass cutoff. Note velocity opens each voice filter further without changing MIDI.',
+  },
+  'chords.attack': {
+    title: 'Chord attack',
+    body: 'Sets the fade-in time of each internal chord voice while leaving generated note timing and strum unchanged.',
+  },
+  'chords.release': {
+    title: 'Chord release',
+    body: 'Sets how long each internal voice fades after its note gate ends. Outgoing MIDI note length is unchanged.',
+  },
+  'chords.width': {
+    title: 'Chord width',
+    body: 'Spreads the eight deterministic voice slots across stereo. At zero, all musical material remains centered and mono-compatible.',
+  },
+  'chords.chorus': {
+    title: 'Shared chord chorus',
+    body: 'Feeds all eight voices into one bounded dual-delay chorus contribution; it does not create a separate effect graph per note.',
+  },
   'output.pan': {
     title: 'Sound panorama',
     body: 'Places this internal voice between the left and right channels. Outgoing MIDI notes are unchanged.',

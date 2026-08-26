@@ -26,6 +26,8 @@ import { bassCutoffHz, bassVelocityGain, createBassDriveCurve, frequencyForBassM
 import { AcidDspKernel, acidAccentDepth, acidAmplitudePeak, acidCutoffHz, acidDcBlockCoefficient, acidDecaySeconds, acidFilterEnvelopePeak, acidSlideSeconds, polyBlep, type AcidDspParams } from '../../src/lib/audio/acid-dsp';
 import { frequencyForAcidMidi, planAcidTransition } from '../../src/lib/audio/voices/acid';
 import { chordAttackSeconds, chordCutoffHz, chordEnvelopeLevelAt, chordReleaseSeconds, chordVelocityGain, frequencyForChordMidi, selectChordVoiceSlot, type ChordVoiceAllocationState } from '../../src/lib/audio/voices/chords';
+import { arpCutoffHz, arpDecaySeconds, arpReleaseEndOffset, arpVelocityGain, frequencyForArpMidi, selectArpVoiceSlot, type ArpVoiceSlotState } from '../../src/lib/audio/voices/arp';
+import { frequencyForPianoMidi, pianoDecaySeconds, pianoModulationDepthHz, pianoToneCutoffHz, pianoVelocityGain, selectPianoVoiceSlot, type PianoVoiceSlotState } from '../../src/lib/audio/voices/piano';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
@@ -38,7 +40,9 @@ import { STARTER_RACK } from '../../src/lib/share/starter';
 import type { ShareableRack } from '../../src/lib/share/types';
 import {
   createRackState,
+  createModule,
   modulePattern,
+  setManualPattern,
   setModuleSoundParam,
   toEngineSnapshot,
   toShareableRack,
@@ -593,6 +597,171 @@ describe('Phase 7.5 polyphonic Chords', () => {
     const changedChords = setModuleSoundParam(rack.modules[2]!, 'width', 100);
     const changed = { ...rack, modules: rack.modules.map((module, index) => index === 2 ? changedChords : module) };
     expect(modulePattern(changed.modules[2]!, changed.key, changed.modules)).toEqual(beforePattern);
+    expect(createSmfType1(changed, 4)).toEqual(beforeSmf);
+  });
+});
+
+describe('Phase 7.6 four-slot Arp', () => {
+  const presetIds = [
+    'arp-core-v2', 'arp-soft-v2', 'arp-crystal-v2', 'arp-pixel-v2',
+    'arp-needle-v2', 'arp-copper-v2', 'arp-dark-v2', 'arp-quick-v2',
+  ] as const;
+
+  it('keeps legacy isolated and exposes eight original presets through one factory identity', () => {
+    const presets = presetsFor('arp');
+    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
+    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(9);
+    expect(VOICE_FACTORY.identify({ type: 'arp', sound: soundForPreset('arp', 'arp-core-v2') }).implementationId).toBe('procedural-arp-v2');
+    expect(VOICE_FACTORY.identify({ type: 'arp', sound: soundForPreset('arp', 'legacy-arp-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
+  });
+
+  it('round-trips appended presets without moving released compact indexes', async () => {
+    expect(SOUND_PRESETS.slice(0, 12).map(({ id }) => id)).toEqual([
+      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
+      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
+      'legacy-mixer-v1', 'silent-mixer-v2', 'legacy-arp-v1', 'arp-core-v2',
+    ]);
+    for (const presetId of presetIds) {
+      const rack = createRackState({ ...STARTER_RACK, modules: [{ type: 'arp', seed: 0x7600_0001, params: { followChords: 0 }, sound: soundForPreset('arp', presetId) }] });
+      const shareable = toShareableRack(rack);
+      const encoded = await serializeRack(shareable);
+      expect(await deserializeRack(encoded)).toEqual(normalizeRack(shareable));
+      expect(encoded.byteLength).toBeLessThanOrEqual(400);
+    }
+  });
+
+  it('cycles four slots deterministically at 300 BPM and keeps velocity/gate mappings bounded', () => {
+    const slots: ArpVoiceSlotState[] = Array.from({ length: 4 }, () => ({ startedAt: Number.NEGATIVE_INFINITY, releaseEnd: 0 }));
+    const allocations: number[] = [];
+    const thirtySecondSeconds = 60 / 300 / 8;
+    for (let note = 0; note < 32; note += 1) {
+      const time = note * thirtySecondSeconds;
+      const selected = selectArpVoiceSlot(slots, time);
+      allocations.push(selected);
+      slots[selected] = { startedAt: time, releaseEnd: time + 0.18 };
+    }
+    expect(allocations.slice(0, 8)).toEqual([0, 1, 2, 3, 0, 1, 2, 3]);
+    expect(Math.max(...allocations)).toBe(3);
+    expect(arpReleaseEndOffset(0.4, 50)).toBeGreaterThan(arpReleaseEndOffset(0.1, 50));
+    expect(arpDecaySeconds(-1)).toBe(arpDecaySeconds(0));
+    expect(arpCutoffHz(101)).toBe(arpCutoffHz(100));
+    expect(frequencyForArpMidi(0)).toBeGreaterThan(8);
+    expect(frequencyForArpMidi(127)).toBeLessThan(13_000);
+    expect(arpVelocityGain(1)).toBeLessThan(arpVelocityGain(64));
+    expect(arpVelocityGain(64)).toBeLessThan(arpVelocityGain(127));
+  });
+
+  it('preallocates four slots, uses only the shared rack delay, and preserves generator/MIDI bytes', () => {
+    const source = readFileSync(new URL('../../src/lib/audio/voices/arp.ts', import.meta.url), 'utf8');
+    expect(source).toContain('Array.from({ length: 4 }');
+    const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
+    expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|StereoPannerNode|DelayNode)/u);
+    expect(source).not.toContain('new DelayNode');
+    expect(moduleHelpFor('sound:arp:decay', 'arp', 'Arp').body).toMatch(/Generator Gate/u);
+    expect(moduleHelpFor('sound:output:delaySend', 'arp', 'Arp').body).toMatch(/shared/u);
+
+    const rack = createRackState({ ...STARTER_RACK, modules: [{ type: 'arp', seed: 0x7600_0002, params: { followChords: 0 } }] });
+    const beforePattern = modulePattern(rack.modules[0]!, rack.key, rack.modules);
+    const beforeSmf = createSmfType1(rack, 4);
+    const withSound = setModuleSoundParam(rack.modules[0]!, 'decay', 100);
+    const changedArp = { ...withSound, sound: { ...withSound.sound, delaySend: 75 } };
+    const changed = { ...rack, modules: [changedArp] };
+    expect(modulePattern(changed.modules[0]!, changed.key, changed.modules)).toEqual(beforePattern);
+    expect(createSmfType1(changed, 4)).toEqual(beforeSmf);
+
+    const shortGate = { ...rack.modules[0]!, params: { ...rack.modules[0]!.params, gate: 5 } };
+    const longGate = { ...rack.modules[0]!, params: { ...rack.modules[0]!.params, gate: 100 } };
+    const shortPattern = modulePattern(shortGate, rack.key, [shortGate]);
+    const longPattern = modulePattern(longGate, rack.key, [longGate]);
+    expect(shortPattern.events.map(({ startStep, pitch, velocity }) => ({ startStep, pitch, velocity })))
+      .toEqual(longPattern.events.map(({ startStep, pitch, velocity }) => ({ startStep, pitch, velocity })));
+    expect(shortPattern.events.every((event, index) => event.durationSteps < longPattern.events[index]!.durationSteps)).toBe(true);
+  });
+});
+
+describe('Phase 7.7 eight-voice electric Piano', () => {
+  const presetIds = [
+    'piano-core-v2', 'piano-soft-v2', 'piano-bell-v2', 'piano-tine-v2',
+    'piano-muted-v2', 'piano-dark-v2', 'piano-bright-v2', 'piano-tremolo-v2',
+  ] as const;
+  const phrase = {
+    lengthSteps: 16,
+    stepsPerBeat: 4,
+    events: Array.from({ length: 8 }, (_, index) => ({
+      startStep: index,
+      durationSteps: 2,
+      pitch: 60 + [0, 4, 7, 11, 14, 11, 7, 4][index]!,
+      velocity: 54 + index * 9,
+    })),
+  } as const;
+
+  it('keeps legacy isolated and exposes eight original presets through one factory identity', () => {
+    const presets = presetsFor('piano');
+    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
+    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(9);
+    expect(VOICE_FACTORY.identify({ type: 'piano', sound: soundForPreset('piano', 'piano-core-v2') }).implementationId).toBe('procedural-piano-v2');
+    expect(VOICE_FACTORY.identify({ type: 'piano', sound: soundForPreset('piano', 'legacy-piano-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
+  });
+
+  it('round-trips every appended preset and hand-authored phrase through project JSON without moving released indexes', () => {
+    expect(SOUND_PRESETS.slice(0, 16).map(({ id }) => id)).toEqual([
+      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
+      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
+      'legacy-mixer-v1', 'silent-mixer-v2', 'legacy-arp-v1', 'arp-core-v2',
+      'legacy-euclid-v1', 'euclid-core-v2', 'legacy-piano-v1', 'piano-core-v2',
+    ]);
+    for (const presetId of presetIds) {
+      const piano = setManualPattern(createModule('piano', 0x7700_0001, undefined, soundForPreset('piano', presetId)), phrase);
+      const rack = createRackState(STARTER_RACK);
+      rack.modules.push(piano);
+      const restored = projectFromJson(projectToJson(createProject(rack, 'Piano reference')));
+      const restoredPiano = restored.racks[0]!.state.modules.at(-1)!;
+      expect(restoredPiano.sound).toEqual(piano.sound);
+      expect(modulePattern(restoredPiano, restored.racks[0]!.state.key, restored.racks[0]!.state.modules)).toEqual(phrase);
+    }
+  });
+
+  it('allocates all eight simultaneous strikes before deterministic stealing and bounds velocity brightness', () => {
+    const slots: PianoVoiceSlotState[] = Array.from({ length: 8 }, () => ({ startedAt: Number.NEGATIVE_INFINITY, releaseEnd: 0 }));
+    const allocations: number[] = [];
+    for (let note = 0; note < 8; note += 1) {
+      const selected = selectPianoVoiceSlot(slots, 1);
+      allocations.push(selected);
+      slots[selected] = { startedAt: 1, releaseEnd: 2.5 };
+    }
+    expect(allocations).toEqual([0, 1, 2, 3, 4, 5, 6, 7]);
+    expect(selectPianoVoiceSlot(slots, 1.5)).toBe(0);
+    expect(pianoDecaySeconds(-1)).toBe(pianoDecaySeconds(0));
+    expect(pianoDecaySeconds(101)).toBe(pianoDecaySeconds(100));
+    expect(pianoToneCutoffHz(-1)).toBe(pianoToneCutoffHz(0));
+    expect(pianoToneCutoffHz(101)).toBe(pianoToneCutoffHz(100));
+    expect(frequencyForPianoMidi(0)).toBeGreaterThan(8);
+    expect(frequencyForPianoMidi(127)).toBeLessThan(13_000);
+    expect(pianoVelocityGain(20)).toBeLessThan(pianoVelocityGain(110));
+    expect(pianoModulationDepthHz(440, 70, 20)).toBeLessThan(pianoModulationDepthHz(440, 70, 110));
+    expect(pianoModulationDepthHz(440, 20, 110)).toBeLessThan(pianoModulationDepthHz(440, 90, 110));
+  });
+
+  it('preallocates eight FM/partial slots, shares tremolo, clears panic, and preserves Piano MIDI bytes', () => {
+    const source = readFileSync(new URL('../../src/lib/audio/voices/piano.ts', import.meta.url), 'utf8');
+    expect(source).toContain('Array.from({ length: 8 }');
+    const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
+    expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|StereoPannerNode|DelayNode)/u);
+    expect(source.match(/this\.#tremoloLfo = new OscillatorNode/gu)).toHaveLength(1);
+    expect(source).toContain('slot.releaseEnd = time');
+    expect(moduleHelpFor('sound:piano:bell', 'piano', 'Piano roll').body).toMatch(/bounded FM/u);
+    expect(moduleHelpFor('sound:piano:tremolo', 'piano', 'Piano roll').body).toMatch(/all eight Piano voices/u);
+
+    const piano = setManualPattern(createModule('piano', 0x7700_0002), phrase);
+    const rack = createRackState(STARTER_RACK);
+    rack.modules.push(piano);
+    const beforePattern = modulePattern(piano, rack.key, rack.modules);
+    const beforeSmf = createSmfType1(rack, 4);
+    const changedPiano = setModuleSoundParam(piano, 'bell', 100);
+    const changed = { ...rack, modules: rack.modules.map((module) => module.id === piano.id ? changedPiano : module) };
+    expect(modulePattern(changedPiano, changed.key, changed.modules)).toEqual(beforePattern);
     expect(createSmfType1(changed, 4)).toEqual(beforeSmf);
   });
 });

@@ -250,6 +250,38 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
     title: 'Shared chord chorus',
     body: 'Feeds all eight voices into one bounded dual-delay chorus contribution; it does not create a separate effect graph per note.',
   },
+  'arp.tone': {
+    title: 'Arp tone',
+    body: 'Sets the base cutoff of the dedicated four-slot pluck voice without changing generated pitches or outgoing MIDI.',
+  },
+  'arp.brightness': {
+    title: 'Arp brightness',
+    body: 'Sets the velocity-sensitive filter snap and resonance at each internal pluck attack.',
+  },
+  'arp.decay': {
+    title: 'Arp sound decay',
+    body: 'Sets the internal pluck envelope decay. Generator Gate still determines note duration and outgoing MIDI note length.',
+  },
+  'arp.character': {
+    title: 'Arp character',
+    body: 'Blends the preallocated triangle and square sources for a softer or more percussive harmonic attack.',
+  },
+  'piano.tone': {
+    title: 'Piano tone',
+    body: 'Sets the low-pass range of the eight-voice electric-piano engine. Higher note velocity still opens each voice further.',
+  },
+  'piano.bell': {
+    title: 'Piano bell',
+    body: 'Raises the bounded FM strike and upper partial level without changing the pitch or velocity stored in the Piano roll.',
+  },
+  'piano.decay': {
+    title: 'Piano decay',
+    body: 'Sets how long the internal struck-key envelope rings before returning fully to silence.',
+  },
+  'piano.tremolo': {
+    title: 'Shared piano tremolo',
+    body: 'Sets the depth and speed of one shared amplitude LFO for all eight Piano voices; it does not create modulation nodes per note.',
+  },
   'output.pan': {
     title: 'Sound panorama',
     body: 'Places this internal voice between the left and right channels. Outgoing MIDI notes are unchanged.',

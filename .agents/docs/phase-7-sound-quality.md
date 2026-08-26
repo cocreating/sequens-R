@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. On 2026-08-26 the user also opened the next phase after the 12 Acid references, closing the Phase 7.4 listening gate. Phase 7.5 Chords implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
+Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. The user subsequently opened each next phase after the Acid, Chords, and Arp references, closing those listening gates. Phase 7.7 Piano implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
 
 ## 1. Outcome
 
@@ -632,4 +632,70 @@ Generated audition files are local and ignored by Git under `test-results/phase7
 | Daybreak | −18.0 | −9.6 dBTP |
 | Cloudcurrent | −18.0 | −9.4 dBTP |
 
-All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, ≤ −60 dBFS DC, and mono-retention gates. Phase 7.5 awaits user listening approval and physical Android C10. Phase 7.6 Arp remains paused until these Chords references are reviewed; the final legacy/cache purge remains deferred until every audible family has an approved replacement.
+All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, ≤ −60 dBFS DC, and mono-retention gates. On 2026-08-26 the user requested the next phase after reviewing these references, closing the Chords listening gate. Physical Android C10 and the final legacy/cache purge remain open.
+
+## 17. Phase 7.6 evidence · four-slot Arp
+
+Implemented on 2026-08-26:
+
+- New engine-version-2 Arp presets select `procedural-arp-v2`; `legacy-arp-v1` remains isolated on the original four-slot triangle voice until the final approved legacy purge. The existing `arp-core-v2` compact index remains fixed and seven presets are appended after the Chords bank.
+- One Arp module preallocates four persistent triangle/square oscillator, filter, envelope, and panorama slots. Attacks are 2.2 ms; velocity controls level and filter snap; generator Gate controls audible duration while Sound Decay shapes the internal pluck tail. Trigger scheduling creates no audio nodes.
+- Slot allocation uses available voices first and then the earliest-ending/oldest slot. A simulated 1/32 pattern at 300 BPM schedules every attack while active voice count remains capped at four; panic ramps every slot to zero and clears its allocation state.
+- Tone controls the base low-pass range, Brightness controls the velocity-sensitive filter excursion/resonance, Decay controls the internal pluck envelope, and Character blends the persistent triangle/square sources. The voice creates no `DelayNode`; its optional Delay send uses the rack's single tempo-synchronised return.
+- The eight original presets are Threadlight, Dewpluck, Crystalstep, Softpixel, Needledrop, Copperkey, Nightbead, and Quickglass, spanning soft, glassy, compact, percussive, metallic, dark, and rapid roles.
+- Generator direction/rate/span/gate/follow behavior, pitch, velocity, pattern goldens, and SMF output remain unchanged by sound macros and shared sends. Short/long Gate tests preserve attack/pitch/velocity sequences while changing only note duration.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings;
+- unit/property tests: 97 passed across 15 files, including append-only catalog/share round trips, bounded mappings, velocity/gate response, four-slot 300 BPM allocation, zero trigger-time node construction, shared-delay topology, contextual help, and unchanged sound-param generator/MIDI behavior;
+- production PWA build/offline precache and bundle gate: passed at 99.03 KiB initial JavaScript gzip / 200 KiB;
+- Playwright: the Phase 7.6 Arp test passed and the full run completed 45 of 46 tests. The remaining existing mobile critical-path timing assertion measured 37–71 ms scheduler-message jitter under concurrent desktop load on this host, above its 20 ms gate; its earlier local baseline was 9–12 ms. This does not affect the eight Arp renders, but the gate remains explicitly open pending a quiet-host rerun and the required physical Android C10 pass.
+
+Generated audition files are local and ignored by Git under `test-results/phase7.6/`:
+
+| Preset | LUFS-I | True peak |
+| --- | ---: | ---: |
+| Threadlight | −18.0 | −4.2 dBTP |
+| Dewpluck | −18.0 | −5.0 dBTP |
+| Crystalstep | −18.0 | −4.4 dBTP |
+| Softpixel | −18.0 | −3.5 dBTP |
+| Needledrop | −18.1 | −1.1 dBTP |
+| Copperkey | −18.0 | −3.1 dBTP |
+| Nightbead | −18.0 | −5.0 dBTP |
+| Quickglass | −18.0 | −1.9 dBTP |
+
+All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. On 2026-08-26 the user requested the next phase after reviewing these references, closing the Arp listening gate. Physical Android C10 and the final legacy/cache purge remain open.
+
+## 18. Phase 7.7 evidence · electric Piano
+
+Implemented on 2026-08-26:
+
+- New engine-version-2 Piano presets select `procedural-piano-v2`; `legacy-piano-v1` remains isolated on the original triangle voice until the final approved legacy purge. The published `piano-core-v2` compact index remains fixed and seven presets are appended after the Arp bank.
+- One Piano module preallocates eight persistent carrier/modulator/partial, filter, envelope, and panorama slots. The bounded 3.01-ratio FM strike and second partial decay into a sine body; trigger scheduling creates no audio nodes.
+- Velocity raises both amplitude and FM/filter brightness within bounded mappings. Tone controls the low-pass range, Bell controls FM depth and upper-partial level, Decay controls the finite struck-key tail, and Tremolo controls one shared amplitude LFO for all eight voices.
+- Slot allocation uses available voices first and then the earliest-ending/oldest slot. Eight simultaneous strikes occupy all eight slots before deterministic stealing; panic ramps every envelope and modulation depth to zero and clears all allocation state.
+- The eight original presets are Amberkey, Velvet tine, Silver bell, Tinewire, Mufflekey, Night felt, Sun tine, and Reed shimmer, spanning soft, bell, tine, muted, dark, bright, and tremolo roles. No multisample assets were added, so initial-load and offline behavior remain procedural.
+- Hand-authored Piano-roll pitches, timing, velocities, local-only project semantics, and SMF bytes remain unchanged by sound macros. Every preset and the eight-note reference phrase round-trip through schema-4 project JSON.
+
+Automated verification:
+
+- strict Svelte/TypeScript: 0 errors and 0 warnings;
+- unit/property tests: 101 passed across 15 files, including append-only catalog/project round trips, eight-note allocation, bounded velocity level/brightness, finite decay mappings, zero trigger-time node construction, shared tremolo topology, panic state, contextual help, and unchanged pattern/MIDI behavior;
+- production PWA build/offline precache and bundle gate: passed at 100.41 KiB initial JavaScript gzip / 200 KiB;
+- Playwright: the Phase 7.7 Piano test passed and the full run completed 46 of 47 tests. The sole remaining existing mobile critical-path timing assertion measured 50.136 ms scheduler-message jitter under concurrent desktop load on this host, above its unchanged 20 ms gate. The Piano render and all other browser tests passed; the timing gate remains open pending a quiet-host rerun and physical Android C10.
+
+Generated audition files are local and ignored by Git under `test-results/phase7.7/`:
+
+| Preset | LUFS-I | True peak | DC |
+| --- | ---: | ---: | ---: |
+| Amberkey | −18.0 | −10.0 dBTP | −127.9 dBFS |
+| Velvet tine | −18.0 | −10.0 dBTP | −127.4 dBFS |
+| Silver bell | −18.0 | −9.9 dBTP | −126.8 dBFS |
+| Tinewire | −18.0 | −10.0 dBTP | −127.9 dBFS |
+| Mufflekey | −18.0 | −8.7 dBTP | −129.9 dBFS |
+| Night felt | −18.0 | −9.0 dBTP | −126.8 dBFS |
+| Sun tine | −18.0 | −9.7 dBTP | −127.3 dBFS |
+| Reed shimmer | −18.0 | −8.1 dBTP | −127.0 dBFS |
+
+All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.7 awaits user listening approval and physical Android C10. Phase 7.8 Euclid remains paused until these Piano references are reviewed; the final legacy/cache purge remains deferred until every audible family has an approved replacement.

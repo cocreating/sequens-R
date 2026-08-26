@@ -7,6 +7,8 @@ import { PolyVoice } from './voices/poly';
 import { ProceduralDrumVoice } from './voices/procedural-drums';
 import { BassVoice } from './voices/bass';
 import { ChordVoice } from './voices/chords';
+import { ArpVoice } from './voices/arp';
+import { PianoVoice } from './voices/piano';
 
 export interface VoiceModuleSnapshot {
   type: ModuleType;
@@ -26,7 +28,7 @@ export interface InternalVoice {
 export interface VoiceIdentity {
   moduleType: ModuleType;
   presetId: string;
-  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'procedural-chords-v2' | 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
+  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'procedural-chords-v2' | 'procedural-arp-v2' | 'procedural-piano-v2' | 'legacy-drums-v1' | 'legacy-acid-v1' | 'legacy-poly-square-v1' | 'legacy-poly-triangle-v1' | 'silent-control-v1';
 }
 
 type LegacyVoice = LegacyAcidVoice | DrumKitVoice | PolyVoice;
@@ -77,6 +79,12 @@ export class VoiceFactory {
     if (module.type === 'chords' && module.sound.presetId !== 'legacy-chords-v1') {
       return new ChordVoice(context, destination, module.sound);
     }
+    if (module.type === 'arp' && module.sound.presetId !== 'legacy-arp-v1') {
+      return new ArpVoice(context, destination, module.sound);
+    }
+    if (module.type === 'piano' && module.sound.presetId !== 'legacy-piano-v1') {
+      return new PianoVoice(context, destination, module.sound);
+    }
     const voice = module.type === 'drums'
       ? new DrumKitVoice(context, destination)
       : module.type === 'acid'
@@ -95,6 +103,10 @@ export class VoiceFactory {
           ? module.sound.presetId === 'legacy-acid-v1' ? 'legacy-acid-v1' : 'procedural-acid-v2'
           : module.type === 'chords'
             ? module.sound.presetId === 'legacy-chords-v1' ? 'legacy-poly-triangle-v1' : 'procedural-chords-v2'
+            : module.type === 'arp'
+              ? module.sound.presetId === 'legacy-arp-v1' ? 'legacy-poly-triangle-v1' : 'procedural-arp-v2'
+            : module.type === 'piano'
+              ? module.sound.presetId === 'legacy-piano-v1' ? 'legacy-poly-triangle-v1' : 'procedural-piano-v2'
           : module.type === 'bass'
             ? module.sound.presetId === 'legacy-bass-v1' ? 'legacy-poly-square-v1' : 'procedural-bass-v2'
             : 'legacy-poly-triangle-v1';

@@ -15,6 +15,7 @@ import {
   type SoundState,
 } from '../audio/sound';
 import type { RackSoundSnapshot } from '../audio/types';
+import { defaultModuleColor, type ModuleColor } from './module-color';
 
 export interface PatternSlot {
   seed: number;
@@ -40,6 +41,7 @@ export type RackModule = {
   id: string;
   type: ModuleType;
   name: string;
+  color: ModuleColor;
   seed: number;
   params: NumericParams;
   slots: PatternSlot[];
@@ -108,6 +110,7 @@ export function createModule(type: ModuleType, seed = randomSeed(), params?: Rea
     id: createId(type),
     type,
     name: DEFAULT_NAMES[type],
+    color: defaultModuleColor(type),
     seed,
     params: normalizedParams,
     slots: createSlots(type, seed, normalizedParams),

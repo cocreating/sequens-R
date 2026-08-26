@@ -128,7 +128,7 @@
   .utility-stack :is(.scene-panel, .hardware-panel, .desktop-studio-panel, .music-export, .rack-switcher, .diagnostics-panel) { margin: 0; }
   .module-list { display: grid; gap: var(--space-3); min-width: 0; }
   .module-list > article { content-visibility: auto; contain-intrinsic-size: auto none auto 44rem; }
-  article { position: relative; min-width: 0; border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm); background: var(--color-surface); overflow: clip; }
+  article { position: relative; min-width: 0; border: 1px solid var(--color-surface-raised); border-radius: var(--radius-sm); background: var(--module-background, var(--color-surface)); overflow: clip; }
   article.muted { opacity: 0.65; }
   article.soloed { border-style: double; border-width: 3px; }
   .desktop-module-readonly { padding: var(--space-4); }
@@ -150,6 +150,8 @@
   .module-menu > summary::-webkit-details-marker { display: none; }
   .module-menu-popover { position: absolute; z-index: 7; inset: calc(100% + var(--space-1)) auto auto 0; display: grid; gap: var(--space-1); width: max-content; min-width: 10rem; border: 1px solid var(--color-structure); padding: var(--space-2); background: var(--color-canvas); box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 45%); }
   .module-menu-popover button { width: 100%; justify-content: start; text-align: start; }
+  .module-color-control { display: grid; grid-template-columns: auto minmax(6rem, 1fr); gap: var(--space-2); align-items: center; min-height: var(--touch-target); color: var(--color-text-muted); font-size: 0.75rem; }
+  .module-color-control select { min-width: 0; }
   .module-help-toggle { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1); white-space: nowrap; }
   .module-help-toggle span { display: grid; place-items: center; width: 1.2rem; height: 1.2rem; border: 1px solid currentColor; border-radius: 50%; font: 800 0.75rem/1 var(--font-data); }
   .module-help-toggle[aria-pressed="true"] { border-color: var(--color-playing); background: color-mix(in oklab, var(--color-playing) 17%, var(--color-surface)); }
@@ -310,17 +312,16 @@
     .utility-stack .shortcut-list { grid-template-columns: 1fr; }
     .utility-stack .music-export { grid-template-columns: auto minmax(0, 1fr) repeat(3, auto); }
     .utility-stack .music-export > div { grid-column: 1 / -1; }
-    .module-list { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--space-4); }
-    .module-list > article { align-self: start; }
-    .module-list > article.module-full-width { grid-column: 1 / -1; }
-    .module-list > article { content-visibility: auto; contain-intrinsic-size: auto none auto 44rem; }
+    .module-list { display: block; column-count: 2; column-gap: var(--space-4); }
+    .module-list > article { width: 100%; margin-block-end: var(--space-4); break-inside: avoid; }
+    .module-list > article.module-full-width { column-span: all; }
     .module-header { grid-template-columns: auto auto auto auto minmax(5rem, 1fr); }
     .module-switches { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .parameters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .mixer-channels { grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); align-items: start; }
   }
   @media (min-width: 90rem) {
-    .module-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .module-list { column-count: 3; }
     .parameters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (prefers-reduced-motion: reduce) {

@@ -11,6 +11,7 @@ import {
   type RackModule,
   type RackState,
 } from '../state/rack';
+import { normalizeModuleColor } from '../state/module-color';
 
 export const PROJECT_SCHEMA_VERSION = 4;
 export const DEFAULT_PROJECT_NAME = 'New Project';
@@ -133,6 +134,7 @@ function normalizeModule(value: unknown, legacySound: boolean): RackModule {
     ...module,
     id: expectString(value.id, 'Module id'),
     name: expectString(value.name, 'Module name'),
+    color: normalizeModuleColor(value.color, normalizedType),
     slots,
     activeSlot,
     seed: active.seed,

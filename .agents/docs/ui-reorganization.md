@@ -1,6 +1,6 @@
 # Studio UI reorganization evidence
 
-Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded on 2026-08-25.
+Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded on 2026-08-26.
 
 This is the UI consolidation completed before Phase 6 was defined. It changes hierarchy and control presentation without changing generator output, project persistence, share encoding, or export formats. Its later transport refinement adds exact-beat Pause/Resume scheduling and MIDI Continue behavior. The resulting vertical mobile rack, disclosures, schema-driven controls, and performance-first hierarchy became the foundation used by the implemented Phase 6 mobile editors.
 
@@ -19,6 +19,8 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - An icon-only 📂 `Demos projects` action directly after project import, retaining its explicit accessible name while opening a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
 - Compact module headers whose first row follows reorder → desktop full-width → collapse → `⋯` actions → top-right editable name; monitor, solo, and mute occupy a balanced second row. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
 - Desktop-only per-module full-width toggles that span all current lanes without changing saved project or playback state.
+- Desktop modules use responsive CSS columns as a masonry-like layout (two columns from 1024 px, three from 1440 px); full-width modules span every column while mobile remains a single vertical rack.
+- Each module type receives a distinct dark default theme color. The module actions menu exposes a labelled palette selector, and the selected color is normalized, saved in project files, and restored through import/migration.
 - Musical-first module bodies: slots, mutation, grid/editor, and parameters precede `Output & advanced` routing, seed, and automatic mutation controls.
 - Schema-driven control language:
   - rotary native ranges for Swing, Humanize, Density, Fill, Drive, Gate, Decay, Strum, CC values, and LFO depth/fade/center;
@@ -55,15 +57,13 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Automated acceptance
 
-The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, 84 deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, 43 Chrome flows, and the axe serious/critical gates. Browser flows include both bundled demos, Tap BPM placement/integer output, exact-beat Pause/Resume, collapsed Workspace sizing, full-width module/header layout, accessible rotary drag/keyboard/reset with separate Undo boundaries, visible icon assertions with accessible names, and the workspace, module action, advanced disclosure, Phase 6 mobile, Phase 7 sound, round-trip, and accessibility coverage.
+The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, Chrome flows, and the axe serious/critical gates. Browser coverage includes responsive masonry columns, full-width module spanning, dark per-module color selection and project round-trip persistence, alongside the existing Workspace, module action, Phase 6 mobile, Phase 7 sound, sharing, and accessibility flows.
 
-Latest execution on 2026-08-25 after the Phase 6 and desktop follow-up refinements:
+Latest focused execution on 2026-08-26 after the masonry and module-theme refinements:
 
 ```text
 svelte-check: 0 errors, 0 warnings
-Vitest: 15 files / 84 tests passed
-production PWA build: 13 entries / 351.53 KiB precached
-initial JavaScript: 92.93 KiB gzip / 200.00 KiB budget
-Playwright Chrome: 43 tests passed
+Vitest: scheduler, module-color, and Phase 2/7 regression suites passed
+Playwright Chrome: Phase 4 masonry/theme flows passed
 axe: no serious or critical violations
 ```

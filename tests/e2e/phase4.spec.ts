@@ -20,7 +20,7 @@ test.describe('Phase 4 desktop studio', () => {
     page.on('pageerror', (reason) => pageErrors.push(reason));
     await page.goto('/');
     await expect(page.getByRole('heading', { name: 'Output & shortcuts' })).toBeVisible();
-    const columns = await page.locator('.module-list').evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length);
+    const columns = await page.locator('.module-list').evaluate((element) => Number(getComputedStyle(element).columnCount));
     expect(columns).toBeGreaterThanOrEqual(2);
 
     for (const [index, type] of ['arp', 'euclid', 'piano', 'cc', 'mod'].entries()) {
@@ -87,12 +87,11 @@ test.describe('Phase 4 desktop studio', () => {
     await widthToggle.click();
     await expect(widthToggle).toHaveAttribute('aria-pressed', 'true');
     const expanded = await drums.evaluate((element) => ({
-      end: getComputedStyle(element).gridColumnEnd,
-      start: getComputedStyle(element).gridColumnStart,
+      span: getComputedStyle(element).columnSpan,
       width: element.getBoundingClientRect().width,
     }));
     const moduleListWidth = await modules.evaluate((element) => element.getBoundingClientRect().width);
-    expect(expanded).toMatchObject({ start: '1', end: '-1' });
+    expect(expanded.span).toBe('all');
     expect(Math.abs(expanded.width - moduleListWidth)).toBeLessThan(1);
     const drumsBox = await drums.boundingBox();
     const bassBox = await bass.boundingBox();
@@ -103,6 +102,32 @@ test.describe('Phase 4 desktop studio', () => {
     await widthToggle.click();
     await expect(widthToggle).toHaveAttribute('aria-pressed', 'false');
     await expect.poll(async () => drums.evaluate((element) => element.getBoundingClientRect().width)).toBeLessThan(moduleListWidth);
+  });
+
+  test('assigns distinct dark module colors and persists a per-module choice', async ({ page }) => {
+    await page.goto('/');
+    const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
+    const bass = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'bass module name' }) });
+    const [drumsBackground, bassBackground] = await Promise.all([
+      drums.evaluate((element) => getComputedStyle(element).backgroundColor),
+      bass.evaluate((element) => getComputedStyle(element).backgroundColor),
+    ]);
+    expect(drumsBackground).not.toBe(bassBackground);
+    const channels = drumsBackground.match(/\d+/gu)?.slice(0, 3).map(Number) ?? [];
+    expect(Math.max(...channels)).toBeLessThan(80);
+
+    await drums.locator('.module-menu > summary').click();
+    const color = drums.getByLabel('Drums color');
+    await expect(color).toHaveValue('ember');
+    await color.selectOption('teal');
+    await expect.poll(() => drums.evaluate((element) => getComputedStyle(element).backgroundColor)).not.toBe(drumsBackground);
+
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.getByText(/Project saved/u)).toBeVisible();
+    await page.reload();
+    const restoredDrums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
+    await restoredDrums.locator('.module-menu > summary').click();
+    await expect(restoredDrums.getByLabel('Drums color')).toHaveValue('teal');
   });
 
   test('manages multiple racks, persists the active rack, and supports desktop shortcuts', async ({ page }) => {

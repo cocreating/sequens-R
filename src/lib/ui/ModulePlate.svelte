@@ -12,6 +12,7 @@
   import SoundPanel from './SoundPanel.svelte';
   import type { RackMixState } from '../audio/sound';
   import type { MeterReading } from '../audio/rack-graph';
+  import { MODULE_COLOR_OPTIONS, moduleColorValue, type ModuleColor } from '../state/module-color';
 
   interface Props {
     module: RackModule;
@@ -124,6 +125,7 @@
   data-app-help-key="module-panel"
   aria-labelledby={`${module.id}-name`}
   style:view-transition-name={`module-${module.id}`}
+  style:--module-background={moduleColorValue(module.color)}
   onpointerover={showContextualHelp}
   onfocusin={showContextualHelp}
 >
@@ -148,6 +150,14 @@
             onclick={selectHelpAction}
           ><span aria-hidden="true">?</span> Help</button>
         {/if}
+        <label class="module-color-control" data-help-key="module-color">
+          <span>Color</span>
+          <select aria-label={`${module.name} color`} value={module.color} onchange={(event) => onpatch({ color: event.currentTarget.value as ModuleColor })}>
+            {#each MODULE_COLOR_OPTIONS as option (option.id)}
+              <option value={option.id}>{option.label}</option>
+            {/each}
+          </select>
+        </label>
         <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={onduplicate}>Duplicate</button>
         {#if !desktopSurface}
           <button type="button" aria-label={`Move ${module.name} earlier`} onclick={() => onmove(-1)}>Move earlier</button>

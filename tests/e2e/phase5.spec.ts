@@ -175,7 +175,7 @@ test.describe('Phase 5 polish', () => {
     const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
     const actionNames = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(actionNames.slice(0, 3)).toEqual(['Tap BPM', 'Workspace', 'Play']);
+    expect(actionNames.slice(0, 4)).toEqual(['Tap BPM', 'Workspace', 'Mixer', 'Play']);
 
     const tempo = page.locator('#tempo');
     await expect(tempo).toHaveAttribute('step', '1');

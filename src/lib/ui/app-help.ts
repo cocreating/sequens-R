@@ -80,6 +80,10 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
     title: 'Workspace',
     body: 'Opens the floating studio panel for project, rack, scene, hardware, export, and diagnostic utilities.',
   },
+  mixer: {
+    title: 'Mixer',
+    body: 'Opens the full-width rack mixer for channel levels, solo, mute, panorama, effects sends, rack returns, and master character.',
+  },
   pause: {
     title: 'Pause',
     body: 'Pauses playback at the current beat and clears active internal and external notes. Press Play to continue from the same position.',

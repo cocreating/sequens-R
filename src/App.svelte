@@ -49,6 +49,7 @@
   } from './lib/state/rack';
   import { RackHistory } from './lib/state/history';
   import ModulePlate from './lib/ui/ModulePlate.svelte';
+  import MixerPanel from './lib/ui/MixerPanel.svelte';
   import Transport from './lib/ui/Transport.svelte';
   import HardwarePanel from './lib/ui/HardwarePanel.svelte';
   import DesktopStudioPanel from './lib/ui/DesktopStudioPanel.svelte';
@@ -904,6 +905,13 @@
       ><span class="button-emoticon" aria-hidden="true">🧰</span></button>
       <button
         type="button"
+        class="header-action mixer-toggle has-emoticon icon-only"
+        data-app-help-key="mixer"
+        aria-label="Mixer"
+        popovertarget="studio-mixer"
+      ><span class="button-emoticon" aria-hidden="true">🎚️</span></button>
+      <button
+        type="button"
         class="header-action header-play"
         data-app-help-key={playing ? 'pause' : 'play'}
         data-playing={playing}
@@ -962,6 +970,31 @@
       <p class="scheduler-jitter">Scheduler jitter <data value={schedulerJitter.toFixed(3)}>{schedulerJitter.toFixed(3)}</data> ms σ</p>
     {/if}
     {#if error}<p class="error" role="alert">{error}</p>{/if}
+
+    <aside class="studio-mixer" id="studio-mixer" popover aria-labelledby="mixer-heading">
+      <header class="workspace-heading">
+        <div>
+          <p>Always-on rack mix</p>
+          <h2 id="mixer-heading">Mixer</h2>
+          <small>{activeProjectRack(project).name}</small>
+        </div>
+        <button type="button" aria-label="Close mixer" popovertarget="studio-mixer" popovertargetaction="hide">×</button>
+      </header>
+      <div class="studio-mixer-content">
+        <MixerPanel
+          id="rack-mixer"
+          modules={rack.modules}
+          mix={rack.mix}
+          meters={audioDiagnostics.moduleMeters}
+          masterMeter={audioDiagnostics.masterMeter}
+          onpatch={patchModule}
+          onsound={setSoundParam}
+          onmix={setRackMixParam}
+          oncommit={endCoalescing}
+          ariaLabel="Rack mixer controls"
+        />
+      </div>
+    </aside>
 
     <aside class="studio-workspace" id="studio-workspace" popover aria-labelledby="workspace-heading">
       <header class="workspace-heading">

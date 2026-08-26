@@ -18,6 +18,31 @@ test.describe('Phase 4 desktop studio', () => {
     await expect(workspaceButton).toBeFocused();
   });
 
+  test('opens the always-available mixer as a full-width floating panel', async ({ page }) => {
+    await page.goto('/');
+    const mixerButton = page.getByRole('button', { name: 'Mixer', exact: true });
+    const mixer = page.locator('#studio-mixer');
+    const workspace = page.locator('#studio-workspace');
+
+    await expect(mixerButton).toHaveText('🎚️');
+    await expect(mixer).toBeHidden();
+    await mixerButton.click();
+    await expect(mixer).toBeVisible();
+    await expect(mixer.getByRole('heading', { name: 'Mixer' })).toBeVisible();
+    await expect(mixer.getByRole('group', { name: 'Rack mixer controls' })).toBeVisible();
+    await expect(mixer.getByRole('region', { name: 'Drums channel' })).toBeVisible();
+
+    const mixerBox = await mixer.boundingBox();
+    expect(mixerBox).not.toBeNull();
+    expect(mixerBox!.width).toBeGreaterThan(1200);
+
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
+    await expect(mixer).toBeHidden();
+    await expect(workspace).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: 'Workspace', exact: true })).toBeFocused();
+  });
+
   test('lays modules into parallel lanes and exposes every schema-driven desktop module', async ({ page }) => {
     const pageErrors: Error[] = [];
     page.on('pageerror', (reason) => pageErrors.push(reason));

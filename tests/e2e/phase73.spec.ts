@@ -34,7 +34,7 @@ test('eight monophonic Bass presets render clean level-matched audition referenc
   await page.getByRole('listitem', { name: 'Chords' }).getByRole('button', { name: 'Mute Chords' }).click();
   const bass = page.getByRole('listitem', { name: 'Bass' });
   await bass.getByText('Sound', { exact: true }).click();
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Length').selectOption('1');
   await mkdir('test-results/phase7.3', { recursive: true });
   const presets = [

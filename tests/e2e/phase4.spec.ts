@@ -3,24 +3,28 @@ import { expect, test } from '@playwright/test';
 test.describe('Phase 4 desktop studio', () => {
   test.use({ viewport: { width: 1440, height: 1000 } });
 
-  test('collapses the desktop workspace to its emoticon trigger', async ({ page }) => {
+  test('opens the floating workspace from its icon-only header trigger', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByLabel('Application version 0.0.1')).toHaveText('v0.0.1');
-    const workspace = page.locator('.workspace-utilities');
-    await expect(workspace).toHaveAttribute('open', '');
-    await workspace.getByLabel('Workspace').click();
-    await expect(workspace).not.toHaveAttribute('open', '');
-    await expect(workspace.locator('summary .button-emoticon')).toBeVisible();
-    await expect(workspace.locator('.workspace-summary-text')).toBeHidden();
-    await expect(workspace.locator('summary > small')).toBeHidden();
-    await expect(workspace).toHaveCSS('width', '44px');
+    const workspaceButton = page.getByRole('button', { name: 'Workspace', exact: true });
+    const workspace = page.locator('#studio-workspace');
+    await expect(workspaceButton).toHaveText('🧰');
+    await expect(workspace).toBeHidden();
+    await workspaceButton.click();
+    await expect(workspace).toBeVisible();
+    await expect(workspace.getByRole('heading', { name: 'Workspace' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(workspace).toBeHidden();
+    await expect(workspaceButton).toBeFocused();
   });
 
   test('lays modules into parallel lanes and exposes every schema-driven desktop module', async ({ page }) => {
     const pageErrors: Error[] = [];
     page.on('pageerror', (reason) => pageErrors.push(reason));
     await page.goto('/');
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await expect(page.getByRole('heading', { name: 'Output & shortcuts' })).toBeVisible();
+    await page.keyboard.press('Escape');
     const columns = await page.locator('.module-list').evaluate((element) => Number(getComputedStyle(element).columnCount));
     expect(columns).toBeGreaterThanOrEqual(2);
 
@@ -123,6 +127,7 @@ test.describe('Phase 4 desktop studio', () => {
     await color.selectOption('teal');
     await expect.poll(() => drums.evaluate((element) => getComputedStyle(element).backgroundColor)).not.toBe(drumsBackground);
 
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Save' }).click();
     await expect(page.getByText(/Project saved/u)).toBeVisible();
     await page.reload();
@@ -133,6 +138,7 @@ test.describe('Phase 4 desktop studio', () => {
 
   test('manages multiple racks, persists the active rack, and supports desktop shortcuts', async ({ page }) => {
     await page.goto('/');
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'New rack' }).click();
     await expect(page.getByRole('tab')).toHaveCount(2);
     await page.getByLabel('Active rack name').fill('Live rack');
@@ -155,6 +161,7 @@ test.describe('Phase 4 desktop studio', () => {
     await expect(page.getByText(/Project saved/)).toBeVisible();
     await page.reload();
     await expect(page.getByText('Local project restored')).toBeVisible();
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await expect(page.getByLabel('Active rack name')).toHaveValue('Live rack');
   });
 
@@ -179,6 +186,7 @@ test.describe('Phase 4 desktop studio', () => {
       });
     });
     await page.goto('/');
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Refresh outputs' }).click();
     await page.getByLabel('Internal audio out').selectOption('studio-out');
     await expect.poll(() => page.evaluate(() => (window as typeof window & { __phase4Apis: { outputId: string } }).__phase4Apis.outputId)).toBe('studio-out');

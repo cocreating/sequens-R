@@ -40,7 +40,7 @@ test('eight four-slot Arp presets render clean level-matched pluck references', 
   await arp.getByLabel('Seed', { exact: true }).blur();
   await arp.getByLabel('Rate').selectOption('2');
   await arp.getByText('Sound', { exact: true }).click();
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Length').selectOption('1');
   await mkdir('test-results/phase7.6', { recursive: true });
   const presets = [

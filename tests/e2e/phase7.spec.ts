@@ -30,9 +30,10 @@ test('sound state has one accessible mobile shell independent from generator con
 
 test('retired projects migrate directly to v2 and control modules stay silent', async ({ page }) => {
   await page.goto('/');
-  await page.getByText('Workspace', { exact: true }).click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.locator('#project-import').setInputFiles(fileURLToPath(new URL('../../public/projects/basic-electro.sequens-r.json', import.meta.url)));
   await expect(page.locator('.session-status')).toHaveText('Project imported and saved locally');
+  await page.getByRole('button', { name: 'Close workspace' }).click();
 
   const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
   await drums.getByText('Sound', { exact: true }).click();

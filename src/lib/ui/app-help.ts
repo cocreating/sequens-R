@@ -76,6 +76,10 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
     title: 'Tap tempo',
     body: 'Tap at least twice in time to set the shared tempo. Recent taps are averaged and the result is rounded to a whole BPM.',
   },
+  workspace: {
+    title: 'Workspace',
+    body: 'Opens the floating studio panel for project, rack, scene, hardware, export, and diagnostic utilities.',
+  },
   pause: {
     title: 'Pause',
     body: 'Pauses playback at the current beat and clears active internal and external notes. Press Play to continue from the same position.',

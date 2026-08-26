@@ -8,11 +8,14 @@ test.describe('Phase 5 polish', () => {
     await page.goto('/');
     const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
     await drums.getByRole('button', { name: 'Drums slot 2' }).click();
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Capture scene' }).click();
     await expect(page.getByLabel('Scene 1 name')).toHaveValue('Scene 1');
     await page.getByLabel('Scene 1 name').fill('Drop');
+    await page.getByRole('button', { name: 'Close workspace' }).click();
     await drums.getByRole('button', { name: 'Drums slot 3' }).click();
     await page.getByRole('button', { name: 'Play', exact: true }).click();
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Launch Drop' }).click();
     await expect(page.getByText('Drop queued for the next bar')).toBeVisible();
     await expect(drums.getByRole('button', { name: 'Drums slot 2' })).toHaveAttribute('aria-pressed', 'true');
@@ -64,7 +67,9 @@ test.describe('Phase 5 polish', () => {
     await page.goto('/');
     await page.getByLabel('New module').selectOption('acid');
     await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.getByRole('button', { name: 'Close workspace' }).click();
     await page.getByRole('button', { name: 'Play', exact: true }).click();
     await expect(page.getByText('Transport playing')).toBeVisible();
     await page.waitForTimeout(350);
@@ -73,6 +78,7 @@ test.describe('Phase 5 polish', () => {
     expect(state.transitions).toBeGreaterThan(0);
     expect(state.wakeRequests).toBe(1);
     expect(state.actions).toEqual(expect.arrayContaining(['play', 'pause', 'stop']));
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByText('Diagnostics', { exact: true }).click();
     await expect(page.getByText('Average render load').locator('..').getByText('0.240')).toBeVisible();
     await page.getByRole('button', { name: 'Pause' }).click();
@@ -93,6 +99,7 @@ test.describe('Phase 5 polish', () => {
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     await page.getByRole('button', { name: 'Play', exact: true }).click();
     await expect(page.getByText('Transport playing')).toBeVisible();
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByText('Diagnostics', { exact: true }).click();
     await expect(page.getByText('Render Capacity API is unavailable')).toBeVisible();
     expect(errors).toEqual([]);
@@ -101,11 +108,13 @@ test.describe('Phase 5 polish', () => {
 
   test('supports keyboard rack navigation and piano-note authoring', async ({ page }) => {
     await page.goto('/');
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'New rack' }).click();
     const activeTab = page.getByRole('tab', { selected: true });
     await activeTab.focus();
     await page.keyboard.press('ArrowLeft');
     await expect(page.getByRole('tab', { selected: true })).toContainText('Rack 1');
+    await page.getByRole('button', { name: 'Close workspace' }).click();
     await page.getByLabel('New module').selectOption('piano');
     await page.getByRole('button', { name: 'Add', exact: true }).click();
     const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
@@ -129,6 +138,7 @@ test.describe('Phase 5 polish', () => {
     await expect(readout.getByRole('heading')).toHaveText('Play');
     await expect(readout).toContainText('audio scheduler');
 
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Capture scene' }).focus();
     await expect(readout.getByRole('heading')).toHaveText('Capture scene');
 
@@ -138,6 +148,7 @@ test.describe('Phase 5 polish', () => {
     await page.getByRole('button', { name: 'Rack MIDI' }).focus();
     await expect(readout.getByRole('heading')).toHaveText('Rack MIDI');
 
+    await page.getByRole('button', { name: 'Close workspace' }).click();
     const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
     await drums.hover();
     await expect(readout.getByRole('heading')).toHaveText('Module panel');
@@ -164,7 +175,7 @@ test.describe('Phase 5 polish', () => {
     const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
     const actionNames = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(actionNames.slice(0, 2)).toEqual(['Tap BPM', 'Play']);
+    expect(actionNames.slice(0, 3)).toEqual(['Tap BPM', 'Workspace', 'Play']);
 
     const tempo = page.locator('#tempo');
     await expect(tempo).toHaveAttribute('step', '1');
@@ -225,6 +236,8 @@ test.describe('Phase 5 polish', () => {
 
   test('uses compact emoticons for recognizable workspace actions', async ({ page }) => {
     await page.goto('/');
+    await expect(page.getByRole('button', { name: 'Workspace', exact: true })).toHaveText('🧰');
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
 
     const iconActions = [
       ['Undo', '↩️'],

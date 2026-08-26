@@ -38,8 +38,7 @@ test('six Euclid palettes render clean level-matched polymetric tuned-percussion
   await euclid.locator('.module-advanced > summary').click();
   for (const label of ['Ring 1 hits', 'Ring 2 hits', 'Ring 3 hits']) await euclid.getByRole('spinbutton', { name: label, exact: true }).fill('8');
   await euclid.getByText('Sound', { exact: true }).click();
-  const workspaceUtilities = page.locator('.workspace-utilities');
-  if (await workspaceUtilities.getAttribute('open') === null) await workspaceUtilities.locator('> summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Length').selectOption('1');
   await mkdir('test-results/phase7.8', { recursive: true });
   const presets = [

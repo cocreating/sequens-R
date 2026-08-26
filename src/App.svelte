@@ -114,7 +114,6 @@
   let desktopMedia: MediaQueryList | null = null;
   let appHelpActive = $state(false);
   let appHelpKey = $state('overview');
-  let workspaceOpen = $state(false);
   let demoProjects = $state<readonly DemoProjectEntry[]>([]);
   let demoProjectsLoaded = $state(false);
   let demoProjectsLoading = $state(false);
@@ -139,7 +138,6 @@
     if (supported) void midi.inspectPermission();
     desktopMedia = window.matchMedia('(min-width: 64rem)');
     desktopSurface = desktopMedia.matches;
-    workspaceOpen = desktopSurface;
     desktopMedia.addEventListener('change', handleDesktopChange);
     window.addEventListener('keydown', handleKeyboardShortcut);
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -157,7 +155,6 @@
 
   function handleDesktopChange(event: MediaQueryListEvent): void {
     desktopSurface = event.matches;
-    workspaceOpen = event.matches;
     if (!desktopSurface) normalizeMobileDenseModules();
   }
 
@@ -900,6 +897,13 @@
       <button type="button" class="header-action header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={tapTempo}>TAP</button>
       <button
         type="button"
+        class="header-action workspace-toggle has-emoticon icon-only"
+        data-app-help-key="workspace"
+        aria-label="Workspace"
+        popovertarget="studio-workspace"
+      ><span class="button-emoticon" aria-hidden="true">🧰</span></button>
+      <button
+        type="button"
         class="header-action header-play"
         data-app-help-key={playing ? 'pause' : 'play'}
         data-playing={playing}
@@ -959,9 +963,16 @@
     {/if}
     {#if error}<p class="error" role="alert">{error}</p>{/if}
 
-    <div class="studio-workspace">
-      <details class="workspace-utilities" bind:open={workspaceOpen}>
-        <summary aria-label="Workspace"><span class="workspace-summary-label"><span class="button-emoticon" aria-hidden="true">🧰</span><span class="workspace-summary-text">Workspace</span></span><small>{project.name}</small></summary>
+    <aside class="studio-workspace" id="studio-workspace" popover aria-labelledby="workspace-heading">
+      <header class="workspace-heading">
+        <div>
+          <p>Studio utilities</p>
+          <h2 id="workspace-heading">Workspace</h2>
+          <small>{project.name}</small>
+        </div>
+        <button type="button" aria-label="Close workspace" popovertarget="studio-workspace" popovertargetaction="hide">×</button>
+      </header>
+      <div class="workspace-utilities">
         <div class="utility-stack">
           <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
@@ -1050,9 +1061,10 @@
           </section>
           <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
         </div>
-      </details>
+      </div>
+    </aside>
 
-      <section
+    <section
       class="module-list"
       id="module-lanes"
       data-app-help-key="module-lanes"
@@ -1101,7 +1113,6 @@
           onexportmidi={() => { void exportMidi(module); }}
         />
       {/each}
-      </section>
-    </div>
+    </section>
   </main>
 {/if}

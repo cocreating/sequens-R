@@ -48,8 +48,7 @@ test('eight electric Piano presets render clean level-matched eight-note referen
     for (let semitone = 0; semitone < intervals[index]!; semitone += 1) await note.press('ArrowUp');
   }
   await piano.getByText('Sound', { exact: true }).click();
-  const workspaceUtilities = page.locator('.workspace-utilities');
-  if (await workspaceUtilities.getAttribute('open') === null) await workspaceUtilities.locator('> summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Music export').getByLabel('Length').selectOption('1');
   await mkdir('test-results/phase7.7', { recursive: true });
   const presets = [

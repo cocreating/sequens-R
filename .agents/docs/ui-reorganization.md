@@ -12,9 +12,9 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. The labelled BPM field adds 44 px minus/plus controls on its left for one-BPM changes, with disabled 20/300 boundaries; manual entry also writes whole values.
 - Pause preserves the current transport beat, freezes the header/grid/piano playheads on it, and clears scheduled internal/MIDI events; Play continues from that beat while Stop resets to zero and hides the playheads.
 - Responsive branding that shows `Local generative MIDI` and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
-- Mobile critical path with the rack directly after one collapsed `Workspace` row.
-- Desktop studio with a sticky workspace rail and three parallel module lanes at 1440 CSS px.
-- Closed desktop Workspace state reduced to one accessible 44 px toolbox trigger, allowing the module lanes to reclaim the released width.
+- Mobile critical path with the rack directly after the performance controls and Workspace removed from document flow.
+- Desktop studio with three full-width parallel module lanes at 1440 CSS px.
+- Workspace utilities live in a top-layer floating panel opened by an icon-only toolbox button immediately after TAP. The native popover supports light dismiss and Escape, restores focus to its trigger, and scrolls internally within the viewport.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
 - An icon-only 📂 `Demos projects` action directly after project import, retaining its explicit accessible name while opening a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
 - Compact module headers whose first row follows reorder → desktop full-width → collapse → `⋯` actions → top-right editable name; monitor, solo, and mute occupy a balanced second row. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
@@ -39,7 +39,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Rotary pointer and touch gestures snap to the schema step, commit once at the gesture boundary, retain horizontal touch panning, and preserve the existing coalesced undo contract.
 - Steppers combine labelled number inputs with 44 px decrement/increment buttons and disabled boundaries.
 - Segmented choices use a labelled group of pressed-state buttons; binary controls use native checkboxes.
-- Workspace and advanced disclosures preserve their user-selected open state through rack edits and asynchronous status updates.
+- The native Workspace popover remains stable through rack edits and asynchronous status updates, closes through its explicit button, light dismiss, or Escape, and restores focus to the toolbox invoker. Module advanced disclosures preserve their user-selected open state independently.
 - Selecting module Help closes the actions disclosure and restores focus to its summary, preventing the relocated panel from obscuring the second-row switches.
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
 - Decorative emoticons are marked `aria-hidden="true"`; text-labelled controls keep their visible name while icon-only controls use explicit accessible names.

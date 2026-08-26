@@ -34,7 +34,7 @@ test('six procedural drum kits render deterministic clean audition references', 
   await page.getByRole('listitem', { name: 'Chords' }).getByRole('button', { name: 'Mute Chords' }).click();
   const drums = page.getByRole('listitem', { name: 'Drums' });
   await drums.getByText('Sound', { exact: true }).click();
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Length').selectOption('1');
   await mkdir('test-results/phase7.2', { recursive: true });
   const kits = [

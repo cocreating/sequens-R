@@ -35,7 +35,7 @@ test('MIDI remains opt-in, routes timestamped notes, clocks, and discovers hot-p
   });
 
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Connect hardware' })).toBeVisible();
   expect(await page.evaluate(() => (window as typeof window & { __midiRequestOptions?: object }).__midiRequestOptions)).toBeUndefined();
 
@@ -43,11 +43,14 @@ test('MIDI remains opt-in, routes timestamped notes, clocks, and discovers hot-p
   await expect(page.getByText('1 MIDI output ready')).toBeVisible();
   expect(await page.evaluate(() => (window as typeof window & { __midiRequestOptions?: { sysex?: boolean } }).__midiRequestOptions)).toEqual({ sysex: false, software: false });
 
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   const bass = page.getByRole('listitem', { name: 'Bass' });
   await bass.locator('.module-advanced > summary').click();
   await bass.getByLabel('MIDI out').selectOption('mock-1');
   await expect(bass.getByRole('button', { name: 'Monitor Bass' })).toHaveAttribute('aria-pressed', 'false');
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Send clock').check();
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page.waitForTimeout(350);
   await page.getByRole('button', { name: 'Stop' }).click();
@@ -86,9 +89,10 @@ test('MIDI denial has a recovery path while internal play remains available', as
     Object.defineProperty(navigator.permissions, 'query', { configurable: true, value: async () => ({ state: 'denied' }) });
   });
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('button', { name: 'Connect hardware' }).click();
   await expect(page.getByText(/Allow MIDI devices in this site’s browser permissions/)).toBeVisible();
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(page.getByText('Transport playing')).toBeVisible();
   await page.getByRole('button', { name: 'Stop' }).click();
@@ -97,7 +101,7 @@ test('MIDI denial has a recovery path while internal play remains available', as
 test('rack/module MIDI, mix WAV, and zipped WAV stems download with selected length', async ({ page }) => {
   test.setTimeout(90_000);
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Length').selectOption('1');
 
   let downloadPromise = page.waitForEvent('download');
@@ -108,6 +112,7 @@ test('rack/module MIDI, mix WAV, and zipped WAV stems download with selected len
   if (path === null) throw new Error('Rack MIDI download has no path.');
   expect((await readFile(path)).subarray(0, 4).toString()).toBe('MThd');
 
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   downloadPromise = page.waitForEvent('download');
   const bass = page.getByRole('listitem', { name: 'Bass' });
   await bass.locator('.module-menu > summary').click();
@@ -115,6 +120,7 @@ test('rack/module MIDI, mix WAV, and zipped WAV stems download with selected len
   download = await downloadPromise;
   expect(download.suggestedFilename()).toBe('bass-1-bars.mid');
 
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Mix WAV' }).click();
   download = await downloadPromise;

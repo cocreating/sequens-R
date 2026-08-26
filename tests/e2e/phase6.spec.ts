@@ -134,7 +134,7 @@ test.describe('Phase 6 mobile editors', () => {
     await expect(page.getByRole('button', { name: 'Add', exact: true })).toBeFocused();
     await page.getByRole('button', { name: 'Stop' }).click();
 
-    await page.locator('.workspace-utilities > summary').click();
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await expect(page.getByText(/Project saved/)).toBeVisible();
     await page.reload();
@@ -215,6 +215,7 @@ test('round-trips desktop-authored Piano and recorded CC project data through mo
     input.dispatchEvent(new Event('input', { bubbles: true }));
     input.dispatchEvent(new Event('change', { bubbles: true }));
   });
+  await author.getByRole('button', { name: 'Workspace', exact: true }).click();
   const authorDownload = author.waitForEvent('download');
   await author.getByRole('button', { name: 'Export', exact: true }).click();
   const authorPath = await (await authorDownload).path();
@@ -223,9 +224,10 @@ test('round-trips desktop-authored Piano and recorded CC project data through mo
   const mobileContext = await browser.newContext({ viewport: { width: 375, height: 667 } });
   const mobile = await mobileContext.newPage();
   await mobile.goto('/');
-  await mobile.locator('.workspace-utilities > summary').click();
+  await mobile.getByRole('button', { name: 'Workspace', exact: true }).click();
   await mobile.locator('#project-import').setInputFiles(authorPath);
   await expect(mobile.getByText('Project imported and saved locally')).toBeVisible();
+  await mobile.getByRole('button', { name: 'Close workspace' }).click();
   const mobilePiano = mobile.locator('article').filter({ has: mobile.getByRole('textbox', { name: 'piano module name' }) });
   await mobilePiano.getByRole('button', { name: 'Open Piano roll editor' }).click();
   const dialog = mobile.getByRole('dialog', { name: 'Piano roll' });
@@ -245,6 +247,7 @@ test('round-trips desktop-authored Piano and recorded CC project data through mo
     input.dispatchEvent(new Event('change', { bubbles: true }));
   });
   await expect(mobileCc.getByText('2 recorded points')).toBeVisible();
+  await mobile.getByRole('button', { name: 'Workspace', exact: true }).click();
   const mobileDownload = mobile.waitForEvent('download');
   await mobile.getByRole('button', { name: 'Export', exact: true }).click();
   const mobilePath = await (await mobileDownload).path();
@@ -252,8 +255,10 @@ test('round-trips desktop-authored Piano and recorded CC project data through mo
 
   const recipient = await authorContext.newPage();
   await recipient.goto('/');
+  await recipient.getByRole('button', { name: 'Workspace', exact: true }).click();
   await recipient.locator('#project-import').setInputFiles(mobilePath);
   await expect(recipient.getByText('Project imported and saved locally')).toBeVisible();
+  await recipient.getByRole('button', { name: 'Close workspace' }).click();
   const recipientPiano = recipient.locator('article').filter({ has: recipient.getByRole('textbox', { name: 'piano module name' }) });
   const recipientCc = recipient.locator('article').filter({ has: recipient.getByRole('textbox', { name: 'cc module name' }) });
   await recipientPiano.getByRole('button', { name: 'Expand Piano roll' }).click();

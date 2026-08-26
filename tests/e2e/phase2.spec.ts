@@ -5,7 +5,7 @@ test.use({ viewport: { width: 375, height: 667 } });
 
 test('lists and loads a bundled demo project', async ({ page }) => {
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Export' })).toBeVisible();
   await expect(page.locator('.import-project')).toBeVisible();
@@ -49,7 +49,7 @@ test('slots, editable seeds, mutate, and revert stay deterministic', async ({ pa
 
 test('continuous parameter input is one undo step', async ({ page }) => {
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   const density = page.getByRole('listitem', { name: 'Bass' }).getByLabel('Density');
   const original = await density.inputValue();
 
@@ -97,7 +97,7 @@ test('rotary parameters support fine drag, keyboard input, reset, and undo bound
   await density.dblclick();
   await expect(density).toHaveValue('55');
 
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('button', { name: 'Undo' }).click();
   await expect(density).toHaveValue('58');
   await page.getByRole('button', { name: 'Undo' }).click();
@@ -108,23 +108,26 @@ test('rotary parameters support fine drag, keyboard input, reset, and undo bound
 
 test('saving restores the exact project after reload', async ({ page }) => {
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('textbox', { name: 'Project' }).fill('Persistent Session');
   await page.getByLabel('Tempo').fill('138');
   await page.getByLabel('Tempo').blur();
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   const bass = page.getByRole('listitem', { name: 'Bass' });
   await bass.locator('.module-advanced > summary').click();
   await bass.getByRole('button', { name: 'Bass slot 3' }).click();
   await bass.getByLabel('Seed', { exact: true }).fill('987654321');
   await bass.getByLabel('Seed', { exact: true }).blur();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.getByText(/Project saved/)).toBeVisible();
 
   await page.reload();
   await expect(page.getByText('Local project restored')).toBeVisible();
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Persistent Session');
   await expect(page.getByLabel('Tempo')).toHaveValue('138');
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   const restoredBass = page.getByRole('listitem', { name: 'Bass' });
   await restoredBass.locator('.module-advanced > summary').click();
   await expect(restoredBass.getByRole('button', { name: 'Bass slot 3' })).toHaveAttribute('aria-pressed', 'true');
@@ -133,11 +136,13 @@ test('saving restores the exact project after reload', async ({ page }) => {
 
 test('opening a shared link remains a draft and does not overwrite the local project', async ({ page, context, browser }) => {
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   const localBass = page.getByRole('listitem', { name: 'Bass' });
   await localBass.locator('.module-advanced > summary').click();
   await localBass.getByLabel('Seed', { exact: true }).fill('111111111');
   await localBass.getByLabel('Seed', { exact: true }).blur();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.getByText(/Project saved/)).toBeVisible();
 
@@ -172,13 +177,15 @@ test('opening a shared link remains a draft and does not overwrite the local pro
 
 test('a project exports, imports identically elsewhere, and protects local-only modules', async ({ page, browser }) => {
   await page.goto('/');
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('textbox', { name: 'Project' }).fill('Portable Session');
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   const bass = page.getByRole('listitem', { name: 'Bass' });
   await bass.locator('.module-advanced > summary').click();
   await bass.getByLabel('Seed', { exact: true }).fill('314159265');
   await bass.getByLabel('Seed', { exact: true }).blur();
 
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export', exact: true }).click();
   const download = await downloadPromise;
@@ -188,10 +195,11 @@ test('a project exports, imports identically elsewhere, and protects local-only 
   const recipientContext = await browser.newContext({ viewport: { width: 375, height: 667 } });
   const recipient = await recipientContext.newPage();
   await recipient.goto('/');
-  await recipient.locator('.workspace-utilities > summary').click();
+  await recipient.getByRole('button', { name: 'Workspace', exact: true }).click();
   await recipient.locator('#project-import').setInputFiles(path);
   await expect(recipient.getByText('Project imported and saved locally')).toBeVisible();
   await expect(recipient.getByRole('textbox', { name: 'Project' })).toHaveValue('Portable Session');
+  await recipient.getByRole('button', { name: 'Close workspace' }).click();
   await recipient.getByRole('listitem', { name: 'Bass' }).locator('.module-advanced > summary').click();
   await expect(recipient.getByRole('listitem', { name: 'Bass' }).getByLabel('Seed', { exact: true })).toHaveValue('314159265');
 
@@ -199,11 +207,13 @@ test('a project exports, imports identically elsewhere, and protects local-only 
     racks: Array<{ state: { modules: Array<{ shareable: boolean }> } }>;
   };
   localOnly.racks[0]!.state.modules[0]!.shareable = false;
+  await recipient.getByRole('button', { name: 'Workspace', exact: true }).click();
   await recipient.locator('#project-import').setInputFiles({
     name: 'local-only.sequens-r.json',
     mimeType: 'application/json',
     buffer: Buffer.from(JSON.stringify(localOnly)),
   });
+  await recipient.getByRole('button', { name: 'Close workspace' }).click();
   await recipient.getByRole('button', { name: 'Share' }).click();
   await expect(recipient.locator('.error')).toContainText('Drums');
   await expect(recipient.locator('.error')).toContainText('Export the project instead');

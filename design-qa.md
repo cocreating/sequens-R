@@ -15,7 +15,7 @@ viewport and normalization:
 - Final combined desktop evidence: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-ui-implementation/09-desktop-comparison-final.png`.
 - Final combined mobile evidence: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-ui-implementation/10-mobile-comparison-final.png`.
 
-state: dark theme, restored local rack, stopped transport, workspace open on desktop and closed on mobile, first three module lanes visible, module action and advanced disclosures closed.
+state: dark theme, restored local rack, stopped transport, floating Workspace opened from the icon-only header toolbox when utilities are under review, first three full-width module lanes visible, module action and advanced disclosures closed.
 
 ## Full-view comparison evidence
 
@@ -60,7 +60,7 @@ Post-fix evidence:
 
 ### Iteration 2 · passed
 
-No actionable P0, P1, or P2 mismatch remains. Residual differences are acceptable product constraints: the implementation carries full production controls, keeps root/scale visible, and uses one mobile Workspace disclosure instead of three concept-only utility shortcuts.
+No actionable P0, P1, or P2 mismatch remains. Residual differences are acceptable product constraints: the implementation carries full production controls, keeps root/scale visible, and uses one responsive top-layer Workspace panel instead of three concept-only utility shortcuts. The same icon-only toolbox access follows TAP on desktop and mobile, while the rack retains the full document width beneath it.
 
 Primary interactions tested: Tap BPM with whole-number output, bounded one-BPM minus/plus stepping, Play/Pause/Resume/Stop, frozen paused playheads, keyboard-accessible parameter change in automated Chrome, Workspace persistence, module actions menu, module MIDI export, Output & advanced routing, add/delete module, scenes, save/import/export/share, accessible icon names, and responsive mobile/desktop transitions.
 

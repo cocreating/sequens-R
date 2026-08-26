@@ -48,7 +48,7 @@ test('ten polyphonic Chords presets render clean level-matched mono-compatible r
   await chords.getByLabel('Seed', { exact: true }).fill('1397051652');
   await chords.getByLabel('Seed', { exact: true }).blur();
   await chords.getByText('Sound', { exact: true }).click();
-  await page.locator('.workspace-utilities > summary').click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByLabel('Length').selectOption('1');
   await mkdir('test-results/phase7.5', { recursive: true });
   const presets = [

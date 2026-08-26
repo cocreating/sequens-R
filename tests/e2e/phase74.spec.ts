@@ -52,7 +52,7 @@ test('12 AudioWorklet Acid presets render clean level-matched audition reference
     await acid.getByLabel('Seed', { exact: true }).blur();
     await acid.getByText('Sound', { exact: true }).click();
     await acid.getByLabel('Preset').selectOption(presetId);
-    await page.locator('.workspace-utilities > summary').click();
+    await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByLabel('Length').selectOption('1');
     const pending = page.waitForEvent('download');
     await page.getByRole('button', { name: 'Mix WAV' }).click();

@@ -34,7 +34,6 @@ import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
 import { GENERATORS } from '../../src/lib/generators';
 import { createProject, migrateProject, projectFromJson, projectToJson } from '../../src/lib/project/model';
-import { encodeCbor } from '../../src/lib/share/cbor';
 import { deserializeRack, normalizeRack, PATCH_SCHEMA_VERSION, serializeRack } from '../../src/lib/share/codec';
 import { MODULE_TYPES, PARAM_SCHEMAS } from '../../src/lib/share/schema';
 import { STARTER_RACK } from '../../src/lib/share/starter';
@@ -63,17 +62,6 @@ function calibrationTone(rmsDbfs: number, seconds = 3): AudioPcm {
   };
 }
 
-async function legacyPatch(version: 1 | 2): Promise<Uint8Array> {
-  const tuple = [1180, 0, SCALE_NAMES.indexOf('minor'), [[0, 0x53455101, []]]];
-  const body = encodeCbor(tuple);
-  const versioned = new Uint8Array(body.length + 1);
-  versioned[0] = version;
-  versioned.set(body, 1);
-  return new Uint8Array(await new Response(
-    new Blob([versioned]).stream().pipeThrough(new CompressionStream('deflate-raw')),
-  ).arrayBuffer());
-}
-
 function randomRack(random: () => number): ShareableRack {
   return {
     bpm: randomInt(random, 200, 3000) / 10,
@@ -83,7 +71,8 @@ function randomRack(random: () => number): ShareableRack {
         const steps = Math.floor((definition.max - definition.min) / definition.step);
         return [definition.key, definition.min + randomInt(random, 0, steps) * definition.step];
       }));
-      const preset = SOUND_PRESETS.filter((candidate) => candidate.moduleType === type)[randomInt(random, 0, 1)]!;
+      const presets = SOUND_PRESETS.filter((candidate) => candidate.moduleType === type);
+      const preset = presets[randomInt(random, 0, presets.length - 1)]!;
       const sound = soundForPreset(type, preset.id);
       sound.params = Object.fromEntries(SOUND_PARAM_SCHEMAS[type].map((definition) => {
         const steps = Math.floor((definition.max - definition.min) / definition.step);
@@ -115,36 +104,40 @@ describe('Phase 7.0 sound domain and migrations', () => {
     expect(() => validatePresetCatalog([{ ...SOUND_PRESETS[0]!, moduleType: 'bass' }])).toThrow();
   });
 
-  it('migrates project schemas 1 through 3 to legacy sound and round-trips v4 deeply', () => {
+  it('migrates project schemas 1 through 4 to released v2 sounds and round-trips v5 deeply', () => {
     const current = createProject(createRackState(STARTER_RACK), 'Phase 7');
     expect(projectFromJson(projectToJson(current))).toEqual(current);
     for (const schemaVersion of [1, 2, 3]) {
-      const legacy = structuredClone(current) as unknown as Record<string, unknown>;
-      legacy.schemaVersion = schemaVersion;
-      for (const rack of (legacy.racks as Array<{ state: { modules: Array<Record<string, unknown>>; mix?: unknown } }>)) {
+      const retired = structuredClone(current) as unknown as Record<string, unknown>;
+      retired.schemaVersion = schemaVersion;
+      for (const rack of (retired.racks as Array<{ state: { modules: Array<Record<string, unknown>>; mix?: unknown } }>)) {
         delete rack.state.mix;
         for (const module of rack.state.modules) delete module.sound;
       }
-      const migrated = migrateProject(legacy);
-      expect(migrated.schemaVersion).toBe(4);
+      const migrated = migrateProject(retired);
+      expect(migrated.schemaVersion).toBe(5);
       expect(migrated.racks[0]?.state.mix).toEqual(DEFAULT_RACK_MIX);
-      expect(migrated.racks[0]?.state.modules.every(({ sound }) => sound.presetId.startsWith('legacy-'))).toBe(true);
+      expect(migrated.racks[0]?.state.modules.every(({ sound }) => sound.presetId.endsWith('-v2'))).toBe(true);
     }
+    const version4 = structuredClone(current) as unknown as Record<string, unknown>;
+    version4.schemaVersion = 4;
+    const module = ((version4.racks as Array<{ state: { modules: Array<Record<string, unknown>> } }>)[0]!.state.modules[0])!;
+    module.sound = { engineVersion: 2, presetId: 'legacy-drums-v1', params: {}, pan: 0, delaySend: 0, reverbSend: 0 };
+    expect(migrateProject(version4).racks[0]?.state.modules[0]?.sound.presetId).toBe('drums-core-v2');
   });
 
-  it('migrates v1/v2 links to legacy voices and deeply round-trips v3 sound state', async () => {
-    for (const version of [1, 2] as const) {
-      const migrated = await deserializeRack(await legacyPatch(version));
-      expect(migrated.modules[0]?.sound?.presetId).toBe('legacy-drums-v1');
-      expect(migrated.mix).toEqual(DEFAULT_RACK_MIX);
-    }
+  it('invalidates retired links and deeply round-trips v4 sound state', async () => {
     const rack = toShareableRack(createRackState(STARTER_RACK));
     const encoded = await serializeRack(rack);
-    expect(PATCH_SCHEMA_VERSION).toBe(3);
+    expect(PATCH_SCHEMA_VERSION).toBe(4);
     expect(await deserializeRack(encoded)).toEqual(normalizeRack(rack));
+    const decompressed = new Uint8Array(await new Response(new Blob([encoded]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    decompressed[0] = 3;
+    const retired = new Uint8Array(await new Response(new Blob([decompressed]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());
+    await expect(deserializeRack(retired)).rejects.toThrow(/Unsupported patch schema version 3/u);
   });
 
-  it('keeps 200 randomized v3 links at or below 400 bytes', async () => {
+  it('keeps 200 randomized v4 links at or below 400 bytes', async () => {
     const random = sfc32(0x70070070);
     let largest = 0;
     for (let index = 0; index < 200; index += 1) {
@@ -259,17 +252,14 @@ describe('Phase 7.1 shared rack graph', () => {
 });
 
 describe('Phase 7.2 procedural drums', () => {
-  it('keeps the legacy preset and appends six original procedural kits', () => {
+  it('exposes only six original procedural kits', () => {
     const presets = presetsFor('drums');
-    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
-    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(DRUM_KITS.map(({ id }) => id));
-    expect(new Set(presets.map(({ label }) => label)).size).toBe(7);
+    expect(presets.map(({ id }) => id)).toEqual(DRUM_KITS.map(({ id }) => id));
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(6);
     expect(VOICE_FACTORY.identify({ type: 'drums', sound: soundForPreset('drums', 'drums-core-v2') }).implementationId).toBe('procedural-drums-v2');
-    expect(VOICE_FACTORY.identify({ type: 'drums', sound: soundForPreset('drums', 'legacy-drums-v1') }).implementationId).toBe('legacy-drums-v1');
   });
 
-  it('round-trips every appended drum kit without changing earlier preset indexes', async () => {
-    expect(SOUND_PRESETS.slice(0, 4).map(({ id }) => id)).toEqual(['legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2']);
+  it('round-trips every released drum kit', async () => {
     for (const kit of DRUM_KITS) {
       const rack = createRackState(STARTER_RACK);
       rack.modules[0] = { ...rack.modules[0]!, sound: soundForPreset('drums', kit.id) };
@@ -334,17 +324,14 @@ describe('Phase 7.3 monophonic Bass', () => {
     'bass-driven-v2', 'bass-animated-v2', 'bass-square-v2', 'bass-deep-v2',
   ] as const;
 
-  it('keeps the legacy voice and exposes eight original Bass presets through one factory identity', () => {
+  it('exposes eight original Bass presets through one factory identity', () => {
     const presets = presetsFor('bass');
-    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
-    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
-    expect(new Set(presets.map(({ label }) => label)).size).toBe(9);
+    expect(presets.map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(8);
     expect(VOICE_FACTORY.identify({ type: 'bass', sound: soundForPreset('bass', 'bass-core-v2') }).implementationId).toBe('procedural-bass-v2');
-    expect(VOICE_FACTORY.identify({ type: 'bass', sound: soundForPreset('bass', 'legacy-bass-v1') }).implementationId).toBe('legacy-poly-square-v1');
   });
 
-  it('round-trips every appended Bass preset without changing earlier compact indexes', async () => {
-    expect(SOUND_PRESETS.slice(0, 4).map(({ id }) => id)).toEqual(['legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2']);
+  it('round-trips every released Bass preset', async () => {
     for (const presetId of presetIds) {
       const rack = createRackState(STARTER_RACK);
       rack.modules[1] = { ...rack.modules[1]!, sound: soundForPreset('bass', presetId) };
@@ -421,17 +408,14 @@ describe('Phase 7.4 AudioWorklet Acid', () => {
     'acid-liquid-v2', 'acid-short-v2', 'acid-low-v2', 'acid-bright-v2',
   ] as const;
 
-  it('keeps legacy isolated and exposes 12 original presets through the shared factory', () => {
+  it('exposes 12 original presets through the shared factory', () => {
     const presets = presetsFor('acid');
-    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
-    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
-    expect(new Set(presets.map(({ label }) => label)).size).toBe(13);
+    expect(presets.map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(12);
     expect(VOICE_FACTORY.identify({ type: 'acid', sound: soundForPreset('acid', 'acid-core-v2') }).implementationId).toBe('procedural-acid-v2');
-    expect(VOICE_FACTORY.identify({ type: 'acid', sound: soundForPreset('acid', 'legacy-acid-v1') }).implementationId).toBe('legacy-acid-v1');
   });
 
-  it('round-trips every appended Acid preset without moving released compact indexes', async () => {
-    expect(SOUND_PRESETS.slice(0, 4).map(({ id }) => id)).toEqual(['legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2']);
+  it('round-trips every released Acid preset', async () => {
     for (const presetId of presetIds) {
       const rack = createRackState(STARTER_RACK);
       const acid = rack.modules.find(({ type }) => type === 'acid') ?? createRackState({ ...STARTER_RACK, modules: [{ type: 'acid', seed: 0x7400_0001, params: {} }] }).modules[0]!;
@@ -525,20 +509,14 @@ describe('Phase 7.5 polyphonic Chords', () => {
     'chords-muted-v2', 'chords-wide-v2', 'chords-dark-v2', 'chords-bright-v2', 'chords-drift-v2',
   ] as const;
 
-  it('keeps legacy isolated and exposes ten original Chords presets through one factory identity', () => {
+  it('exposes ten original Chords presets through one factory identity', () => {
     const presets = presetsFor('chords');
-    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
-    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
-    expect(new Set(presets.map(({ label }) => label)).size).toBe(11);
+    expect(presets.map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(10);
     expect(VOICE_FACTORY.identify({ type: 'chords', sound: soundForPreset('chords', 'chords-core-v2') }).implementationId).toBe('procedural-chords-v2');
-    expect(VOICE_FACTORY.identify({ type: 'chords', sound: soundForPreset('chords', 'legacy-chords-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
   });
 
-  it('round-trips every appended preset without moving released compact indexes', async () => {
-    expect(SOUND_PRESETS.slice(0, 8).map(({ id }) => id)).toEqual([
-      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
-      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
-    ]);
+  it('round-trips every released Chords preset', async () => {
     for (const presetId of presetIds) {
       const rack = createRackState(STARTER_RACK);
       rack.modules[2] = { ...rack.modules[2]!, sound: soundForPreset('chords', presetId) };
@@ -609,21 +587,14 @@ describe('Phase 7.6 four-slot Arp', () => {
     'arp-needle-v2', 'arp-copper-v2', 'arp-dark-v2', 'arp-quick-v2',
   ] as const;
 
-  it('keeps legacy isolated and exposes eight original presets through one factory identity', () => {
+  it('exposes eight original presets through one factory identity', () => {
     const presets = presetsFor('arp');
-    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
-    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
-    expect(new Set(presets.map(({ label }) => label)).size).toBe(9);
+    expect(presets.map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(8);
     expect(VOICE_FACTORY.identify({ type: 'arp', sound: soundForPreset('arp', 'arp-core-v2') }).implementationId).toBe('procedural-arp-v2');
-    expect(VOICE_FACTORY.identify({ type: 'arp', sound: soundForPreset('arp', 'legacy-arp-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
   });
 
-  it('round-trips appended presets without moving released compact indexes', async () => {
-    expect(SOUND_PRESETS.slice(0, 12).map(({ id }) => id)).toEqual([
-      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
-      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
-      'legacy-mixer-v1', 'silent-mixer-v2', 'legacy-arp-v1', 'arp-core-v2',
-    ]);
+  it('round-trips every released Arp preset', async () => {
     for (const presetId of presetIds) {
       const rack = createRackState({ ...STARTER_RACK, modules: [{ type: 'arp', seed: 0x7600_0001, params: { followChords: 0 }, sound: soundForPreset('arp', presetId) }] });
       const shareable = toShareableRack(rack);
@@ -698,22 +669,14 @@ describe('Phase 7.7 eight-voice electric Piano', () => {
     })),
   } as const;
 
-  it('keeps legacy isolated and exposes eight original presets through one factory identity', () => {
+  it('exposes eight original presets through one factory identity', () => {
     const presets = presetsFor('piano');
-    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
-    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
-    expect(new Set(presets.map(({ label }) => label)).size).toBe(9);
+    expect(presets.map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(8);
     expect(VOICE_FACTORY.identify({ type: 'piano', sound: soundForPreset('piano', 'piano-core-v2') }).implementationId).toBe('procedural-piano-v2');
-    expect(VOICE_FACTORY.identify({ type: 'piano', sound: soundForPreset('piano', 'legacy-piano-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
   });
 
-  it('round-trips every appended preset and hand-authored phrase through project JSON without moving released indexes', () => {
-    expect(SOUND_PRESETS.slice(0, 16).map(({ id }) => id)).toEqual([
-      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
-      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
-      'legacy-mixer-v1', 'silent-mixer-v2', 'legacy-arp-v1', 'arp-core-v2',
-      'legacy-euclid-v1', 'euclid-core-v2', 'legacy-piano-v1', 'piano-core-v2',
-    ]);
+  it('round-trips every released preset and hand-authored phrase through project JSON', () => {
     for (const presetId of presetIds) {
       const piano = setManualPattern(createModule('piano', 0x7700_0001, undefined, soundForPreset('piano', presetId)), phrase);
       const rack = createRackState(STARTER_RACK);
@@ -774,22 +737,14 @@ describe('Phase 7.8 three-ring Euclid percussion', () => {
     'euclid-circuit-v2', 'euclid-tide-v2', 'euclid-skein-v2',
   ] as const;
 
-  it('keeps legacy isolated and exposes six palettes through one factory identity', () => {
+  it('exposes six palettes through one factory identity', () => {
     const presets = presetsFor('euclid');
-    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
-    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
-    expect(new Set(presets.map(({ label }) => label)).size).toBe(7);
+    expect(presets.map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(6);
     expect(VOICE_FACTORY.identify({ type: 'euclid', sound: soundForPreset('euclid', 'euclid-core-v2') }).implementationId).toBe('procedural-euclid-v2');
-    expect(VOICE_FACTORY.identify({ type: 'euclid', sound: soundForPreset('euclid', 'legacy-euclid-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
   });
 
-  it('round-trips all appended palettes without moving released compact indexes', async () => {
-    expect(SOUND_PRESETS.slice(0, 16).map(({ id }) => id)).toEqual([
-      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
-      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
-      'legacy-mixer-v1', 'silent-mixer-v2', 'legacy-arp-v1', 'arp-core-v2',
-      'legacy-euclid-v1', 'euclid-core-v2', 'legacy-piano-v1', 'piano-core-v2',
-    ]);
+  it('round-trips all released palettes', async () => {
     for (const presetId of presetIds) {
       const rack = createRackState({ ...STARTER_RACK, modules: [{ type: 'euclid', seed: 0x7800_0001, params: {}, sound: soundForPreset('euclid', presetId) }] });
       const shareable = toShareableRack(rack);

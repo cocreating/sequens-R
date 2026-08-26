@@ -120,25 +120,15 @@ function defaultsFor(type: ModuleType): Readonly<Record<string, number>> {
 type PresetRow = Omit<SoundPreset, 'engineVersion' | 'outputTrimDb' | 'provenance'> & { outputTrimDb?: number };
 
 const PRESET_ROWS = [
-  { id: 'legacy-drums-v1', moduleType: 'drums', label: 'Legacy Drums', params: defaultsFor('drums') },
   { id: 'drums-core-v2', moduleType: 'drums', label: 'Foundation', params: { tone: 55, punch: 65, decay: 45 }, outputTrimDb: 6 },
-  { id: 'legacy-bass-v1', moduleType: 'bass', label: 'Legacy Bass', params: defaultsFor('bass') },
   { id: 'bass-core-v2', moduleType: 'bass', label: 'Roundhouse', params: { wave: 1, cutoff: 55, resonance: 18, envelope: 42, drive: 10, glide: 8, sub: 38 }, outputTrimDb: 7 },
-  { id: 'legacy-acid-v1', moduleType: 'acid', label: 'Legacy Acid', params: defaultsFor('acid') },
   { id: 'acid-core-v2', moduleType: 'acid', label: 'Pulsewire', params: { wave: 0, cutoff: 55, resonance: 64, envAmount: 60, decay: 45, accent: 65, slide: 35, drive: 12 }, outputTrimDb: 14.2 },
-  { id: 'legacy-chords-v1', moduleType: 'chords', label: 'Legacy Chords', params: defaultsFor('chords') },
   { id: 'chords-core-v2', moduleType: 'chords', label: 'Velvetframe', params: { tone: 48, attack: 28, release: 62, width: 55, chorus: 24 }, outputTrimDb: 10.6 },
-  { id: 'legacy-mixer-v1', moduleType: 'mixer', label: 'Legacy silent control', params: defaultsFor('mixer') },
   { id: 'silent-mixer-v2', moduleType: 'mixer', label: 'Silent control', params: defaultsFor('mixer') },
-  { id: 'legacy-arp-v1', moduleType: 'arp', label: 'Legacy Arp', params: defaultsFor('arp') },
   { id: 'arp-core-v2', moduleType: 'arp', label: 'Threadlight', params: { tone: 52, brightness: 58, decay: 42, character: 22 }, outputTrimDb: 19.7 },
-  { id: 'legacy-euclid-v1', moduleType: 'euclid', label: 'Legacy Euclid', params: defaultsFor('euclid') },
   { id: 'euclid-core-v2', moduleType: 'euclid', label: 'Orbit', params: defaultsFor('euclid'), outputTrimDb: 13.25 },
-  { id: 'legacy-piano-v1', moduleType: 'piano', label: 'Legacy Piano', params: defaultsFor('piano') },
   { id: 'piano-core-v2', moduleType: 'piano', label: 'Amberkey', params: { tone: 52, bell: 34, decay: 58, tremolo: 12 }, outputTrimDb: 15.7 },
-  { id: 'legacy-cc-v1', moduleType: 'cc', label: 'Legacy silent control', params: defaultsFor('cc') },
   { id: 'silent-cc-v2', moduleType: 'cc', label: 'Silent control', params: defaultsFor('cc') },
-  { id: 'legacy-mod-v1', moduleType: 'mod', label: 'Legacy silent control', params: defaultsFor('mod') },
   { id: 'silent-mod-v2', moduleType: 'mod', label: 'Silent control', params: defaultsFor('mod') },
   { id: 'drums-broken-v2', moduleType: 'drums', label: 'Fracture', params: { tone: 70, punch: 52, decay: 32 }, outputTrimDb: 9 },
   { id: 'drums-latin-v2', moduleType: 'drums', label: 'Solar', params: { tone: 62, punch: 45, decay: 38 }, outputTrimDb: 8 },
@@ -205,10 +195,6 @@ const DEFAULT_PRESET_IDS: Readonly<Record<ModuleType, string>> = Object.freeze({
   drums: 'drums-core-v2', bass: 'bass-core-v2', acid: 'acid-core-v2', chords: 'chords-core-v2', mixer: 'silent-mixer-v2',
   arp: 'arp-core-v2', euclid: 'euclid-core-v2', piano: 'piano-core-v2', cc: 'silent-cc-v2', mod: 'silent-mod-v2',
 });
-
-function legacyPresetId(type: ModuleType): string {
-  return `legacy-${type}-v1`;
-}
 
 function assertQuantized(value: number, definition: ParamDefinition, label: string): void {
   if (!Number.isInteger(value) || value < definition.min || value > definition.max || (value - definition.min) % definition.step !== 0) {
@@ -287,13 +273,6 @@ export function createDefaultSound(type: ModuleType): SoundState {
   return soundForPreset(type, DEFAULT_PRESET_IDS[type]);
 }
 
-export function createLegacySound(type: ModuleType): SoundState {
-  return soundForPreset(type, legacyPresetId(type));
-}
-
-export function isLegacySound(sound: SoundState): boolean {
-  return sound.presetId.startsWith('legacy-') && sound.presetId.endsWith('-v1');
-}
 
 export function normalizeSoundState(type: ModuleType, value: unknown): SoundState {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) throw new TypeError(`${type} sound state must be an object.`);

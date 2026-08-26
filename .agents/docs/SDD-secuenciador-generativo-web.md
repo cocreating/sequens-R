@@ -723,11 +723,13 @@ La fase se ejecuta como subfases secuenciales. Cada una termina con tests, métr
 57. Auditar que Mod permanece silencioso, mantiene timing/valores MIDI y no consume voces. Modular parámetros internos queda fuera de alcance.
 
 #### Fase 7.11 — Integración y aceptación
-58. Completar los 12 presets Acid, 40 presets no-Acid (Bass 8, Chords 10, Arp 8, Piano 8, Euclid 6) y seis kits; nivelar; verificar live/bounce, migraciones, share, exports, accesibilidad, bundle y Android.
+58. Completar los 12 presets Acid, 40 presets no-Acid (Bass 8, Chords 10, Arp 8, Piano 8, Euclid 6) y seis kits; nivelar; retirar las rutas temporales de presets/DSP; invalidar una vez proyectos locales y caché PWA; verificar live/bounce, migraciones a v2, nuevo formato share, exports, accesibilidad, bundle y Android.
+
+Las mejoras posteriores de los diez módulos se mantienen en `module-improvement-roadmap.md`. Ese documento distingue el contrato publicado del backlog y define la evidencia necesaria para ampliar un módulo sin romper determinismo, MIDI/SMF, proyectos/enlaces, audio, accesibilidad o C10.
 
 **DoD por subfase sonora:** output MIDI/SMF y golden de patrón idénticos antes/después; live y offline dentro de tolerancias; ningún click, NaN, DC persistente o voz colgada; preset/macros accesibles en móvil y escritorio; C10 sin regresión; escucha A/B a loudness igualada aceptada y documentada.
 
-**DoD de fase:** RF-040–RF-049 demostrados. Los 58 presets/kits están versionados y nivelados a −18 LUFS-I ±1 LU con true peak ≤ −1 dBTP sobre sus frases de referencia. Un rack de 16 módulos a 140 BPM cumple todos los presupuestos C10 en el Android de referencia. Bounce y live comparten el grafo, los proyectos/enlaces legacy conservan su preset legacy, nuevos enlaces siguen ≤ 400 bytes y no existe runtime network. La fase no se completa únicamente con tests automáticos: requiere aceptación auditiva explícita de cada familia.
+**DoD de fase:** RF-040–RF-049 demostrados. Los 58 presets/kits están versionados y nivelados a −18 LUFS-I ±1 LU con true peak ≤ −1 dBTP sobre sus frases de referencia. Un rack de 16 módulos a 140 BPM cumple todos los presupuestos C10 en el Android de referencia. Bounce y live comparten el grafo; proyectos anteriores migran a defaults v2, enlaces compactos retirados se rechazan en el nuevo límite de versión, nuevos enlaces siguen ≤ 400 bytes y no existe runtime network. La fase no se completa únicamente con tests automáticos: requiere aceptación auditiva explícita de cada familia.
 
 ---
 

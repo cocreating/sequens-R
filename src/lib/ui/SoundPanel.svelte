@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { ModuleType } from '../core/pattern';
   import {
-    isLegacySound,
     presetsFor,
     SOUND_OUTPUT_SCHEMA,
     SOUND_PARAM_SCHEMAS,
@@ -16,10 +15,9 @@
     onparam: (key: string, value: number) => void;
     oncommit: () => void;
     onpreset: (presetId: string) => void;
-    onupgrade: () => void;
   }
 
-  let { moduleId, moduleType, sound, onparam, oncommit, onpreset, onupgrade }: Props = $props();
+  let { moduleId, moduleType, sound, onparam, oncommit, onpreset }: Props = $props();
   let schema = $derived(SOUND_PARAM_SCHEMAS[moduleType]);
   let presets = $derived(presetsFor(moduleType));
   let silent = $derived(moduleType === 'mixer' || moduleType === 'cc' || moduleType === 'mod');
@@ -47,9 +45,6 @@
           <option value={preset.id}>{preset.label}</option>
         {/each}
       </select>
-      {#if isLegacySound(sound)}
-        <button type="button" class="upgrade-sound" onclick={onupgrade}>Upgrade sound</button>
-      {/if}
     </div>
 
     {#if silent}

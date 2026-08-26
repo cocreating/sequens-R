@@ -81,10 +81,6 @@ abstract class WorkletAcidVoice {
     this.#node.port.postMessage({ type: 'sound', time, params: paramsFor(sound) });
   }
 
-  protected useLegacyMode(): void {
-    this.#node.port.postMessage({ type: 'legacy' });
-  }
-
   sync(): Promise<void> {
     if (this.#failure !== null) return Promise.reject(this.#failure);
     const id = this.#nextSyncId;
@@ -135,12 +131,5 @@ export class AcidVoice extends WorkletAcidVoice {
 
   applySound(sound: Readonly<SoundState>, time: number): void {
     this.postSound(sound, time);
-  }
-}
-
-export class LegacyAcidVoice extends WorkletAcidVoice {
-  constructor(context: BaseAudioContext, destination: AudioNode) {
-    super(context, destination);
-    this.useLegacyMode();
   }
 }

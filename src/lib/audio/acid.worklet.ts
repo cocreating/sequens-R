@@ -29,16 +29,12 @@ interface AcidPanic {
   time: number;
 }
 
-interface AcidLegacyChange {
-  type: 'legacy';
-}
-
 interface AcidSync {
   type: 'sync';
   id: number;
 }
 
-type AcidMessage = AcidTrigger | AcidSoundChange | AcidPanic | AcidLegacyChange | AcidSync;
+type AcidMessage = AcidTrigger | AcidSoundChange | AcidPanic | AcidSync;
 
 class SequensAcidProcessor extends AudioWorkletProcessor {
   readonly #events: AcidTrigger[] = [];
@@ -46,11 +42,6 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
   readonly #kernel = new AcidDspKernel(sampleRate);
   readonly #currentParams: AcidDspParams = { ...DEFAULT_ACID_DSP_PARAMS };
   readonly #targetParams: AcidDspParams = { ...DEFAULT_ACID_DSP_PARAMS };
-  readonly #legacyFilterState = new Float64Array(4);
-  #legacy = false;
-  #legacyPhase = 0;
-  #legacyNoteStart = Number.NEGATIVE_INFINITY;
-  #legacyNoteDuration = 0.1;
   #frequency = 110;
   #slideFrom = 110;
   #slideStart = 0;
@@ -66,9 +57,7 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
   constructor() {
     super();
     this.port.onmessage = (message: MessageEvent<AcidMessage>) => {
-      if (message.data.type === 'legacy') {
-        this.#legacy = true;
-      } else if (message.data.type === 'sync') {
+      if (message.data.type === 'sync') {
         this.port.postMessage({ type: 'synced', id: message.data.id });
       } else if (message.data.type === 'panic') {
         this.#events.length = 0;
@@ -94,25 +83,12 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
       while (this.#events[0] !== undefined && this.#events[0]!.startTime <= time) this.#activate(this.#events.shift()!);
       this.#smoothParams();
       this.#advanceEnvelopes(time);
-      output[index] = this.#legacy
-        ? this.#legacySample(time)
-        : this.#kernel.process(this.#frequencyAt(time), this.#amplitudeEnvelope, this.#filterEnvelope, this.#accented, this.#currentParams, 1);
+      output[index] = this.#kernel.process(this.#frequencyAt(time), this.#amplitudeEnvelope, this.#filterEnvelope, this.#accented, this.#currentParams, 1);
     }
     return true;
   }
 
   #activate(event: AcidTrigger): void {
-    if (this.#legacy) {
-      this.#slideFrom = this.#frequencyAt(event.startTime);
-      this.#slideStart = event.startTime;
-      this.#slideEnd = event.slide ? event.startTime + Math.min(0.09, event.duration * 0.5) : event.startTime;
-      this.#frequency = event.frequency;
-      this.#legacyNoteStart = event.startTime;
-      this.#legacyNoteDuration = Math.max(0.04, event.duration);
-      this.#accented = event.accent;
-      this.#gateEnd = event.startTime + event.duration;
-      return;
-    }
     const overlaps = this.#gateEnd > event.startTime + 0.000_5;
     const glides = overlaps && this.#outgoingSlide;
     this.#slideFrom = this.#frequencyAt(event.startTime);
@@ -173,49 +149,6 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
     this.#amplitudeEnvelope = 0;
     this.#filterEnvelope = 0;
     this.#kernel.reset();
-    this.#legacyFilterState.fill(0);
-    this.#legacyNoteStart = Number.NEGATIVE_INFINITY;
-  }
-
-  #legacySample(time: number): number {
-    const age = time - this.#legacyNoteStart;
-    const envelope = this.#legacyEnvelope(age);
-    const frequency = this.#frequencyAt(time);
-    this.#legacyPhase = (this.#legacyPhase + frequency / sampleRate) % 1;
-    const saw = this.#legacyPhase * 2 - 1;
-    const cutoffPeak = this.#accented ? 3_200 : 1_850;
-    const cutoff = 380 + (cutoffPeak - 380) * Math.exp(-5 * Math.max(0, age) / Math.max(0.04, this.#legacyNoteDuration));
-    return this.#legacyLadder(Math.tanh(saw * 1.35), cutoff, this.#accented ? 3.65 : 3.35) * envelope;
-  }
-
-  #legacyEnvelope(age: number): number {
-    if (age < 0 || age >= this.#legacyNoteDuration) return 0;
-    const peak = this.#accented ? 0.34 : 0.23;
-    if (age < 0.004) return peak * age / 0.004;
-    return peak * Math.exp(-6 * (age - 0.004) / Math.max(0.01, this.#legacyNoteDuration - 0.004));
-  }
-
-  #legacyOnePole(input: number, stage: number, coefficient: number): number {
-    const state = this.#legacyFilterState[stage] ?? 0;
-    const delta = (input - state) * coefficient;
-    const output = delta + state;
-    this.#legacyFilterState[stage] = output + delta;
-    return output;
-  }
-
-  #legacyLadder(input: number, cutoff: number, resonance: number): number {
-    const normalizedCutoff = Math.max(40, Math.min(sampleRate * 0.45, cutoff));
-    const g = Math.tan(Math.PI * normalizedCutoff / sampleRate);
-    const coefficient = g / (1 + g);
-    const c2 = coefficient * coefficient;
-    const c3 = c2 * coefficient;
-    const c4 = c3 * coefficient;
-    const sigma = c3 * this.#legacyFilterState[0]! + c2 * this.#legacyFilterState[1]! + coefficient * this.#legacyFilterState[2]! + this.#legacyFilterState[3]!;
-    const drive = (input - resonance * sigma) / (1 + resonance * c4);
-    const first = this.#legacyOnePole(drive, 0, coefficient);
-    const second = this.#legacyOnePole(first, 1, coefficient);
-    const third = this.#legacyOnePole(second, 2, coefficient);
-    return this.#legacyOnePole(third, 3, coefficient);
   }
 }
 

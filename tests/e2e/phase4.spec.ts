@@ -5,6 +5,7 @@ test.describe('Phase 4 desktop studio', () => {
 
   test('collapses the desktop workspace to its emoticon trigger', async ({ page }) => {
     await page.goto('/');
+    await expect(page.getByLabel('Application version 0.0.1')).toHaveText('v0.0.1');
     const workspace = page.locator('.workspace-utilities');
     await expect(workspace).toHaveAttribute('open', '');
     await workspace.getByLabel('Workspace').click();

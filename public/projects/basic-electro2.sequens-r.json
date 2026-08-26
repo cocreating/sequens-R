@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "id": "aa2aa01e-e26e-4985-bc0c-cda58b5652c6",
   "name": "Basic Electro 2",
   "racks": [
@@ -84,7 +84,7 @@
             "level": 0,
             "sound": {
               "engineVersion": 2,
-              "presetId": "legacy-mixer-v1",
+              "presetId": "silent-mixer-v2",
               "params": {},
               "pan": 0,
               "delaySend": 0,

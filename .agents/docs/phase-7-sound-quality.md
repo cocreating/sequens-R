@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. The user subsequently opened each next phase after the Acid, Chords, and Arp references, closing those listening gates. Phase 7.7 Piano and Phase 7.8 Euclid implementation/objective evidence are complete and await listening approval; Phase 7.9 CC Control and Phase 7.10 Mod are implemented and automatically accepted as silent contracts. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
+Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. The user subsequently opened each next phase after the Acid, Chords, and Arp references, closing those listening gates. Phase 7.7 Piano and Phase 7.8 Euclid implementation/objective evidence are complete and await listening approval; Phase 7.9 CC Control and Phase 7.10 Mod are implemented and automatically accepted as silent contracts. Phase 7.11 implementation and automated regression evidence completed on 2026-08-26: only released v2 presets/DSP remain, project schema 5 and patch schema 4 establish the new library boundary, and a one-time local project/PWA cache reset is active. Mixer/Piano/Euclid listening and physical Android C10 remain open, so Phase 7 is not yet accepted. Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next/final phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
 
 ## 1. Outcome
 
@@ -409,7 +409,7 @@ DoD:
 
 - all RF-040–RF-049 requirements pass;
 - every catalog entry is valid, versioned, level-matched to −18 LUFS-I ±1 LU, and ≤ −1 dBTP on its reference phrase;
-- old projects/links select legacy voices; new project/link round trips preserve exact sound state; 200 randomized links remain ≤ 400 bytes;
+- project schemas 0–4 migrate removed sound IDs to released v2 defaults; retired compact links are rejected at the schema-4 boundary; new project/link round trips preserve exact sound state and 200 randomized links remain ≤ 400 bytes;
 - live, mix WAV, and stems share the same voice/effect factory and pass analysis tolerances;
 - initial JS ≤ 200 KiB gzip and initial total load ≤ 400 KiB; installed PWA starts and renders the starter rack offline;
 - at 16 active modules/140 BPM on reference Android: 0 xruns, average render capacity ≤ 0.5, peak ≤ 0.8, UI frame ≤ 8 ms, reported audio latency < 40 ms, and MIDI jitter remains ≤ 1 ms σ;
@@ -758,3 +758,24 @@ Automated verification:
 - strict Svelte/TypeScript diagnostics: 0 errors and 0 warnings;
 - unit coverage asserts the canonical default/identity, direct null factory result, engine/bounce exclusion, three enabled maximum-rate LFO lanes with 768 bounded CC events, and non-empty SMF output without audio sound parameters;
 - a 375 × 812 Chrome flow enables all three LFOs at their fastest rate and maximum depth, verifies the external-only UI/no sends, and completes normal Play/Stop transport.
+
+## 22. Phase 7.11 evidence · released library boundary
+
+Implemented on 2026-08-26:
+
+- The catalog now contains only the released engine-version-2 library: six Drum kits, eight Bass presets, twelve Acid presets, ten Chords presets, eight Arp presets, eight Piano presets, six Euclid palettes, and the three explicit silent Mixer/CC/Mod records. The ten temporary preset records and the visible per-module upgrade action were removed.
+- The pre-release Drum, square/triangle poly, and Acid compatibility DSP were deleted. `VoiceFactory` now has one direct implementation per audible family and explicit null results for control modules; live monitoring and offline bounce continue to use that same factory.
+- Project schema 5 accepts schemas 0–4. Documents without released sound state, and schema-4 modules containing a retired preset ID, receive the current v2 default for their own module family. The bundled `Basic Electro 2` project is stored as schema 5 with `silent-mixer-v2`; the older `Basic Electro` fixture proves import migration to released defaults.
+- Patch schema 4 deliberately rejects compact-link schemas 1–3 because removing ten registry entries changes every subsequent compact index. New links deeply round-trip exact sound and mix state; no tombstone preset or retired DSP remains in the runtime.
+- Starter rack version 2 starts exclusively on current defaults. Before the app mounts, a one-time release marker clears the former IndexedDB project database and all origin Cache Storage entries. Workbox then registers with the new `sequens-r-phase-7-v2` cache namespace and `cleanupOutdatedCaches`, so subsequent starts retain new schema-5 projects without repeating the reset.
+
+Automated verification:
+
+- strict Svelte/TypeScript diagnostics: 0 errors and 0 warnings; the Svelte 5 autofixer reported no issues in the three edited components (only pre-existing `bind:this` modernization suggestions outside this change);
+- unit/property tests: 111 passed across 16 files, covering the v2-only catalog/factory, schema-5 migration, schema-4 link boundary, 200 randomized compact links, every family preset round trip, analysis gates, deterministic pattern/MIDI/SMF output, and silent controls;
+- production PWA build: 100.87 KiB initial JavaScript gzip / 200 KiB; generated starter/offline-shell precache 351.66 KiB across 10 entries, below the 400 KiB initial-load budget. Bundled demo JSON remains an on-demand static fetch and is not part of the initial offline shell;
+- Playwright: the new v2-only catalog and retired-project migration flows pass, along with all rendering, export, persistence, accessibility, desktop, and mobile tests. The full run passed 50 of 51 tests. The existing mobile critical-path scheduler gate measured 68.397 ms σ under the parallel run and 52.047 ms σ when repeated alone, above the unchanged 20 ms browser gate.
+
+Phase 7.11 implementation is complete, but Phase 7 acceptance remains open. Required evidence still missing is explicit Mixer, Piano, Euclid, and final mixed-starter listening approval; the physical 16-module/140 BPM Android C10 run; and the scheduler jitter gate.
+
+Post-Phase-7 improvement candidates, limitations, priorities, and acceptance requirements for every module are consolidated in `module-improvement-roadmap.md`.

@@ -7,7 +7,6 @@ import { mutationSeed } from '../generators/shared';
 import type { ProjectScene } from '../project/model';
 import {
   createDefaultSound,
-  createLegacySound,
   DEFAULT_RACK_MIX,
   soundForPreset,
   validateSoundState,
@@ -182,7 +181,7 @@ export function revertModule(module: RackModule): RackModule {
   return { ...restored, mutation: { ...module.mutation, revert: null } };
 }
 
-export function createRackState(shared: ShareableRack, soundMode: 'current' | 'legacy' = 'current'): RackState {
+export function createRackState(shared: ShareableRack): RackState {
   const rack = normalizeRack(shared);
   return {
     bpm: rack.bpm,
@@ -191,7 +190,7 @@ export function createRackState(shared: ShareableRack, soundMode: 'current' | 'l
       module.type,
       module.seed,
       module.params,
-      module.sound ?? (soundMode === 'legacy' ? createLegacySound(module.type) : createDefaultSound(module.type)),
+      module.sound ?? createDefaultSound(module.type),
     )),
     mix: structuredClone(rack.mix ?? DEFAULT_RACK_MIX),
   };
@@ -274,10 +273,6 @@ export function setModuleSoundParam(module: RackModule, key: string, value: numb
 
 export function selectModulePreset(module: RackModule, presetId: string): RackModule {
   return setModuleSound(module, soundForPreset(module.type, presetId, module.sound));
-}
-
-export function upgradeModuleSound(module: RackModule): RackModule {
-  return setModuleSound(module, createDefaultSound(module.type));
 }
 
 export function toEngineSnapshot(rack: RackState): EngineSnapshot {

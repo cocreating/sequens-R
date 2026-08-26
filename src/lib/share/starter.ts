@@ -1,6 +1,6 @@
 import type { ShareableRack } from './types';
 
-export const STARTER_RACK_VERSION = 1;
+export const STARTER_RACK_VERSION = 2;
 
 export const STARTER_RACK: ShareableRack = {
   bpm: 118,

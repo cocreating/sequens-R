@@ -26,7 +26,6 @@
     onparamcommit: () => void;
     onsoundparam: (key: string, value: number) => void;
     onsoundpreset: (presetId: string) => void;
-    onupgradesound: () => void;
     onseed: (seed: number) => void;
     oncopyseed: () => void;
     onslot: (index: number) => void;
@@ -52,7 +51,7 @@
     onclearautomation: () => void;
   }
 
-  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onupgradesound, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, rackMix, meters = {}, masterMeter = { peakDbfs: -120, rmsDbfs: -120 }, ontargetsound, onmixparam, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
+  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, rackMix, meters = {}, masterMeter = { peakDbfs: -120, rmsDbfs: -120 }, ontargetsound, onmixparam, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
   let pattern = $derived(modulePattern(module, musicalKey, rackModules));
   let schema = $derived(GENERATORS[module.type].paramSchema.filter((definition) => definition.control !== 'hidden'));
   let recordingCc = $state(false);
@@ -300,7 +299,6 @@
         onparam={onsoundparam}
         oncommit={onparamcommit}
         onpreset={onsoundpreset}
-        onupgrade={onupgradesound}
       />
       <details class="module-advanced">
         <summary>Output &amp; advanced</summary>

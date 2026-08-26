@@ -1,6 +1,9 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+
+const packageVersion = (JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string }).version;
 
 const isolationHeaders = {
   'Cross-Origin-Embedder-Policy': 'require-corp',
@@ -8,6 +11,7 @@ const isolationHeaders = {
 };
 
 export default defineConfig({
+  define: { __APP_VERSION__: JSON.stringify(packageVersion) },
   plugins: [
     svelte(),
     VitePWA({
@@ -31,9 +35,10 @@ export default defineConfig({
         ],
       },
       workbox: {
+        cacheId: 'sequens-r-phase-7-v2',
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,json,svg,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,svg,webmanifest}'],
       },
     }),
   ],

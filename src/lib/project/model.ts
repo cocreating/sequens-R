@@ -1,7 +1,7 @@
 import { SCALE_NAMES, type NoteEvent, type Pattern, type ScaleName } from '../core/pattern';
 import { MODULE_TYPES, validateParams } from '../share/schema';
 import type { ShareableRack } from '../share/types';
-import { createLegacySound, DEFAULT_RACK_MIX, normalizeRackMixState, normalizeSoundState } from '../audio/sound';
+import { createDefaultSound, DEFAULT_RACK_MIX, normalizeRackMixState, normalizeSoundState, SOUND_PRESET_IDS } from '../audio/sound';
 import {
   createModule,
   createRackState,
@@ -13,7 +13,7 @@ import {
 } from '../state/rack';
 import { normalizeModuleColor } from '../state/module-color';
 
-export const PROJECT_SCHEMA_VERSION = 4;
+export const PROJECT_SCHEMA_VERSION = 5;
 export const DEFAULT_PROJECT_NAME = 'New Project';
 const LEGACY_DEFAULT_PROJECT_NAME = 'Untitled Project';
 
@@ -110,7 +110,14 @@ function normalizeMutation(value: unknown, type: RackModule['type']): MutationSt
   return { on: Boolean(value.on), intensity, everyNLoops, revert: value.revert === null || value.revert === undefined ? null : normalizeSlot(value.revert, type) };
 }
 
-function normalizeModule(value: unknown, legacySound: boolean): RackModule {
+function normalizeReleasedSound(type: RackModule['type'], value: unknown, hasReleasedSound: boolean) {
+  if (!hasReleasedSound || !isRecord(value) || typeof value.presetId !== 'string' || !SOUND_PRESET_IDS.includes(value.presetId)) {
+    return createDefaultSound(type);
+  }
+  return normalizeSoundState(type, value);
+}
+
+function normalizeModule(value: unknown, hasReleasedSound: boolean): RackModule {
   if (!isRecord(value)) throw new TypeError('Project module must be an object.');
   const type = value.type;
   if (typeof type !== 'string' || !MODULE_TYPES.includes(type as RackModule['type'])) throw new RangeError('Unknown module type.');
@@ -121,7 +128,7 @@ function normalizeModule(value: unknown, legacySound: boolean): RackModule {
   const activeSlot = expectNumber(value.activeSlot, 'Active slot');
   if (!Number.isInteger(activeSlot) || activeSlot < 0 || activeSlot > 7) throw new RangeError('Active slot must be 0 to 7.');
   const active = slots[activeSlot]!;
-  const sound = legacySound ? createLegacySound(normalizedType) : normalizeSoundState(normalizedType, value.sound);
+  const sound = normalizeReleasedSound(normalizedType, value.sound, hasReleasedSound);
   const module = createModule(normalizedType, active.seed, active.params, sound);
   const automation = Array.isArray(value.automation) ? value.automation.map((entry) => {
     if (!isRecord(entry)) throw new TypeError('CC automation point must be an object.');
@@ -163,16 +170,16 @@ function normalizeMidiRoute(value: unknown, defaultChannel: number): { portId: s
   return { portId, channel };
 }
 
-function normalizeRackState(value: unknown, legacySound: boolean): RackState {
+function normalizeRackState(value: unknown, hasReleasedSound: boolean): RackState {
   if (!isRecord(value) || !isRecord(value.key) || !Array.isArray(value.modules)) throw new TypeError('Rack state is malformed.');
   const bpm = expectNumber(value.bpm, 'BPM');
   if (bpm < 20 || bpm > 300 || Math.round(bpm * 10) !== bpm * 10) throw new RangeError('Invalid BPM.');
   const root = expectNumber(value.key.root, 'Key root');
   const scale = value.key.scale;
   if (!Number.isInteger(root) || root < 0 || root > 11 || typeof scale !== 'string' || !SCALE_NAMES.includes(scale as ScaleName)) throw new RangeError('Invalid musical key.');
-  const modules = value.modules.map((module) => normalizeModule(module, legacySound));
+  const modules = value.modules.map((module) => normalizeModule(module, hasReleasedSound));
   if (modules.length < 1 || modules.length > 16) throw new RangeError('A rack must contain 1 to 16 modules.');
-  const mix = legacySound ? structuredClone(DEFAULT_RACK_MIX) : normalizeRackMixState(value.mix);
+  const mix = hasReleasedSound ? normalizeRackMixState(value.mix) : structuredClone(DEFAULT_RACK_MIX);
   return { bpm, key: { root, scale: scale as ScaleName }, modules, mix };
 }
 
@@ -218,20 +225,20 @@ export function updateProjectRack(project: ProjectDocument, rack: RackState, nam
   };
 }
 
-function migrateLegacyProject(value: Record<string, unknown>): ProjectDocument {
+function migrateSingleRackProject(value: Record<string, unknown>): ProjectDocument {
   const rack = value.rack as ShareableRack;
-  return createProject(createRackState(rack, 'legacy'), typeof value.name === 'string' ? value.name : 'Imported Project');
+  return createProject(createRackState(rack), typeof value.name === 'string' ? value.name : 'Imported Project');
 }
 
 export function migrateProject(value: unknown): ProjectDocument {
   if (!isRecord(value)) throw new TypeError('Project file must contain an object.');
-  if (value.schemaVersion === 0) return migrateLegacyProject(value);
-  if (value.schemaVersion !== 1 && value.schemaVersion !== 2 && value.schemaVersion !== 3 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
-  const legacySound = value.schemaVersion !== PROJECT_SCHEMA_VERSION;
+  if (value.schemaVersion === 0) return migrateSingleRackProject(value);
+  if (value.schemaVersion !== 1 && value.schemaVersion !== 2 && value.schemaVersion !== 3 && value.schemaVersion !== 4 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
+  const hasReleasedSound = value.schemaVersion === 4 || value.schemaVersion === PROJECT_SCHEMA_VERSION;
   if (!Array.isArray(value.racks) || value.racks.length < 1) throw new RangeError('A project must contain at least one rack.');
   const racks = value.racks.map((entry): ProjectRack => {
     if (!isRecord(entry)) throw new TypeError('Project rack must be an object.');
-    return { id: expectString(entry.id, 'Rack id'), name: expectString(entry.name, 'Rack name'), state: normalizeRackState(entry.state, legacySound) };
+    return { id: expectString(entry.id, 'Rack id'), name: expectString(entry.name, 'Rack name'), state: normalizeRackState(entry.state, hasReleasedSound) };
   });
   const activeRackId = expectString(value.activeRackId, 'Active rack id');
   const projectName = expectString(value.name, 'Project name');

@@ -40,7 +40,6 @@
     setManualPattern,
     selectModulePreset,
     setModuleSoundParam,
-    upgradeModuleSound,
     toEngineSnapshot,
     toSoundSnapshot,
     toShareableRack,
@@ -69,6 +68,8 @@
   import type { AudioDiagnostics } from './lib/audio/engine';
   import { appHelpFor } from './lib/ui/app-help';
   import { DEFAULT_RACK_MIX, presetById, type RackMixState } from './lib/audio/sound';
+
+  const APP_VERSION = __APP_VERSION__;
 
   let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
   const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
@@ -428,16 +429,6 @@
       modules: rack.modules.map((module) => module.id === id ? selectModulePreset(module, presetId) : module),
     });
     status = `${presetById(presetId).label} selected`;
-  }
-
-  function upgradeSound(id: string): void {
-    const source = rack.modules.find((module) => module.id === id);
-    if (source === undefined) return;
-    replaceSoundRack({
-      ...rack,
-      modules: rack.modules.map((module) => module.id === id ? upgradeModuleSound(module) : module),
-    });
-    status = `${source.name} sound upgraded · Undo is available`;
   }
 
   function setPattern(id: string, pattern: Pattern): void {
@@ -898,7 +889,10 @@
 <a class="skip-link" href="#rack">Skip to rack</a>
 <header class:playing class:app-help-active={appHelpActive} class="app-header">
   <div class="brand">
-    <p>Local generative MIDI</p>
+    <div class="brand-kicker">
+      <p>Local generative MIDI</p>
+      <span class="app-version" aria-label={`Application version ${APP_VERSION}`}>v{APP_VERSION}</span>
+    </div>
     <h1 aria-label="sequens-R"><span class="brand-title-full" aria-hidden="true">sequens-R</span><span class="brand-title-compact" aria-hidden="true">s-R</span></h1>
   </div>
   {#if supported && initialized}
@@ -1081,7 +1075,6 @@
           onparam={(key, value) => setParam(module.id, key, value)}
           onsoundparam={(key, value) => setSoundParam(module.id, key, value)}
           onsoundpreset={(presetId) => selectSoundPreset(module.id, presetId)}
-          onupgradesound={() => upgradeSound(module.id)}
           onparamcommit={endCoalescing}
           onseed={(seed) => setSeed(module.id, seed)}
           oncopyseed={() => copySeed(module.seed)}

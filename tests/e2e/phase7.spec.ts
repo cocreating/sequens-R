@@ -5,13 +5,14 @@ test.use({ viewport: { width: 375, height: 667 } });
 
 test('sound state has one accessible mobile shell independent from generator controls', async ({ page }) => {
   await page.goto('/');
+  expect(await page.evaluate(() => localStorage.getItem('sequens-r:library-release'))).toBe('phase-7-v2');
   const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
   await drums.getByText('Sound', { exact: true }).click();
 
   await expect(drums.getByLabel('Kit')).toHaveValue('drums-core-v2');
-  await expect(drums.getByLabel('Kit').getByRole('option')).toHaveCount(7);
+  await expect(drums.getByLabel('Kit').getByRole('option')).toHaveCount(6);
   expect(await drums.getByLabel('Kit').getByRole('option').allTextContents()).toEqual([
-    'Legacy Drums', 'Foundation', 'Fracture', 'Solar', 'Voltage', 'Weight', 'Tilt',
+    'Foundation', 'Fracture', 'Solar', 'Voltage', 'Weight', 'Tilt',
   ]);
   await expect(drums.getByLabel('Tone')).toBeVisible();
   await expect(drums.getByLabel('Punch')).toBeVisible();
@@ -22,14 +23,12 @@ test('sound state has one accessible mobile shell independent from generator con
   expect(await drums.getByLabel('Tone').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(true);
   expect(await drums.getByLabel('Pan').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(true);
 
-  await drums.getByLabel('Kit').selectOption('legacy-drums-v1');
-  await expect(page.locator('.session-status')).toHaveText('Legacy Drums selected');
-  await drums.getByRole('button', { name: 'Upgrade sound' }).click();
-  await expect(drums.getByLabel('Kit')).toHaveValue('drums-core-v2');
-  await expect(page.locator('.session-status')).toContainText('Undo is available');
+  await drums.getByLabel('Kit').selectOption('drums-broken-v2');
+  await expect(page.locator('.session-status')).toHaveText('Fracture selected');
+  await expect(drums.getByRole('button', { name: 'Upgrade sound' })).toHaveCount(0);
 });
 
-test('legacy projects expose a reversible upgrade and control modules stay silent', async ({ page }) => {
+test('retired projects migrate directly to v2 and control modules stay silent', async ({ page }) => {
   await page.goto('/');
   await page.getByText('Workspace', { exact: true }).click();
   await page.locator('#project-import').setInputFiles(fileURLToPath(new URL('../../public/projects/basic-electro.sequens-r.json', import.meta.url)));
@@ -37,11 +36,8 @@ test('legacy projects expose a reversible upgrade and control modules stay silen
 
   const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
   await drums.getByText('Sound', { exact: true }).click();
-  await expect(drums.getByLabel('Kit')).toHaveValue('legacy-drums-v1');
-  await drums.getByRole('button', { name: 'Upgrade sound' }).click();
-  await expect(page.locator('.session-status')).toContainText('Undo is available');
-  await page.getByRole('button', { name: 'Undo' }).click();
-  await expect(drums.getByLabel('Kit')).toHaveValue('legacy-drums-v1');
+  await expect(drums.getByLabel('Kit')).toHaveValue('drums-core-v2');
+  await expect(drums.getByRole('button', { name: 'Upgrade sound' })).toHaveCount(0);
 
   await page.getByLabel('New module').selectOption('cc');
   await page.getByRole('button', { name: 'Add', exact: true }).click();

@@ -3,7 +3,6 @@ import { decodeCbor, encodeCbor, type CborValue } from './cbor';
 import { MODULE_TYPES, PARAM_SCHEMAS, validateParams } from './schema';
 import type { ShareableModule, ShareableRack } from './types';
 import {
-  createLegacySound,
   DEFAULT_RACK_MIX,
   normalizeRackMixState,
   normalizeSoundState,
@@ -15,7 +14,7 @@ import {
   type SoundState,
 } from '../audio/sound';
 
-export const PATCH_SCHEMA_VERSION = 3;
+export const PATCH_SCHEMA_VERSION = 4;
 const FORMAT = 'deflate-raw' as ConstructorParameters<typeof CompressionStream>[0];
 
 function expectArray(value: CborValue, label: string): readonly CborValue[] {
@@ -133,7 +132,7 @@ function decodeSound(type: ModuleType, value: CborValue): SoundState {
   });
 }
 
-function decodeModule(value: CborValue, version: number): ShareableModule {
+function decodeModule(value: CborValue): ShareableModule {
   const tuple = expectArray(value, 'Module');
   const type = MODULE_TYPES[expectInteger(tuple[0], 'Module type')];
   if (type === undefined) throw new RangeError('Unknown module type.');
@@ -149,7 +148,7 @@ function decodeModule(value: CborValue, version: number): ShareableModule {
       ? definition.defaultValue
       : expectInteger(encoded, `${type}.${definition.key}`);
   }
-  const sound = version < 3 ? createLegacySound(type) : tuple[3] === undefined ? undefined : decodeSound(type, tuple[3]);
+  const sound = tuple[3] === undefined ? undefined : decodeSound(type, tuple[3]);
   return normalizeModule({ type, seed, params, ...(sound === undefined ? {} : { sound }) });
 }
 
@@ -159,12 +158,12 @@ function decodeMix(value: CborValue): RackMixState {
   return normalizeRackMixState(Object.fromEntries(MIX_KEYS.map((key, index) => [key, tuple[index] === undefined || tuple[index] === null ? DEFAULT_RACK_MIX[key] : expectInteger(tuple[index], `mix.${key}`)])));
 }
 
-function fromTuple(value: CborValue, version: number): ShareableRack {
+function fromTuple(value: CborValue): ShareableRack {
   const tuple = expectArray(value, 'Rack');
   const scale = SCALE_NAMES[expectInteger(tuple[2], 'Scale')];
   if (scale === undefined) throw new RangeError('Unknown scale.');
-  const modules = expectArray(tuple[3] ?? [], 'Modules').map((module) => decodeModule(module, version));
-  const mix = version < 3 ? structuredClone(DEFAULT_RACK_MIX) : tuple[4] === undefined ? undefined : decodeMix(tuple[4]);
+  const modules = expectArray(tuple[3] ?? [], 'Modules').map(decodeModule);
+  const mix = tuple[4] === undefined ? undefined : decodeMix(tuple[4]);
   return normalizeRack({
     bpm: expectInteger(tuple[0], 'BPM') / 10,
     key: { root: expectInteger(tuple[1], 'Root'), scale },
@@ -190,8 +189,8 @@ export async function serializeRack(rack: ShareableRack): Promise<Uint8Array> {
 export async function deserializeRack(compressed: Uint8Array): Promise<ShareableRack> {
   const versioned = await transform(compressed, new DecompressionStream(FORMAT));
   const version = versioned[0];
-  if (version !== 1 && version !== 2 && version !== PATCH_SCHEMA_VERSION) throw new RangeError(`Unsupported patch schema version ${String(version)}.`);
-  return fromTuple(decodeCbor(versioned.subarray(1)), version);
+  if (version !== PATCH_SCHEMA_VERSION) throw new RangeError(`Unsupported patch schema version ${String(version)}.`);
+  return fromTuple(decodeCbor(versioned.subarray(1)));
 }
 
 export function toBase64Url(bytes: Uint8Array): string {

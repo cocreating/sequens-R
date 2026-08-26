@@ -1,0 +1,1479 @@
+{
+  "schemaVersion": 5,
+  "id": "demo-project-ambient-idm-polymeter",
+  "name": "Ambient IDM Polymeter",
+  "racks": [
+    {
+      "id": "rack-ambient-idm-polymeter",
+      "name": "Ambient IDM Polymeter Rack",
+      "state": {
+        "bpm": 82,
+        "key": {
+          "root": 3,
+          "scale": "lydian"
+        },
+        "modules": [
+          {
+            "id": "drums-ambient-idm-polymeter-1",
+            "type": "drums",
+            "name": "Sparse Dust",
+            "color": "ember",
+            "seed": 2399716692,
+            "params": {
+              "steps": 32,
+              "groove": 5,
+              "swing": 22,
+              "humanize": 28,
+              "overrideLanes": 255,
+              "lane0": 8396801,
+              "lane1": 33554944,
+              "lane2": 269516932,
+              "lane3": 134219776,
+              "lane4": 262144,
+              "lane5": 2097184,
+              "lane6": 1073758216,
+              "lane7": 536875008
+            },
+            "slots": [
+              {
+                "seed": 2399716692,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 28,
+                  "overrideLanes": 255,
+                  "lane0": 8396801,
+                  "lane1": 33554944,
+                  "lane2": 269516932,
+                  "lane3": 134219776,
+                  "lane4": 262144,
+                  "lane5": 2097184,
+                  "lane6": 1073758216,
+                  "lane7": 536875008
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2416494311,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 28,
+                  "overrideLanes": 255,
+                  "lane0": 8396801,
+                  "lane1": 33554944,
+                  "lane2": 269516932,
+                  "lane3": 134219776,
+                  "lane4": 262144,
+                  "lane5": 2097184,
+                  "lane6": 1140867080,
+                  "lane7": 4026535936
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2433271930,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 15,
+                  "humanize": 18,
+                  "overrideLanes": 255,
+                  "lane0": 1,
+                  "lane1": 33554944,
+                  "lane2": 268468228,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2450049549,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 28,
+                  "overrideLanes": 255,
+                  "lane0": 8396801,
+                  "lane1": 33554944,
+                  "lane2": 1431688661,
+                  "lane3": 134219776,
+                  "lane4": 269746176,
+                  "lane5": 2097184,
+                  "lane6": 1073758216,
+                  "lane7": 4026535936
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2332606216,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 28,
+                  "overrideLanes": 255,
+                  "lane0": 8396801,
+                  "lane1": 33554944,
+                  "lane2": 269516932,
+                  "lane3": 134219776,
+                  "lane4": 262144,
+                  "lane5": 4194368,
+                  "lane6": 2147516432,
+                  "lane7": 1073750016
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2349383835,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 28,
+                  "overrideLanes": 255,
+                  "lane0": 8396801,
+                  "lane1": 33554944,
+                  "lane2": 269516932,
+                  "lane3": 1212172352,
+                  "lane4": 262144,
+                  "lane5": 2097184,
+                  "lane6": 65569,
+                  "lane7": 536875008
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2366161454,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 11,
+                  "humanize": 0,
+                  "overrideLanes": 255,
+                  "lane0": 8396801,
+                  "lane1": 33554944,
+                  "lane2": 4,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2382939073,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 28,
+                  "overrideLanes": 255,
+                  "lane0": 8396801,
+                  "lane1": 1375732224,
+                  "lane2": 269516932,
+                  "lane3": 134219776,
+                  "lane4": 262144,
+                  "lane5": 2097184,
+                  "lane6": 3959439368,
+                  "lane7": 3959427072
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.31,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "drums-odd-v2",
+              "params": {
+                "tone": 65,
+                "punch": 58,
+                "decay": 42
+              },
+              "pan": 0,
+              "delaySend": 12,
+              "reverbSend": 42
+            },
+            "midi": {
+              "portId": null,
+              "channel": 10
+            },
+            "automation": []
+          },
+          {
+            "id": "bass-ambient-idm-polymeter-2",
+            "type": "bass",
+            "name": "Low Fog",
+            "color": "forest",
+            "seed": 2279643246,
+            "params": {
+              "style": 4,
+              "steps": 29,
+              "range": 1,
+              "density": 18,
+              "drive": 0,
+              "octave": 2,
+              "gate": 100
+            },
+            "slots": [
+              {
+                "seed": 2279643246,
+                "params": {
+                  "style": 4,
+                  "steps": 29,
+                  "range": 1,
+                  "density": 18,
+                  "drive": 0,
+                  "octave": 2,
+                  "gate": 100
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2296420865,
+                "params": {
+                  "style": 4,
+                  "steps": 29,
+                  "range": 1,
+                  "density": 32,
+                  "drive": 0,
+                  "octave": 2,
+                  "gate": 88
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2246088008,
+                "params": {
+                  "style": 4,
+                  "steps": 29,
+                  "range": 1,
+                  "density": 8,
+                  "drive": 0,
+                  "octave": 2,
+                  "gate": 100
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2262865627,
+                "params": {
+                  "style": 4,
+                  "steps": 29,
+                  "range": 2,
+                  "density": 46,
+                  "drive": 20,
+                  "octave": 2,
+                  "gate": 100
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2346753722,
+                "params": {
+                  "style": 4,
+                  "steps": 29,
+                  "range": 1,
+                  "density": 12,
+                  "drive": 0,
+                  "octave": 1,
+                  "gate": 100
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2363531341,
+                "params": {
+                  "style": 5,
+                  "steps": 29,
+                  "range": 1,
+                  "density": 18,
+                  "drive": 0,
+                  "octave": 2,
+                  "gate": 100
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2313198484,
+                "params": {
+                  "style": 0,
+                  "steps": 29,
+                  "range": 1,
+                  "density": 26,
+                  "drive": 0,
+                  "octave": 2,
+                  "gate": 100
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2329976103,
+                "params": {
+                  "style": 3,
+                  "steps": 29,
+                  "range": 1,
+                  "density": 18,
+                  "drive": 0,
+                  "octave": 2,
+                  "gate": 80
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.28,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "bass-clean-v2",
+              "params": {
+                "wave": 0,
+                "cutoff": 72,
+                "resonance": 10,
+                "envelope": 30,
+                "drive": 0,
+                "glide": 5,
+                "sub": 20
+              },
+              "pan": 0,
+              "delaySend": 0,
+              "reverbSend": 24
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "chords-ambient-idm-polymeter-3",
+            "type": "chords",
+            "name": "Cloud Current",
+            "color": "plum",
+            "seed": 1261944300,
+            "params": {
+              "length": 4,
+              "quality": 4,
+              "duration": 32,
+              "strum": 56
+            },
+            "slots": [
+              {
+                "seed": 1261944300,
+                "params": {
+                  "length": 4,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 56
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1278721919,
+                "params": {
+                  "length": 4,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 74
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1295499538,
+                "params": {
+                  "length": 4,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 94
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1312277157,
+                "params": {
+                  "length": 4,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 48
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1194833824,
+                "params": {
+                  "length": 4,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 56
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1211611443,
+                "params": {
+                  "length": 4,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 66
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1228389062,
+                "params": {
+                  "length": 3,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 56
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1245166681,
+                "params": {
+                  "length": 5,
+                  "quality": 4,
+                  "duration": 32,
+                  "strum": 84
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.43,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "chords-drift-v2",
+              "params": {
+                "tone": 52,
+                "attack": 60,
+                "release": 96,
+                "width": 86,
+                "chorus": 90
+              },
+              "pan": -14,
+              "delaySend": 28,
+              "reverbSend": 64
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "euclid-ambient-idm-polymeter-4",
+            "type": "euclid",
+            "name": "Five Seven Nine",
+            "color": "teal",
+            "seed": 407761231,
+            "params": {
+              "steps1": 5,
+              "hits1": 2,
+              "rotation1": 1,
+              "note1": 51,
+              "steps2": 7,
+              "hits2": 3,
+              "rotation2": 2,
+              "note2": 58,
+              "steps3": 9,
+              "hits3": 4,
+              "rotation3": 0,
+              "note3": 63,
+              "separateChannels": 0
+            },
+            "slots": [
+              {
+                "seed": 407761231,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 2,
+                  "rotation1": 1,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 3,
+                  "rotation2": 2,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 4,
+                  "rotation3": 0,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 390983612,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 2,
+                  "rotation1": 2,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 3,
+                  "rotation2": 4,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 4,
+                  "rotation3": 3,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 441316469,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 0,
+                  "rotation1": 3,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 2,
+                  "rotation2": 6,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 3,
+                  "rotation3": 6,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 424538850,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 4,
+                  "rotation1": 4,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 5,
+                  "rotation2": 1,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 5,
+                  "rotation3": 0,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 340650755,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 2,
+                  "rotation1": 0,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 3,
+                  "rotation2": 3,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 4,
+                  "rotation3": 3,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 323873136,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 2,
+                  "rotation1": 1,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 3,
+                  "rotation2": 5,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 4,
+                  "rotation3": 6,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 374205993,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 2,
+                  "rotation1": 2,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 3,
+                  "rotation2": 0,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 4,
+                  "rotation3": 0,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 357428374,
+                "params": {
+                  "steps1": 5,
+                  "hits1": 2,
+                  "rotation1": 3,
+                  "note1": 51,
+                  "steps2": 7,
+                  "hits2": 3,
+                  "rotation2": 2,
+                  "note2": 58,
+                  "steps3": 9,
+                  "hits3": 4,
+                  "rotation3": 3,
+                  "note3": 63,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.27,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "euclid-tide-v2",
+              "params": {
+                "tone": 26,
+                "decay": 92,
+                "spread": 58
+              },
+              "pan": 22,
+              "delaySend": 38,
+              "reverbSend": 58
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "arp-ambient-idm-polymeter-5",
+            "type": "arp",
+            "name": "Slow Constellation",
+            "color": "navy",
+            "seed": 4057990634,
+            "params": {
+              "direction": 3,
+              "rate": 0,
+              "span": 3,
+              "gate": 100,
+              "followChords": 1,
+              "octave": 4
+            },
+            "slots": [
+              {
+                "seed": 4057990634,
+                "params": {
+                  "direction": 3,
+                  "rate": 0,
+                  "span": 3,
+                  "gate": 100,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4074768253,
+                "params": {
+                  "direction": 1,
+                  "rate": 0,
+                  "span": 3,
+                  "gate": 90,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4024435396,
+                "params": {
+                  "direction": 3,
+                  "rate": 0,
+                  "span": 2,
+                  "gate": 100,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4041213015,
+                "params": {
+                  "direction": 3,
+                  "rate": 1,
+                  "span": 4,
+                  "gate": 82,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3990880158,
+                "params": {
+                  "direction": 3,
+                  "rate": 0,
+                  "span": 3,
+                  "gate": 100,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4007657777,
+                "params": {
+                  "direction": 0,
+                  "rate": 0,
+                  "span": 4,
+                  "gate": 100,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3957324920,
+                "params": {
+                  "direction": 1,
+                  "rate": 0,
+                  "span": 3,
+                  "gate": 100,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3974102539,
+                "params": {
+                  "direction": 3,
+                  "rate": 3,
+                  "span": 3,
+                  "gate": 76,
+                  "followChords": 1,
+                  "octave": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.29,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "arp-dark-v2",
+              "params": {
+                "tone": 18,
+                "brightness": 36,
+                "decay": 72,
+                "character": 30
+              },
+              "pan": 16,
+              "delaySend": 48,
+              "reverbSend": 62
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "piano-ambient-idm-polymeter-6",
+            "type": "piano",
+            "name": "Overlapping Lights",
+            "color": "indigo",
+            "seed": 2103442268,
+            "params": {
+              "length": 2,
+              "inKey": 1
+            },
+            "slots": [
+              {
+                "seed": 2103442268,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 22,
+                      "pitch": 51,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 5.25,
+                      "durationSteps": 18,
+                      "pitch": 58,
+                      "velocity": 48
+                    },
+                    {
+                      "startStep": 12.5,
+                      "durationSteps": 25,
+                      "pitch": 67,
+                      "velocity": 57
+                    },
+                    {
+                      "startStep": 21.75,
+                      "durationSteps": 20,
+                      "pitch": 62,
+                      "velocity": 43
+                    },
+                    {
+                      "startStep": 31,
+                      "durationSteps": 26,
+                      "pitch": 69,
+                      "velocity": 66
+                    },
+                    {
+                      "startStep": 40.25,
+                      "durationSteps": 18,
+                      "pitch": 65,
+                      "velocity": 51
+                    },
+                    {
+                      "startStep": 49.5,
+                      "durationSteps": 14,
+                      "pitch": 72,
+                      "velocity": 59
+                    },
+                    {
+                      "startStep": 57.25,
+                      "durationSteps": 10,
+                      "pitch": 75,
+                      "velocity": 46
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 2120219887,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 4,
+                      "durationSteps": 22,
+                      "pitch": 51,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 9.25,
+                      "durationSteps": 18,
+                      "pitch": 58,
+                      "velocity": 48
+                    },
+                    {
+                      "startStep": 16.5,
+                      "durationSteps": 25,
+                      "pitch": 67,
+                      "velocity": 57
+                    },
+                    {
+                      "startStep": 25.75,
+                      "durationSteps": 20,
+                      "pitch": 62,
+                      "velocity": 43
+                    },
+                    {
+                      "startStep": 35,
+                      "durationSteps": 26,
+                      "pitch": 69,
+                      "velocity": 66
+                    },
+                    {
+                      "startStep": 44.25,
+                      "durationSteps": 18,
+                      "pitch": 65,
+                      "velocity": 51
+                    },
+                    {
+                      "startStep": 53.5,
+                      "durationSteps": 14,
+                      "pitch": 72,
+                      "velocity": 59
+                    },
+                    {
+                      "startStep": 61.25,
+                      "durationSteps": 10,
+                      "pitch": 75,
+                      "velocity": 46
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 2136997506,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 26.4,
+                      "pitch": 51,
+                      "velocity": 42
+                    },
+                    {
+                      "startStep": 12.5,
+                      "durationSteps": 30,
+                      "pitch": 67,
+                      "velocity": 42
+                    },
+                    {
+                      "startStep": 31,
+                      "durationSteps": 31.2,
+                      "pitch": 69,
+                      "velocity": 46
+                    },
+                    {
+                      "startStep": 49.5,
+                      "durationSteps": 16.8,
+                      "pitch": 72,
+                      "velocity": 42
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 2153775125,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 22,
+                      "pitch": 51,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 0,
+                      "durationSteps": 22,
+                      "pitch": 63,
+                      "velocity": 48
+                    },
+                    {
+                      "startStep": 5.25,
+                      "durationSteps": 18,
+                      "pitch": 58,
+                      "velocity": 48
+                    },
+                    {
+                      "startStep": 12.5,
+                      "durationSteps": 25,
+                      "pitch": 67,
+                      "velocity": 57
+                    },
+                    {
+                      "startStep": 21.75,
+                      "durationSteps": 20,
+                      "pitch": 62,
+                      "velocity": 43
+                    },
+                    {
+                      "startStep": 21.75,
+                      "durationSteps": 20,
+                      "pitch": 74,
+                      "velocity": 48
+                    },
+                    {
+                      "startStep": 31,
+                      "durationSteps": 26,
+                      "pitch": 69,
+                      "velocity": 66
+                    },
+                    {
+                      "startStep": 40.25,
+                      "durationSteps": 18,
+                      "pitch": 65,
+                      "velocity": 51
+                    },
+                    {
+                      "startStep": 49.5,
+                      "durationSteps": 14,
+                      "pitch": 72,
+                      "velocity": 59
+                    },
+                    {
+                      "startStep": 49.5,
+                      "durationSteps": 14,
+                      "pitch": 84,
+                      "velocity": 48
+                    },
+                    {
+                      "startStep": 57.25,
+                      "durationSteps": 10,
+                      "pitch": 75,
+                      "velocity": 46
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 2036331792,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 31.9,
+                      "pitch": 51,
+                      "velocity": 36
+                    },
+                    {
+                      "startStep": 5.25,
+                      "durationSteps": 26.099999999999998,
+                      "pitch": 58,
+                      "velocity": 36
+                    },
+                    {
+                      "startStep": 12.5,
+                      "durationSteps": 36.25,
+                      "pitch": 67,
+                      "velocity": 36
+                    },
+                    {
+                      "startStep": 21.75,
+                      "durationSteps": 29,
+                      "pitch": 62,
+                      "velocity": 36
+                    },
+                    {
+                      "startStep": 31,
+                      "durationSteps": 37.699999999999996,
+                      "pitch": 69,
+                      "velocity": 38
+                    },
+                    {
+                      "startStep": 40.25,
+                      "durationSteps": 26.099999999999998,
+                      "pitch": 65,
+                      "velocity": 36
+                    },
+                    {
+                      "startStep": 49.5,
+                      "durationSteps": 20.3,
+                      "pitch": 72,
+                      "velocity": 36
+                    },
+                    {
+                      "startStep": 57.25,
+                      "durationSteps": 14.5,
+                      "pitch": 75,
+                      "velocity": 36
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 2053109411,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 22,
+                      "pitch": 63,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 5.25,
+                      "durationSteps": 18,
+                      "pitch": 58,
+                      "velocity": 48
+                    },
+                    {
+                      "startStep": 12.5,
+                      "durationSteps": 25,
+                      "pitch": 67,
+                      "velocity": 57
+                    },
+                    {
+                      "startStep": 21.75,
+                      "durationSteps": 20,
+                      "pitch": 62,
+                      "velocity": 43
+                    },
+                    {
+                      "startStep": 31,
+                      "durationSteps": 26,
+                      "pitch": 81,
+                      "velocity": 66
+                    },
+                    {
+                      "startStep": 40.25,
+                      "durationSteps": 18,
+                      "pitch": 65,
+                      "velocity": 51
+                    },
+                    {
+                      "startStep": 49.5,
+                      "durationSteps": 14,
+                      "pitch": 72,
+                      "velocity": 59
+                    },
+                    {
+                      "startStep": 57.25,
+                      "durationSteps": 10,
+                      "pitch": 75,
+                      "velocity": 46
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 2069887030,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 8,
+                      "durationSteps": 22,
+                      "pitch": 51,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 20.5,
+                      "durationSteps": 25,
+                      "pitch": 67,
+                      "velocity": 57
+                    },
+                    {
+                      "startStep": 29.75,
+                      "durationSteps": 20,
+                      "pitch": 62,
+                      "velocity": 43
+                    },
+                    {
+                      "startStep": 48.25,
+                      "durationSteps": 18,
+                      "pitch": 65,
+                      "velocity": 51
+                    },
+                    {
+                      "startStep": 57.5,
+                      "durationSteps": 14,
+                      "pitch": 72,
+                      "velocity": 59
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 2086664649,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 22,
+                      "pitch": 51,
+                      "velocity": 74
+                    },
+                    {
+                      "startStep": 5.37,
+                      "durationSteps": 18,
+                      "pitch": 58,
+                      "velocity": 44
+                    },
+                    {
+                      "startStep": 12.5,
+                      "durationSteps": 25,
+                      "pitch": 67,
+                      "velocity": 53
+                    },
+                    {
+                      "startStep": 21.87,
+                      "durationSteps": 20,
+                      "pitch": 62,
+                      "velocity": 39
+                    },
+                    {
+                      "startStep": 31,
+                      "durationSteps": 26,
+                      "pitch": 69,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 40.37,
+                      "durationSteps": 18,
+                      "pitch": 65,
+                      "velocity": 47
+                    },
+                    {
+                      "startStep": 49.5,
+                      "durationSteps": 14,
+                      "pitch": 72,
+                      "velocity": 55
+                    },
+                    {
+                      "startStep": 57.37,
+                      "durationSteps": 10,
+                      "pitch": 75,
+                      "velocity": 42
+                    }
+                  ]
+                }
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": false,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.38,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "piano-tremolo-v2",
+              "params": {
+                "tone": 48,
+                "bell": 42,
+                "decay": 76,
+                "tremolo": 86
+              },
+              "pan": -6,
+              "delaySend": 44,
+              "reverbSend": 68
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 0,
+          "delayFeedback": 68,
+          "delayReturn": 44,
+          "reverbReturn": 68,
+          "masterCharacter": 18
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-ambient-idm-polymeter",
+  "scenes": [
+    {
+      "id": "scene-ambient-idm-polymeter-intro",
+      "name": "Intro",
+      "assignments": {
+        "drums-ambient-idm-polymeter-1": 4,
+        "bass-ambient-idm-polymeter-2": 4,
+        "chords-ambient-idm-polymeter-3": 4,
+        "euclid-ambient-idm-polymeter-4": 4,
+        "arp-ambient-idm-polymeter-5": 4,
+        "piano-ambient-idm-polymeter-6": 4
+      }
+    },
+    {
+      "id": "scene-ambient-idm-polymeter-main",
+      "name": "Main",
+      "assignments": {
+        "drums-ambient-idm-polymeter-1": 0,
+        "bass-ambient-idm-polymeter-2": 0,
+        "chords-ambient-idm-polymeter-3": 0,
+        "euclid-ambient-idm-polymeter-4": 0,
+        "arp-ambient-idm-polymeter-5": 0,
+        "piano-ambient-idm-polymeter-6": 0
+      }
+    },
+    {
+      "id": "scene-ambient-idm-polymeter-variation",
+      "name": "Variation",
+      "assignments": {
+        "drums-ambient-idm-polymeter-1": 1,
+        "bass-ambient-idm-polymeter-2": 1,
+        "chords-ambient-idm-polymeter-3": 1,
+        "euclid-ambient-idm-polymeter-4": 1,
+        "arp-ambient-idm-polymeter-5": 1,
+        "piano-ambient-idm-polymeter-6": 1
+      }
+    },
+    {
+      "id": "scene-ambient-idm-polymeter-peak",
+      "name": "Peak",
+      "assignments": {
+        "drums-ambient-idm-polymeter-1": 3,
+        "bass-ambient-idm-polymeter-2": 3,
+        "chords-ambient-idm-polymeter-3": 3,
+        "euclid-ambient-idm-polymeter-4": 3,
+        "arp-ambient-idm-polymeter-5": 3,
+        "piano-ambient-idm-polymeter-6": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Ambient IDM Polymeter",
+    "demo": true
+  },
+  "createdAt": 1787824800000,
+  "updatedAt": 1787824800000
+}

@@ -29,9 +29,13 @@ npm run dev
 
 The Vite server sends COOP/COEP headers. Open the printed localhost URL rather than opening `index.html` directly.
 
-## Example project
+## Bundled demo projects
 
-[Basic Electro](public/projects/basic-electro.sequens-r.json) is a schema-version-3 project at 110 BPM in C minor with Drums and Arp modules. Open the 🧰 Workspace button and choose Import to exercise the same validated project path used by exported user projects.
+The Workspace demo picker ships ten schema-version-5 genre projects: Detroit Minimal Techno, Deep Tech House, Euphoric Trance, Neon Synthwave, Halftime Dubstep Trap, Ambient IDM Polymeter, Electro Funk Machine, Hardstyle Overdrive, Jungle Drum & Bass, and Nu-Disco Night Drive. Each project contains eight deterministic slots per module, editable piano-roll material, and four scenes named Intro, Main, Variation, and Peak.
+
+The demos store their channel levels, pan, sends, delay/reverb returns, and master character in the rack's normal mix state. They do not add Mixer modules; use the permanent Mixer button beside Workspace to edit the shared rack mix. The two former Basic Electro projects remain at the end of the catalog as compatibility examples.
+
+The catalog and its JSON files live under [`public/projects/`](public/projects/). Regenerate the ten genre projects deterministically with `npm run demos:generate`. See the [demo-project library reference](.agents/docs/demo-projects.md) for the complete matrix and verification contract.
 
 ## Verification
 
@@ -41,4 +45,4 @@ npm run verify
 
 This runs strict Svelte/TypeScript checks, deterministic unit and property tests, a production PWA build, the 200 KiB initial-JavaScript gate, and the Chrome browser flows.
 
-See [Phase 1 evidence](.agents/docs/phase-1-sound.md), [Phase 2 evidence](.agents/docs/phase-2-persistence.md), [Phase 3 evidence](.agents/docs/phase-3-midi-outputs.md), [Phase 4 evidence](.agents/docs/phase-4-desktop.md), [Phase 5 evidence](.agents/docs/phase-5-polish.md), the [Phase 6 specification](.agents/docs/phase-6-mobile-studio.md), the [Phase 7 sound specification](.agents/docs/phase-7-sound-quality.md), the [complete module improvement roadmap](.agents/docs/module-improvement-roadmap.md), [UI reorganization evidence](.agents/docs/ui-reorganization.md), and [architecture decisions](.agents/docs/architecture-decisions.md) for the current acceptance status, future module work, and technical rationale.
+See [Phase 1 evidence](.agents/docs/phase-1-sound.md), [Phase 2 evidence](.agents/docs/phase-2-persistence.md), [Phase 3 evidence](.agents/docs/phase-3-midi-outputs.md), [Phase 4 evidence](.agents/docs/phase-4-desktop.md), [Phase 5 evidence](.agents/docs/phase-5-polish.md), the [Phase 6 specification](.agents/docs/phase-6-mobile-studio.md), the [Phase 7 sound specification](.agents/docs/phase-7-sound-quality.md), the [demo-project library](.agents/docs/demo-projects.md), the [complete module improvement roadmap](.agents/docs/module-improvement-roadmap.md), [UI reorganization evidence](.agents/docs/ui-reorganization.md), and [architecture decisions](.agents/docs/architecture-decisions.md) for the current acceptance status, future module work, and technical rationale.

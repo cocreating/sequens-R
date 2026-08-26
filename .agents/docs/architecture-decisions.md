@@ -40,7 +40,7 @@ Decision: persist a versioned project document in native IndexedDB through a sma
 - Project import runs through the same migration and validation path as IndexedDB restoration.
 - `navigator.storage.persist()` is requested from the explicit Save gesture; ordinary edits still autosave without prompting.
 - New documents use `New Project` as their default name. Migration rewrites only the former exact default `Untitled Project`, preserving every user-authored project name.
-- Versioned example documents may ship under `public/projects/` and enter the app only through the ordinary import/migration boundary. A validated `public/projects/index.json` catalog drives the Workspace demo picker; both the catalog and its project documents are precached for offline use. The catalog currently includes the migrated `Basic Electro` example and the schema-version-4, engine-version-2 `Basic Electro 2` project.
+- Versioned example documents may ship under `public/projects/` and enter the app only through the ordinary import/migration boundary. A validated `public/projects/index.json` catalog drives the Workspace demo picker. The catalog includes ten schema-version-5 genre demos with eight slots and four scenes each, followed by the two legacy Basic Electro examples for compatibility. New demos persist rack mix state and use the permanent Mixer view without adding a Mixer module. The genre files and catalog are regenerated with `npm run demos:generate`.
 
 ## AD-004 · Phase 3 export contract
 

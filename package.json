@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "demos:generate": "vite-node scripts/generate-demo-projects.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",

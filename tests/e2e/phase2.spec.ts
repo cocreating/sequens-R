@@ -1,7 +1,31 @@
 import { readFile } from 'node:fs/promises';
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator } from '@playwright/test';
 
 test.use({ viewport: { width: 375, height: 667 } });
+
+async function expectPlayingBorder(button: Locator): Promise<void> {
+  const colors = await button.evaluate((element) => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(--color-playing)';
+    element.append(probe);
+    const expected = getComputedStyle(probe).color;
+    probe.remove();
+    return { actual: getComputedStyle(element).borderTopColor, expected };
+  });
+  expect(colors.actual).toBe(colors.expected);
+}
+
+test('activated buttons use the playing color for their border', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const bass = page.getByRole('listitem', { name: 'Bass' });
+
+  await expectPlayingBorder(bass.getByRole('button', { name: 'Bass slot 1' }));
+  await expectPlayingBorder(bass.locator('.step-lane button[aria-pressed="true"]').first());
+
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
+  await expectPlayingBorder(page.locator('.rack-tabs button[aria-selected="true"]'));
+});
 
 test('lists and loads a bundled demo project', async ({ page }) => {
   await page.goto('/');

@@ -133,7 +133,7 @@ const PRESET_ROWS = [
   { id: 'legacy-arp-v1', moduleType: 'arp', label: 'Legacy Arp', params: defaultsFor('arp') },
   { id: 'arp-core-v2', moduleType: 'arp', label: 'Threadlight', params: { tone: 52, brightness: 58, decay: 42, character: 22 }, outputTrimDb: 19.7 },
   { id: 'legacy-euclid-v1', moduleType: 'euclid', label: 'Legacy Euclid', params: defaultsFor('euclid') },
-  { id: 'euclid-core-v2', moduleType: 'euclid', label: 'Core Palette', params: defaultsFor('euclid') },
+  { id: 'euclid-core-v2', moduleType: 'euclid', label: 'Orbit', params: defaultsFor('euclid'), outputTrimDb: 13.25 },
   { id: 'legacy-piano-v1', moduleType: 'piano', label: 'Legacy Piano', params: defaultsFor('piano') },
   { id: 'piano-core-v2', moduleType: 'piano', label: 'Amberkey', params: { tone: 52, bell: 34, decay: 58, tremolo: 12 }, outputTrimDb: 15.7 },
   { id: 'legacy-cc-v1', moduleType: 'cc', label: 'Legacy silent control', params: defaultsFor('cc') },
@@ -186,6 +186,11 @@ const PRESET_ROWS = [
   { id: 'piano-dark-v2', moduleType: 'piano', label: 'Night felt', params: { tone: 14, bell: 12, decay: 82, tremolo: 22 }, outputTrimDb: 13.4 },
   { id: 'piano-bright-v2', moduleType: 'piano', label: 'Sun tine', params: { tone: 92, bell: 58, decay: 44, tremolo: 6 }, outputTrimDb: 17 },
   { id: 'piano-tremolo-v2', moduleType: 'piano', label: 'Reed shimmer', params: { tone: 48, bell: 42, decay: 76, tremolo: 86 }, outputTrimDb: 14.2 },
+  { id: 'euclid-shards-v2', moduleType: 'euclid', label: 'Shards', params: { tone: 82, decay: 24, spread: 76 }, outputTrimDb: 15.7 },
+  { id: 'euclid-cairn-v2', moduleType: 'euclid', label: 'Cairn', params: { tone: 34, decay: 68, spread: 32 }, outputTrimDb: 12.7 },
+  { id: 'euclid-circuit-v2', moduleType: 'euclid', label: 'Circuit', params: { tone: 68, decay: 42, spread: 92 }, outputTrimDb: 13.5 },
+  { id: 'euclid-tide-v2', moduleType: 'euclid', label: 'Tide', params: { tone: 26, decay: 92, spread: 58 }, outputTrimDb: 12.7 },
+  { id: 'euclid-skein-v2', moduleType: 'euclid', label: 'Skein', params: { tone: 54, decay: 52, spread: 100 }, outputTrimDb: 13 },
 ] satisfies readonly PresetRow[];
 
 export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({

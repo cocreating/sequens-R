@@ -234,6 +234,18 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
     title: 'Acid audio drive',
     body: 'Adds bounded saturation before and after the internal resonant filter. It changes harmonics without changing MIDI velocity.',
   },
+  'euclid.tone': {
+    title: 'Ring tone',
+    body: 'Sets the brightness of all three internal tuned-percussion rings. It does not change their generated MIDI note values or timing.',
+  },
+  'euclid.decay': {
+    title: 'Ring decay',
+    body: 'Sets the monitored decay of each Euclid ring, with a distinct fixed contour per ring. MIDI note durations remain unchanged.',
+  },
+  'euclid.spread': {
+    title: 'Ring spread',
+    body: 'Sets the internal left-to-right separation of the three Euclid rings. It affects monitoring only; the module output Pan remains separate.',
+  },
   'chords.tone': {
     title: 'Chord tone',
     body: 'Blends the bounded dual oscillators and sets the base low-pass cutoff. Note velocity opens each voice filter further without changing MIDI.',

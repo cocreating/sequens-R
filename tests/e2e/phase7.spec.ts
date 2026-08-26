@@ -47,7 +47,7 @@ test('legacy projects expose a reversible upgrade and control modules stay silen
   await page.getByRole('button', { name: 'Add', exact: true }).click();
   const control = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'cc module name' }) });
   await control.getByText('Sound', { exact: true }).click();
-  await expect(control.getByText('Silent control module')).toBeVisible();
+  await expect(control.getByText(/sends MIDI control data to external hardware/u)).toBeVisible();
   await expect(control.getByLabel('Pan')).toHaveCount(0);
 });
 

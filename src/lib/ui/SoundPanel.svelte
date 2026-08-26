@@ -24,6 +24,13 @@
   let presets = $derived(presetsFor(moduleType));
   let silent = $derived(moduleType === 'mixer' || moduleType === 'cc' || moduleType === 'mod');
   let presetLabel = $derived(moduleType === 'drums' ? 'Kit' : moduleType === 'euclid' ? 'Palette' : 'Preset');
+  let silentNote = $derived(
+    moduleType === 'cc'
+      ? 'CC Control sends MIDI control data to external hardware. It has no internal voice, panorama, or effect sends.'
+      : moduleType === 'mod'
+        ? 'Mod sends tempo-synchronised MIDI CC data to external hardware. It has no internal voice, panorama, or effect sends.'
+        : 'Silent control module · no internal voice, panorama, or effect sends.',
+  );
 </script>
 
 <details class="sound-panel">
@@ -46,7 +53,7 @@
     </div>
 
     {#if silent}
-      <p class="silent-sound-note">Silent control module · no internal voice, panorama, or effect sends.</p>
+      <p class="silent-sound-note">{silentNote}</p>
     {:else}
       <div class="parameters sound-parameters">
         {#each schema as definition (definition.key)}

@@ -28,6 +28,7 @@ import { frequencyForAcidMidi, planAcidTransition } from '../../src/lib/audio/vo
 import { chordAttackSeconds, chordCutoffHz, chordEnvelopeLevelAt, chordReleaseSeconds, chordVelocityGain, frequencyForChordMidi, selectChordVoiceSlot, type ChordVoiceAllocationState } from '../../src/lib/audio/voices/chords';
 import { arpCutoffHz, arpDecaySeconds, arpReleaseEndOffset, arpVelocityGain, frequencyForArpMidi, selectArpVoiceSlot, type ArpVoiceSlotState } from '../../src/lib/audio/voices/arp';
 import { frequencyForPianoMidi, pianoDecaySeconds, pianoModulationDepthHz, pianoToneCutoffHz, pianoVelocityGain, selectPianoVoiceSlot, type PianoVoiceSlotState } from '../../src/lib/audio/voices/piano';
+import { euclidDecaySeconds, euclidRingPan, euclidToneCutoffHz, euclidVelocityGain, frequencyForEuclidMidi } from '../../src/lib/audio/voices/euclid';
 import { SCALE_NAMES, type ModuleType } from '../../src/lib/core/pattern';
 import { randomInt, sfc32 } from '../../src/lib/core/rng';
 import { createSmfType1 } from '../../src/lib/export/smf';
@@ -43,6 +44,7 @@ import {
   createModule,
   modulePattern,
   setManualPattern,
+  setModuleParams,
   setModuleSoundParam,
   toEngineSnapshot,
   toShareableRack,
@@ -763,6 +765,133 @@ describe('Phase 7.7 eight-voice electric Piano', () => {
     const changed = { ...rack, modules: rack.modules.map((module) => module.id === piano.id ? changedPiano : module) };
     expect(modulePattern(changedPiano, changed.key, changed.modules)).toEqual(beforePattern);
     expect(createSmfType1(changed, 4)).toEqual(beforeSmf);
+  });
+});
+
+describe('Phase 7.8 three-ring Euclid percussion', () => {
+  const presetIds = [
+    'euclid-core-v2', 'euclid-shards-v2', 'euclid-cairn-v2',
+    'euclid-circuit-v2', 'euclid-tide-v2', 'euclid-skein-v2',
+  ] as const;
+
+  it('keeps legacy isolated and exposes six palettes through one factory identity', () => {
+    const presets = presetsFor('euclid');
+    expect(presets.filter(({ id }) => id.startsWith('legacy-'))).toHaveLength(1);
+    expect(presets.filter(({ id }) => !id.startsWith('legacy-')).map(({ id }) => id)).toEqual(presetIds);
+    expect(new Set(presets.map(({ label }) => label)).size).toBe(7);
+    expect(VOICE_FACTORY.identify({ type: 'euclid', sound: soundForPreset('euclid', 'euclid-core-v2') }).implementationId).toBe('procedural-euclid-v2');
+    expect(VOICE_FACTORY.identify({ type: 'euclid', sound: soundForPreset('euclid', 'legacy-euclid-v1') }).implementationId).toBe('legacy-poly-triangle-v1');
+  });
+
+  it('round-trips all appended palettes without moving released compact indexes', async () => {
+    expect(SOUND_PRESETS.slice(0, 16).map(({ id }) => id)).toEqual([
+      'legacy-drums-v1', 'drums-core-v2', 'legacy-bass-v1', 'bass-core-v2',
+      'legacy-acid-v1', 'acid-core-v2', 'legacy-chords-v1', 'chords-core-v2',
+      'legacy-mixer-v1', 'silent-mixer-v2', 'legacy-arp-v1', 'arp-core-v2',
+      'legacy-euclid-v1', 'euclid-core-v2', 'legacy-piano-v1', 'piano-core-v2',
+    ]);
+    for (const presetId of presetIds) {
+      const rack = createRackState({ ...STARTER_RACK, modules: [{ type: 'euclid', seed: 0x7800_0001, params: {}, sound: soundForPreset('euclid', presetId) }] });
+      const shareable = toShareableRack(rack);
+      const encoded = await serializeRack(shareable);
+      expect(await deserializeRack(encoded)).toEqual(normalizeRack(shareable));
+      expect(encoded.byteLength).toBeLessThanOrEqual(400);
+    }
+  });
+
+  it('maps three independent rings to bounded pitch, decay, tone, and stereo values', () => {
+    expect(frequencyForEuclidMidi(0)).toBeGreaterThan(8);
+    expect(frequencyForEuclidMidi(127)).toBeLessThan(13_000);
+    expect(euclidDecaySeconds(50, 0)).toBeGreaterThan(euclidDecaySeconds(50, 2));
+    expect(euclidDecaySeconds(-1, 1)).toBe(euclidDecaySeconds(0, 1));
+    expect(euclidDecaySeconds(101, 1)).toBe(euclidDecaySeconds(100, 1));
+    expect(euclidToneCutoffHz(20, 0)).toBeLessThan(euclidToneCutoffHz(90, 0));
+    expect(euclidToneCutoffHz(50, 0)).not.toBe(euclidToneCutoffHz(50, 2));
+    expect(euclidRingPan(100, 0)).toBeLessThan(0);
+    expect(euclidRingPan(100, 1)).toBe(0);
+    expect(euclidRingPan(100, 2)).toBeGreaterThan(0);
+    expect(euclidVelocityGain(20, 0)).toBeLessThan(euclidVelocityGain(110, 0));
+  });
+
+  it('preallocates exactly three tuned-percussion chains and preserves generator/MIDI bytes', () => {
+    const source = readFileSync(new URL('../../src/lib/audio/voices/euclid.ts', import.meta.url), 'utf8');
+    expect(source).toContain('Array.from({ length: 3 }');
+    const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
+    expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|StereoPannerNode|DelayNode)/u);
+    expect(triggerBody).toContain('const start = time + (wasActive ? 0.0025 : 0)');
+    expect(triggerBody).toContain('ring.envelope.gain.linearRampToValueAtTime(MIN_GAIN, start)');
+    expect(moduleHelpFor('sound:euclid:spread', 'euclid', 'Euclid').body).toMatch(/monitoring only/u);
+
+    const euclid = createModule('euclid', 0x7800_0002);
+    const rack = createRackState(STARTER_RACK);
+    rack.modules.push(euclid);
+    const beforePattern = modulePattern(euclid, rack.key, rack.modules);
+    const beforeSmf = createSmfType1(rack, 4);
+    const changedEuclid = setModuleSoundParam(euclid, 'spread', 100);
+    const changed = { ...rack, modules: rack.modules.map((module) => module.id === euclid.id ? changedEuclid : module) };
+    expect(modulePattern(changedEuclid, changed.key, changed.modules)).toEqual(beforePattern);
+    expect(createSmfType1(changed, 4)).toEqual(beforeSmf);
+  });
+});
+
+describe('Phase 7.9 silent CC Control', () => {
+  it('uses the formal silent contract and never constructs an internal voice', () => {
+    const sound = soundForPreset('cc', 'silent-cc-v2');
+    expect(createDefaultSound('cc').presetId).toBe('silent-cc-v2');
+    expect(VOICE_FACTORY.identify({ type: 'cc', sound }).implementationId).toBe('silent-cc-v2');
+    expect(VOICE_FACTORY.create(null as unknown as BaseAudioContext, { type: 'cc', sound }, null as unknown as AudioNode)).toBeNull();
+
+    const factorySource = readFileSync(new URL('../../src/lib/audio/voice-factory.ts', import.meta.url), 'utf8');
+    const engineSource = readFileSync(new URL('../../src/lib/audio/engine.ts', import.meta.url), 'utf8');
+    const bounceSource = readFileSync(new URL('../../src/lib/export/bounce.ts', import.meta.url), 'utf8');
+    expect(factorySource).toContain("if (module.type === 'cc') return null");
+    expect(engineSource).toContain('if (isControlModule(module.type)) return { type: module.type, strip: null, voice: null');
+    expect(bounceSource).toContain('!isControlModule(module.type)');
+  });
+
+  it('keeps automation, MIDI routing, and SMF bytes independent from the silent sound state', () => {
+    const cc = createModule('cc', 0x7900_0001);
+    const rack = createRackState(STARTER_RACK);
+    rack.modules.push(cc);
+    const beforePattern = modulePattern(cc, rack.key, rack.modules);
+    const beforeSmf = createSmfType1(rack, 4);
+    expect(() => setModuleSoundParam(cc, 'ignored', 50)).toThrow(/cc\.ignored is not a known sound parameter/u);
+    expect(modulePattern(cc, rack.key, rack.modules)).toEqual(beforePattern);
+    expect(createSmfType1(rack, 4)).toEqual(beforeSmf);
+  });
+});
+
+describe('Phase 7.10 silent Mod', () => {
+  it('uses the formal silent identity and never constructs an internal voice', () => {
+    const sound = soundForPreset('mod', 'silent-mod-v2');
+    expect(createDefaultSound('mod').presetId).toBe('silent-mod-v2');
+    expect(VOICE_FACTORY.identify({ type: 'mod', sound }).implementationId).toBe('silent-mod-v2');
+    expect(VOICE_FACTORY.create(null as unknown as BaseAudioContext, { type: 'mod', sound }, null as unknown as AudioNode)).toBeNull();
+
+    const factorySource = readFileSync(new URL('../../src/lib/audio/voice-factory.ts', import.meta.url), 'utf8');
+    const engineSource = readFileSync(new URL('../../src/lib/audio/engine.ts', import.meta.url), 'utf8');
+    const bounceSource = readFileSync(new URL('../../src/lib/export/bounce.ts', import.meta.url), 'utf8');
+    expect(factorySource).toContain("if (module.type === 'mod') return null");
+    expect(engineSource).toContain('if (isControlModule(module.type)) return { type: module.type, strip: null, voice: null');
+    expect(bounceSource).toContain('!isControlModule(module.type)');
+  });
+
+  it('keeps three maximum-rate LFOs in the external MIDI/SMF path without audio sound parameters', () => {
+    const initial = createModule('mod', 0x7a00_0001);
+    const mod = setModuleParams(initial, {
+      ...initial.params,
+      enabled1: 1, enabled2: 1, enabled3: 1,
+      rate1: 0, rate2: 0, rate3: 0,
+      depth1: 63, depth2: 63, depth3: 63,
+    });
+    const rack = createRackState(STARTER_RACK);
+    rack.modules.push(mod);
+    const pattern = modulePattern(mod, rack.key, rack.modules);
+    expect(pattern.events).toHaveLength(768);
+    expect(new Set(pattern.events.map(({ lane }) => lane))).toEqual(new Set([0, 1, 2]));
+    expect(pattern.events.every((event) => event.cc !== undefined && event.value !== undefined && event.value >= 0 && event.value <= 127)).toBe(true);
+    expect(createSmfType1(rack, 4).byteLength).toBeGreaterThan(0);
+    expect(() => setModuleSoundParam(mod, 'ignored', 50)).toThrow(/mod\.ignored is not a known sound parameter/u);
   });
 });
 

@@ -1,6 +1,6 @@
 # Phase 7 · Sound identity and mix
 
-Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. The user subsequently opened each next phase after the Acid, Chords, and Arp references, closing those listening gates. Phase 7.7 Piano implementation and objective evidence are complete and awaiting listening approval. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
+Status: Phase 7.0 is accepted. Phase 7.1 and Phase 7.2 implementation/automated evidence completed on 2026-08-25; the user approved the six Drum kits that day and opened the next phase after hearing the eight Bass presets on 2026-08-26. The user subsequently opened each next phase after the Acid, Chords, and Arp references, closing those listening gates. Phase 7.7 Piano and Phase 7.8 Euclid implementation/objective evidence are complete and await listening approval; Phase 7.9 CC Control and Phase 7.10 Mod are implemented and automatically accepted as silent contracts. Mixer listening and physical Android C10 remain open; Phase 6 physical Android acceptance also remains open. The user's explicit “empezamos phase 7”, subsequent “adelante”, and instructions to continue to the next phase authorize these phase-boundary exceptions without approving or waiving any physical gate.
 
 ## 1. Outcome
 
@@ -369,7 +369,7 @@ DoD:
 
 Deliver:
 
-- a formal `silent-cc-v1` preset and null voice-factory result;
+- a formal `silent-cc-v2` preset and null voice-factory result. The `v2` suffix is retained because this release already has schema-4 projects and shared links using that append-only engine-version-2 preset ID;
 - UI text explaining that it controls external sound and therefore has no internal voice;
 - validation that automation, mute, solo, routing, bounce, and stems do not allocate or leak audio nodes.
 
@@ -384,7 +384,7 @@ DoD:
 
 Deliver:
 
-- a formal `silent-mod-v1` preset and null voice-factory result;
+- a formal `silent-mod-v2` preset and null voice-factory result. The `v2` suffix is retained because this release already has schema-4 projects and shared links using that append-only engine-version-2 preset ID;
 - UI text explaining that its LFOs target external MIDI CC in this phase;
 - validation that three maximum-rate LFOs do not allocate internal voices or modulate sound state.
 
@@ -698,4 +698,63 @@ Generated audition files are local and ignored by Git under `test-results/phase7
 | Sun tine | −18.0 | −9.7 dBTP | −127.3 dBFS |
 | Reed shimmer | −18.0 | −8.1 dBTP | −127.0 dBFS |
 
-All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.7 awaits user listening approval and physical Android C10. Phase 7.8 Euclid remains paused until these Piano references are reviewed; the final legacy/cache purge remains deferred until every audible family has an approved replacement.
+All files have distinct SHA-256 digests and pass −18 LUFS-I ±1, ≤ −1 dBTP, finite PCM, and ≤ −60 dBFS DC gates. Phase 7.7 awaits user listening approval and physical Android C10. Phase 7.8 was subsequently implemented and reviewed without treating that work as Piano listening approval; the final legacy/cache purge remains deferred until every audible family has an approved replacement.
+
+## 19. Phase 7.8 evidence · three-ring Euclid percussion
+
+Implemented on 2026-08-26:
+
+- New engine-version-2 Euclid presets select `procedural-euclid-v2`; `legacy-euclid-v1` remains on the original triangle voice until the final approved legacy purge. The published `euclid-core-v2` index stays fixed, and five palettes are appended after the existing banks.
+- One Euclid module preallocates three independent tuned-percussion chains, mapped exclusively from the existing event lanes. Each chain has persistent carrier, overtone, FM modulator, filter, envelope, and panorama nodes; triggering schedules parameters only and creates no audio nodes.
+- Review on 2026-08-26 added a 2.5 ms retrigger crossfade whenever a ring is still sounding. Dense same-ring hits now reach silence before the next excitation instead of discontinuously resetting the active envelope, while every event remains scheduled and the persistent three-chain ceiling is unchanged.
+- Existing ring note values select monitored pitch, while each ring owns a distinct decay contour, harmonic relationship, tone response, and deterministic spread position. These details are internal-monitor-only: the Bjorklund pattern, event timing, MIDI channel offsets, outgoing MIDI notes, and SMF bytes remain unchanged.
+- The six palettes are Orbit, Shards, Cairn, Circuit, Tide, and Skein. They cover neutral, bright, earthy, electronic, low/long, and wide polymetric roles without sharing Drum-kit synthesis.
+
+Automated verification:
+
+- strict Svelte/TypeScript diagnostics: 0 errors and 0 warnings;
+- Svelte 5 autofixer review of `SoundPanel.svelte`: no issues or suggestions;
+- unit/property tests: 111 passed across 16 files, including fixed catalog indexes, six palette project/link round trips, legacy isolation, bounded three-ring pitch/decay/tone/spread mappings, zero trigger-time node construction, contextual help, silent-control contracts, and unchanged generator/MIDI/SMF output;
+- production PWA build/offline precache and bundle gate: passed at 102.14 KiB initial JavaScript gzip / 200 KiB;
+- targeted Playwright: all three Phase 7.8–7.10 tests passed. The full run completed 50 of 51 tests; the sole existing mobile critical-path timing assertion measured 68.389 ms scheduler-message jitter under concurrent desktop load on this host, above its unchanged 20 ms gate. All sound renders, CC/Mod flows, accessibility, persistence, and MIDI tests passed.
+
+The mobile Playwright render test exports every palette from a dense three-ring phrase. All files are distinct:
+
+| Palette | LUFS-I | True peak | DC |
+| --- | ---: | ---: | ---: |
+| Orbit | −18.0 | −1.5 dBTP | −97.1 dBFS |
+| Shards | −18.0 | −1.5 dBTP | −89.6 dBFS |
+| Cairn | −18.0 | −1.7 dBTP | −111.4 dBFS |
+| Circuit | −18.0 | −1.6 dBTP | −97.4 dBFS |
+| Tide | −18.0 | −1.7 dBTP | −110.6 dBFS |
+| Skein | −18.0 | −1.7 dBTP | −110.5 dBFS |
+
+Generated audition files are local and ignored by Git under `test-results/phase7.8/`. Phase 7.8 awaits listening approval and the shared physical Android C10 acceptance; the final legacy/cache purge remains deferred until every audible family has an approved replacement.
+
+## 20. Phase 7.9 evidence · silent CC Control
+
+Implemented and automatically accepted on 2026-08-26:
+
+- `silent-cc-v2` is the explicit factory identity for CC Control. It remains the existing append-only project/share preset ID; no migration or replacement is needed. The factory returns `null` before touching an audio context or destination.
+- The Sound panel now says that CC Control sends MIDI control data to external hardware and has no internal voice, panorama, or effect sends. It exposes no sound macros, panning, or sends.
+- The engine creates neither a module strip nor a voice for CC Control. Offline mix and stem rendering filter all control modules before graph/voice creation, so CC events are delivered only through the MIDI scheduler path.
+
+Automated verification:
+
+- strict Svelte/TypeScript diagnostics: 0 errors and 0 warnings;
+- unit coverage asserts the canonical default/identity, direct null factory result, excluded engine/bounce path, invalid audio-parameter rejection, and unchanged CC pattern/SMF output;
+- a 375 × 812 Chrome flow verifies the external-only UI text, absence of pan/sends, recordable CC movement, and regular transport behavior.
+
+## 21. Phase 7.10 evidence · silent Mod
+
+Implemented and automatically accepted on 2026-08-26:
+
+- `silent-mod-v2` is the explicit factory identity for Mod. It retains the existing append-only project/share ID and returns `null` before touching an audio context or destination.
+- Mod continues to generate tempo-synchronised external MIDI CC LFO events only. The Sound panel explicitly says that it has no internal voice, panorama, or effect sends, and exposes none of those controls.
+- The engine and offline bounce/stem paths remove all control modules before audio-strip or voice creation. This prevents the three LFOs from acquiring an implicit internal modulation target or allocating audio nodes.
+
+Automated verification:
+
+- strict Svelte/TypeScript diagnostics: 0 errors and 0 warnings;
+- unit coverage asserts the canonical default/identity, direct null factory result, engine/bounce exclusion, three enabled maximum-rate LFO lanes with 768 bounded CC events, and non-empty SMF output without audio sound parameters;
+- a 375 × 812 Chrome flow enables all three LFOs at their fastest rate and maximum depth, verifies the external-only UI/no sends, and completes normal Play/Stop transport.

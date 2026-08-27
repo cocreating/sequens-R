@@ -19,7 +19,8 @@
     <div><dt>Audio state</dt><dd>{diagnostics.state}</dd></div>
     <div><dt>Output latency</dt><dd class:warning={latencyWarning}>{milliseconds(diagnostics.latencySeconds)}</dd></div>
     <div><dt>Scheduler jitter</dt><dd>{diagnostics.schedulerJitterMs === null ? 'Waiting for data' : `${diagnostics.schedulerJitterMs.toFixed(3)} ms σ`}</dd></div>
-    <div><dt>Active voices</dt><dd>{diagnostics.activeVoices}</dd></div>
+    <div><dt>Active voices</dt><dd>{diagnostics.activeVoices} / {diagnostics.voiceBudget}</dd></div>
+    <div><dt>Dropped internal notes</dt><dd>{diagnostics.droppedInternalNotes}</dd></div>
     <div><dt>Average render load</dt><dd>{diagnostics.renderCapacitySupported ? ratio(diagnostics.averageRenderLoad) : 'Unsupported · fixed voice ceiling'}</dd></div>
     <div><dt>Peak render load</dt><dd class:warning={loadWarning}>{diagnostics.renderCapacitySupported ? ratio(diagnostics.peakRenderLoad) : 'Unsupported'}</dd></div>
     <div><dt>Underrun ratio</dt><dd>{diagnostics.renderCapacitySupported ? ratio(diagnostics.underrunRatio) : 'Unsupported'}</dd></div>
@@ -27,5 +28,5 @@
   </dl>
   {#if latencyWarning}<p class="diagnostic-warning">Output latency exceeds the 40 ms reference budget.</p>{/if}
   {#if loadWarning}<p class="diagnostic-warning">Audio render load is above 0.8. Mute modules or reduce polyphony.</p>{/if}
-  {#if !diagnostics.renderCapacitySupported}<p class="diagnostic-note">Render Capacity API is unavailable; the fixed 16-module voice ceiling remains active.</p>{/if}
+  {#if !diagnostics.renderCapacitySupported}<p class="diagnostic-note">Render Capacity API is unavailable; the adaptive live voice budget remains active.</p>{/if}
 </details>

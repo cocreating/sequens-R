@@ -14,9 +14,10 @@
 
   let { pattern, syncBeat = null, playing, bpm, editable = false, laneLabels = [], ontoggle }: Props = $props();
   let lanes = $derived(Math.max(laneLabels.length, 1, ...pattern.events.map((event) => (event.lane ?? 0) + 1)));
+  let activeSteps = $derived(new Set(pattern.events.map((event) => `${event.lane ?? 0}:${Math.floor(event.startStep)}`)));
 
   function isActive(lane: number, step: number): boolean {
-    return pattern.events.some((event) => (event.lane ?? 0) === lane && Math.floor(event.startStep) === step);
+    return activeSteps.has(`${lane}:${step}`);
   }
 
 </script>

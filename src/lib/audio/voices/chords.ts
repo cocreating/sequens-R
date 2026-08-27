@@ -99,7 +99,7 @@ export class ChordVoice {
   readonly #chorusDepthRight: GainNode;
   #sound: Readonly<SoundState>;
 
-  constructor(context: BaseAudioContext, destination: AudioNode, sound: Readonly<SoundState>) {
+  constructor(context: BaseAudioContext, destination: AudioNode, sound: Readonly<SoundState>, voiceCount = 8) {
     this.#context = context;
     this.#sound = { ...sound, params: { ...sound.params } };
     this.#dryBus = new GainNode(context, { gain: 0.72 });
@@ -121,7 +121,8 @@ export class ChordVoice {
     this.#chorusLfo.connect(this.#chorusDepthRight).connect(this.#chorusDelayRight.delayTime);
     this.#chorusLfo.start();
 
-    this.#slots = Array.from({ length: 8 }, (_, index) => {
+    const boundedVoiceCount = Math.max(1, Math.min(SLOT_PAN.length, Math.round(voiceCount)));
+    this.#slots = Array.from({ length: boundedVoiceCount }, (_, index) => {
       const oscillatorA = new OscillatorNode(context, { type: 'triangle', frequency: 110, detune: SLOT_DETUNE[index]! });
       const oscillatorB = new OscillatorNode(context, { type: 'sawtooth', frequency: 110, detune: -SLOT_DETUNE[index]! * 0.7 });
       const oscillatorBGain = new GainNode(context, { gain: 0.12 });
@@ -230,5 +231,9 @@ export class ChordVoice {
 
   get activeVoiceCount(): number {
     return this.#slots.filter((slot) => slot.releaseEnd > this.#context.currentTime).length;
+  }
+
+  get maxVoiceCount(): number {
+    return this.#slots.length;
   }
 }

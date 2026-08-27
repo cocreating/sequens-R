@@ -8,12 +8,21 @@ declare class AudioWorkletProcessor {
 
 class SequensClockProcessor extends AudioWorkletProcessor {
   #quantumCount = 0;
+  #quantaPerTick = 32;
+
+  constructor() {
+    super();
+    this.port.onmessage = (message: MessageEvent<{ active?: boolean }>) => {
+      this.#quantaPerTick = message.data.active === true ? 4 : 32;
+      this.#quantumCount = 0;
+    };
+  }
 
   process(): boolean {
     this.#quantumCount += 1;
-    if (this.#quantumCount === 4) {
+    if (this.#quantumCount === this.#quantaPerTick) {
       this.#quantumCount = 0;
-      this.port.postMessage({ type: 'tick', contextTime: currentTime });
+      this.port.postMessage({ type: 'tick', contextTime: currentTime, active: this.#quantaPerTick === 4 });
     }
     return true;
   }

@@ -22,7 +22,17 @@ export interface InternalVoice {
   panic(time: number): void;
   dispose(time: number): void;
   readonly activeVoiceCount: number;
+  readonly maxVoiceCount: number;
 }
+
+export interface VoiceLimits {
+  chordVoices: number;
+  arpVoices: number;
+  pianoVoices: number;
+}
+
+export const FULL_VOICE_LIMITS: Readonly<VoiceLimits> = Object.freeze({ chordVoices: 8, arpVoices: 4, pianoVoices: 8 });
+export const MOBILE_VOICE_LIMITS: Readonly<VoiceLimits> = Object.freeze({ chordVoices: 5, arpVoices: 3, pianoVoices: 4 });
 
 export interface VoiceIdentity {
   moduleType: ModuleType;
@@ -31,7 +41,7 @@ export interface VoiceIdentity {
 }
 
 export class VoiceFactory {
-  create(context: BaseAudioContext, module: VoiceModuleSnapshot, destination: AudioNode): InternalVoice | null {
+  create(context: BaseAudioContext, module: VoiceModuleSnapshot, destination: AudioNode, limits: Readonly<VoiceLimits> = FULL_VOICE_LIMITS): InternalVoice | null {
     validateSoundState(module.type, module.sound as SoundState);
     // CC is an external MIDI control surface by contract. Keep its null voice
     // explicit so it cannot accidentally enter a future internal DSP path.
@@ -43,10 +53,10 @@ export class VoiceFactory {
     if (module.type === 'drums') return new ProceduralDrumVoice(context, destination, module.sound);
     if (module.type === 'bass') return new BassVoice(context, destination, module.sound);
     if (module.type === 'acid') return new AcidVoice(context, destination, module.sound);
-    if (module.type === 'chords') return new ChordVoice(context, destination, module.sound);
-    if (module.type === 'arp') return new ArpVoice(context, destination, module.sound);
+    if (module.type === 'chords') return new ChordVoice(context, destination, module.sound, limits.chordVoices);
+    if (module.type === 'arp') return new ArpVoice(context, destination, module.sound, limits.arpVoices);
     if (module.type === 'euclid') return new EuclidVoice(context, destination, module.sound);
-    return new PianoVoice(context, destination, module.sound);
+    return new PianoVoice(context, destination, module.sound, limits.pianoVoices);
   }
 
   identify(module: VoiceModuleSnapshot): VoiceIdentity {

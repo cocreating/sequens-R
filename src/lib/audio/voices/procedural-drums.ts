@@ -188,6 +188,7 @@ function holdAndRamp(param: AudioParam, value: number, time: number, duration = 
 }
 
 export class ProceduralDrumVoice {
+  readonly maxVoiceCount = 16;
   readonly #context: BaseAudioContext;
   readonly #lanes: readonly LaneBus[];
   readonly #buffers: readonly (readonly AudioBuffer[])[];
@@ -222,6 +223,13 @@ export class ProceduralDrumVoice {
   }
 
   trigger(event: NoteEvent, time: number): void {
+    if (this.#active.size >= this.maxVoiceCount) {
+      const oldest = this.#active.keys().next().value as AudioBufferSourceNode | undefined;
+      if (oldest !== undefined) {
+        try { oldest.stop(time + 0.002); } catch { /* It may already be scheduled to stop. */ }
+        this.#active.delete(oldest);
+      }
+    }
     const lane = clamp(Math.round(event.lane ?? event.pitch - 36), 0, 7);
     if (lane === 2) this.#chokeOpenHat(time);
     const variant = drumVariationIndex(this.#sound.presetId, lane, event, this.#triggerIndex);

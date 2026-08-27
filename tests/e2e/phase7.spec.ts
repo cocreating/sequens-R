@@ -5,7 +5,7 @@ test.use({ viewport: { width: 375, height: 667 } });
 
 test('sound state has one accessible mobile shell independent from generator controls', async ({ page }) => {
   await page.goto('/');
-  expect(await page.evaluate(() => localStorage.getItem('sequens-r:library-release'))).toBe('phase-7-v2');
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('sequens-r:library-release'))).toBe('phase-7-v2');
   const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
   await drums.getByText('Sound', { exact: true }).click();
 

@@ -233,7 +233,7 @@ Cross-module work should generally happen in this order:
 - **P1:** deterministic pattern modes for order, octave sequence, skip/repeat, and rhythm masks.
 - **P1:** visual indication of source chord and current traversal position without coupling visibility to playback.
 - **P2:** latch/hold workflow and chord capture, designed for keyboard and touch.
-- **P2:** adaptive voice ceiling only after Android profiling; preserve deterministic stealing.
+- **Implemented performance baseline (2026-08-27):** mobile live playback uses three Arp slots inside the shared 32-voice rack budget; full live/offline profiles retain four. Further adaptation still requires Android profiling and must preserve deterministic stealing.
 
 ### Required evidence for changes
 
@@ -408,7 +408,7 @@ An improvement is not complete until all applicable items are recorded:
 
 ## 16. Suggested next sequence
 
-1. Close current Phase 7 acceptance: Mixer, Piano, Euclid, final mixed starter, scheduler jitter, and Android C10.
+1. Close current Phase 7 acceptance: Mixer, Piano, Euclid, final mixed starter, and Android C10. The local browser scheduler-message gate passed after the 2026-08-27 interval-jitter correction; physical MIDI jitter remains inside C10.
 2. Run a short product-use observation period before choosing module expansion work.
 3. Prefer workflow depth first: Piano editing, explicit Chords context sources, CC automation editing, and Drum per-step expression.
 4. Add synthesis breadth only when listening feedback identifies a concrete missing role.

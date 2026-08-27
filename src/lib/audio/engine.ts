@@ -6,8 +6,8 @@ import acidWorkletUrl from './acid.worklet.ts?worker&url';
 import { MidiTimeBridge } from '../midi/time-bridge';
 import type { MidiSink } from '../midi/types';
 import { createDefaultSound, DEFAULT_RACK_MIX } from './sound';
-import { VOICE_FACTORY, type InternalVoice } from './voice-factory';
-import { RackAudioGraph, type MeterReading, type RackModuleStrip } from './rack-graph';
+import { FULL_VOICE_LIMITS, MOBILE_VOICE_LIMITS, VOICE_FACTORY, type InternalVoice, type VoiceLimits } from './voice-factory';
+import { audibleLevelPower, RackAudioGraph, type MeterReading, type RackModuleStrip } from './rack-graph';
 
 interface ModuleVoice {
   type: ModuleType;
@@ -41,12 +41,26 @@ export interface AudioDiagnostics {
   averageRenderLoad: number | null;
   peakRenderLoad: number | null;
   underrunRatio: number | null;
+  voiceBudget: number;
+  droppedInternalNotes: number;
   masterMeter: MeterReading;
   moduleMeters: Readonly<Record<string, MeterReading>>;
 }
 
 const EMPTY_SNAPSHOT: EngineSnapshot = { bpm: 118, modules: [] };
 const EMPTY_SOUND_SNAPSHOT: RackSoundSnapshot = { mix: DEFAULT_RACK_MIX, modules: [] };
+
+interface LiveVoiceProfile {
+  limits: Readonly<VoiceLimits>;
+  budget: number;
+}
+
+function defaultLiveVoiceProfile(): LiveVoiceProfile {
+  const mobileSurface = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse) and (max-width: 64rem)').matches;
+  return mobileSurface
+    ? { limits: MOBILE_VOICE_LIMITS, budget: 32 }
+    : { limits: FULL_VOICE_LIMITS, budget: 64 };
+}
 
 export class AudioEngine {
   #context: AudioContext | null = null;
@@ -66,11 +80,19 @@ export class AudioEngine {
   #averageRenderLoad: number | null = null;
   #peakRenderLoad: number | null = null;
   #underrunRatio: number | null = null;
+  readonly #voiceLimits: Readonly<VoiceLimits>;
+  readonly #voiceBudget: number;
+  #droppedInternalNotes = 0;
+  #meteringEnabled = false;
+  #moduleById = new Map<string, EngineModuleSnapshot>();
+  #anySolo = false;
 
-  constructor(onBar: ((bar: number) => void) | null = null, midi: MidiSink | null = null, onPosition: ((beat: number | null) => void) | null = null) {
+  constructor(onBar: ((bar: number) => void) | null = null, midi: MidiSink | null = null, onPosition: ((beat: number | null) => void) | null = null, voiceProfile: LiveVoiceProfile = defaultLiveVoiceProfile()) {
     this.#onBar = onBar;
     this.#midi = midi;
     this.#onPosition = onPosition;
+    this.#voiceLimits = voiceProfile.limits;
+    this.#voiceBudget = voiceProfile.budget;
   }
 
   get ready(): boolean {
@@ -110,6 +132,8 @@ export class AudioEngine {
       averageRenderLoad: this.#averageRenderLoad,
       peakRenderLoad: this.#peakRenderLoad,
       underrunRatio: this.#underrunRatio,
+      voiceBudget: this.#voiceBudget,
+      droppedInternalNotes: this.#droppedInternalNotes,
       masterMeter: this.#graph?.readMasterMeter() ?? { peakDbfs: -120, rmsDbfs: -120 },
       moduleMeters,
     };
@@ -137,7 +161,7 @@ export class AudioEngine {
     }
     const context = new AudioContext({ latencyHint: 'interactive' });
     await Promise.all([context.audioWorklet.addModule(clockWorkletUrl), context.audioWorklet.addModule(acidWorkletUrl)]);
-    const graph = new RackAudioGraph(context, context.destination, this.#snapshot.bpm, this.#soundSnapshot.mix);
+    const graph = new RackAudioGraph(context, context.destination, this.#snapshot.bpm, this.#soundSnapshot.mix, audibleLevelPower(this.#snapshot.modules));
     this.#midiTime = new MidiTimeBridge(context);
     this.#midiResyncTimer = window.setInterval(() => this.#midiTime?.resync(), 1000);
     const scheduler = new AudioScheduler(context, this.#snapshot, (note) => this.#schedule(note), this.#onBar, (time) => this.#scheduleClock(time), this.#onPosition);
@@ -163,6 +187,7 @@ export class AudioEngine {
   publish(snapshot: EngineSnapshot, soundSnapshot: RackSoundSnapshot = this.#soundSnapshot): void {
     this.#silenceMidiTransitions(this.#snapshot.modules, snapshot.modules);
     this.#snapshot = snapshot;
+    this.#indexSnapshot(snapshot);
     this.#soundSnapshot = soundSnapshot;
     this.#syncVoices(snapshot.modules);
     this.#graph?.applyMix(soundSnapshot.mix, snapshot.bpm, this.#context?.currentTime ?? 0);
@@ -175,6 +200,12 @@ export class AudioEngine {
     this.#graph?.applyMix(snapshot.mix, this.#snapshot.bpm, this.#context?.currentTime ?? 0);
   }
 
+  setMeteringEnabled(enabled: boolean): void {
+    if (this.#meteringEnabled === enabled) return;
+    this.#meteringEnabled = enabled;
+    for (const module of this.#voices.values()) module.strip?.setMeteringEnabled(enabled);
+  }
+
   async play(): Promise<void> {
     if (this.#scheduler?.playing === true) return;
     await this.initialize();
@@ -184,12 +215,14 @@ export class AudioEngine {
     const transportTime = this.#toPerformanceTime(this.#context!.currentTime + 0.05);
     if (resuming) this.#midi?.resume(transportTime);
     else this.#midi?.start(transportTime);
+    this.#clock?.port.postMessage({ active: true });
     this.#scheduler!.start();
   }
 
   pause(): number | null {
     const pausedBeat = this.#scheduler?.pause() ?? null;
     if (pausedBeat === null) return null;
+    this.#clock?.port.postMessage({ active: false });
     this.#midi?.clear();
     this.#midi?.stop(this.#toPerformanceTime(this.#context?.currentTime ?? 0));
     this.panic();
@@ -198,6 +231,7 @@ export class AudioEngine {
 
   stop(): void {
     this.#scheduler?.stop();
+    this.#clock?.port.postMessage({ active: false });
     this.#midi?.clear();
     this.#midi?.stop(this.#toPerformanceTime(this.#context?.currentTime ?? 0));
     this.panic();
@@ -229,6 +263,7 @@ export class AudioEngine {
     }
     this.#graph?.dispose();
     this.#voices.clear();
+    this.#moduleById.clear();
     const context = this.#context;
     this.#context = null;
     this.#scheduler = null;
@@ -248,13 +283,23 @@ export class AudioEngine {
 
   #schedule(note: ScheduledNote): void {
     const module = this.#voices.get(note.moduleId);
-    const snapshot = this.#snapshot.modules.find((entry) => entry.id === note.moduleId);
-    const anySolo = this.#snapshot.modules.some((entry) => entry.solo);
-    if (snapshot === undefined || snapshot.mute || (anySolo && !snapshot.solo)) return;
+    const snapshot = this.#moduleById.get(note.moduleId);
+    if (snapshot === undefined || snapshot.mute || (this.#anySolo && !snapshot.solo)) return;
     if (note.event.cc === undefined) this.#midi?.note(snapshot.midi, note.event, this.#toPerformanceTime(note.time), note.duration * 1000);
     else this.#midi?.control(snapshot.midi, note.event, this.#toPerformanceTime(note.time));
     if (module === undefined || module.voice === null || !snapshot.monitor) return;
+    const moduleVoiceCount = module.voice.activeVoiceCount;
+    if (moduleVoiceCount < module.voice.maxVoiceCount && this.#activeVoiceCount() >= this.#voiceBudget) {
+      this.#droppedInternalNotes += 1;
+      return;
+    }
     module.voice.trigger(note.event, note.time, note.duration);
+  }
+
+  #activeVoiceCount(): number {
+    let active = 0;
+    for (const module of this.#voices.values()) active += module.voice?.activeVoiceCount ?? 0;
+    return active;
   }
 
   #scheduleClock(contextTime: number): void {
@@ -298,9 +343,23 @@ export class AudioEngine {
     const context = this.#context!;
     const soundModule = this.#soundFor(module);
     if (isControlModule(module.type)) return { type: module.type, strip: null, voice: null, presetId: soundModule.sound.presetId, crossfadeUntil: 0 };
-    const strip = this.#graph!.createModuleStrip(soundModule.sound, initialGain);
-    const voice = VOICE_FACTORY.create(context, soundModule, strip.input);
+    const strip = this.#graph!.createModuleStrip(soundModule.sound, initialGain, this.#meteringEnabled);
+    const voice = VOICE_FACTORY.create(context, soundModule, strip.input, this.#voiceLimits);
     return { type: module.type, strip, voice, presetId: soundModule.sound.presetId, crossfadeUntil: 0 };
+  }
+
+  #silentVoice(module: EngineModuleSnapshot): ModuleVoice {
+    return { type: module.type, strip: null, voice: null, presetId: this.#soundFor(module).sound.presetId, crossfadeUntil: 0 };
+  }
+
+  #retireVoice(module: ModuleVoice, time: number): void {
+    const disconnectAt = time + 0.008;
+    module.strip?.cancelAndFade(0, time, disconnectAt);
+    module.voice?.panic(disconnectAt);
+    window.setTimeout(() => {
+      module.voice?.dispose(disconnectAt);
+      module.strip?.disconnect();
+    }, 12);
   }
 
   #applyLevels(modules: readonly EngineModuleSnapshot[], time: number): void {
@@ -311,6 +370,7 @@ export class AudioEngine {
       const audible = module.monitor && !module.mute && (!anySolo || module.solo);
       voice.strip.applyLevel(audible ? module.level : 0, Math.max(time, voice.crossfadeUntil));
     }
+    this.#graph?.applyHeadroom(audibleLevelPower(modules), time);
   }
 
   #syncVoices(modules: readonly EngineModuleSnapshot[]): void {
@@ -319,22 +379,25 @@ export class AudioEngine {
     for (const [id, module] of this.#voices) {
       if (!moduleIds.has(id)) {
         const now = this.#context.currentTime;
-        const disconnectAt = now + 0.008;
-        module.strip?.cancelAndFade(0, now, disconnectAt);
-        module.voice?.panic(disconnectAt);
-        window.setTimeout(() => {
-          module.voice?.dispose(disconnectAt);
-          module.strip?.disconnect();
-        }, 12);
+        this.#retireVoice(module, now);
         this.#voices.delete(id);
       }
     }
+    const anySolo = modules.some((module) => module.solo);
     for (const module of modules) {
       const current = this.#voices.get(module.id);
       const sound = this.#soundFor(module);
+      const shouldCreate = !isControlModule(module.type)
+        && module.pattern.events.length > 0
+        && module.monitor
+        && !module.mute
+        && (!anySolo || module.solo);
       if (current === undefined) {
-        this.#voices.set(module.id, this.#makeVoice(module));
-      } else if (current.type !== module.type || current.presetId !== sound.sound.presetId) {
+        this.#voices.set(module.id, shouldCreate ? this.#makeVoice(module) : this.#silentVoice(module));
+      } else if (!shouldCreate) {
+        if (current.voice !== null || current.strip !== null) this.#retireVoice(current, this.#context.currentTime);
+        this.#voices.set(module.id, this.#silentVoice(module));
+      } else if (current.voice === null || current.strip === null || current.type !== module.type || current.presetId !== sound.sound.presetId) {
         const now = this.#context.currentTime;
         const crossfadeEnd = now + 0.012;
         current.strip?.cancelAndFade(0, now, crossfadeEnd);
@@ -352,5 +415,10 @@ export class AudioEngine {
       }
     }
     this.#applyLevels(modules, this.#context.currentTime);
+  }
+
+  #indexSnapshot(snapshot: EngineSnapshot): void {
+    this.#moduleById = new Map(snapshot.modules.map((module) => [module.id, module]));
+    this.#anySolo = snapshot.modules.some((module) => module.solo);
   }
 }

@@ -35,6 +35,7 @@ interface AcidSync {
 }
 
 type AcidMessage = AcidTrigger | AcidSoundChange | AcidPanic | AcidSync;
+const ACID_PARAM_KEYS: readonly (keyof AcidDspParams)[] = ['wave', 'cutoff', 'resonance', 'envAmount', 'decay', 'accent', 'slide', 'drive'];
 
 class SequensAcidProcessor extends AudioWorkletProcessor {
   readonly #events: AcidTrigger[] = [];
@@ -53,6 +54,9 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
   #filterEnvelope = 0;
   #attackUntil = Number.NEGATIVE_INFINITY;
   #panicTime: number | null = null;
+  readonly #attackCoefficient = Math.min(1, 1 / (sampleRate * 0.0012));
+  readonly #releaseCoefficient = Math.exp(-1 / (sampleRate * 0.012));
+  readonly #smoothCoefficient = 1 - Math.exp(-1 / (sampleRate * 0.012));
 
   constructor() {
     super();
@@ -76,6 +80,16 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
   process(_inputs: Float32Array[][], outputs: Float32Array[][]): boolean {
     const output = outputs[0]?.[0];
     if (output === undefined) return true;
+    const quantumEnd = currentTime + output.length / sampleRate;
+    const nextActivity = Math.min(
+      this.#events[0]?.startTime ?? Number.POSITIVE_INFINITY,
+      this.#soundChanges[0]?.time ?? Number.POSITIVE_INFINITY,
+      this.#panicTime ?? Number.POSITIVE_INFINITY,
+    );
+    if (this.#amplitudeEnvelope === 0 && this.#filterEnvelope === 0 && this.#paramsSettled() && nextActivity >= quantumEnd) {
+      output.fill(0);
+      return true;
+    }
     for (let index = 0; index < output.length; index += 1) {
       const time = currentTime + index / sampleRate;
       if (this.#panicTime !== null && time >= this.#panicTime) this.#panic();
@@ -117,30 +131,34 @@ class SequensAcidProcessor extends AudioWorkletProcessor {
     const accentDepth = acidAccentDepth(this.#accented, this.#currentParams.accent);
     const amplitudePeak = acidAmplitudePeak(this.#accented, this.#currentParams.accent);
     if (time < this.#attackUntil) {
-      this.#amplitudeEnvelope += (amplitudePeak - this.#amplitudeEnvelope) * Math.min(1, 1 / (sampleRate * 0.0012));
+      this.#amplitudeEnvelope += (amplitudePeak - this.#amplitudeEnvelope) * this.#attackCoefficient;
     } else if (time < this.#gateEnd) {
       const decay = acidDecaySeconds(this.#currentParams.decay);
       const sustain = 0.055 + accentDepth * 0.025;
       this.#amplitudeEnvelope = sustain + (this.#amplitudeEnvelope - sustain) * Math.exp(-1 / (sampleRate * decay));
     } else {
-      this.#amplitudeEnvelope *= Math.exp(-1 / (sampleRate * 0.012));
+      this.#amplitudeEnvelope *= this.#releaseCoefficient;
       if (this.#amplitudeEnvelope < 0.000_01) this.#amplitudeEnvelope = 0;
     }
     const filterDecay = acidDecaySeconds(this.#currentParams.decay) * (0.58 + accentDepth * 0.35);
     this.#filterEnvelope *= Math.exp(-1 / (sampleRate * filterDecay));
+    if (this.#filterEnvelope < 0.000_001) this.#filterEnvelope = 0;
   }
 
   #applySound(params: AcidDspParams): void {
-    for (const key of Object.keys(this.#targetParams) as Array<keyof AcidDspParams>) {
+    for (const key of ACID_PARAM_KEYS) {
       this.#targetParams[key] = clampAcid(params[key], 0, key === 'wave' ? 1 : 100);
     }
   }
 
   #smoothParams(): void {
-    const coefficient = 1 - Math.exp(-1 / (sampleRate * 0.012));
-    for (const key of Object.keys(this.#currentParams) as Array<keyof AcidDspParams>) {
-      this.#currentParams[key] += (this.#targetParams[key] - this.#currentParams[key]) * coefficient;
+    for (const key of ACID_PARAM_KEYS) {
+      this.#currentParams[key] += (this.#targetParams[key] - this.#currentParams[key]) * this.#smoothCoefficient;
     }
+  }
+
+  #paramsSettled(): boolean {
+    return ACID_PARAM_KEYS.every((key) => Math.abs(this.#targetParams[key] - this.#currentParams[key]) < 0.000_01);
   }
 
   #panic(): void {

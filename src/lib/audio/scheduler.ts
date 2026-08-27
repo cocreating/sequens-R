@@ -61,6 +61,8 @@ export class AudioScheduler {
   #paused = false;
   #resumeBeat = 0;
   readonly #timingOffsets: number[] = [];
+  #lastTimingContextTime: number | null = null;
+  #lastTimingPerformanceTime: number | null = null;
   #lastReportedBar = -1;
   #lastReportedStep = -1;
 
@@ -78,7 +80,7 @@ export class AudioScheduler {
     this.#clock = clock;
     clock.port.onmessage = (message: MessageEvent<ClockTickMessage>) => {
       if (message.data.type === 'tick') {
-        this.#recordTiming(message.data.contextTime);
+        if (message.data.active) this.#recordTiming(message.data.contextTime);
         this.#tick(message.data.contextTime);
       }
     };
@@ -105,6 +107,9 @@ export class AudioScheduler {
 
   start(): void {
     if (this.#playing) return;
+    this.#timingOffsets.length = 0;
+    this.#lastTimingContextTime = null;
+    this.#lastTimingPerformanceTime = null;
     const resumeBeat = this.#paused ? this.#resumeBeat : 0;
     const resuming = this.#paused;
     this.#playing = true;
@@ -218,10 +223,14 @@ export class AudioScheduler {
   }
 
   #recordTiming(contextTime: number): void {
-    const timestamp = this.#context.getOutputTimestamp();
-    if (timestamp.performanceTime === undefined || timestamp.contextTime === undefined) return;
-    const expectedPerformanceTime = timestamp.performanceTime + (contextTime - timestamp.contextTime) * 1000;
-    this.#timingOffsets.push(performance.now() - expectedPerformanceTime);
-    if (this.#timingOffsets.length > 256) this.#timingOffsets.shift();
+    const performanceTime = performance.now();
+    if (this.#lastTimingContextTime !== null && this.#lastTimingPerformanceTime !== null) {
+      const contextInterval = (contextTime - this.#lastTimingContextTime) * 1000;
+      const deliveryInterval = performanceTime - this.#lastTimingPerformanceTime;
+      this.#timingOffsets.push(deliveryInterval - contextInterval);
+      if (this.#timingOffsets.length > 64) this.#timingOffsets.shift();
+    }
+    this.#lastTimingContextTime = contextTime;
+    this.#lastTimingPerformanceTime = performanceTime;
   }
 }

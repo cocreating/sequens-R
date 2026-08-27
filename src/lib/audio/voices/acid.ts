@@ -33,6 +33,7 @@ function paramsFor(sound: Readonly<SoundState>): AcidDspParams {
 }
 
 abstract class WorkletAcidVoice {
+  readonly maxVoiceCount = 1;
   readonly ready: Promise<void>;
   readonly #context: BaseAudioContext;
   readonly #node: AudioWorkletNode;

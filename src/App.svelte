@@ -71,6 +71,8 @@
   import { DEFAULT_RACK_MIX, presetById, type RackMixState } from './lib/audio/sound';
 
   const APP_VERSION = __APP_VERSION__;
+  const EMPTY_MODULE_METERS: AudioDiagnostics['moduleMeters'] = Object.freeze({});
+  const SILENT_METER: AudioDiagnostics['masterMeter'] = Object.freeze({ peakDbfs: -120, rmsDbfs: -120 });
 
   let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
   const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
@@ -123,10 +125,12 @@
   let demoProjectsPopover = $state<HTMLDivElement>();
   let mixerPanVisible = $state(false);
   let mixerSendsVisible = $state(false);
+  let mixerOpen = $state(false);
+  let workspaceOpen = $state(false);
   let appHelp = $derived(appHelpFor(appHelpKey));
 
   onDestroy(() => {
-    if (diagnosticTimer !== null) window.clearInterval(diagnosticTimer);
+    if (diagnosticTimer !== null) window.clearTimeout(diagnosticTimer);
     if (saveTimer !== null) window.clearTimeout(saveTimer);
     void engine.destroy();
     void playbackSession.destroy();
@@ -250,6 +254,38 @@
 
   function publish(): void {
     engine.publish(toEngineSnapshot(rack), toSoundSnapshot(rack));
+    syncMetering();
+  }
+
+  function meteringRequested(): boolean {
+    return mixerOpen || workspaceOpen || rack.modules.some((module) => module.type === 'mixer' && !module.collapsed);
+  }
+
+  function syncMetering(): void {
+    engine.setMeteringEnabled(meteringRequested());
+  }
+
+  function handleStudioPopoverToggle(event: Event, panel: 'mixer' | 'workspace'): void {
+    const open = event.currentTarget instanceof HTMLElement && event.currentTarget.matches(':popover-open');
+    if (panel === 'mixer') mixerOpen = open;
+    else workspaceOpen = open;
+    syncMetering();
+    if (open) audioDiagnostics = engine.diagnostics;
+    if (playing) startDiagnosticPolling();
+  }
+
+  function pollDiagnostics(): void {
+    if (!playing) return;
+    schedulerJitter = engine.schedulerMessageJitterMs;
+    audioState = engine.state;
+    audioDiagnostics = engine.diagnostics;
+    diagnosticTimer = window.setTimeout(pollDiagnostics, meteringRequested() ? 100 : 500);
+  }
+
+  function startDiagnosticPolling(): void {
+    if (diagnosticTimer !== null) window.clearTimeout(diagnosticTimer);
+    diagnosticTimer = null;
+    pollDiagnostics();
   }
 
   function rackSnapshot(value: RackState = rack): RackState {
@@ -343,11 +379,7 @@
       audioState = engine.state;
       await playbackSession.setPlaying(true, rack.bpm, startBeat);
       status = 'Transport playing';
-      diagnosticTimer ??= window.setInterval(() => {
-        schedulerJitter = engine.schedulerMessageJitterMs;
-        audioState = engine.state;
-        audioDiagnostics = engine.diagnostics;
-      }, 250);
+      startDiagnosticPolling();
     } catch (reason: unknown) {
       error = reason instanceof Error ? reason.message : 'Audio could not start.';
       playing = false;
@@ -358,7 +390,7 @@
     playing = false;
     audioState = engine.state;
     audioDiagnostics = engine.diagnostics;
-    if (diagnosticTimer !== null) window.clearInterval(diagnosticTimer);
+    if (diagnosticTimer !== null) window.clearTimeout(diagnosticTimer);
     diagnosticTimer = null;
   }
 
@@ -972,7 +1004,7 @@
     {/if}
     {#if error}<p class="error" role="alert">{error}</p>{/if}
 
-    <aside class="studio-mixer" id="studio-mixer" popover aria-labelledby="mixer-heading">
+    <aside class="studio-mixer" id="studio-mixer" popover aria-labelledby="mixer-heading" ontoggle={(event) => handleStudioPopoverToggle(event, 'mixer')}>
       <header class="workspace-heading">
         <div>
           <p>Always-on rack mix</p>
@@ -987,25 +1019,27 @@
           <button type="button" aria-label="Close mixer" popovertarget="studio-mixer" popovertargetaction="hide">×</button>
         </div>
       </header>
-      <div class="studio-mixer-content">
-        <MixerPanel
-          id="rack-mixer"
-          modules={rack.modules}
-          mix={rack.mix}
-          meters={audioDiagnostics.moduleMeters}
-          masterMeter={audioDiagnostics.masterMeter}
-          onpatch={patchModule}
-          onsound={setSoundParam}
-          onmix={setRackMixParam}
-          oncommit={endCoalescing}
-          showPan={mixerPanVisible}
-          showSends={mixerSendsVisible}
-          ariaLabel="Rack mixer controls"
-        />
-      </div>
+      {#if mixerOpen}
+        <div class="studio-mixer-content">
+          <MixerPanel
+            id="rack-mixer"
+            modules={rack.modules}
+            mix={rack.mix}
+            meters={audioDiagnostics.moduleMeters}
+            masterMeter={audioDiagnostics.masterMeter}
+            onpatch={patchModule}
+            onsound={setSoundParam}
+            onmix={setRackMixParam}
+            oncommit={endCoalescing}
+            showPan={mixerPanVisible}
+            showSends={mixerSendsVisible}
+            ariaLabel="Rack mixer controls"
+          />
+        </div>
+      {/if}
     </aside>
 
-    <aside class="studio-workspace" id="studio-workspace" popover aria-labelledby="workspace-heading">
+    <aside class="studio-workspace" id="studio-workspace" popover aria-labelledby="workspace-heading" ontoggle={(event) => handleStudioPopoverToggle(event, 'workspace')}>
       <header class="workspace-heading">
         <div>
           <p>Studio utilities</p>
@@ -1014,7 +1048,7 @@
         </div>
         <button type="button" aria-label="Close workspace" popovertarget="studio-workspace" popovertargetaction="hide">×</button>
       </header>
-      <div class="workspace-utilities">
+      {#if workspaceOpen}<div class="workspace-utilities">
         <div class="utility-stack">
           <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
@@ -1103,7 +1137,7 @@
           </section>
           <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
         </div>
-      </div>
+      </div>{/if}
     </aside>
 
     <section
@@ -1147,8 +1181,8 @@
           rackModules={rack.modules}
           ontargetpatch={patchModule}
           rackMix={rack.mix}
-          meters={audioDiagnostics.moduleMeters}
-          masterMeter={audioDiagnostics.masterMeter}
+          meters={module.type === 'mixer' ? audioDiagnostics.moduleMeters : EMPTY_MODULE_METERS}
+          masterMeter={module.type === 'mixer' ? audioDiagnostics.masterMeter : SILENT_METER}
           ontargetsound={setSoundParam}
           onmixparam={setRackMixParam}
           midiOutputs={midiState.outputs}

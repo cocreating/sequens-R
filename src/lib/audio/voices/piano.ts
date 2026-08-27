@@ -81,7 +81,7 @@ export class PianoVoice {
   readonly #tremoloDepth: GainNode;
   #sound: Readonly<SoundState>;
 
-  constructor(context: BaseAudioContext, destination: AudioNode, sound: Readonly<SoundState>) {
+  constructor(context: BaseAudioContext, destination: AudioNode, sound: Readonly<SoundState>, voiceCount = 8) {
     this.#context = context;
     this.#sound = { ...sound, params: { ...sound.params } };
     this.#outputBus = new GainNode(context, { gain: 0.72 });
@@ -91,7 +91,8 @@ export class PianoVoice {
     this.#tremoloLfo.connect(this.#tremoloDepth).connect(this.#outputBus.gain);
     this.#tremoloLfo.start();
 
-    this.#slots = Array.from({ length: 8 }, (_, index) => {
+    const boundedVoiceCount = Math.max(1, Math.min(SLOT_PAN.length, Math.round(voiceCount)));
+    this.#slots = Array.from({ length: boundedVoiceCount }, (_, index) => {
       const carrier = new OscillatorNode(context, { type: 'sine', frequency: 220, detune: SLOT_DETUNE[index]! });
       const modulator = new OscillatorNode(context, { type: 'sine', frequency: 660, detune: -SLOT_DETUNE[index]! * 0.4 });
       const modulatorGain = new GainNode(context, { gain: 0 });
@@ -195,5 +196,9 @@ export class PianoVoice {
 
   get activeVoiceCount(): number {
     return this.#slots.filter((slot) => slot.releaseEnd > this.#context.currentTime).length;
+  }
+
+  get maxVoiceCount(): number {
+    return this.#slots.length;
   }
 }

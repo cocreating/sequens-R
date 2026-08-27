@@ -8,6 +8,16 @@ export interface MeterReading {
 const MIN_DB = -120;
 const PARAM_RAMP_SECONDS = 0.02;
 const DELAY_DIVISION_BEATS = [1, 0.5, 0.75, 1 / 3, 0.25, 0.375] as const;
+const BASE_HEADROOM_GAIN = 0.5;
+const REFERENCE_LEVEL_POWER = 1.1;
+
+interface HeadroomModule {
+  level: number;
+  monitor: boolean;
+  mute: boolean;
+  solo: boolean;
+  pattern: { events: readonly unknown[] };
+}
 
 function gainForPercent(value: number): number {
   return (Math.max(0, Math.min(100, value)) / 100) ** 2;
@@ -19,6 +29,19 @@ function gainForDb(value: number): number {
 
 function toDb(value: number): number {
   return value <= 0 ? MIN_DB : Math.max(MIN_DB, 20 * Math.log10(value));
+}
+
+export function audibleLevelPower(modules: readonly HeadroomModule[]): number {
+  const anySolo = modules.some((module) => module.solo);
+  return modules.reduce((power, module) => {
+    const audible = module.monitor && !module.mute && (!anySolo || module.solo) && module.pattern.events.length > 0;
+    return audible ? power + Math.max(0, Math.min(1, module.level)) ** 2 : power;
+  }, 0);
+}
+
+export function headroomGainForLevelPower(levelPower: number): number {
+  if (!Number.isFinite(levelPower) || levelPower <= REFERENCE_LEVEL_POWER) return BASE_HEADROOM_GAIN;
+  return BASE_HEADROOM_GAIN * Math.sqrt(REFERENCE_LEVEL_POWER / levelPower);
 }
 
 function holdAndRamp(param: AudioParam, value: number, time: number, duration = PARAM_RAMP_SECONDS): void {
@@ -92,30 +115,36 @@ class MeterTap {
 
 export class RackModuleStrip {
   readonly input: GainNode;
+  readonly #context: BaseAudioContext;
+  readonly #meterDestination: AudioNode;
   readonly #level: GainNode;
   readonly #pan: StereoPannerNode;
   readonly #delaySend: GainNode;
   readonly #reverbSend: GainNode;
-  readonly #meter: MeterTap;
+  #meter: MeterTap | null = null;
 
   constructor(
     context: BaseAudioContext,
     dryBus: AudioNode,
     delayBus: AudioNode,
     reverbBus: AudioNode,
+    meterDestination: AudioNode,
     sound: Readonly<SoundState>,
     level: number,
+    meteringEnabled: boolean,
   ) {
+    this.#context = context;
+    this.#meterDestination = meterDestination;
     this.input = new GainNode(context, { gain: gainForDb(presetById(sound.presetId).outputTrimDb) });
     this.#level = new GainNode(context, { gain: level });
     this.#pan = new StereoPannerNode(context, { pan: sound.pan / 100 });
     this.#delaySend = new GainNode(context, { gain: gainForPercent(sound.delaySend) });
     this.#reverbSend = new GainNode(context, { gain: gainForPercent(sound.reverbSend) });
-    this.#meter = new MeterTap(context);
-    this.input.connect(this.#level).connect(this.#pan).connect(this.#meter.node);
-    this.#meter.node.connect(dryBus);
-    this.#meter.node.connect(this.#delaySend).connect(delayBus);
-    this.#meter.node.connect(this.#reverbSend).connect(reverbBus);
+    this.input.connect(this.#level).connect(this.#pan);
+    this.#pan.connect(dryBus);
+    this.#pan.connect(this.#delaySend).connect(delayBus);
+    this.#pan.connect(this.#reverbSend).connect(reverbBus);
+    this.setMeteringEnabled(meteringEnabled);
   }
 
   applyLevel(level: number, time: number): void {
@@ -139,14 +168,27 @@ export class RackModuleStrip {
   }
 
   readMeter(): MeterReading {
-    return this.#meter.read();
+    return this.#meter?.read() ?? { peakDbfs: MIN_DB, rmsDbfs: MIN_DB };
+  }
+
+  setMeteringEnabled(enabled: boolean): void {
+    if (enabled && this.#meter === null) {
+      const meter = new MeterTap(this.#context);
+      this.#pan.connect(meter.node);
+      meter.node.connect(this.#meterDestination);
+      this.#meter = meter;
+    } else if (!enabled && this.#meter !== null) {
+      this.#pan.disconnect(this.#meter.node);
+      this.#meter.node.disconnect();
+      this.#meter = null;
+    }
   }
 
   disconnect(): void {
+    this.setMeteringEnabled(false);
     this.input.disconnect();
     this.#level.disconnect();
     this.#pan.disconnect();
-    this.#meter.node.disconnect();
     this.#delaySend.disconnect();
     this.#reverbSend.disconnect();
   }
@@ -157,89 +199,122 @@ export class RackAudioGraph {
   readonly #dryBus: GainNode;
   readonly #delayBus: GainNode;
   readonly #reverbBus: GainNode;
-  readonly #delayLeft: DelayNode;
-  readonly #delayRight: DelayNode;
-  readonly #delayFeedbackLeft: GainNode;
-  readonly #delayFeedbackRight: GainNode;
-  readonly #delayReturn: GainNode;
-  readonly #delayPanLeft: StereoPannerNode;
-  readonly #delayPanRight: StereoPannerNode;
-  readonly #reverbReturn: GainNode;
-  readonly #convolver: ConvolverNode;
+  readonly #meterSink: GainNode;
+  #delayLeft: DelayNode | null = null;
+  #delayRight: DelayNode | null = null;
+  #delayFeedbackLeft: GainNode | null = null;
+  #delayFeedbackRight: GainNode | null = null;
+  #delayReturn: GainNode | null = null;
+  #delayPanLeft: StereoPannerNode | null = null;
+  #delayPanRight: StereoPannerNode | null = null;
+  #reverbReturn: GainNode | null = null;
+  #convolver: ConvolverNode | null = null;
   readonly #headroom: GainNode;
   readonly #dcBlocker: BiquadFilterNode;
   readonly #correctiveEq: BiquadFilterNode;
+  readonly #characterDry: GainNode;
+  readonly #characterWetInput: GainNode;
   readonly #softClip: WaveShaperNode;
+  readonly #characterWet: GainNode;
   readonly #limiter: DynamicsCompressorNode;
   readonly #meter: MeterTap;
   readonly #output: GainNode;
   #mix: Readonly<RackMixState>;
   #bpm: number;
 
-  constructor(context: BaseAudioContext, destination: AudioNode, bpm: number, mix: Readonly<RackMixState>) {
+  constructor(context: BaseAudioContext, destination: AudioNode, bpm: number, mix: Readonly<RackMixState>, levelPower = REFERENCE_LEVEL_POWER) {
     this.#context = context;
     this.#mix = { ...mix };
     this.#bpm = bpm;
     this.#dryBus = new GainNode(context, { gain: 1 });
     this.#delayBus = new GainNode(context, { gain: 1 });
     this.#reverbBus = new GainNode(context, { gain: 1 });
-    this.#delayLeft = new DelayNode(context, { maxDelayTime: 5, delayTime: delaySecondsFor(bpm, mix.delayDivision) });
-    this.#delayRight = new DelayNode(context, { maxDelayTime: 5, delayTime: delaySecondsFor(bpm, mix.delayDivision) * 1.5 });
-    this.#delayFeedbackLeft = new GainNode(context, { gain: mix.delayFeedback / 100 });
-    this.#delayFeedbackRight = new GainNode(context, { gain: mix.delayFeedback / 100 });
-    this.#delayReturn = new GainNode(context, { gain: mix.delayReturn / 100 });
-    this.#reverbReturn = new GainNode(context, { gain: mix.reverbReturn / 100 });
-    this.#headroom = new GainNode(context, { gain: 0.5 });
+    this.#meterSink = new GainNode(context, { gain: 0 });
+    this.#meterSink.connect(destination);
+    this.#headroom = new GainNode(context, { gain: headroomGainForLevelPower(levelPower) });
     this.#dcBlocker = new BiquadFilterNode(context, { type: 'highpass', frequency: 18, Q: 0.707 });
     this.#correctiveEq = new BiquadFilterNode(context, { type: 'peaking', frequency: 280, Q: 0.75, gain: -0.75 });
+    const characterEnabled = mix.masterCharacter > 0;
+    this.#characterDry = new GainNode(context, { gain: characterEnabled ? 0 : 1 });
+    this.#characterWetInput = new GainNode(context, { gain: characterEnabled ? 1 : 0 });
     this.#softClip = new WaveShaperNode(context, { curve: createSoftClipCurve(mix.masterCharacter), oversample: 'none' });
+    this.#characterWet = new GainNode(context, { gain: 1 });
     this.#limiter = new DynamicsCompressorNode(context, { threshold: -1, knee: 1, ratio: 20, attack: 0.003, release: 0.09 });
     this.#meter = new MeterTap(context);
-    this.#output = new GainNode(context, { gain: gainForDb(-1.5) });
+    this.#output = new GainNode(context, { gain: gainForDb(-2) });
 
-    this.#delayPanLeft = new StereoPannerNode(context, { pan: -0.72 });
-    this.#delayPanRight = new StereoPannerNode(context, { pan: 0.72 });
-    this.#delayBus.connect(this.#delayLeft).connect(this.#delayPanLeft).connect(this.#delayReturn);
-    this.#delayBus.connect(this.#delayRight).connect(this.#delayPanRight).connect(this.#delayReturn);
-    this.#delayLeft.connect(this.#delayFeedbackLeft).connect(this.#delayRight);
-    this.#delayRight.connect(this.#delayFeedbackRight).connect(this.#delayLeft);
-
-    this.#convolver = new ConvolverNode(context, { buffer: createProceduralImpulse(context) });
-    this.#convolver.normalize = true;
-    this.#reverbBus.connect(this.#convolver).connect(this.#reverbReturn);
+    if (mix.delayReturn > 0) this.#ensureDelay(mix, bpm, true);
+    if (mix.reverbReturn > 0) this.#ensureReverb(mix, true);
 
     this.#dryBus.connect(this.#headroom);
-    this.#delayReturn.connect(this.#headroom);
-    this.#reverbReturn.connect(this.#headroom);
     this.#headroom
       .connect(this.#dcBlocker)
-      .connect(this.#correctiveEq)
-      .connect(this.#softClip)
-      .connect(this.#limiter)
+      .connect(this.#correctiveEq);
+    this.#correctiveEq.connect(this.#characterDry).connect(this.#limiter);
+    this.#correctiveEq.connect(this.#characterWetInput).connect(this.#softClip).connect(this.#characterWet).connect(this.#limiter);
+    this.#limiter
       .connect(this.#meter.node)
       .connect(this.#output)
       .connect(destination);
   }
 
-  createModuleStrip(sound: Readonly<SoundState>, level: number): RackModuleStrip {
-    return new RackModuleStrip(this.#context, this.#dryBus, this.#delayBus, this.#reverbBus, sound, level);
+  createModuleStrip(sound: Readonly<SoundState>, level: number, meteringEnabled = false): RackModuleStrip {
+    return new RackModuleStrip(this.#context, this.#dryBus, this.#delayBus, this.#reverbBus, this.#meterSink, sound, level, meteringEnabled);
   }
 
   applyMix(mix: Readonly<RackMixState>, bpm: number, time: number): void {
     this.#mix = { ...mix };
     this.#bpm = bpm;
-    const delayTime = delaySecondsFor(bpm, mix.delayDivision);
-    holdAndRamp(this.#delayLeft.delayTime, delayTime, time, 0.03);
-    holdAndRamp(this.#delayRight.delayTime, delayTime * 1.5, time, 0.03);
-    holdAndRamp(this.#delayFeedbackLeft.gain, mix.delayFeedback / 100, time);
-    holdAndRamp(this.#delayFeedbackRight.gain, mix.delayFeedback / 100, time);
-    holdAndRamp(this.#delayReturn.gain, mix.delayReturn / 100, time);
-    holdAndRamp(this.#reverbReturn.gain, mix.reverbReturn / 100, time);
+    if (mix.delayReturn > 0 || this.#delayReturn !== null) {
+      this.#ensureDelay(mix, bpm);
+      const delayTime = delaySecondsFor(bpm, mix.delayDivision);
+      holdAndRamp(this.#delayLeft!.delayTime, delayTime, time, 0.03);
+      holdAndRamp(this.#delayRight!.delayTime, delayTime * 1.5, time, 0.03);
+      holdAndRamp(this.#delayFeedbackLeft!.gain, mix.delayFeedback / 100, time);
+      holdAndRamp(this.#delayFeedbackRight!.gain, mix.delayFeedback / 100, time);
+      holdAndRamp(this.#delayReturn!.gain, mix.delayReturn / 100, time);
+    }
+    if (mix.reverbReturn > 0 || this.#reverbReturn !== null) {
+      this.#ensureReverb(mix);
+      holdAndRamp(this.#reverbReturn!.gain, mix.reverbReturn / 100, time);
+    }
+    const characterEnabled = mix.masterCharacter > 0;
+    holdAndRamp(this.#characterDry.gain, characterEnabled ? 0 : 1, time);
+    holdAndRamp(this.#characterWetInput.gain, characterEnabled ? 1 : 0, time);
     this.#softClip.curve = createSoftClipCurve(mix.masterCharacter);
   }
 
+  applyHeadroom(levelPower: number, time: number): void {
+    holdAndRamp(this.#headroom.gain, headroomGainForLevelPower(levelPower), time, 0.04);
+  }
+
+  #ensureDelay(mix: Readonly<RackMixState>, bpm: number, useInitialReturn = false): void {
+    if (this.#delayReturn !== null) return;
+    const delayTime = delaySecondsFor(bpm, mix.delayDivision);
+    this.#delayLeft = new DelayNode(this.#context, { maxDelayTime: 5, delayTime });
+    this.#delayRight = new DelayNode(this.#context, { maxDelayTime: 5, delayTime: delayTime * 1.5 });
+    this.#delayFeedbackLeft = new GainNode(this.#context, { gain: mix.delayFeedback / 100 });
+    this.#delayFeedbackRight = new GainNode(this.#context, { gain: mix.delayFeedback / 100 });
+    this.#delayReturn = new GainNode(this.#context, { gain: useInitialReturn ? mix.delayReturn / 100 : 0 });
+    this.#delayPanLeft = new StereoPannerNode(this.#context, { pan: -0.72 });
+    this.#delayPanRight = new StereoPannerNode(this.#context, { pan: 0.72 });
+    this.#delayBus.connect(this.#delayLeft).connect(this.#delayPanLeft).connect(this.#delayReturn);
+    this.#delayBus.connect(this.#delayRight).connect(this.#delayPanRight).connect(this.#delayReturn);
+    this.#delayLeft.connect(this.#delayFeedbackLeft).connect(this.#delayRight);
+    this.#delayRight.connect(this.#delayFeedbackRight).connect(this.#delayLeft);
+    this.#delayReturn.connect(this.#headroom);
+  }
+
+  #ensureReverb(mix: Readonly<RackMixState>, useInitialReturn = false): void {
+    if (this.#reverbReturn !== null) return;
+    this.#reverbReturn = new GainNode(this.#context, { gain: useInitialReturn ? mix.reverbReturn / 100 : 0 });
+    this.#convolver = new ConvolverNode(this.#context, { buffer: createProceduralImpulse(this.#context) });
+    this.#convolver.normalize = true;
+    this.#reverbBus.connect(this.#convolver).connect(this.#reverbReturn).connect(this.#headroom);
+  }
+
   fadeOut(startTime: number, endTime: number): void {
-    this.#output.gain.setValueAtTime(gainForDb(-1.5), startTime);
+    this.#output.gain.setValueAtTime(gainForDb(-2), startTime);
     this.#output.gain.linearRampToValueAtTime(0, endTime);
   }
 
@@ -259,8 +334,8 @@ export class RackAudioGraph {
       this.#dryBus, this.#delayBus, this.#reverbBus, this.#delayLeft, this.#delayRight,
       this.#delayFeedbackLeft, this.#delayFeedbackRight, this.#delayPanLeft, this.#delayPanRight,
       this.#delayReturn, this.#convolver, this.#reverbReturn,
-      this.#headroom, this.#dcBlocker, this.#correctiveEq, this.#softClip, this.#limiter,
-      this.#meter.node, this.#output,
-    ]) node.disconnect();
+      this.#headroom, this.#dcBlocker, this.#correctiveEq, this.#characterDry, this.#characterWetInput,
+      this.#softClip, this.#characterWet, this.#limiter, this.#meter.node, this.#output, this.#meterSink,
+    ]) node?.disconnect();
   }
 }

@@ -39,4 +39,5 @@ export interface ScheduledNote {
 export interface ClockTickMessage {
   type: 'tick';
   contextTime: number;
+  active: boolean;
 }

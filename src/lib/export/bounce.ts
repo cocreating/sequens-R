@@ -7,7 +7,7 @@ import { isControlModule } from '../core/pattern';
 import acidWorkletUrl from '../audio/acid.worklet.ts?worker&url';
 import { VOICE_FACTORY, type InternalVoice } from '../audio/voice-factory';
 import { analyzeAudio, pcmFromAudioBuffer, type AudioAnalysis } from '../audio/analysis';
-import { RackAudioGraph, type RackModuleStrip } from '../audio/rack-graph';
+import { audibleLevelPower, RackAudioGraph, type RackModuleStrip } from '../audio/rack-graph';
 
 const SAMPLE_RATE = 44_100;
 const BEATS_PER_BAR = 4;
@@ -28,7 +28,7 @@ export async function renderRackAudio(rack: RackState, bars: number, moduleId: s
     && (!anySolo || module.solo)
     && (moduleId === null || module.id === moduleId));
   const snapshot: EngineSnapshot = { bpm: source.bpm, modules };
-  const graph = new RackAudioGraph(context, context.destination, rack.bpm, sounds.mix);
+  const graph = new RackAudioGraph(context, context.destination, rack.bpm, sounds.mix, audibleLevelPower(modules));
   const voices = new Map<string, InternalVoice>();
   const strips: RackModuleStrip[] = [];
   for (const module of modules) {

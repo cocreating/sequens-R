@@ -75,10 +75,11 @@ export class ArpVoice {
   readonly #slots: ArpVoiceSlot[];
   #sound: Readonly<SoundState>;
 
-  constructor(context: BaseAudioContext, destination: AudioNode, sound: Readonly<SoundState>) {
+  constructor(context: BaseAudioContext, destination: AudioNode, sound: Readonly<SoundState>, voiceCount = 4) {
     this.#context = context;
     this.#sound = { ...sound, params: { ...sound.params } };
-    this.#slots = Array.from({ length: 4 }, (_, index) => {
+    const boundedVoiceCount = Math.max(1, Math.min(SLOT_PAN.length, Math.round(voiceCount)));
+    this.#slots = Array.from({ length: boundedVoiceCount }, (_, index) => {
       const oscillatorA = new OscillatorNode(context, { type: 'triangle', frequency: 220, detune: SLOT_DETUNE[index]! });
       const oscillatorB = new OscillatorNode(context, { type: 'square', frequency: 220, detune: -SLOT_DETUNE[index]! * 0.6 });
       const oscillatorAGain = new GainNode(context, { gain: 0.8 });
@@ -169,5 +170,9 @@ export class ArpVoice {
 
   get activeVoiceCount(): number {
     return this.#slots.filter((slot) => slot.releaseEnd > this.#context.currentTime).length;
+  }
+
+  get maxVoiceCount(): number {
+    return this.#slots.length;
   }
 }

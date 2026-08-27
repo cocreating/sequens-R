@@ -67,6 +67,7 @@ interface EuclidRingVoice {
  * enter this voice; they remain the scheduler's responsibility.
  */
 export class EuclidVoice {
+  readonly maxVoiceCount = 3;
   readonly #context: BaseAudioContext;
   readonly #rings: EuclidRingVoice[];
   #sound: Readonly<SoundState>;

@@ -20,7 +20,7 @@ import {
   validatePresetCatalog,
 } from '../../src/lib/audio/sound';
 import { VOICE_FACTORY } from '../../src/lib/audio/voice-factory';
-import { createSoftClipCurve, delaySecondsFor } from '../../src/lib/audio/rack-graph';
+import { audibleLevelPower, createSoftClipCurve, delaySecondsFor, headroomGainForLevelPower } from '../../src/lib/audio/rack-graph';
 import { DRUM_KITS, drumVariationIndex, drumVelocityGain, renderProceduralDrumLane } from '../../src/lib/audio/voices/procedural-drums';
 import { bassCutoffHz, bassVelocityGain, createBassDriveCurve, frequencyForBassMidi, planBassTrigger } from '../../src/lib/audio/voices/bass';
 import { AcidDspKernel, acidAccentDepth, acidAmplitudePeak, acidCutoffHz, acidDcBlockCoefficient, acidDecaySeconds, acidFilterEnvelopePeak, acidSlideSeconds, polyBlep, type AcidDspParams } from '../../src/lib/audio/acid-dsp';
@@ -248,6 +248,23 @@ describe('Phase 7.1 shared rack graph', () => {
       expect(Math.abs(character[index]!)).toBeLessThanOrEqual(1);
     }
     expect(character[192]!).toBeGreaterThan(neutral[192]!);
+  });
+
+  it('preserves starter headroom and scales dense monitored racks by level power', () => {
+    const modules = Array.from({ length: 14 }, (_, index) => ({
+      level: index % 3 === 0 ? 0.82 : 0.68,
+      monitor: true,
+      mute: false,
+      solo: false,
+      pattern: { events: [{}] },
+    }));
+    const densePower = audibleLevelPower(modules);
+    expect(densePower).toBeGreaterThan(6);
+    expect(headroomGainForLevelPower(1.1)).toBe(0.5);
+    expect(headroomGainForLevelPower(1.35)).toBeLessThan(0.5);
+    expect(headroomGainForLevelPower(densePower)).toBeLessThan(0.26);
+    expect(audibleLevelPower(modules.map((module, index) => index === 0 ? { ...module, solo: true } : module))).toBeCloseTo(0.82 ** 2, 6);
+    expect(audibleLevelPower(modules.map((module) => ({ ...module, monitor: false })))).toBe(0);
   });
 });
 
@@ -563,13 +580,14 @@ describe('Phase 7.5 polyphonic Chords', () => {
     expect(chordVelocityGain(64)).toBeLessThan(chordVelocityGain(127));
   });
 
-  it('preallocates eight slots and leaves generator patterns and MIDI bytes unchanged', () => {
+  it('preallocates a bounded full/mobile slot count and leaves generator patterns and MIDI bytes unchanged', () => {
     const source = readFileSync(new URL('../../src/lib/audio/voices/chords.ts', import.meta.url), 'utf8');
-    expect(source).toContain('Array.from({ length: 8 }');
+    expect(source).toContain('voiceCount = 8');
+    expect(source).toContain('Math.min(SLOT_PAN.length');
     const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
     expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|StereoPannerNode|DelayNode)/u);
     expect(source.match(/new DelayNode/g)).toHaveLength(2);
-    expect(moduleHelpFor('sound:chords:chorus', 'chords', 'Chords').body).toMatch(/all eight voices/u);
+    expect(moduleHelpFor('sound:chords:chorus', 'chords', 'Chords').body).toMatch(/available voices/u);
 
     const rack = createRackState(STARTER_RACK);
     const beforePattern = modulePattern(rack.modules[2]!, rack.key, rack.modules);
@@ -625,9 +643,10 @@ describe('Phase 7.6 four-slot Arp', () => {
     expect(arpVelocityGain(64)).toBeLessThan(arpVelocityGain(127));
   });
 
-  it('preallocates four slots, uses only the shared rack delay, and preserves generator/MIDI bytes', () => {
+  it('preallocates a bounded full/mobile slot count, uses only the shared rack delay, and preserves generator/MIDI bytes', () => {
     const source = readFileSync(new URL('../../src/lib/audio/voices/arp.ts', import.meta.url), 'utf8');
-    expect(source).toContain('Array.from({ length: 4 }');
+    expect(source).toContain('voiceCount = 4');
+    expect(source).toContain('Math.min(SLOT_PAN.length');
     const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
     expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|StereoPannerNode|DelayNode)/u);
     expect(source).not.toContain('new DelayNode');
@@ -709,15 +728,16 @@ describe('Phase 7.7 eight-voice electric Piano', () => {
     expect(pianoModulationDepthHz(440, 20, 110)).toBeLessThan(pianoModulationDepthHz(440, 90, 110));
   });
 
-  it('preallocates eight FM/partial slots, shares tremolo, clears panic, and preserves Piano MIDI bytes', () => {
+  it('preallocates a bounded full/mobile FM pool, shares tremolo, clears panic, and preserves Piano MIDI bytes', () => {
     const source = readFileSync(new URL('../../src/lib/audio/voices/piano.ts', import.meta.url), 'utf8');
-    expect(source).toContain('Array.from({ length: 8 }');
+    expect(source).toContain('voiceCount = 8');
+    expect(source).toContain('Math.min(SLOT_PAN.length');
     const triggerBody = source.slice(source.indexOf('  trigger(event:'), source.indexOf('  applySound('));
     expect(triggerBody).not.toMatch(/new (OscillatorNode|GainNode|BiquadFilterNode|StereoPannerNode|DelayNode)/u);
     expect(source.match(/this\.#tremoloLfo = new OscillatorNode/gu)).toHaveLength(1);
     expect(source).toContain('slot.releaseEnd = time');
     expect(moduleHelpFor('sound:piano:bell', 'piano', 'Piano roll').body).toMatch(/bounded FM/u);
-    expect(moduleHelpFor('sound:piano:tremolo', 'piano', 'Piano roll').body).toMatch(/all eight Piano voices/u);
+    expect(moduleHelpFor('sound:piano:tremolo', 'piano', 'Piano roll').body).toMatch(/available Piano voices/u);
 
     const piano = setManualPattern(createModule('piano', 0x7700_0002), phrase);
     const rack = createRackState(STARTER_RACK);

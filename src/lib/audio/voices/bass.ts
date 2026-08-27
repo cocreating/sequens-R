@@ -62,6 +62,7 @@ function ramp(param: AudioParam, value: number, time: number, duration = 0.02): 
 }
 
 export class BassVoice {
+  readonly maxVoiceCount = 1;
   readonly #context: BaseAudioContext;
   readonly #oscillators: readonly OscillatorNode[];
   readonly #waveGains: readonly GainNode[];

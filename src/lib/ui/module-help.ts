@@ -260,15 +260,15 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
   },
   'chords.width': {
     title: 'Chord width',
-    body: 'Spreads the eight deterministic voice slots across stereo. At zero, all musical material remains centered and mono-compatible.',
+    body: 'Spreads the available deterministic voice slots across stereo. At zero, all musical material remains centered and mono-compatible.',
   },
   'chords.chorus': {
     title: 'Shared chord chorus',
-    body: 'Feeds all eight voices into one bounded dual-delay chorus contribution; it does not create a separate effect graph per note.',
+    body: 'Feeds the available voices into one bounded dual-delay chorus contribution; it does not create a separate effect graph per note.',
   },
   'arp.tone': {
     title: 'Arp tone',
-    body: 'Sets the base cutoff of the dedicated four-slot pluck voice without changing generated pitches or outgoing MIDI.',
+    body: 'Sets the base cutoff of the bounded pluck voice without changing generated pitches or outgoing MIDI.',
   },
   'arp.brightness': {
     title: 'Arp brightness',
@@ -296,7 +296,7 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
   },
   'piano.tremolo': {
     title: 'Shared piano tremolo',
-    body: 'Sets the depth and speed of one shared amplitude LFO for all eight Piano voices; it does not create modulation nodes per note.',
+    body: 'Sets the depth and speed of one shared amplitude LFO for the available Piano voices; it does not create modulation nodes per note.',
   },
   'output.pan': {
     title: 'Sound panorama',

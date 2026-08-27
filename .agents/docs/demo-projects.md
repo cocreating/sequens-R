@@ -9,7 +9,7 @@ Status: ten genre demos implemented with automated structural acceptance on 2026
 - `npm run demos:generate` deterministically rewrites those ten JSON documents and the catalog. Repeated generation produces byte-identical files.
 - `Basic Electro` and `Basic Electro 2` remain after the genre entries as legacy import/migration examples. The unlisted experimental `Basic Electro 4` and `Basic Electro 5` files are not part of the shipping catalog.
 - Demo files are copied into the production `dist/projects/` output by Vite and fetched on demand. They are not part of the initial PWA shell precache.
-- Every genre demo contains one rack, released engine-v2 sound states, exactly eight slots per module, an authored Piano pattern in every Piano slot, and four scenes: Intro, Main, Variation, and Peak.
+- Every genre demo is a minimal three-module arrangement containing one Drums module, one defining genre voice, and one authored Piano module. Each has released engine-v2 sound states, exactly eight slots per module, a pattern in every Piano slot, and four scenes: Intro, Main, Variation, and Peak.
 - Scene assignments use slot 4 for Intro, slot 0 for Main, slot 1 for Variation, and slot 3 for Peak.
 - Genre demos never persist a Mixer module. Their channel levels, pan, sends, shared delay/reverb returns, and master character use the ordinary module/rack mix state exposed by the permanent Mixer view.
 
@@ -17,16 +17,16 @@ Status: ten genre demos implemented with automated structural acceptance on 2026
 
 | Demo | Tempo and key | Musical focus | Modules |
 | --- | --- | --- | --- |
-| Detroit Minimal Techno | 132 BPM, F♯ minor | Locked 32-step drums, micro-timed mono pulse, resonant acid, random two-octave arp | Drums, Bass, Acid, Arp, Piano |
-| Deep Tech House | 125 BPM, A minor | Swung four-on-the-floor, upbeat minor-seventh stabs, deep bass, chord-following arp | Drums, Bass, Chords, Arp, Piano |
-| Euphoric Trance | 142 BPM, D harmonic minor | Driving 32-step rhythm, emotional triads, high run, three-octave crystal arp | Drums, Bass, Chords, Arp, Piano |
-| Neon Synthwave | 108 BPM, E minor | Electro kit, root–fifth–octave motion, chorus chords, eighth-note arp | Drums, Bass, Chords, Arp, Piano |
-| Halftime Dubstep Trap | 150 BPM, C phrygian | Half-time grid, sparse sub, sliding acid, triplet Euclid layer, 1/32 stutters | Drums, Bass, Acid, Euclid, Arp, Piano |
-| Ambient IDM Polymeter | 82 BPM, E♭ lydian | Sparse dust, 5/7/9 Euclidean cycles, drifting chords, overlapping long notes | Drums, Bass, Chords, Euclid, Arp, Piano |
-| Electro Funk Machine | 126 BPM, E blues | Syncopated machine beat, square bass, driven acid, ascending low riff | Drums, Bass, Acid, Arp, Piano |
-| Hardstyle Overdrive | 156 BPM, F harmonic minor | Zero-swing dense grid, clipped octave bass, bright acid, high 1/16 plucks | Drums, Bass, Acid, Chords, Arp, Piano |
-| Jungle Drum & Bass | 174 BPM, D minor | Hand-shaped breakbeat, rolling animated bass, shifting hook, 1/32 flourishes | Drums, Bass, Acid, Arp, Piano |
-| Nu-Disco Night Drive | 120 BPM, G mixolydian | Live-feel disco groove, fluid octave bass, sevenths, swung keyboard picking | Drums, Bass, Chords, Arp, Piano |
+| Detroit Minimal Techno | 132 BPM, F♯ minor | Locked 32-step drums, micro-timed mono pulse, one resonant acid line | Drums, Acid, Piano |
+| Deep Tech House | 125 BPM, A minor | Swung four-on-the-floor, deep pocket bass, upbeat minor-seventh stabs | Drums, Bass, Piano |
+| Euphoric Trance | 142 BPM, D harmonic minor | Driving rhythm, high emotional triad run, three-octave crystal arp | Drums, Arp, Piano |
+| Neon Synthwave | 108 BPM, E minor | Gated electro kit, root–fifth–octave pulse, eighth-note neon arp | Drums, Arp, Piano |
+| Halftime Dubstep Trap | 150 BPM, C phrygian | Half-time grid, sparse sub pressure, fractured top-line bursts | Drums, Bass, Piano |
+| Ambient IDM Polymeter | 82 BPM, E♭ lydian | Sparse dust, one 5/7/9 Euclidean cycle, overlapping long notes | Drums, Euclid, Piano |
+| Electro Funk Machine | 126 BPM, E blues | Syncopated machine beat, driven acid snap, staccato low riff | Drums, Acid, Piano |
+| Hardstyle Overdrive | 156 BPM, F harmonic minor | Zero-swing kick grid, clipped octave bass, fast minor-key charge | Drums, Bass, Piano |
+| Jungle Drum & Bass | 174 BPM, D minor | Hand-shaped breakbeat, rolling Reese bass, one shifting hook | Drums, Bass, Piano |
+| Nu-Disco Night Drive | 120 BPM, G mixolydian | Live-feel disco groove, fluid octave bass, swung seventh picking | Drums, Bass, Piano |
 
 ## Determinism and maintenance
 
@@ -40,4 +40,4 @@ When editing a demo:
 4. Confirm regeneration is byte-identical.
 5. Audition Main and all three alternate scenes at matched playback level before release approval. Automated import, schema, and build checks do not replace musical or mix approval.
 
-`tests/unit/example-project.test.ts` imports all ten files through `projectFromJson` and verifies schema 5, engine-v2 sound state, eight slots, four scenes, valid scene/module references, authored Piano data, and the absence of Mixer modules.
+`tests/unit/example-project.test.ts` imports all ten files through `projectFromJson` and verifies schema 5, the three-module ceiling, engine-v2 sound state, eight slots, four scenes, valid scene/module references, authored Piano data, and the absence of Mixer modules.

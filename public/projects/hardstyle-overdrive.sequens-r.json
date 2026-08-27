@@ -237,8 +237,8 @@
               "style": 5,
               "steps": 32,
               "range": 3,
-              "density": 94,
-              "drive": 100,
+              "density": 76,
+              "drive": 88,
               "octave": 2,
               "gate": 42
             },
@@ -249,8 +249,8 @@
                   "style": 5,
                   "steps": 32,
                   "range": 3,
-                  "density": 94,
-                  "drive": 100,
+                  "density": 76,
+                  "drive": 88,
                   "octave": 2,
                   "gate": 42
                 },
@@ -263,8 +263,8 @@
                   "style": 5,
                   "steps": 32,
                   "range": 3,
-                  "density": 100,
-                  "drive": 100,
+                  "density": 90,
+                  "drive": 88,
                   "octave": 2,
                   "gate": 30
                 },
@@ -277,8 +277,8 @@
                   "style": 5,
                   "steps": 32,
                   "range": 3,
-                  "density": 39,
-                  "drive": 100,
+                  "density": 32,
+                  "drive": 88,
                   "octave": 2,
                   "gate": 60
                 },
@@ -305,8 +305,8 @@
                   "style": 5,
                   "steps": 32,
                   "range": 3,
-                  "density": 61,
-                  "drive": 100,
+                  "density": 49,
+                  "drive": 88,
                   "octave": 1,
                   "gate": 42
                 },
@@ -319,8 +319,8 @@
                   "style": 0,
                   "steps": 32,
                   "range": 3,
-                  "density": 94,
-                  "drive": 100,
+                  "density": 76,
+                  "drive": 88,
                   "octave": 2,
                   "gate": 42
                 },
@@ -333,8 +333,8 @@
                   "style": 1,
                   "steps": 32,
                   "range": 3,
-                  "density": 100,
-                  "drive": 100,
+                  "density": 84,
+                  "drive": 88,
                   "octave": 2,
                   "gate": 42
                 },
@@ -347,8 +347,8 @@
                   "style": 4,
                   "steps": 32,
                   "range": 3,
-                  "density": 94,
-                  "drive": 100,
+                  "density": 76,
+                  "drive": 88,
                   "octave": 2,
                   "gate": 22
                 },
@@ -368,7 +368,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.59,
+            "level": 0.56,
             "sound": {
               "engineVersion": 2,
               "presetId": "bass-driven-v2",
@@ -392,432 +392,7 @@
             "automation": []
           },
           {
-            "id": "acid-hardstyle-overdrive-3",
-            "type": "acid",
-            "name": "Razor Lead",
-            "color": "olive",
-            "seed": 3002681896,
-            "params": {
-              "fill": 82,
-              "steps": 32,
-              "range": 3,
-              "decay": 28
-            },
-            "slots": [
-              {
-                "seed": 3002681896,
-                "params": {
-                  "fill": 82,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 28
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3019459515,
-                "params": {
-                  "fill": 94,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 20
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3036237134,
-                "params": {
-                  "fill": 29,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 52
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3053014753,
-                "params": {
-                  "fill": 100,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 28
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3069792372,
-                "params": {
-                  "fill": 48,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 28
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3086569991,
-                "params": {
-                  "fill": 82,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 46
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3103347610,
-                "params": {
-                  "fill": 88,
-                  "steps": 32,
-                  "range": 1,
-                  "decay": 28
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3120125229,
-                "params": {
-                  "fill": 100,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 10
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.43,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "acid-bright-v2",
-              "params": {
-                "wave": 0,
-                "cutoff": 85,
-                "resonance": 92,
-                "envAmount": 65,
-                "decay": 40,
-                "accent": 70,
-                "slide": 32,
-                "drive": 45
-              },
-              "pan": -10,
-              "delaySend": 14,
-              "reverbSend": 8
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "chords-hardstyle-overdrive-4",
-            "type": "chords",
-            "name": "Hard Dance Chords",
-            "color": "plum",
-            "seed": 2487675,
-            "params": {
-              "length": 4,
-              "quality": 0,
-              "duration": 8,
-              "strum": 0
-            },
-            "slots": [
-              {
-                "seed": 2487675,
-                "params": {
-                  "length": 4,
-                  "quality": 0,
-                  "duration": 8,
-                  "strum": 0
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4280677352,
-                "params": {
-                  "length": 4,
-                  "quality": 0,
-                  "duration": 8,
-                  "strum": 18
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 36042913,
-                "params": {
-                  "length": 4,
-                  "quality": 0,
-                  "duration": 8,
-                  "strum": 38
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 19265294,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 8,
-                  "strum": 0
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 69598151,
-                "params": {
-                  "length": 4,
-                  "quality": 3,
-                  "duration": 8,
-                  "strum": 0
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 52820532,
-                "params": {
-                  "length": 4,
-                  "quality": 4,
-                  "duration": 8,
-                  "strum": 10
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 103153389,
-                "params": {
-                  "length": 3,
-                  "quality": 0,
-                  "duration": 8,
-                  "strum": 0
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 86375770,
-                "params": {
-                  "length": 5,
-                  "quality": 0,
-                  "duration": 8,
-                  "strum": 28
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.32,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "chords-bright-v2",
-              "params": {
-                "tone": 78,
-                "attack": 12,
-                "release": 46,
-                "width": 58,
-                "chorus": 18
-              },
-              "pan": -5,
-              "delaySend": 0,
-              "reverbSend": 28
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "arp-hardstyle-overdrive-5",
-            "type": "arp",
-            "name": "Piercing Pluck",
-            "color": "navy",
-            "seed": 2075484712,
-            "params": {
-              "direction": 0,
-              "rate": 2,
-              "span": 3,
-              "gate": 18,
-              "followChords": 1,
-              "octave": 5
-            },
-            "slots": [
-              {
-                "seed": 2075484712,
-                "params": {
-                  "direction": 0,
-                  "rate": 2,
-                  "span": 3,
-                  "gate": 18,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2092262331,
-                "params": {
-                  "direction": 2,
-                  "rate": 2,
-                  "span": 3,
-                  "gate": 8,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2109039950,
-                "params": {
-                  "direction": 0,
-                  "rate": 1,
-                  "span": 2,
-                  "gate": 36,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2125817569,
-                "params": {
-                  "direction": 0,
-                  "rate": 3,
-                  "span": 4,
-                  "gate": 5,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2142595188,
-                "params": {
-                  "direction": 3,
-                  "rate": 1,
-                  "span": 3,
-                  "gate": 18,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2159372807,
-                "params": {
-                  "direction": 0,
-                  "rate": 2,
-                  "span": 4,
-                  "gate": 18,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2176150426,
-                "params": {
-                  "direction": 1,
-                  "rate": 2,
-                  "span": 3,
-                  "gate": 28,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2192928045,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 3,
-                  "gate": 5,
-                  "followChords": 1,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.34,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "arp-needle-v2",
-              "params": {
-                "tone": 92,
-                "brightness": 100,
-                "decay": 8,
-                "character": 72
-              },
-              "pan": 16,
-              "delaySend": 30,
-              "reverbSend": 18
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "piano-hardstyle-overdrive-6",
+            "id": "piano-hardstyle-overdrive-3",
             "type": "piano",
             "name": "Minor Octave Charge",
             "color": "indigo",
@@ -2431,10 +2006,7 @@
       "assignments": {
         "drums-hardstyle-overdrive-1": 4,
         "bass-hardstyle-overdrive-2": 4,
-        "acid-hardstyle-overdrive-3": 4,
-        "chords-hardstyle-overdrive-4": 4,
-        "arp-hardstyle-overdrive-5": 4,
-        "piano-hardstyle-overdrive-6": 4
+        "piano-hardstyle-overdrive-3": 4
       }
     },
     {
@@ -2443,10 +2015,7 @@
       "assignments": {
         "drums-hardstyle-overdrive-1": 0,
         "bass-hardstyle-overdrive-2": 0,
-        "acid-hardstyle-overdrive-3": 0,
-        "chords-hardstyle-overdrive-4": 0,
-        "arp-hardstyle-overdrive-5": 0,
-        "piano-hardstyle-overdrive-6": 0
+        "piano-hardstyle-overdrive-3": 0
       }
     },
     {
@@ -2455,10 +2024,7 @@
       "assignments": {
         "drums-hardstyle-overdrive-1": 1,
         "bass-hardstyle-overdrive-2": 1,
-        "acid-hardstyle-overdrive-3": 1,
-        "chords-hardstyle-overdrive-4": 1,
-        "arp-hardstyle-overdrive-5": 1,
-        "piano-hardstyle-overdrive-6": 1
+        "piano-hardstyle-overdrive-3": 1
       }
     },
     {
@@ -2467,10 +2033,7 @@
       "assignments": {
         "drums-hardstyle-overdrive-1": 3,
         "bass-hardstyle-overdrive-2": 3,
-        "acid-hardstyle-overdrive-3": 3,
-        "chords-hardstyle-overdrive-4": 3,
-        "arp-hardstyle-overdrive-5": 3,
-        "piano-hardstyle-overdrive-6": 3
+        "piano-hardstyle-overdrive-3": 3
       }
     }
   ],

@@ -350,6 +350,7 @@ function buildProject(spec: DemoSpec): ProjectDocument {
   modules.push(createDrums(spec.slug, spec.drums, modules.length));
   for (const moduleSpec of spec.modules) modules.push(createGeneratedModule(spec.slug, moduleSpec, modules.length));
   modules.push(createPiano(spec.slug, spec.piano, modules.length));
+  if (modules.length > 3) throw new RangeError(`${spec.name} exceeds the three-module demo limit.`);
 
   const rackId = `rack-${spec.slug}`;
   const rack: RackState = { bpm: spec.bpm, key: spec.key, modules, mix: spec.mix };
@@ -392,7 +393,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'detroit-minimal-techno',
     name: 'Detroit Minimal Techno',
-    description: '132 BPM F♯ minor: locked drums, micro-timed mono pulse, resonant acid, and a two-octave random arp.',
+    description: '132 BPM F♯ minor: a minimal locked drum grid, micro-timed mono pulse, and one resonant acid line.',
     bpm: 132,
     key: DETROIT,
     mix: mix(4, 38, 18, 10, 42),
@@ -402,9 +403,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-core-v2', level: 0.74, reverbSend: 5,
     },
     modules: [
-      { type: 'bass', name: 'Sub Anchor', seed: 0x13200102, params: { style: 0, steps: 16, range: 1, density: 42, drive: 28, octave: 2, gate: 48 }, presetId: 'bass-deep-v2', level: 0.58 },
-      { type: 'acid', name: 'Resonant Wire', seed: 0x13200103, params: { fill: 68, steps: 16, range: 2, decay: 24 }, presetId: 'acid-sharp-v2', level: 0.42, pan: -12, delaySend: 18 },
-      { type: 'arp', name: 'Random Signal', seed: 0x13200104, params: { direction: 3, rate: 2, span: 2, gate: 24, followChords: 0, octave: 4 }, presetId: 'arp-needle-v2', level: 0.28, pan: 24, delaySend: 42, reverbSend: 8 },
+      { type: 'acid', name: 'Resonant Wire', seed: 0x13200103, params: { fill: 46, steps: 16, range: 2, decay: 24 }, presetId: 'acid-sharp-v2', level: 0.38, pan: -12, delaySend: 18 },
     ],
     piano: {
       name: 'Micro Pulse', seed: 0x13200105, length: 32,
@@ -415,7 +414,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'deep-tech-house',
     name: 'Deep Tech House',
-    description: '125 BPM A minor: swung four-on-the-floor, upbeat minor-7 stabs, deep bass, and a chord-following arp.',
+    description: '125 BPM A minor: a spare swung four-on-the-floor, deep pocket bass, and upbeat minor-7 piano stabs.',
     bpm: 125,
     key: HOUSE,
     mix: mix(2, 44, 20, 22, 28),
@@ -426,8 +425,6 @@ const demos: readonly DemoSpec[] = [
     },
     modules: [
       { type: 'bass', name: 'Deep Pocket', seed: 0x12500202, params: { style: 4, steps: 16, range: 1, density: 52, drive: 18, octave: 2, gate: 62 }, presetId: 'bass-deep-v2', level: 0.57 },
-      { type: 'chords', name: 'Velvet Sevenths', seed: 0x12500203, params: { length: 4, quality: 1, duration: 16, strum: 12 }, presetId: 'chords-pad-v2', level: 0.25, pan: -10, reverbSend: 34 },
-      { type: 'arp', name: 'Swing Thread', seed: 0x12500204, params: { direction: 2, rate: 2, span: 2, gate: 54, followChords: 1, octave: 3 }, presetId: 'arp-soft-v2', level: 0.3, pan: 18, delaySend: 26, reverbSend: 16 },
     ],
     piano: {
       name: 'Upbeat Stabs', seed: 0x12500205, length: 32,
@@ -438,7 +435,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'euphoric-trance',
     name: 'Euphoric Trance',
-    description: '142 BPM D harmonic minor: driving 32-step rhythm, emotional triads, high running notes, and a three-octave crystal arp.',
+    description: '142 BPM D harmonic minor: a lean driving rhythm, high triad run, and one three-octave crystal arp.',
     bpm: 142,
     key: TRANCE,
     mix: mix(2, 58, 34, 38, 34),
@@ -448,9 +445,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-core-v2', level: 0.73, reverbSend: 12,
     },
     modules: [
-      { type: 'bass', name: 'Rolling Low End', seed: 0x14200302, params: { style: 2, steps: 32, range: 1, density: 88, drive: 32, octave: 2, gate: 42 }, presetId: 'bass-animated-v2', level: 0.54 },
-      { type: 'chords', name: 'Supersaw Horizon', seed: 0x14200303, params: { length: 4, quality: 0, duration: 16, strum: 4 }, presetId: 'chords-wide-v2', level: 0.38, pan: -8, delaySend: 12, reverbSend: 42 },
-      { type: 'arp', name: 'Crystal Runner', seed: 0x14200304, params: { direction: 2, rate: 2, span: 3, gate: 72, followChords: 1, octave: 4 }, presetId: 'arp-crystal-v2', level: 0.36, pan: 14, delaySend: 48, reverbSend: 32 },
+      { type: 'arp', name: 'Crystal Runner', seed: 0x14200304, params: { direction: 2, rate: 2, span: 3, gate: 58, followChords: 0, octave: 4 }, presetId: 'arp-crystal-v2', level: 0.25, pan: 14, delaySend: 42, reverbSend: 26 },
     ],
     piano: {
       name: 'High Triad Run', seed: 0x14200305, length: 32,
@@ -465,7 +460,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'neon-synthwave',
     name: 'Neon Synthwave',
-    description: '108 BPM E minor: gated electro drums, root–fifth–octave bass motion, wide chorus chords, and a simple eighth-note arp.',
+    description: '108 BPM E minor: a minimal gated drum machine, root–fifth–octave pulse, and simple eighth-note arp.',
     bpm: 108,
     key: SYNTHWAVE,
     mix: mix(2, 46, 24, 30, 46),
@@ -475,9 +470,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-electro-v2', level: 0.7, reverbSend: 18,
     },
     modules: [
-      { type: 'bass', name: 'Octave Driver', seed: 0x10800402, params: { style: 2, steps: 16, range: 2, density: 92, drive: 42, octave: 2, gate: 64 }, presetId: 'bass-square-v2', level: 0.56 },
-      { type: 'chords', name: 'Juno Skyline', seed: 0x10800403, params: { length: 4, quality: 0, duration: 16, strum: 3 }, presetId: 'chords-wide-v2', level: 0.42, pan: -8, reverbSend: 36 },
-      { type: 'arp', name: 'Neon Eighths', seed: 0x10800404, params: { direction: 2, rate: 1, span: 1, gate: 66, followChords: 1, octave: 4 }, presetId: 'arp-copper-v2', level: 0.32, pan: 15, delaySend: 30, reverbSend: 20 },
+      { type: 'arp', name: 'Neon Eighths', seed: 0x10800404, params: { direction: 2, rate: 1, span: 1, gate: 54, followChords: 0, octave: 4 }, presetId: 'arp-copper-v2', level: 0.28, pan: 15, delaySend: 26, reverbSend: 16 },
     ],
     piano: {
       name: 'Root Fifth Octave', seed: 0x10800405, length: 32,
@@ -488,7 +481,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'halftime-dubstep-trap',
     name: 'Halftime Dubstep Trap',
-    description: '150 BPM C phrygian: heavy half-time drums, sparse sub pressure, sliding acid phrases, and short 1/32 stutter bursts.',
+    description: '150 BPM C phrygian: a stripped half-time groove, sparse sub pressure, and short fractured top-line bursts.',
     bpm: 150,
     key: DUBSTEP,
     mix: mix(3, 52, 20, 18, 62),
@@ -499,9 +492,6 @@ const demos: readonly DemoSpec[] = [
     },
     modules: [
       { type: 'bass', name: 'Sub Pressure', seed: 0x15000502, params: { style: 4, steps: 32, range: 1, density: 24, drive: 12, octave: 1, gate: 100 }, presetId: 'bass-sub-v2', level: 0.64 },
-      { type: 'acid', name: 'Pitch Wobble', seed: 0x15000503, params: { fill: 34, steps: 32, range: 3, decay: 82 }, presetId: 'acid-liquid-v2', level: 0.45, pan: -9, delaySend: 16 },
-      { type: 'euclid', name: 'Triplet Shrapnel', seed: 0x15000504, params: { steps1: 12, hits1: 5, rotation1: 0, note1: 48, steps2: 12, hits2: 7, rotation2: 2, note2: 55, steps3: 6, hits3: 2, rotation3: 1, note3: 60, separateChannels: 0 }, presetId: 'euclid-circuit-v2', level: 0.24, pan: 18, delaySend: 32, reverbSend: 10 },
-      { type: 'arp', name: 'Stutter Burst', seed: 0x15000505, params: { direction: 3, rate: 3, span: 2, gate: 12, followChords: 0, octave: 5 }, presetId: 'arp-quick-v2', level: 0.19, pan: 25, delaySend: 46 },
     ],
     piano: {
       name: 'Fractured Top Line', seed: 0x15000506, length: 32,
@@ -512,7 +502,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'ambient-idm-polymeter',
     name: 'Ambient IDM Polymeter',
-    description: '82 BPM E♭ lydian: 5/7/9 Euclidean cycles, drifting chords, overlapping piano tones, and a slow randomized arp.',
+    description: '82 BPM E♭ lydian: sparse dust, one 5/7/9 Euclidean polymeter, and long overlapping piano lights.',
     bpm: 82,
     key: AMBIENT,
     mix: mix(0, 68, 44, 68, 18),
@@ -522,10 +512,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-odd-v2', level: 0.31, delaySend: 12, reverbSend: 42,
     },
     modules: [
-      { type: 'bass', name: 'Low Fog', seed: 0x08200602, params: { style: 4, steps: 29, range: 1, density: 18, drive: 0, octave: 2, gate: 100 }, presetId: 'bass-clean-v2', level: 0.28, reverbSend: 24 },
-      { type: 'chords', name: 'Cloud Current', seed: 0x08200603, params: { length: 4, quality: 4, duration: 32, strum: 56 }, presetId: 'chords-drift-v2', level: 0.43, pan: -14, delaySend: 28, reverbSend: 64 },
       { type: 'euclid', name: 'Five Seven Nine', seed: 0x08200604, params: { steps1: 5, hits1: 2, rotation1: 1, note1: 51, steps2: 7, hits2: 3, rotation2: 2, note2: 58, steps3: 9, hits3: 4, rotation3: 0, note3: 63, separateChannels: 0 }, presetId: 'euclid-tide-v2', level: 0.27, pan: 22, delaySend: 38, reverbSend: 58 },
-      { type: 'arp', name: 'Slow Constellation', seed: 0x08200605, params: { direction: 3, rate: 0, span: 3, gate: 100, followChords: 1, octave: 4 }, presetId: 'arp-dark-v2', level: 0.29, pan: 16, delaySend: 48, reverbSend: 62 },
     ],
     piano: {
       name: 'Overlapping Lights', seed: 0x08200606, length: 64,
@@ -540,7 +527,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'electro-funk-machine',
     name: 'Electro Funk Machine',
-    description: '126 BPM E blues: syncopated machine drums, punchy square bass, scorched acid, and an ascending low-register riff.',
+    description: '126 BPM E blues: a compact syncopated machine beat, scorched acid snap, and staccato low-register riff.',
     bpm: 126,
     key: ELECTRO,
     mix: mix(4, 40, 18, 12, 58),
@@ -550,9 +537,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-electro-v2', level: 0.76, reverbSend: 6,
     },
     modules: [
-      { type: 'bass', name: 'Square Punch', seed: 0x12600702, params: { style: 5, steps: 16, range: 2, density: 68, drive: 72, octave: 2, gate: 32 }, presetId: 'bass-square-v2', level: 0.58 },
-      { type: 'acid', name: 'Bar-One Snap', seed: 0x12600703, params: { fill: 56, steps: 16, range: 2, decay: 22 }, presetId: 'acid-driven-v2', level: 0.39, pan: -15, delaySend: 10 },
-      { type: 'arp', name: 'Four Note Circuit', seed: 0x12600704, params: { direction: 0, rate: 2, span: 1, gate: 28, followChords: 0, octave: 2 }, presetId: 'arp-copper-v2', level: 0.36, pan: 18, delaySend: 22 },
+      { type: 'acid', name: 'Bar-One Snap', seed: 0x12600703, params: { fill: 42, steps: 16, range: 2, decay: 22 }, presetId: 'acid-driven-v2', level: 0.36, pan: -15, delaySend: 10 },
     ],
     piano: {
       name: 'Staccato Voltage', seed: 0x12600705, length: 32,
@@ -563,7 +548,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'hardstyle-overdrive',
     name: 'Hardstyle Overdrive',
-    description: '156 BPM F harmonic minor: dense zero-swing drums, driven octave bass, hard acid, and tightly quantized high plucks.',
+    description: '156 BPM F harmonic minor: a direct zero-swing kick grid, driven octave bass, and one fast minor-key charge.',
     bpm: 156,
     key: HARDSTYLE,
     mix: mix(4, 32, 12, 24, 82),
@@ -573,10 +558,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-electro-v2', level: 0.82, reverbSend: 8,
     },
     modules: [
-      { type: 'bass', name: 'Clipped Octaves', seed: 0x15600802, params: { style: 5, steps: 32, range: 3, density: 94, drive: 100, octave: 2, gate: 42 }, presetId: 'bass-driven-v2', level: 0.59 },
-      { type: 'acid', name: 'Razor Lead', seed: 0x15600803, params: { fill: 82, steps: 32, range: 3, decay: 28 }, presetId: 'acid-bright-v2', level: 0.43, pan: -10, delaySend: 14, reverbSend: 8 },
-      { type: 'chords', name: 'Hard Dance Chords', seed: 0x15600804, params: { length: 4, quality: 0, duration: 8, strum: 0 }, presetId: 'chords-bright-v2', level: 0.32, pan: -5, reverbSend: 28 },
-      { type: 'arp', name: 'Piercing Pluck', seed: 0x15600805, params: { direction: 0, rate: 2, span: 3, gate: 18, followChords: 1, octave: 5 }, presetId: 'arp-needle-v2', level: 0.34, pan: 16, delaySend: 30, reverbSend: 18 },
+      { type: 'bass', name: 'Clipped Octaves', seed: 0x15600802, params: { style: 5, steps: 32, range: 3, density: 76, drive: 88, octave: 2, gate: 42 }, presetId: 'bass-driven-v2', level: 0.56 },
     ],
     piano: {
       name: 'Minor Octave Charge', seed: 0x15600806, length: 32,
@@ -587,7 +569,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'jungle-drum-and-bass',
     name: 'Jungle Drum & Bass',
-    description: '174 BPM D minor: hand-shaped breakbeat syncopation, rolling animated bass, shifting hook notes, and 1/32 flourishes.',
+    description: '174 BPM D minor: a focused hand-shaped breakbeat, rolling Reese bass, and one shifting melodic hook.',
     bpm: 174,
     key: DNB,
     mix: mix(4, 48, 22, 16, 66),
@@ -597,9 +579,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-broken-v2', level: 0.78, reverbSend: 7,
     },
     modules: [
-      { type: 'bass', name: 'Rolling Reese', seed: 0x17400902, params: { style: 3, steps: 32, range: 2, density: 78, drive: 64, octave: 1, gate: 84 }, presetId: 'bass-animated-v2', level: 0.63 },
-      { type: 'acid', name: 'Dark Bass Motion', seed: 0x17400903, params: { fill: 42, steps: 32, range: 2, decay: 74 }, presetId: 'acid-dark-v2', level: 0.27, pan: -12, delaySend: 10 },
-      { type: 'arp', name: 'Darting Flourish', seed: 0x17400904, params: { direction: 3, rate: 3, span: 2, gate: 16, followChords: 0, octave: 5 }, presetId: 'arp-quick-v2', level: 0.21, pan: 22, delaySend: 46, reverbSend: 12 },
+      { type: 'bass', name: 'Rolling Reese', seed: 0x17400902, params: { style: 3, steps: 32, range: 2, density: 62, drive: 56, octave: 1, gate: 78 }, presetId: 'bass-animated-v2', level: 0.6 },
     ],
     piano: {
       name: 'Shifting Hook', seed: 0x17400905, length: 32,
@@ -610,7 +590,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'nu-disco-night-drive',
     name: 'Nu-Disco Night Drive',
-    description: '120 BPM G mixolydian: live-feel four-on-the-floor, fluid octave bass, seventh chords, and swung keyboard picking.',
+    description: '120 BPM G mixolydian: a light live-feel disco groove, fluid octave bass, and swung seventh-chord picking.',
     bpm: 120,
     key: DISCO,
     mix: mix(5, 42, 20, 24, 38),
@@ -620,9 +600,7 @@ const demos: readonly DemoSpec[] = [
       presetId: 'drums-latin-v2', level: 0.69, reverbSend: 14,
     },
     modules: [
-      { type: 'bass', name: 'Octave Glide', seed: 0x12001002, params: { style: 1, steps: 32, range: 2, density: 76, drive: 24, octave: 2, gate: 58 }, presetId: 'bass-pluck-v2', level: 0.57 },
-      { type: 'chords', name: 'Disco Sevenths', seed: 0x12001003, params: { length: 4, quality: 1, duration: 16, strum: 34 }, presetId: 'chords-keys-v2', level: 0.39, pan: -12, delaySend: 12, reverbSend: 18 },
-      { type: 'arp', name: 'Picked Strings', seed: 0x12001004, params: { direction: 2, rate: 1, span: 2, gate: 48, followChords: 1, octave: 3 }, presetId: 'arp-copper-v2', level: 0.35, pan: 17, delaySend: 22, reverbSend: 12 },
+      { type: 'bass', name: 'Octave Glide', seed: 0x12001002, params: { style: 1, steps: 32, range: 2, density: 62, drive: 20, octave: 2, gate: 54 }, presetId: 'bass-pluck-v2', level: 0.55 },
     ],
     piano: {
       name: 'Swing Pick', seed: 0x12001005, length: 32,

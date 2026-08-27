@@ -31,7 +31,7 @@ The Vite server sends COOP/COEP headers. Open the printed localhost URL rather t
 
 ## Bundled demo projects
 
-The Workspace demo picker ships ten schema-version-5 genre projects: Detroit Minimal Techno, Deep Tech House, Euphoric Trance, Neon Synthwave, Halftime Dubstep Trap, Ambient IDM Polymeter, Electro Funk Machine, Hardstyle Overdrive, Jungle Drum & Bass, and Nu-Disco Night Drive. Each project contains eight deterministic slots per module, editable piano-roll material, and four scenes named Intro, Main, Variation, and Peak.
+The Workspace demo picker ships ten minimal schema-version-5 genre projects: Detroit Minimal Techno, Deep Tech House, Euphoric Trance, Neon Synthwave, Halftime Dubstep Trap, Ambient IDM Polymeter, Electro Funk Machine, Hardstyle Overdrive, Jungle Drum & Bass, and Nu-Disco Night Drive. Each arrangement is limited to three musical modules, with eight deterministic slots per module, editable piano-roll material, and four scenes named Intro, Main, Variation, and Peak.
 
 The demos store their channel levels, pan, sends, delay/reverb returns, and master character in the rack's normal mix state. They do not add Mixer modules; use the permanent Mixer button beside Workspace to edit the shared rack mix. The two former Basic Electro projects remain at the end of the catalog as compatibility examples.
 

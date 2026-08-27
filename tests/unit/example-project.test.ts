@@ -53,6 +53,7 @@ describe('bundled example projects', () => {
 
       expect(project.schemaVersion).toBe(5);
       expect(project.scenes.map(({ name }) => name)).toEqual(['Intro', 'Main', 'Variation', 'Peak']);
+      expect(rack.modules.length).toBeLessThanOrEqual(3);
       expect(rack.modules.every(({ slots }) => slots.length === 8)).toBe(true);
       expect(rack.modules.every(({ sound }) => sound.engineVersion === 2)).toBe(true);
       expect(rack.modules.some(({ type }) => type === 'mixer')).toBe(false);

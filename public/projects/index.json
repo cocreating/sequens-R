@@ -3,52 +3,52 @@
     {
       "name": "Detroit Minimal Techno",
       "file": "detroit-minimal-techno.sequens-r.json",
-      "description": "132 BPM F♯ minor: locked drums, micro-timed mono pulse, resonant acid, and a two-octave random arp."
+      "description": "132 BPM F♯ minor: a minimal locked drum grid, micro-timed mono pulse, and one resonant acid line."
     },
     {
       "name": "Deep Tech House",
       "file": "deep-tech-house.sequens-r.json",
-      "description": "125 BPM A minor: swung four-on-the-floor, upbeat minor-7 stabs, deep bass, and a chord-following arp."
+      "description": "125 BPM A minor: a spare swung four-on-the-floor, deep pocket bass, and upbeat minor-7 piano stabs."
     },
     {
       "name": "Euphoric Trance",
       "file": "euphoric-trance.sequens-r.json",
-      "description": "142 BPM D harmonic minor: driving 32-step rhythm, emotional triads, high running notes, and a three-octave crystal arp."
+      "description": "142 BPM D harmonic minor: a lean driving rhythm, high triad run, and one three-octave crystal arp."
     },
     {
       "name": "Neon Synthwave",
       "file": "neon-synthwave.sequens-r.json",
-      "description": "108 BPM E minor: gated electro drums, root–fifth–octave bass motion, wide chorus chords, and a simple eighth-note arp."
+      "description": "108 BPM E minor: a minimal gated drum machine, root–fifth–octave pulse, and simple eighth-note arp."
     },
     {
       "name": "Halftime Dubstep Trap",
       "file": "halftime-dubstep-trap.sequens-r.json",
-      "description": "150 BPM C phrygian: heavy half-time drums, sparse sub pressure, sliding acid phrases, and short 1/32 stutter bursts."
+      "description": "150 BPM C phrygian: a stripped half-time groove, sparse sub pressure, and short fractured top-line bursts."
     },
     {
       "name": "Ambient IDM Polymeter",
       "file": "ambient-idm-polymeter.sequens-r.json",
-      "description": "82 BPM E♭ lydian: 5/7/9 Euclidean cycles, drifting chords, overlapping piano tones, and a slow randomized arp."
+      "description": "82 BPM E♭ lydian: sparse dust, one 5/7/9 Euclidean polymeter, and long overlapping piano lights."
     },
     {
       "name": "Electro Funk Machine",
       "file": "electro-funk-machine.sequens-r.json",
-      "description": "126 BPM E blues: syncopated machine drums, punchy square bass, scorched acid, and an ascending low-register riff."
+      "description": "126 BPM E blues: a compact syncopated machine beat, scorched acid snap, and staccato low-register riff."
     },
     {
       "name": "Hardstyle Overdrive",
       "file": "hardstyle-overdrive.sequens-r.json",
-      "description": "156 BPM F harmonic minor: dense zero-swing drums, driven octave bass, hard acid, and tightly quantized high plucks."
+      "description": "156 BPM F harmonic minor: a direct zero-swing kick grid, driven octave bass, and one fast minor-key charge."
     },
     {
       "name": "Jungle Drum & Bass",
       "file": "jungle-drum-and-bass.sequens-r.json",
-      "description": "174 BPM D minor: hand-shaped breakbeat syncopation, rolling animated bass, shifting hook notes, and 1/32 flourishes."
+      "description": "174 BPM D minor: a focused hand-shaped breakbeat, rolling Reese bass, and one shifting melodic hook."
     },
     {
       "name": "Nu-Disco Night Drive",
       "file": "nu-disco-night-drive.sequens-r.json",
-      "description": "120 BPM G mixolydian: live-feel four-on-the-floor, fluid octave bass, seventh chords, and swung keyboard picking."
+      "description": "120 BPM G mixolydian: a light live-feel disco groove, fluid octave bass, and swung seventh-chord picking."
     },
     {
       "name": "Basic Electro",

@@ -392,294 +392,7 @@
             "automation": []
           },
           {
-            "id": "chords-deep-tech-house-3",
-            "type": "chords",
-            "name": "Velvet Sevenths",
-            "color": "plum",
-            "seed": 177831059,
-            "params": {
-              "length": 4,
-              "quality": 1,
-              "duration": 16,
-              "strum": 12
-            },
-            "slots": [
-              {
-                "seed": 177831059,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 12
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 161053440,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 30
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 211386297,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 50
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 194608678,
-                "params": {
-                  "length": 4,
-                  "quality": 2,
-                  "duration": 16,
-                  "strum": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 244941535,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 12
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 228163916,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 22
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 278496773,
-                "params": {
-                  "length": 3,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 12
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 261719154,
-                "params": {
-                  "length": 5,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 40
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.25,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "chords-pad-v2",
-              "params": {
-                "tone": 38,
-                "attack": 72,
-                "release": 82,
-                "width": 68,
-                "chorus": 46
-              },
-              "pan": -10,
-              "delaySend": 0,
-              "reverbSend": 34
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "arp-deep-tech-house-4",
-            "type": "arp",
-            "name": "Swing Thread",
-            "color": "navy",
-            "seed": 544554239,
-            "params": {
-              "direction": 2,
-              "rate": 2,
-              "span": 2,
-              "gate": 54,
-              "followChords": 1,
-              "octave": 3
-            },
-            "slots": [
-              {
-                "seed": 544554239,
-                "params": {
-                  "direction": 2,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 54,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 527776620,
-                "params": {
-                  "direction": 0,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 44,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 578109477,
-                "params": {
-                  "direction": 2,
-                  "rate": 1,
-                  "span": 1,
-                  "gate": 72,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 561331858,
-                "params": {
-                  "direction": 2,
-                  "rate": 3,
-                  "span": 3,
-                  "gate": 36,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 477443763,
-                "params": {
-                  "direction": 3,
-                  "rate": 1,
-                  "span": 2,
-                  "gate": 54,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 460666144,
-                "params": {
-                  "direction": 0,
-                  "rate": 2,
-                  "span": 3,
-                  "gate": 54,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 510999001,
-                "params": {
-                  "direction": 1,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 64,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 494221382,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 30,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.3,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "arp-soft-v2",
-              "params": {
-                "tone": 34,
-                "brightness": 28,
-                "decay": 60,
-                "character": 8
-              },
-              "pan": 18,
-              "delaySend": 26,
-              "reverbSend": 16
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "piano-deep-tech-house-5",
+            "id": "piano-deep-tech-house-3",
             "type": "piano",
             "name": "Upbeat Stabs",
             "color": "indigo",
@@ -2293,9 +2006,7 @@
       "assignments": {
         "drums-deep-tech-house-1": 4,
         "bass-deep-tech-house-2": 4,
-        "chords-deep-tech-house-3": 4,
-        "arp-deep-tech-house-4": 4,
-        "piano-deep-tech-house-5": 4
+        "piano-deep-tech-house-3": 4
       }
     },
     {
@@ -2304,9 +2015,7 @@
       "assignments": {
         "drums-deep-tech-house-1": 0,
         "bass-deep-tech-house-2": 0,
-        "chords-deep-tech-house-3": 0,
-        "arp-deep-tech-house-4": 0,
-        "piano-deep-tech-house-5": 0
+        "piano-deep-tech-house-3": 0
       }
     },
     {
@@ -2315,9 +2024,7 @@
       "assignments": {
         "drums-deep-tech-house-1": 1,
         "bass-deep-tech-house-2": 1,
-        "chords-deep-tech-house-3": 1,
-        "arp-deep-tech-house-4": 1,
-        "piano-deep-tech-house-5": 1
+        "piano-deep-tech-house-3": 1
       }
     },
     {
@@ -2326,9 +2033,7 @@
       "assignments": {
         "drums-deep-tech-house-1": 3,
         "bass-deep-tech-house-2": 3,
-        "chords-deep-tech-house-3": 3,
-        "arp-deep-tech-house-4": 3,
-        "piano-deep-tech-house-5": 3
+        "piano-deep-tech-house-3": 3
       }
     }
   ],

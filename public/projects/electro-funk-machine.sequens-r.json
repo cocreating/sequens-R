@@ -228,177 +228,13 @@
             "automation": []
           },
           {
-            "id": "bass-electro-funk-machine-2",
-            "type": "bass",
-            "name": "Square Punch",
-            "color": "forest",
-            "seed": 511272991,
-            "params": {
-              "style": 5,
-              "steps": 16,
-              "range": 2,
-              "density": 68,
-              "drive": 72,
-              "octave": 2,
-              "gate": 32
-            },
-            "slots": [
-              {
-                "seed": 511272991,
-                "params": {
-                  "style": 5,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 68,
-                  "drive": 72,
-                  "octave": 2,
-                  "gate": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 494495372,
-                "params": {
-                  "style": 5,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 82,
-                  "drive": 72,
-                  "octave": 2,
-                  "gate": 20
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 544828229,
-                "params": {
-                  "style": 5,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 29,
-                  "drive": 72,
-                  "octave": 2,
-                  "gate": 50
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 528050610,
-                "params": {
-                  "style": 5,
-                  "steps": 16,
-                  "range": 3,
-                  "density": 96,
-                  "drive": 92,
-                  "octave": 2,
-                  "gate": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 444162515,
-                "params": {
-                  "style": 5,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 44,
-                  "drive": 72,
-                  "octave": 1,
-                  "gate": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 427384896,
-                "params": {
-                  "style": 0,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 68,
-                  "drive": 72,
-                  "octave": 2,
-                  "gate": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 477717753,
-                "params": {
-                  "style": 1,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 76,
-                  "drive": 72,
-                  "octave": 2,
-                  "gate": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 460940134,
-                "params": {
-                  "style": 4,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 68,
-                  "drive": 72,
-                  "octave": 2,
-                  "gate": 12
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.58,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "bass-square-v2",
-              "params": {
-                "wave": 1,
-                "cutoff": 44,
-                "resonance": 22,
-                "envelope": 38,
-                "drive": 18,
-                "glide": 4,
-                "sub": 45
-              },
-              "pan": 0,
-              "delaySend": 0,
-              "reverbSend": 0
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "acid-electro-funk-machine-3",
+            "id": "acid-electro-funk-machine-2",
             "type": "acid",
             "name": "Bar-One Snap",
             "color": "olive",
             "seed": 1966993336,
             "params": {
-              "fill": 56,
+              "fill": 42,
               "steps": 16,
               "range": 2,
               "decay": 22
@@ -407,7 +243,7 @@
               {
                 "seed": 1966993336,
                 "params": {
-                  "fill": 56,
+                  "fill": 42,
                   "steps": 16,
                   "range": 2,
                   "decay": 22
@@ -418,7 +254,7 @@
               {
                 "seed": 1983770955,
                 "params": {
-                  "fill": 68,
+                  "fill": 54,
                   "steps": 16,
                   "range": 2,
                   "decay": 14
@@ -429,7 +265,7 @@
               {
                 "seed": 2000548574,
                 "params": {
-                  "fill": 20,
+                  "fill": 15,
                   "steps": 16,
                   "range": 2,
                   "decay": 46
@@ -440,7 +276,7 @@
               {
                 "seed": 2017326193,
                 "params": {
-                  "fill": 84,
+                  "fill": 70,
                   "steps": 16,
                   "range": 3,
                   "decay": 22
@@ -451,7 +287,7 @@
               {
                 "seed": 2034103812,
                 "params": {
-                  "fill": 32,
+                  "fill": 24,
                   "steps": 16,
                   "range": 2,
                   "decay": 22
@@ -462,7 +298,7 @@
               {
                 "seed": 2050881431,
                 "params": {
-                  "fill": 56,
+                  "fill": 42,
                   "steps": 16,
                   "range": 2,
                   "decay": 40
@@ -473,7 +309,7 @@
               {
                 "seed": 2067659050,
                 "params": {
-                  "fill": 62,
+                  "fill": 48,
                   "steps": 16,
                   "range": 1,
                   "decay": 22
@@ -484,7 +320,7 @@
               {
                 "seed": 2084436669,
                 "params": {
-                  "fill": 76,
+                  "fill": 62,
                   "steps": 16,
                   "range": 2,
                   "decay": 4
@@ -505,7 +341,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.39,
+            "level": 0.36,
             "sound": {
               "engineVersion": 2,
               "presetId": "acid-driven-v2",
@@ -530,159 +366,7 @@
             "automation": []
           },
           {
-            "id": "arp-electro-funk-machine-4",
-            "type": "arp",
-            "name": "Four Note Circuit",
-            "color": "navy",
-            "seed": 3650322491,
-            "params": {
-              "direction": 0,
-              "rate": 2,
-              "span": 1,
-              "gate": 28,
-              "followChords": 0,
-              "octave": 2
-            },
-            "slots": [
-              {
-                "seed": 3650322491,
-                "params": {
-                  "direction": 0,
-                  "rate": 2,
-                  "span": 1,
-                  "gate": 28,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3633544872,
-                "params": {
-                  "direction": 2,
-                  "rate": 2,
-                  "span": 1,
-                  "gate": 18,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3683877729,
-                "params": {
-                  "direction": 0,
-                  "rate": 1,
-                  "span": 1,
-                  "gate": 46,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3667100110,
-                "params": {
-                  "direction": 0,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 10,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3717432967,
-                "params": {
-                  "direction": 3,
-                  "rate": 1,
-                  "span": 1,
-                  "gate": 28,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3700655348,
-                "params": {
-                  "direction": 0,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 28,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3750988205,
-                "params": {
-                  "direction": 1,
-                  "rate": 2,
-                  "span": 1,
-                  "gate": 38,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3734210586,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 1,
-                  "gate": 5,
-                  "followChords": 0,
-                  "octave": 2
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.36,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "arp-copper-v2",
-              "params": {
-                "tone": 60,
-                "brightness": 66,
-                "decay": 52,
-                "character": 88
-              },
-              "pan": 18,
-              "delaySend": 22,
-              "reverbSend": 0
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "piano-electro-funk-machine-5",
+            "id": "piano-electro-funk-machine-3",
             "type": "piano",
             "name": "Staccato Voltage",
             "color": "indigo",
@@ -1436,10 +1120,8 @@
       "name": "Intro",
       "assignments": {
         "drums-electro-funk-machine-1": 4,
-        "bass-electro-funk-machine-2": 4,
-        "acid-electro-funk-machine-3": 4,
-        "arp-electro-funk-machine-4": 4,
-        "piano-electro-funk-machine-5": 4
+        "acid-electro-funk-machine-2": 4,
+        "piano-electro-funk-machine-3": 4
       }
     },
     {
@@ -1447,10 +1129,8 @@
       "name": "Main",
       "assignments": {
         "drums-electro-funk-machine-1": 0,
-        "bass-electro-funk-machine-2": 0,
-        "acid-electro-funk-machine-3": 0,
-        "arp-electro-funk-machine-4": 0,
-        "piano-electro-funk-machine-5": 0
+        "acid-electro-funk-machine-2": 0,
+        "piano-electro-funk-machine-3": 0
       }
     },
     {
@@ -1458,10 +1138,8 @@
       "name": "Variation",
       "assignments": {
         "drums-electro-funk-machine-1": 1,
-        "bass-electro-funk-machine-2": 1,
-        "acid-electro-funk-machine-3": 1,
-        "arp-electro-funk-machine-4": 1,
-        "piano-electro-funk-machine-5": 1
+        "acid-electro-funk-machine-2": 1,
+        "piano-electro-funk-machine-3": 1
       }
     },
     {
@@ -1469,10 +1147,8 @@
       "name": "Peak",
       "assignments": {
         "drums-electro-funk-machine-1": 3,
-        "bass-electro-funk-machine-2": 3,
-        "acid-electro-funk-machine-3": 3,
-        "arp-electro-funk-machine-4": 3,
-        "piano-electro-funk-machine-5": 3
+        "acid-electro-funk-machine-2": 3,
+        "piano-electro-funk-machine-3": 3
       }
     }
   ],

@@ -228,306 +228,7 @@
             "automation": []
           },
           {
-            "id": "bass-euphoric-trance-2",
-            "type": "bass",
-            "name": "Rolling Low End",
-            "color": "forest",
-            "seed": 4107254854,
-            "params": {
-              "style": 2,
-              "steps": 32,
-              "range": 1,
-              "density": 88,
-              "drive": 32,
-              "octave": 2,
-              "gate": 42
-            },
-            "slots": [
-              {
-                "seed": 4107254854,
-                "params": {
-                  "style": 2,
-                  "steps": 32,
-                  "range": 1,
-                  "density": 88,
-                  "drive": 32,
-                  "octave": 2,
-                  "gate": 42
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4124032473,
-                "params": {
-                  "style": 2,
-                  "steps": 32,
-                  "range": 1,
-                  "density": 100,
-                  "drive": 32,
-                  "octave": 2,
-                  "gate": 30
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4073699616,
-                "params": {
-                  "style": 2,
-                  "steps": 32,
-                  "range": 1,
-                  "density": 37,
-                  "drive": 32,
-                  "octave": 2,
-                  "gate": 60
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4090477235,
-                "params": {
-                  "style": 2,
-                  "steps": 32,
-                  "range": 2,
-                  "density": 100,
-                  "drive": 52,
-                  "octave": 2,
-                  "gate": 42
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4174365330,
-                "params": {
-                  "style": 2,
-                  "steps": 32,
-                  "range": 1,
-                  "density": 57,
-                  "drive": 32,
-                  "octave": 1,
-                  "gate": 42
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4191142949,
-                "params": {
-                  "style": 3,
-                  "steps": 32,
-                  "range": 1,
-                  "density": 88,
-                  "drive": 32,
-                  "octave": 2,
-                  "gate": 42
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4140810092,
-                "params": {
-                  "style": 4,
-                  "steps": 32,
-                  "range": 1,
-                  "density": 96,
-                  "drive": 32,
-                  "octave": 2,
-                  "gate": 42
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4157587711,
-                "params": {
-                  "style": 1,
-                  "steps": 32,
-                  "range": 1,
-                  "density": 88,
-                  "drive": 32,
-                  "octave": 2,
-                  "gate": 22
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.54,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "bass-animated-v2",
-              "params": {
-                "wave": 2,
-                "cutoff": 62,
-                "resonance": 48,
-                "envelope": 70,
-                "drive": 25,
-                "glide": 55,
-                "sub": 25
-              },
-              "pan": 0,
-              "delaySend": 0,
-              "reverbSend": 0
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "chords-euphoric-trance-3",
-            "type": "chords",
-            "name": "Supersaw Horizon",
-            "color": "plum",
-            "seed": 2843477719,
-            "params": {
-              "length": 4,
-              "quality": 0,
-              "duration": 16,
-              "strum": 4
-            },
-            "slots": [
-              {
-                "seed": 2843477719,
-                "params": {
-                  "length": 4,
-                  "quality": 0,
-                  "duration": 16,
-                  "strum": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2826700100,
-                "params": {
-                  "length": 4,
-                  "quality": 0,
-                  "duration": 16,
-                  "strum": 22
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2877032957,
-                "params": {
-                  "length": 4,
-                  "quality": 0,
-                  "duration": 16,
-                  "strum": 42
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2860255338,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 0
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2776367243,
-                "params": {
-                  "length": 4,
-                  "quality": 3,
-                  "duration": 16,
-                  "strum": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2759589624,
-                "params": {
-                  "length": 4,
-                  "quality": 4,
-                  "duration": 16,
-                  "strum": 14
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2809922481,
-                "params": {
-                  "length": 3,
-                  "quality": 0,
-                  "duration": 16,
-                  "strum": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2793144862,
-                "params": {
-                  "length": 5,
-                  "quality": 0,
-                  "duration": 16,
-                  "strum": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.38,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "chords-wide-v2",
-              "params": {
-                "tone": 62,
-                "attack": 36,
-                "release": 70,
-                "width": 100,
-                "chorus": 72
-              },
-              "pan": -8,
-              "delaySend": 12,
-              "reverbSend": 42
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "arp-euphoric-trance-4",
+            "id": "arp-euphoric-trance-2",
             "type": "arp",
             "name": "Crystal Runner",
             "color": "navy",
@@ -536,8 +237,8 @@
               "direction": 2,
               "rate": 2,
               "span": 3,
-              "gate": 72,
-              "followChords": 1,
+              "gate": 58,
+              "followChords": 0,
               "octave": 4
             },
             "slots": [
@@ -547,8 +248,8 @@
                   "direction": 2,
                   "rate": 2,
                   "span": 3,
-                  "gate": 72,
-                  "followChords": 1,
+                  "gate": 58,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -560,8 +261,8 @@
                   "direction": 0,
                   "rate": 2,
                   "span": 3,
-                  "gate": 62,
-                  "followChords": 1,
+                  "gate": 48,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -573,8 +274,8 @@
                   "direction": 2,
                   "rate": 1,
                   "span": 2,
-                  "gate": 90,
-                  "followChords": 1,
+                  "gate": 76,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -586,8 +287,8 @@
                   "direction": 2,
                   "rate": 3,
                   "span": 4,
-                  "gate": 54,
-                  "followChords": 1,
+                  "gate": 40,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -599,8 +300,8 @@
                   "direction": 3,
                   "rate": 1,
                   "span": 3,
-                  "gate": 72,
-                  "followChords": 1,
+                  "gate": 58,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -612,8 +313,8 @@
                   "direction": 0,
                   "rate": 2,
                   "span": 4,
-                  "gate": 72,
-                  "followChords": 1,
+                  "gate": 58,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -625,8 +326,8 @@
                   "direction": 1,
                   "rate": 2,
                   "span": 3,
-                  "gate": 82,
-                  "followChords": 1,
+                  "gate": 68,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -638,8 +339,8 @@
                   "direction": 3,
                   "rate": 3,
                   "span": 3,
-                  "gate": 48,
-                  "followChords": 1,
+                  "gate": 34,
+                  "followChords": 0,
                   "octave": 4
                 },
                 "handEdited": false,
@@ -658,7 +359,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.36,
+            "level": 0.25,
             "sound": {
               "engineVersion": 2,
               "presetId": "arp-crystal-v2",
@@ -669,8 +370,8 @@
                 "character": 18
               },
               "pan": 14,
-              "delaySend": 48,
-              "reverbSend": 32
+              "delaySend": 42,
+              "reverbSend": 26
             },
             "midi": {
               "portId": null,
@@ -679,7 +380,7 @@
             "automation": []
           },
           {
-            "id": "piano-euphoric-trance-5",
+            "id": "piano-euphoric-trance-3",
             "type": "piano",
             "name": "High Triad Run",
             "color": "indigo",
@@ -2292,10 +1993,8 @@
       "name": "Intro",
       "assignments": {
         "drums-euphoric-trance-1": 4,
-        "bass-euphoric-trance-2": 4,
-        "chords-euphoric-trance-3": 4,
-        "arp-euphoric-trance-4": 4,
-        "piano-euphoric-trance-5": 4
+        "arp-euphoric-trance-2": 4,
+        "piano-euphoric-trance-3": 4
       }
     },
     {
@@ -2303,10 +2002,8 @@
       "name": "Main",
       "assignments": {
         "drums-euphoric-trance-1": 0,
-        "bass-euphoric-trance-2": 0,
-        "chords-euphoric-trance-3": 0,
-        "arp-euphoric-trance-4": 0,
-        "piano-euphoric-trance-5": 0
+        "arp-euphoric-trance-2": 0,
+        "piano-euphoric-trance-3": 0
       }
     },
     {
@@ -2314,10 +2011,8 @@
       "name": "Variation",
       "assignments": {
         "drums-euphoric-trance-1": 1,
-        "bass-euphoric-trance-2": 1,
-        "chords-euphoric-trance-3": 1,
-        "arp-euphoric-trance-4": 1,
-        "piano-euphoric-trance-5": 1
+        "arp-euphoric-trance-2": 1,
+        "piano-euphoric-trance-3": 1
       }
     },
     {
@@ -2325,10 +2020,8 @@
       "name": "Peak",
       "assignments": {
         "drums-euphoric-trance-1": 3,
-        "bass-euphoric-trance-2": 3,
-        "chords-euphoric-trance-3": 3,
-        "arp-euphoric-trance-4": 3,
-        "piano-euphoric-trance-5": 3
+        "arp-euphoric-trance-2": 3,
+        "piano-euphoric-trance-3": 3
       }
     }
   ],

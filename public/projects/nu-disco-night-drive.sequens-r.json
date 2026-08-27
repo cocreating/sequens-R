@@ -237,10 +237,10 @@
               "style": 1,
               "steps": 32,
               "range": 2,
-              "density": 76,
-              "drive": 24,
+              "density": 62,
+              "drive": 20,
               "octave": 2,
-              "gate": 58
+              "gate": 54
             },
             "slots": [
               {
@@ -249,10 +249,10 @@
                   "style": 1,
                   "steps": 32,
                   "range": 2,
-                  "density": 76,
-                  "drive": 24,
+                  "density": 62,
+                  "drive": 20,
                   "octave": 2,
-                  "gate": 58
+                  "gate": 54
                 },
                 "handEdited": false,
                 "pattern": null
@@ -263,10 +263,10 @@
                   "style": 1,
                   "steps": 32,
                   "range": 2,
-                  "density": 90,
-                  "drive": 24,
+                  "density": 76,
+                  "drive": 20,
                   "octave": 2,
-                  "gate": 46
+                  "gate": 42
                 },
                 "handEdited": false,
                 "pattern": null
@@ -277,10 +277,10 @@
                   "style": 1,
                   "steps": 32,
                   "range": 2,
-                  "density": 32,
-                  "drive": 24,
+                  "density": 26,
+                  "drive": 20,
                   "octave": 2,
-                  "gate": 76
+                  "gate": 72
                 },
                 "handEdited": false,
                 "pattern": null
@@ -291,10 +291,10 @@
                   "style": 1,
                   "steps": 32,
                   "range": 3,
-                  "density": 100,
-                  "drive": 44,
+                  "density": 90,
+                  "drive": 40,
                   "octave": 2,
-                  "gate": 58
+                  "gate": 54
                 },
                 "handEdited": false,
                 "pattern": null
@@ -305,10 +305,10 @@
                   "style": 1,
                   "steps": 32,
                   "range": 2,
-                  "density": 49,
-                  "drive": 24,
+                  "density": 40,
+                  "drive": 20,
                   "octave": 1,
-                  "gate": 58
+                  "gate": 54
                 },
                 "handEdited": false,
                 "pattern": null
@@ -319,10 +319,10 @@
                   "style": 2,
                   "steps": 32,
                   "range": 2,
-                  "density": 76,
-                  "drive": 24,
+                  "density": 62,
+                  "drive": 20,
                   "octave": 2,
-                  "gate": 58
+                  "gate": 54
                 },
                 "handEdited": false,
                 "pattern": null
@@ -333,10 +333,10 @@
                   "style": 3,
                   "steps": 32,
                   "range": 2,
-                  "density": 84,
-                  "drive": 24,
+                  "density": 70,
+                  "drive": 20,
                   "octave": 2,
-                  "gate": 58
+                  "gate": 54
                 },
                 "handEdited": false,
                 "pattern": null
@@ -347,10 +347,10 @@
                   "style": 0,
                   "steps": 32,
                   "range": 2,
-                  "density": 76,
-                  "drive": 24,
+                  "density": 62,
+                  "drive": 20,
                   "octave": 2,
-                  "gate": 38
+                  "gate": 34
                 },
                 "handEdited": false,
                 "pattern": null
@@ -368,7 +368,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.57,
+            "level": 0.55,
             "sound": {
               "engineVersion": 2,
               "presetId": "bass-pluck-v2",
@@ -392,294 +392,7 @@
             "automation": []
           },
           {
-            "id": "chords-nu-disco-night-drive-3",
-            "type": "chords",
-            "name": "Disco Sevenths",
-            "color": "plum",
-            "seed": 150952627,
-            "params": {
-              "length": 4,
-              "quality": 1,
-              "duration": 16,
-              "strum": 34
-            },
-            "slots": [
-              {
-                "seed": 150952627,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 34
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 134175008,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 52
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 184507865,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 72
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 167730246,
-                "params": {
-                  "length": 4,
-                  "quality": 2,
-                  "duration": 16,
-                  "strum": 26
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 218063103,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 34
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 201285484,
-                "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 44
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 251618341,
-                "params": {
-                  "length": 3,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 34
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 234840722,
-                "params": {
-                  "length": 5,
-                  "quality": 1,
-                  "duration": 16,
-                  "strum": 62
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.39,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "chords-keys-v2",
-              "params": {
-                "tone": 58,
-                "attack": 8,
-                "release": 34,
-                "width": 38,
-                "chorus": 12
-              },
-              "pan": -12,
-              "delaySend": 12,
-              "reverbSend": 18
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "arp-nu-disco-night-drive-4",
-            "type": "arp",
-            "name": "Picked Strings",
-            "color": "navy",
-            "seed": 3392222725,
-            "params": {
-              "direction": 2,
-              "rate": 1,
-              "span": 2,
-              "gate": 48,
-              "followChords": 1,
-              "octave": 3
-            },
-            "slots": [
-              {
-                "seed": 3392222725,
-                "params": {
-                  "direction": 2,
-                  "rate": 1,
-                  "span": 2,
-                  "gate": 48,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3375445106,
-                "params": {
-                  "direction": 0,
-                  "rate": 1,
-                  "span": 2,
-                  "gate": 38,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3358667487,
-                "params": {
-                  "direction": 2,
-                  "rate": 0,
-                  "span": 1,
-                  "gate": 66,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3341889868,
-                "params": {
-                  "direction": 2,
-                  "rate": 2,
-                  "span": 3,
-                  "gate": 30,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3325112249,
-                "params": {
-                  "direction": 3,
-                  "rate": 0,
-                  "span": 2,
-                  "gate": 48,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3308334630,
-                "params": {
-                  "direction": 0,
-                  "rate": 1,
-                  "span": 3,
-                  "gate": 48,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3291557011,
-                "params": {
-                  "direction": 1,
-                  "rate": 1,
-                  "span": 2,
-                  "gate": 58,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3274779392,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 24,
-                  "followChords": 1,
-                  "octave": 3
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.35,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "arp-copper-v2",
-              "params": {
-                "tone": 60,
-                "brightness": 66,
-                "decay": 52,
-                "character": 88
-              },
-              "pan": 17,
-              "delaySend": 22,
-              "reverbSend": 12
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "piano-nu-disco-night-drive-5",
+            "id": "piano-nu-disco-night-drive-3",
             "type": "piano",
             "name": "Swing Pick",
             "color": "indigo",
@@ -1579,9 +1292,7 @@
       "assignments": {
         "drums-nu-disco-night-drive-1": 4,
         "bass-nu-disco-night-drive-2": 4,
-        "chords-nu-disco-night-drive-3": 4,
-        "arp-nu-disco-night-drive-4": 4,
-        "piano-nu-disco-night-drive-5": 4
+        "piano-nu-disco-night-drive-3": 4
       }
     },
     {
@@ -1590,9 +1301,7 @@
       "assignments": {
         "drums-nu-disco-night-drive-1": 0,
         "bass-nu-disco-night-drive-2": 0,
-        "chords-nu-disco-night-drive-3": 0,
-        "arp-nu-disco-night-drive-4": 0,
-        "piano-nu-disco-night-drive-5": 0
+        "piano-nu-disco-night-drive-3": 0
       }
     },
     {
@@ -1601,9 +1310,7 @@
       "assignments": {
         "drums-nu-disco-night-drive-1": 1,
         "bass-nu-disco-night-drive-2": 1,
-        "chords-nu-disco-night-drive-3": 1,
-        "arp-nu-disco-night-drive-4": 1,
-        "piano-nu-disco-night-drive-5": 1
+        "piano-nu-disco-night-drive-3": 1
       }
     },
     {
@@ -1612,9 +1319,7 @@
       "assignments": {
         "drums-nu-disco-night-drive-1": 3,
         "bass-nu-disco-night-drive-2": 3,
-        "chords-nu-disco-night-drive-3": 3,
-        "arp-nu-disco-night-drive-4": 3,
-        "piano-nu-disco-night-drive-5": 3
+        "piano-nu-disco-night-drive-3": 3
       }
     }
   ],

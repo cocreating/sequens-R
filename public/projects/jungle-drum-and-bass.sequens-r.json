@@ -237,10 +237,10 @@
               "style": 3,
               "steps": 32,
               "range": 2,
-              "density": 78,
-              "drive": 64,
+              "density": 62,
+              "drive": 56,
               "octave": 1,
-              "gate": 84
+              "gate": 78
             },
             "slots": [
               {
@@ -249,10 +249,10 @@
                   "style": 3,
                   "steps": 32,
                   "range": 2,
-                  "density": 78,
-                  "drive": 64,
+                  "density": 62,
+                  "drive": 56,
                   "octave": 1,
-                  "gate": 84
+                  "gate": 78
                 },
                 "handEdited": false,
                 "pattern": null
@@ -263,10 +263,10 @@
                   "style": 3,
                   "steps": 32,
                   "range": 2,
-                  "density": 92,
-                  "drive": 64,
+                  "density": 76,
+                  "drive": 56,
                   "octave": 1,
-                  "gate": 72
+                  "gate": 66
                 },
                 "handEdited": false,
                 "pattern": null
@@ -277,10 +277,10 @@
                   "style": 3,
                   "steps": 32,
                   "range": 2,
-                  "density": 33,
-                  "drive": 64,
+                  "density": 26,
+                  "drive": 56,
                   "octave": 1,
-                  "gate": 100
+                  "gate": 96
                 },
                 "handEdited": false,
                 "pattern": null
@@ -291,10 +291,10 @@
                   "style": 3,
                   "steps": 32,
                   "range": 3,
-                  "density": 100,
-                  "drive": 84,
+                  "density": 90,
+                  "drive": 76,
                   "octave": 1,
-                  "gate": 84
+                  "gate": 78
                 },
                 "handEdited": false,
                 "pattern": null
@@ -305,10 +305,10 @@
                   "style": 3,
                   "steps": 32,
                   "range": 2,
-                  "density": 51,
-                  "drive": 64,
+                  "density": 40,
+                  "drive": 56,
                   "octave": 1,
-                  "gate": 84
+                  "gate": 78
                 },
                 "handEdited": false,
                 "pattern": null
@@ -319,10 +319,10 @@
                   "style": 4,
                   "steps": 32,
                   "range": 2,
-                  "density": 78,
-                  "drive": 64,
+                  "density": 62,
+                  "drive": 56,
                   "octave": 1,
-                  "gate": 84
+                  "gate": 78
                 },
                 "handEdited": false,
                 "pattern": null
@@ -333,10 +333,10 @@
                   "style": 5,
                   "steps": 32,
                   "range": 2,
-                  "density": 86,
-                  "drive": 64,
+                  "density": 70,
+                  "drive": 56,
                   "octave": 1,
-                  "gate": 84
+                  "gate": 78
                 },
                 "handEdited": false,
                 "pattern": null
@@ -347,10 +347,10 @@
                   "style": 2,
                   "steps": 32,
                   "range": 2,
-                  "density": 78,
-                  "drive": 64,
+                  "density": 62,
+                  "drive": 56,
                   "octave": 1,
-                  "gate": 64
+                  "gate": 58
                 },
                 "handEdited": false,
                 "pattern": null
@@ -368,7 +368,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.63,
+            "level": 0.6,
             "sound": {
               "engineVersion": 2,
               "presetId": "bass-animated-v2",
@@ -392,297 +392,7 @@
             "automation": []
           },
           {
-            "id": "acid-jungle-drum-and-bass-3",
-            "type": "acid",
-            "name": "Dark Bass Motion",
-            "color": "olive",
-            "seed": 3071103800,
-            "params": {
-              "fill": 42,
-              "steps": 32,
-              "range": 2,
-              "decay": 74
-            },
-            "slots": [
-              {
-                "seed": 3071103800,
-                "params": {
-                  "fill": 42,
-                  "steps": 32,
-                  "range": 2,
-                  "decay": 74
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3087881419,
-                "params": {
-                  "fill": 54,
-                  "steps": 32,
-                  "range": 2,
-                  "decay": 66
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3104659038,
-                "params": {
-                  "fill": 15,
-                  "steps": 32,
-                  "range": 2,
-                  "decay": 98
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3121436657,
-                "params": {
-                  "fill": 70,
-                  "steps": 32,
-                  "range": 3,
-                  "decay": 74
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3138214276,
-                "params": {
-                  "fill": 24,
-                  "steps": 32,
-                  "range": 2,
-                  "decay": 74
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3154991895,
-                "params": {
-                  "fill": 42,
-                  "steps": 32,
-                  "range": 2,
-                  "decay": 92
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3171769514,
-                "params": {
-                  "fill": 48,
-                  "steps": 32,
-                  "range": 1,
-                  "decay": 74
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3188547133,
-                "params": {
-                  "fill": 62,
-                  "steps": 32,
-                  "range": 2,
-                  "decay": 56
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.27,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "acid-dark-v2",
-              "params": {
-                "wave": 1,
-                "cutoff": 28,
-                "resonance": 88,
-                "envAmount": 70,
-                "decay": 78,
-                "accent": 60,
-                "slide": 75,
-                "drive": 18
-              },
-              "pan": -12,
-              "delaySend": 10,
-              "reverbSend": 0
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "arp-jungle-drum-and-bass-4",
-            "type": "arp",
-            "name": "Darting Flourish",
-            "color": "navy",
-            "seed": 2776046838,
-            "params": {
-              "direction": 3,
-              "rate": 3,
-              "span": 2,
-              "gate": 16,
-              "followChords": 0,
-              "octave": 5
-            },
-            "slots": [
-              {
-                "seed": 2776046838,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 16,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2792824457,
-                "params": {
-                  "direction": 1,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 6,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2742491600,
-                "params": {
-                  "direction": 3,
-                  "rate": 2,
-                  "span": 1,
-                  "gate": 34,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2759269219,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 3,
-                  "gate": 5,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2843157314,
-                "params": {
-                  "direction": 3,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 16,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2859934933,
-                "params": {
-                  "direction": 0,
-                  "rate": 3,
-                  "span": 3,
-                  "gate": 16,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2809602076,
-                "params": {
-                  "direction": 1,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 26,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2826379695,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 5,
-                  "followChords": 0,
-                  "octave": 5
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.21,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "arp-quick-v2",
-              "params": {
-                "tone": 76,
-                "brightness": 80,
-                "decay": 16,
-                "character": 54
-              },
-              "pan": 22,
-              "delaySend": 46,
-              "reverbSend": 12
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "piano-jungle-drum-and-bass-5",
+            "id": "piano-jungle-drum-and-bass-3",
             "type": "piano",
             "name": "Shifting Hook",
             "color": "indigo",
@@ -1534,9 +1244,7 @@
       "assignments": {
         "drums-jungle-drum-and-bass-1": 4,
         "bass-jungle-drum-and-bass-2": 4,
-        "acid-jungle-drum-and-bass-3": 4,
-        "arp-jungle-drum-and-bass-4": 4,
-        "piano-jungle-drum-and-bass-5": 4
+        "piano-jungle-drum-and-bass-3": 4
       }
     },
     {
@@ -1545,9 +1253,7 @@
       "assignments": {
         "drums-jungle-drum-and-bass-1": 0,
         "bass-jungle-drum-and-bass-2": 0,
-        "acid-jungle-drum-and-bass-3": 0,
-        "arp-jungle-drum-and-bass-4": 0,
-        "piano-jungle-drum-and-bass-5": 0
+        "piano-jungle-drum-and-bass-3": 0
       }
     },
     {
@@ -1556,9 +1262,7 @@
       "assignments": {
         "drums-jungle-drum-and-bass-1": 1,
         "bass-jungle-drum-and-bass-2": 1,
-        "acid-jungle-drum-and-bass-3": 1,
-        "arp-jungle-drum-and-bass-4": 1,
-        "piano-jungle-drum-and-bass-5": 1
+        "piano-jungle-drum-and-bass-3": 1
       }
     },
     {
@@ -1567,9 +1271,7 @@
       "assignments": {
         "drums-jungle-drum-and-bass-1": 3,
         "bass-jungle-drum-and-bass-2": 3,
-        "acid-jungle-drum-and-bass-3": 3,
-        "arp-jungle-drum-and-bass-4": 3,
-        "piano-jungle-drum-and-bass-5": 3
+        "piano-jungle-drum-and-bass-3": 3
       }
     }
   ],

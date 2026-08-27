@@ -228,177 +228,13 @@
             "automation": []
           },
           {
-            "id": "bass-detroit-minimal-techno-2",
-            "type": "bass",
-            "name": "Sub Anchor",
-            "color": "forest",
-            "seed": 3584699617,
-            "params": {
-              "style": 0,
-              "steps": 16,
-              "range": 1,
-              "density": 42,
-              "drive": 28,
-              "octave": 2,
-              "gate": 48
-            },
-            "slots": [
-              {
-                "seed": 3584699617,
-                "params": {
-                  "style": 0,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 42,
-                  "drive": 28,
-                  "octave": 2,
-                  "gate": 48
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3567921998,
-                "params": {
-                  "style": 0,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 56,
-                  "drive": 28,
-                  "octave": 2,
-                  "gate": 36
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3551144379,
-                "params": {
-                  "style": 0,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 18,
-                  "drive": 28,
-                  "octave": 2,
-                  "gate": 66
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3534366760,
-                "params": {
-                  "style": 0,
-                  "steps": 16,
-                  "range": 2,
-                  "density": 70,
-                  "drive": 48,
-                  "octave": 2,
-                  "gate": 48
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3651810093,
-                "params": {
-                  "style": 0,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 27,
-                  "drive": 28,
-                  "octave": 1,
-                  "gate": 48
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3635032474,
-                "params": {
-                  "style": 1,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 42,
-                  "drive": 28,
-                  "octave": 2,
-                  "gate": 48
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3618254855,
-                "params": {
-                  "style": 2,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 50,
-                  "drive": 28,
-                  "octave": 2,
-                  "gate": 48
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 3601477236,
-                "params": {
-                  "style": 5,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 42,
-                  "drive": 28,
-                  "octave": 2,
-                  "gate": 28
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.58,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "bass-deep-v2",
-              "params": {
-                "wave": 0,
-                "cutoff": 40,
-                "resonance": 42,
-                "envelope": 50,
-                "drive": 32,
-                "glide": 28,
-                "sub": 65
-              },
-              "pan": 0,
-              "delaySend": 0,
-              "reverbSend": 0
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "acid-detroit-minimal-techno-3",
+            "id": "acid-detroit-minimal-techno-2",
             "type": "acid",
             "name": "Resonant Wire",
             "color": "olive",
             "seed": 452744587,
             "params": {
-              "fill": 68,
+              "fill": 46,
               "steps": 16,
               "range": 2,
               "decay": 24
@@ -407,7 +243,7 @@
               {
                 "seed": 452744587,
                 "params": {
-                  "fill": 68,
+                  "fill": 46,
                   "steps": 16,
                   "range": 2,
                   "decay": 24
@@ -418,7 +254,7 @@
               {
                 "seed": 435966968,
                 "params": {
-                  "fill": 80,
+                  "fill": 58,
                   "steps": 16,
                   "range": 2,
                   "decay": 16
@@ -429,7 +265,7 @@
               {
                 "seed": 486299825,
                 "params": {
-                  "fill": 24,
+                  "fill": 16,
                   "steps": 16,
                   "range": 2,
                   "decay": 48
@@ -440,7 +276,7 @@
               {
                 "seed": 469522206,
                 "params": {
-                  "fill": 96,
+                  "fill": 74,
                   "steps": 16,
                   "range": 3,
                   "decay": 24
@@ -451,7 +287,7 @@
               {
                 "seed": 519855063,
                 "params": {
-                  "fill": 39,
+                  "fill": 27,
                   "steps": 16,
                   "range": 2,
                   "decay": 24
@@ -462,7 +298,7 @@
               {
                 "seed": 503077444,
                 "params": {
-                  "fill": 68,
+                  "fill": 46,
                   "steps": 16,
                   "range": 2,
                   "decay": 42
@@ -473,7 +309,7 @@
               {
                 "seed": 553410301,
                 "params": {
-                  "fill": 74,
+                  "fill": 52,
                   "steps": 16,
                   "range": 1,
                   "decay": 24
@@ -484,7 +320,7 @@
               {
                 "seed": 536632682,
                 "params": {
-                  "fill": 88,
+                  "fill": 66,
                   "steps": 16,
                   "range": 2,
                   "decay": 6
@@ -505,7 +341,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.42,
+            "level": 0.38,
             "sound": {
               "engineVersion": 2,
               "presetId": "acid-sharp-v2",
@@ -530,159 +366,7 @@
             "automation": []
           },
           {
-            "id": "arp-detroit-minimal-techno-4",
-            "type": "arp",
-            "name": "Random Signal",
-            "color": "navy",
-            "seed": 2433780287,
-            "params": {
-              "direction": 3,
-              "rate": 2,
-              "span": 2,
-              "gate": 24,
-              "followChords": 0,
-              "octave": 4
-            },
-            "slots": [
-              {
-                "seed": 2433780287,
-                "params": {
-                  "direction": 3,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 24,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2417002668,
-                "params": {
-                  "direction": 1,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 14,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2467335525,
-                "params": {
-                  "direction": 3,
-                  "rate": 1,
-                  "span": 1,
-                  "gate": 42,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2450557906,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 3,
-                  "gate": 6,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2366669811,
-                "params": {
-                  "direction": 3,
-                  "rate": 1,
-                  "span": 2,
-                  "gate": 24,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2349892192,
-                "params": {
-                  "direction": 0,
-                  "rate": 2,
-                  "span": 3,
-                  "gate": 24,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2400225049,
-                "params": {
-                  "direction": 1,
-                  "rate": 2,
-                  "span": 2,
-                  "gate": 34,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2383447430,
-                "params": {
-                  "direction": 3,
-                  "rate": 3,
-                  "span": 2,
-                  "gate": 5,
-                  "followChords": 0,
-                  "octave": 4
-                },
-                "handEdited": false,
-                "pattern": null
-              }
-            ],
-            "activeSlot": 0,
-            "mutation": {
-              "on": false,
-              "intensity": 2,
-              "everyNLoops": 4,
-              "revert": null
-            },
-            "shareable": true,
-            "collapsed": false,
-            "mute": false,
-            "solo": false,
-            "monitor": true,
-            "level": 0.28,
-            "sound": {
-              "engineVersion": 2,
-              "presetId": "arp-needle-v2",
-              "params": {
-                "tone": 92,
-                "brightness": 100,
-                "decay": 8,
-                "character": 72
-              },
-              "pan": 24,
-              "delaySend": 42,
-              "reverbSend": 8
-            },
-            "midi": {
-              "portId": null,
-              "channel": 1
-            },
-            "automation": []
-          },
-          {
-            "id": "piano-detroit-minimal-techno-5",
+            "id": "piano-detroit-minimal-techno-3",
             "type": "piano",
             "name": "Micro Pulse",
             "color": "indigo",
@@ -2295,10 +1979,8 @@
       "name": "Intro",
       "assignments": {
         "drums-detroit-minimal-techno-1": 4,
-        "bass-detroit-minimal-techno-2": 4,
-        "acid-detroit-minimal-techno-3": 4,
-        "arp-detroit-minimal-techno-4": 4,
-        "piano-detroit-minimal-techno-5": 4
+        "acid-detroit-minimal-techno-2": 4,
+        "piano-detroit-minimal-techno-3": 4
       }
     },
     {
@@ -2306,10 +1988,8 @@
       "name": "Main",
       "assignments": {
         "drums-detroit-minimal-techno-1": 0,
-        "bass-detroit-minimal-techno-2": 0,
-        "acid-detroit-minimal-techno-3": 0,
-        "arp-detroit-minimal-techno-4": 0,
-        "piano-detroit-minimal-techno-5": 0
+        "acid-detroit-minimal-techno-2": 0,
+        "piano-detroit-minimal-techno-3": 0
       }
     },
     {
@@ -2317,10 +1997,8 @@
       "name": "Variation",
       "assignments": {
         "drums-detroit-minimal-techno-1": 1,
-        "bass-detroit-minimal-techno-2": 1,
-        "acid-detroit-minimal-techno-3": 1,
-        "arp-detroit-minimal-techno-4": 1,
-        "piano-detroit-minimal-techno-5": 1
+        "acid-detroit-minimal-techno-2": 1,
+        "piano-detroit-minimal-techno-3": 1
       }
     },
     {
@@ -2328,10 +2006,8 @@
       "name": "Peak",
       "assignments": {
         "drums-detroit-minimal-techno-1": 3,
-        "bass-detroit-minimal-techno-2": 3,
-        "acid-detroit-minimal-techno-3": 3,
-        "arp-detroit-minimal-techno-4": 3,
-        "piano-detroit-minimal-techno-5": 3
+        "acid-detroit-minimal-techno-2": 3,
+        "piano-detroit-minimal-techno-3": 3
       }
     }
   ],

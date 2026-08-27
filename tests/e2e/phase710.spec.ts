@@ -5,7 +5,7 @@ test.use({ viewport: { width: 375, height: 812 } });
 test('Mod keeps three maximum-rate LFOs external-MIDI-only on mobile', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('New module').selectOption('mod');
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
   const mod = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'mod module name' }) });
 
   await mod.getByText('Sound', { exact: true }).click();

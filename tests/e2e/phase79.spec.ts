@@ -5,7 +5,7 @@ test.use({ viewport: { width: 375, height: 812 } });
 test('CC Control explains its external-only sound contract and keeps mobile automation available', async ({ page }) => {
   await page.goto('/');
   await page.getByLabel('New module').selectOption('cc');
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
   const cc = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'cc module name' }) });
 
   await cc.getByText('Sound', { exact: true }).click();

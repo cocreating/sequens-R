@@ -33,7 +33,7 @@ test('six Euclid palettes render clean level-matched polymetric tuned-percussion
     await page.getByRole('listitem', { name: moduleName }).getByRole('button', { name: `Mute ${moduleName}` }).click();
   }
   await page.getByLabel('New module').selectOption('euclid');
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
   const euclid = page.getByRole('listitem', { name: 'Euclid' });
   await euclid.locator('.module-advanced > summary').click();
   for (const label of ['Ring 1 hits', 'Ring 2 hits', 'Ring 3 hits']) await euclid.getByRole('spinbutton', { name: label, exact: true }).fill('8');

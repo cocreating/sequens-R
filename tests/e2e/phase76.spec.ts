@@ -33,7 +33,7 @@ test('eight four-slot Arp presets render clean level-matched pluck references', 
     await page.getByRole('listitem', { name: moduleName }).getByRole('button', { name: `Mute ${moduleName}` }).click();
   }
   await page.getByLabel('New module').selectOption('arp');
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
   const arp = page.getByRole('listitem', { name: 'Arp' });
   await arp.locator('.module-advanced > summary').click();
   await arp.getByLabel('Seed', { exact: true }).fill('1397051654');

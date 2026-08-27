@@ -13,7 +13,7 @@ const labels = {
 
 async function addModule(page: Page, type: keyof typeof labels): Promise<void> {
   await page.getByLabel('New module').selectOption(type);
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
   await expect(page.getByText(`${labels[type]} added`)).toBeVisible();
 }
 
@@ -24,6 +24,12 @@ for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }
     page.on('pageerror', (error) => pageErrors.push(error));
     await page.goto('/');
 
+    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toHaveText('➕Add Module');
+    expect(await page.locator('.performance-deck').evaluate((deck) => {
+      const [transport, rackTools] = Array.from(deck.children);
+      if (transport === undefined || rackTools === undefined) return false;
+      return Math.abs(transport.getBoundingClientRect().top - rackTools.getBoundingClientRect().top) < 1;
+    })).toBe(true);
     await expect(page.getByLabel('New module').getByRole('option')).toHaveCount(10);
     for (const type of ['acid', 'mixer', 'arp', 'euclid', 'piano', 'cc', 'mod'] as const) await addModule(page, type);
     await expect(page.locator('.module-list > article')).toHaveCount(10);
@@ -131,7 +137,7 @@ test.describe('Phase 6 mobile editors', () => {
     await copy.locator('.module-menu > summary').click();
     await copy.getByRole('button', { name: 'Delete Arp copy' }).click();
     await expect(page.getByRole('textbox', { name: 'arp module name' })).toHaveCount(1);
-    await expect(page.getByRole('button', { name: 'Add', exact: true })).toBeFocused();
+    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toBeFocused();
     await page.getByRole('button', { name: 'Stop' }).click();
 
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();

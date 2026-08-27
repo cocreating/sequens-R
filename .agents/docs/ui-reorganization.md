@@ -1,6 +1,6 @@
 # Studio UI reorganization evidence
 
-Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded on 2026-08-26.
+Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded on 2026-08-27.
 
 This is the UI consolidation completed before Phase 6 was defined. It changes hierarchy and control presentation without changing generator output, project persistence, share encoding, or export formats. Its later transport refinement adds exact-beat Pause/Resume scheduling and MIDI Continue behavior. The resulting vertical mobile rack, disclosures, schema-driven controls, and performance-first hierarchy became the foundation used by the implemented Phase 6 mobile editors.
 
@@ -8,10 +8,10 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Delivered
 
-- Compact global header containing Tap BPM, a stable Play/Pause toggle, Stop, Share, and General Help, followed by a performance deck for tempo, key, Random, and module creation.
+- Compact global header containing Tap BPM, a stable Play/Pause toggle, Stop, Share, and General Help, followed by a performance deck for tempo, key, Random, and module creation. On mobile, the transport and rack actions stay in one horizontal, contained-scroll row rather than stacking; desktop keeps its two-column deck.
 - Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. The labelled BPM field adds 44 px minus/plus controls on its left for one-BPM changes, with disabled 20/300 boundaries; manual entry also writes whole values.
 - Pause preserves the current transport beat, freezes the header/grid/piano playheads on it, and clears scheduled internal/MIDI events; Play continues from that beat while Stop resets to zero and hides the playheads.
-- Responsive branding that shows `Local generative MIDI` and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
+- Responsive branding that shows `Local generative MIDI`, a build-derived current-version badge, and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
 - Mobile critical path with the rack directly after the performance controls and Workspace removed from document flow.
 - Desktop studio with three full-width parallel module lanes at 1440 CSS px.
 - Workspace utilities live in a top-layer floating panel opened by an icon-only toolbox button immediately after TAP. The native popover supports light dismiss and Escape, restores focus to its trigger, and scrolls internally within the viewport.
@@ -33,7 +33,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
   - vertical native range faders for desktop mixer levels.
 - Rotary parameters delegate to an independent Svelte 5 `RotaryKnob` component. Its SVG arc and indicator remain visual decoration around a native range input; vertical Pointer Events dragging uses pointer capture, Shift increases pixels per domain step, and double click restores the schema default. Component-specific CSS properties keep the visual layer themeable without coupling it to generator definitions or adding a runtime dependency.
 - Named Kick, Snare, Closed hat, Open hat, Clap, Tom, Rim, and Perc drum lanes.
-- Icon-only affordances for recognizable frequent actions: Play/Pause, Stop, Share, General Help, Random, Add, Undo/Redo, Save, project export/import/demo discovery, rack creation/duplication, scene capture, hardware connect/refresh, music exports, and piano-note creation. Ambiguous or higher-consequence controls such as Delete, Mutate/Revert, scene launch, recording, advanced routing, and module-menu commands retain visible text.
+- Icon-only affordances for recognizable frequent actions: Play/Pause, Stop, Share, General Help, Random, Undo/Redo, Save, project export/import/demo discovery, rack creation/duplication, scene capture, hardware connect/refresh, music exports, and piano-note creation. The module creation action deliberately keeps its `➕ Add Module` text label. Ambiguous or higher-consequence controls such as Delete, Mutate/Revert, scene launch, recording, advanced routing, and module-menu commands retain visible text.
 
 ## Accessibility and behavior
 
@@ -45,6 +45,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Selecting module Help closes the actions disclosure and restores focus to its summary, preventing the relocated panel from obscuring the second-row switches.
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
 - Decorative emoticons are marked `aria-hidden="true"`; text-labelled controls keep their visible name while icon-only controls use explicit accessible names.
+- The compact module-type select retains the `New module` accessible name even though its former visible caption was removed to keep the one-row mobile deck compact; the adjacent action is visibly and programmatically named `Add Module`.
 - Icon-only controls retain explicit accessible names, pressed state where applicable, and 44 px touch targets.
 - Mixer PAN and SENDS visibility toggles expose dynamic Show/Hide accessible names and pressed state; hiding either group removes its controls from the keyboard and accessibility trees.
 
@@ -62,11 +63,12 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, Chrome flows, and the axe serious/critical gates. Browser coverage includes responsive masonry columns, full-width module spanning, dark per-module color selection and project round-trip persistence, alongside the existing Workspace, module action, Phase 6 mobile, Phase 7 sound, sharing, and accessibility flows.
 
-Latest focused execution on 2026-08-26 after the masonry and module-theme refinements:
+Latest focused execution on 2026-08-27 after the mobile performance-deck and module-action refinement:
 
 ```text
 svelte-check: 0 errors, 0 warnings
-Vitest: scheduler, module-color, and Phase 2/7 regression suites passed
-Playwright Chrome: Phase 4 masonry/theme flows passed
-axe: no serious or critical violations
+Vitest: 112 tests passed
+production PWA build and 200 KiB initial-JavaScript budget: passed (101.86 KiB gzip)
+Playwright Chrome: 53 checks passed
+mobile layout assertion: transport and rack actions share one deck row at 375 × 667 and 375 × 812
 ```

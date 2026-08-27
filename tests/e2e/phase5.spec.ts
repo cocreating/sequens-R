@@ -66,7 +66,7 @@ test.describe('Phase 5 polish', () => {
     });
     await page.goto('/');
     await page.getByLabel('New module').selectOption('acid');
-    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await page.getByRole('button', { name: 'Add Module', exact: true }).click();
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await page.getByRole('button', { name: 'Close workspace' }).click();
@@ -96,7 +96,7 @@ test.describe('Phase 5 polish', () => {
     });
     await page.goto('/');
     await page.getByLabel('New module').selectOption('acid');
-    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await page.getByRole('button', { name: 'Add Module', exact: true }).click();
     await page.getByRole('button', { name: 'Play', exact: true }).click();
     await expect(page.getByText('Transport playing')).toBeVisible();
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();
@@ -116,7 +116,7 @@ test.describe('Phase 5 polish', () => {
     await expect(page.getByRole('tab', { selected: true })).toContainText('Rack 1');
     await page.getByRole('button', { name: 'Close workspace' }).click();
     await page.getByLabel('New module').selectOption('piano');
-    await page.getByRole('button', { name: 'Add', exact: true }).click();
+    await page.getByRole('button', { name: 'Add Module', exact: true }).click();
     const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
     await expect(piano.getByRole('button', { name: 'Add note' })).toHaveText('➕');
     await piano.getByRole('button', { name: 'Add note' }).click();
@@ -170,7 +170,7 @@ test.describe('Phase 5 polish', () => {
     await expect(page.getByRole('button', { name: 'Share' })).toHaveText('🔗');
     await expect(page.locator('.app-help-toggle')).toHaveText('?');
     await expect(page.getByRole('button', { name: 'Random' })).toHaveText('🎲');
-    await expect(page.getByRole('button', { name: 'Add', exact: true })).toHaveText('➕');
+    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toHaveText('➕Add Module');
 
     const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);

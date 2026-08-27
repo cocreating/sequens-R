@@ -957,11 +957,10 @@
       <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
         <button type="button" class="random has-emoticon" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><span class="button-emoticon" aria-hidden="true">🎲</span></button>
         <div class="add-module">
-          <label for="module-type" data-app-help-key="module-type">New module</label>
-          <select id="module-type" data-app-help-key="module-type" bind:value={selectedModuleType}>
+          <select id="module-type" aria-label="New module" data-app-help-key="module-type" bind:value={selectedModuleType}>
             {#each MODULE_TYPES as type (type)}<option value={type}>{moduleLabels[type]}</option>{/each}
           </select>
-          <button id="add-module-button" type="button" class="has-emoticon icon-only" data-app-help-key="add-module" aria-label="Add" onclick={addModule} disabled={rack.modules.length >= 16}><span class="button-emoticon" aria-hidden="true">➕</span></button>
+          <button id="add-module-button" type="button" class="has-emoticon" data-app-help-key="add-module" aria-label="Add Module" onclick={addModule} disabled={rack.modules.length >= 16}><span class="button-emoticon" aria-hidden="true">➕</span><span>Add Module</span></button>
         </div>
       </section>
     </div>

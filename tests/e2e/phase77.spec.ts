@@ -36,7 +36,7 @@ test('eight electric Piano presets render clean level-matched eight-note referen
     await page.getByRole('listitem', { name: moduleName }).getByRole('button', { name: `Mute ${moduleName}` }).click();
   }
   await page.getByLabel('New module').selectOption('piano');
-  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
   const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
   await piano.locator('.module-advanced > summary').click();
   await piano.getByLabel('Pitch mode').getByRole('button', { name: 'Chromatic' }).click();

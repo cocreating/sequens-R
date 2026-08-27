@@ -55,7 +55,7 @@ test.describe('Phase 4 desktop studio', () => {
 
     for (const [index, type] of ['arp', 'euclid', 'piano', 'cc', 'mod'].entries()) {
       await page.getByLabel('New module').selectOption(type);
-      await page.getByRole('button', { name: 'Add', exact: true }).click();
+      await page.getByRole('button', { name: 'Add Module', exact: true }).click();
       expect(pageErrors).toEqual([]);
       await expect(page.locator('article')).toHaveCount(4 + index);
     }
@@ -253,7 +253,7 @@ test('mobile reproduces, edits, and re-shares a desktop-authored module', async 
   const desktop = await desktopContext.newPage();
   await desktop.goto('/');
   await desktop.getByLabel('New module').selectOption('arp');
-  await desktop.getByRole('button', { name: 'Add', exact: true }).click();
+  await desktop.getByRole('button', { name: 'Add Module', exact: true }).click();
   await desktop.getByRole('button', { name: 'Share' }).click();
   await expect(desktop.getByText(/Patch link copied/)).toBeVisible();
   const sharedUrl = desktop.url();

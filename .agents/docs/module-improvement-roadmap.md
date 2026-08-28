@@ -279,7 +279,10 @@ Cross-module work should generally happen in this order:
 
 - Manual editor rather than a generative phrase source. Each of eight slots stores its own authored pattern.
 - Generator/editor controls: 16/32/64-step Length and Chromatic/In key pitch mode.
-- Note operations: add, move, resize, keyboard edit, delete, and project-key snapping.
+- Note operations: add, move, resize, keyboard edit, delete, project-key snapping, per-note velocity/accent, and scale-degree/octave phrase transposition.
+- Navigation and harmony: Fit plus 50/75/100/150/200% zoom, scrollable pitch keyboard, scale/chord-tone highlighting, selectable Chords sources, chord stamping, and routed live audition.
+- Melody library: 20 original key-aware examples ordered from simple to advanced; loading one atomically replaces the phrase and selects its native 16/32/64-step loop.
+- Loop shortening is non-destructive: notes beyond the active boundary stay in the project slot, remain silent and absent from MIDI export, and return when the loop expands.
 - Sharing: Piano data is project-only and intentionally rejected by compact links.
 - Sound engine: eight persistent electric-piano slots with carrier, 3.01-ratio FM strike, 2.005 partial, filter, envelope, panner, and one shared tremolo LFO.
 - Sound controls: Tone, Bell, Decay, Tremolo, Pan, and sends.
@@ -287,17 +290,20 @@ Cross-module work should generally happen in this order:
 
 ### Known limitations
 
-- No velocity editor, quantize, copy/paste, multi-select, zoom, loop-range selection, or note preview.
-- Length changes discard notes beyond the shortened boundary.
+- No quantize, copy/paste, multi-select, or loop-range selection.
+- Harmony source selection is editor-local rather than part of the saved Piano slot contract.
+- Built-in melodies are fixed authored examples rather than seed-driven generators; they become ordinary editable Piano notes after loading.
 - Project-only sharing makes quick cross-device links impossible for authored phrases.
 - Eight voices can steal notes in dense chords with long Decay.
 
 ### Improvement backlog
 
 - **P0:** explicit listening approval for all Piano directions before altering the default/demo musical content.
-- **P1:** velocity editing, multi-select, copy/paste, duplicate, quantize, and transpose with full Undo boundaries.
-- **P1:** non-destructive length changes or an explicit confirmation when notes would be truncated.
-- **P1:** accessible zoom/scroll and optional note audition that respects monitor/routing state.
+- **Implemented P1 (2026-08-28):** per-note velocity lane, accent marking with an audible velocity floor, and diatonic phrase transposition through rack Undo/Redo.
+- **P1:** multi-select, copy/paste, duplicate, and quantize with full Undo boundaries.
+- **Implemented P1 (2026-08-28):** non-destructive length changes with persisted overflow notes excluded from playback and MIDI export.
+- **Implemented P1 (2026-08-28):** accessible zoom/scroll, pitch keyboard, optional routed audition, selectable Chords context, chord-tone highlighting, and chord stamping.
+- **Implemented P1 (2026-08-28):** 50% and 75% compact zoom, octave transforms, and 20 progressively structured key-aware melody examples with atomic loop-length synchronization.
 - **P2:** a new compact-link representation only after a size/security design proves bounded payloads and compatibility.
 - **P2:** sustain-pedal or articulation lanes, with MIDI and internal-envelope semantics specified separately.
 

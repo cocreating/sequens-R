@@ -150,7 +150,7 @@ export function setModuleSeed(module: RackModule, seed: number): RackModule {
 export function setModuleParams(module: RackModule, params: NumericParams): RackModule {
   const current = module.slots[module.activeSlot]!;
   const nextPattern = module.type === 'piano' && current.pattern !== null
-    ? { ...current.pattern, lengthSteps: [16, 32, 64][params.length ?? 0] ?? 16, events: current.pattern.events.filter((event) => event.startStep < ([16, 32, 64][params.length ?? 0] ?? 16)) }
+    ? { ...current.pattern, lengthSteps: [16, 32, 64][params.length ?? 0] ?? 16 }
     : clonePattern(current.pattern);
   const slot = { seed: module.seed, params: { ...params }, handEdited: current.handEdited, pattern: nextPattern };
   const slots = module.slots.map((current, index) => index === module.activeSlot ? slot : cloneSlot(current));
@@ -196,9 +196,8 @@ export function createRackState(shared: ShareableRack): RackState {
   };
 }
 
-function chordContext(modules: readonly RackModule[], key: MusicalKey): readonly ChordEvent[] | undefined {
-  const chords = modules.find((candidate) => candidate.type === 'chords');
-  if (chords === undefined) return undefined;
+export function chordEventsForModule(chords: RackModule, key: MusicalKey): readonly ChordEvent[] {
+  if (chords.type !== 'chords') return [];
   const pattern = GENERATORS.chords.generate(chords.seed, chords.params, { key, bars: 1 });
   const duration = Math.max(1, chords.params.duration ?? 16);
   const count = Math.max(1, chords.params.length ?? 4);
@@ -209,6 +208,11 @@ function chordContext(modules: readonly RackModule[], key: MusicalKey): readonly
       .map((event) => event.pitch);
     return { startStep, durationSteps: duration, pitches };
   }).filter(({ pitches }) => pitches.length > 0);
+}
+
+function chordContext(modules: readonly RackModule[], key: MusicalKey): readonly ChordEvent[] | undefined {
+  const chords = modules.find((candidate) => candidate.type === 'chords');
+  return chords === undefined ? undefined : chordEventsForModule(chords, key);
 }
 
 function ccAutomationPattern(module: RackModule): Pattern | null {
@@ -229,7 +233,10 @@ function ccAutomationPattern(module: RackModule): Pattern | null {
 export function modulePattern(module: RackModule, key: MusicalKey, rackModules: readonly RackModule[] = []): Pattern {
   if (module.type === 'piano') {
     const slot = module.slots[module.activeSlot]!;
-    if (slot.handEdited && slot.pattern !== null) return clonePattern(slot.pattern)!;
+    if (slot.handEdited && slot.pattern !== null) {
+      const pattern = clonePattern(slot.pattern)!;
+      return { ...pattern, events: pattern.events.filter((event) => event.startStep >= 0 && event.startStep < pattern.lengthSteps) };
+    }
   }
   const automation = ccAutomationPattern(module);
   if (automation !== null) return automation;
@@ -241,11 +248,21 @@ export function modulePattern(module: RackModule, key: MusicalKey, rackModules: 
   });
 }
 
+export function pianoEditorPattern(module: RackModule): Pattern {
+  if (module.type !== 'piano') throw new TypeError('Only Piano modules have an editor pattern.');
+  const slot = module.slots[module.activeSlot]!;
+  return slot.pattern === null ? GENERATORS.piano.generate(module.seed, module.params, { key: { root: 0, scale: 'major' }, bars: 1 }) : clonePattern(slot.pattern)!;
+}
+
 export function setManualPattern(module: RackModule, pattern: Pattern): RackModule {
   if (module.type !== 'piano') return module;
-  const slot = { ...cloneSlot(module.slots[module.activeSlot]!), handEdited: true, pattern: clonePattern(pattern) };
+  const current = cloneSlot(module.slots[module.activeSlot]!);
+  const lengthIndex = [16, 32, 64].indexOf(pattern.lengthSteps);
+  const params = lengthIndex < 0 ? current.params : { ...current.params, length: lengthIndex };
+  const slot = { ...current, params, handEdited: true, pattern: clonePattern(pattern) };
   return {
     ...module,
+    params: { ...params },
     shareable: false,
     slots: module.slots.map((current, index) => index === module.activeSlot ? slot : cloneSlot(current)),
   };

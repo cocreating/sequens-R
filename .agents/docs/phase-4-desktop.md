@@ -21,6 +21,8 @@ Status: automated Definition of Done accepted on 2026-08-24.
 
 The mobile playback-only plate is the accepted historical Phase 4 behavior. Phase 6 has now replaced it with adaptive mobile editors for all five modules while preserving these deterministic and sharing contracts.
 
+Post-acceptance Piano Roll refinement on 2026-08-28 adds velocity/accent editing, non-destructive loop shortening, harmonic helpers, routed audition, expanded zoom/navigation, octave transforms, and 20 original key-aware melody examples. These features extend the hand-authored `PatternSlot` contract without changing the Phase 4 generator golden, compact-link exclusion, MIDI scheduling, or project-only sharing boundary. Complete behavior and current evidence live in `piano-roll-pro.md`.
+
 ## Determinism and migration
 
 - Golden hashes at seed `0x504834`:

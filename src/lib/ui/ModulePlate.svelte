@@ -1,8 +1,8 @@
 <script lang="ts">
   import { dragHandle } from 'svelte-dnd-action';
   import { GENERATORS } from '../generators';
-  import { modulePattern, type RackModule } from '../state/rack';
-  import { isControlModule, type MusicalKey, type Pattern } from '../core/pattern';
+  import { chordEventsForModule, modulePattern, pianoEditorPattern, type RackModule } from '../state/rack';
+  import { isControlModule, type MusicalKey, type NoteEvent, type Pattern } from '../core/pattern';
   import Knob from './Knob.svelte';
   import StepGrid from './StepGrid.svelte';
   import MixerPanel from './MixerPanel.svelte';
@@ -48,12 +48,16 @@
     midiOutputs?: readonly MidiPortInfo[];
     onexportmidi: () => void;
     onpattern: (pattern: Pattern) => void;
+    onpianoaudition: (event: NoteEvent) => void;
     onautomation: (control: 1 | 2 | 3 | 4, step: number, value: number) => void;
     onclearautomation: () => void;
   }
 
-  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, rackMix, meters = {}, masterMeter = { peakDbfs: -120, rmsDbfs: -120 }, ontargetsound, onmixparam, midiOutputs = [], onexportmidi, onpattern, onautomation, onclearautomation }: Props = $props();
-  let pattern = $derived(modulePattern(module, musicalKey, rackModules));
+  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, rackMix, meters = {}, masterMeter = { peakDbfs: -120, rmsDbfs: -120 }, ontargetsound, onmixparam, midiOutputs = [], onexportmidi, onpattern, onpianoaudition, onautomation, onclearautomation }: Props = $props();
+  let pattern = $derived(module.type === 'piano' ? pianoEditorPattern(module) : modulePattern(module, musicalKey, rackModules));
+  let pianoHarmonySources = $derived(rackModules
+    .filter((candidate) => candidate.type === 'chords')
+    .map((candidate) => ({ id: candidate.id, name: candidate.name, chords: chordEventsForModule(candidate, musicalKey) })));
   let schema = $derived(GENERATORS[module.type].paramSchema.filter((definition) => definition.control !== 'hidden'));
   let recordingCc = $state(false);
   let recordingStartedAt = 0;
@@ -217,7 +221,7 @@
         {/if}
         {#if module.type === 'piano'}
           {#if desktopSurface}
-            <PianoRoll editorId={`${module.id}-desktop-piano`} {pattern} {musicalKey} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} onchange={onpattern} />
+            <PianoRoll editorId={`${module.id}-desktop-piano`} {pattern} {musicalKey} harmonySources={pianoHarmonySources} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} onchange={onpattern} onaudition={onpianoaudition} />
           {:else}
             <button bind:this={mobilePianoTrigger} type="button" class="open-mobile-piano" aria-haspopup="dialog" aria-controls={`${module.id}-mobile-piano-dialog`} onclick={openMobilePiano}>Open Piano roll editor</button>
             <dialog
@@ -240,7 +244,7 @@
                     {/each}
                   </div>
                 </section>
-                <PianoRoll editorId={`${module.id}-mobile-piano`} {pattern} {musicalKey} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} mobile onchange={onpattern} />
+                <PianoRoll editorId={`${module.id}-mobile-piano`} {pattern} {musicalKey} harmonySources={pianoHarmonySources} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} mobile onchange={onpattern} onaudition={onpianoaudition} />
               </div>
             </dialog>
           {/if}

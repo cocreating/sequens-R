@@ -1,4 +1,5 @@
-import { isControlModule, type ModuleType } from '../core/pattern';
+import { isControlModule, type ModuleType, type NoteEvent } from '../core/pattern';
+import { beatsToSeconds } from '../core/time';
 import { AudioScheduler } from './scheduler';
 import type { EngineModuleSnapshot, EngineSnapshot, RackSoundSnapshot, ScheduledNote, SoundModuleSnapshot } from './types';
 import clockWorkletUrl from './clock.worklet.ts?worker&url';
@@ -152,6 +153,21 @@ export class AudioEngine {
 
   async resume(): Promise<void> {
     if (this.#context?.state === 'suspended') await this.#context.resume();
+  }
+
+  async audition(moduleId: string, event: NoteEvent): Promise<void> {
+    await this.initialize();
+    await this.#context!.resume();
+    const snapshot = this.#moduleById.get(moduleId);
+    if (snapshot === undefined) return;
+    const duration = beatsToSeconds(Math.max(0.25, event.durationSteps) / snapshot.pattern.stepsPerBeat, this.#snapshot.bpm);
+    this.#schedule({
+      moduleId,
+      moduleType: snapshot.type,
+      event,
+      time: this.#context!.currentTime + 0.01,
+      duration,
+    });
   }
 
   async initialize(): Promise<void> {

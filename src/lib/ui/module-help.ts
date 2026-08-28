@@ -104,7 +104,7 @@ const CONTROL_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
   },
   'piano-roll': {
     title: 'Piano roll',
-    body: 'Click empty space to add a note. Drag a note to move it, drag its right edge to resize it, or use arrow keys and Delete while focused.',
+    body: 'Author or load key-aware melodies, edit velocity and accents, transpose by degree or octave, zoom or scroll with the piano keyboard, and audition through the current monitor and MIDI route.',
   },
   'add-note': {
     title: 'Add note',

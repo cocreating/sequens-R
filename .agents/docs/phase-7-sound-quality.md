@@ -678,6 +678,8 @@ Implemented on 2026-08-26:
 - The eight original presets are Amberkey, Velvet tine, Silver bell, Tinewire, Mufflekey, Night felt, Sun tine, and Reed shimmer, spanning soft, bell, tine, muted, dark, bright, and tremolo roles. No multisample assets were added, so initial-load and offline behavior remain procedural.
 - Hand-authored Piano-roll pitches, timing, velocities, local-only project semantics, and SMF bytes remain unchanged by sound macros. Every preset and the eight-note reference phrase round-trip through schema-4 project JSON.
 
+Post-phase editor work on 2026-08-28 makes velocity and accent directly authorable, adds routed audition, and supplies 20 key-aware melody examples. Accent raises authored velocity to a bounded floor of 112, so both internal velocity response and exported MIDI use the same event value; no sound macro, preset, voice allocation, or DSP mapping changes. Audition enters through the existing engine scheduler and therefore respects mute, solo, monitor, voice-budget, and external MIDI route rules.
+
 Automated verification:
 
 - strict Svelte/TypeScript: 0 errors and 0 warnings;

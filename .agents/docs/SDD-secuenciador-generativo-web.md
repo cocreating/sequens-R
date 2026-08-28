@@ -161,7 +161,7 @@ De principio a fin, en un móvil, **en menos de diez segundos y con un solo perm
 |---|---|---|
 | RF-025 | **Arp** | Convierte un acorde en línea. Dirección, rate, span de octavas, gate. `Follow Chords`: sigue en vivo al primer módulo Chords |
 | RF-026 | **Euclid** | 3 anillos independientes (Bjorklund), `steps` 2–16, `hits`, `rotation`, nota por anillo, salida conjunta o por canales separados |
-| RF-027 | **Piano roll** | Dibujo manual: añadir con toque, mover con arrastre, redimensionar por el borde. Modo `In Key` / `Chromatic`. 16/32/64 pasos. **No serializable a enlace** (C12) |
+| RF-027 | **Piano roll** | Dibujo manual: añadir, mover y redimensionar; velocidad/accent por nota; transformaciones por grado y octava; guía/estampado de acordes; teclado con audición; zoom Fit/50/75/100/150/200%; 20 melodías originales adaptadas a la tonalidad; 16/32/64 pasos con reducción no destructiva. **No serializable a enlace** (C12) |
 | RF-028 | **CC Control** | Panel de knobs → CC MIDI. Canal por control. Grabación de movimiento en bucle de 1–8 barras |
 | RF-029 | **Mod** | Hasta 3 LFOs sincronizados a tempo sobre CCs. Forma, rate en beats, depth, fade-in, centro, bipolar |
 
@@ -683,6 +683,8 @@ Ejecuta **una fase por vez**. No empieces la siguiente sin que la DoD de la ante
 **DoD funcional:** en Chrome Android, una persona puede añadir y editar los diez tipos de módulo sin cambiar a modo escritorio. Un patch de escritorio con Arp, Euclid o Mod se abre, se edita y vuelve a compartir con resultado determinista idéntico. Piano roll y automatización CC conservan su contrato de exportación/importación de proyecto cuando no caben en enlace. Añadir, editar, colapsar, reordenar y borrar cualquier tipo durante la reproducción no produce clicks, cortes ni notas colgadas.
 
 **DoD de interfaz y rendimiento:** recorrido completo a 375 × 667 sin overflow horizontal de página, sin controles solapados y con objetivos táctiles ≥ 44 × 44 CSS px. Navegación por teclado, foco restaurado al cerrar editores dedicados, reducción de movimiento y axe sin violaciones serias/críticas. En el Android de referencia, 16 módulos activos a 140 BPM mantienen 0 xruns, `renderCapacity` medio ≤ 0.5/pico ≤ 0.8 cuando exista y frames de UI ≤ 8 ms mientras se desplaza y edita el rack. Los presupuestos de tamaño de C10 siguen verdes.
+
+**Ampliación Piano Roll P1 — 2026-08-28.** El patrón persistido conserva las notas situadas fuera del límite cuando se acorta el loop; el scheduler y el exportador SMF reciben solo las notas activas, y al volver a ampliar reaparecen exactamente. Las transformaciones, cargas de melodía y cambios de dinámica son operaciones únicas de Undo. Las 20 melodías son datos originales por grados de escala, no una colección de frases protegidas ni un generador alternativo. La audición reutiliza el motor y el ruteo normal, respetando monitor, mute, solo y MIDI externo. El contrato completo y la evidencia están en `piano-roll-pro.md`.
 
 ### Fase 7 — Identidad sonora y mezcla
 

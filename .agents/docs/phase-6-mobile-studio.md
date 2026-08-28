@@ -64,7 +64,7 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 - CC Control groups its four controllers into native disclosures while keeping loop length, recording, clearing, routing, mute, solo, and monitor controls available. Mod groups its three LFOs the same way.
 - Only one Arp, Euclid, Piano roll, CC Control, or Mod body remains expanded on mobile. Creation, expansion, duplication, shared-link restoration, local restoration, and project import all enforce this presentation rule without changing engine snapshot membership.
 - Mobile module menus provide explicit Move earlier and Move later commands in addition to the existing touch drag handle. Reorder, duplicate, and delete remain available while transport runs.
-- Piano roll opens through a native full-screen `dialog`. It includes explicit Close, 16/32/64-step length, chromatic/in-key mode, touch/grid and keyboard note entry, selected-note movement, resizing, deletion, local two-axis grid scrolling, Escape dismissal, and focus restoration to its opener.
+- Piano roll opens through a native full-screen `dialog`. It includes explicit Close, 16/32/64-step length, chromatic/in-key mode, touch/grid and keyboard note entry, selected-note movement, resizing, deletion, local two-axis grid scrolling, Escape dismissal, and focus restoration to its opener. The shared post-phase editor also exposes velocity/accent editing, Fit/50/75/100/150/200% zoom, pitch-key audition, scale-degree/octave transforms, chord guidance/stamping, preserved overflow notes, and the 20-example key-aware melody library on mobile without forking its state or engine path.
 - Module plates use `content-visibility: auto` with an intrinsic-size placeholder. Collapsed and off-screen modules remain in rack state and immutable audio/MIDI snapshots.
 
 ## Automated evidence · 2026-08-25
@@ -84,6 +84,8 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 - a desktop-authored Arp/Euclid/Mod link edits on mobile, reopens on desktop with the expected parameters, and re-serializes to the identical fragment;
 - desktop-authored Piano and recorded-CC data export to mobile, edit and export there, and re-import on desktop with identical authored note and automation counts;
 - existing desktop lanes, shortcuts, audio-output/File System Access enhancements, exports, persistence, deterministic output, and Phase 1–5 browser flows remain green.
+
+Post-acceptance regression on 2026-08-28 covers the complete Piano Pro workflow in Chrome and reruns the mobile Piano dialog authoring, focus-restoration, local-overflow, and axe serious/critical gates. The current full suite passes 56 Playwright tests. Physical Android requirements above remain open and are not replaced by this browser evidence.
 
 ## Remaining physical evidence
 

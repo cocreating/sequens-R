@@ -2,7 +2,7 @@
   import { onDestroy, onMount, tick } from 'svelte';
   import { dragHandleZone, type DndEvent } from 'svelte-dnd-action';
   import { AudioEngine } from './lib/audio/engine';
-  import { isControlModule, isDesktopModule, SCALE_NAMES, type ModuleType, type Pattern, type ScaleName } from './lib/core/pattern';
+  import { isControlModule, isDesktopModule, SCALE_NAMES, type ModuleType, type NoteEvent, type Pattern, type ScaleName } from './lib/core/pattern';
   import { TapTempo } from './lib/core/tap-tempo';
   import {
     activeProjectRack,
@@ -474,6 +474,12 @@
     updateModule(id, (module) => setManualPattern(module, pattern), `piano:${id}`);
     endCoalescing();
     status = 'Piano roll updated · project export required for sharing';
+  }
+
+  function auditionPiano(id: string, event: NoteEvent): void {
+    void engine.audition(id, event).catch((reason: unknown) => {
+      status = reason instanceof Error ? reason.message : 'Piano audition failed';
+    });
   }
 
   function addAutomationPoint(id: string, control: 1 | 2 | 3 | 4, step: number, value: number): void {
@@ -1187,6 +1193,7 @@
           onschedule={(on, everyNLoops) => updateModule(module.id, (current) => setMutationSchedule(current, on, everyNLoops))}
           onstep={(lane, step) => updateModule(module.id, (current) => toggleDrumStep(current, rack.key, lane, step))}
           onpattern={(pattern) => setPattern(module.id, pattern)}
+          onpianoaudition={(event) => auditionPiano(module.id, event)}
           onautomation={(control, step, value) => addAutomationPoint(module.id, control, step, value)}
           onclearautomation={() => clearAutomation(module.id)}
           onduplicate={() => duplicateModule(module.id)}

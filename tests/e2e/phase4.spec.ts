@@ -54,8 +54,8 @@ test.describe('Phase 4 desktop studio', () => {
     expect(columns).toBeGreaterThanOrEqual(2);
 
     for (const [index, type] of ['arp', 'euclid', 'piano', 'cc', 'mod'].entries()) {
-      await page.getByLabel('New module').selectOption(type);
       await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+      await page.locator(`.module-choice[data-module-type="${type}"]`).click();
       expect(pageErrors).toEqual([]);
       await expect(page.locator('article')).toHaveCount(4 + index);
     }
@@ -252,8 +252,8 @@ test('mobile reproduces, edits, and re-shares a desktop-authored module', async 
   const desktopContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
   const desktop = await desktopContext.newPage();
   await desktop.goto('/');
-  await desktop.getByLabel('New module').selectOption('arp');
   await desktop.getByRole('button', { name: 'Add Module', exact: true }).click();
+  await desktop.locator('.module-choice[data-module-type="arp"]').click();
   await desktop.getByRole('button', { name: 'Share' }).click();
   await expect(desktop.getByText(/Patch link copied/)).toBeVisible();
   const sharedUrl = desktop.url();
@@ -263,7 +263,9 @@ test('mobile reproduces, edits, and re-shares a desktop-authored module', async 
   await mobile.goto(sharedUrl);
   const arp = mobile.locator('article').filter({ has: mobile.getByRole('textbox', { name: 'arp module name' }) });
   await expect(arp.getByLabel('Direction')).toBeVisible();
-  await expect(mobile.getByLabel('New module').getByRole('option', { name: 'Arp' })).toHaveCount(1);
+  await mobile.getByRole('button', { name: 'Add Module', exact: true }).click();
+  await expect(mobile.locator('.module-choice[data-module-type="arp"]')).toHaveCount(1);
+  await mobile.getByRole('button', { name: 'Close module library' }).click();
   await arp.getByLabel('Direction').selectOption({ label: 'Down' });
   await mobile.getByRole('button', { name: 'Share' }).click();
   await expect(mobile.getByText(/Patch link copied/)).toBeVisible();

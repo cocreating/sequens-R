@@ -184,13 +184,9 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
     title: 'Share',
     body: 'Copies a compact patch link when every module is shareable. Hand-edited piano notes and recorded CC movement require project export.',
   },
-  'module-type': {
-    title: 'New module type',
-    body: 'Chooses which generator, editor, mixer, or MIDI control module will be added next.',
-  },
   'add-module': {
     title: 'Add module',
-    body: 'Appends the selected module to the active rack. A rack can contain up to 16 modules.',
+    body: 'Opens the visual module library. Choose a named generator, editor, mixer, or MIDI control module to append it to the active rack. A rack can contain up to 16 modules.',
   },
   status: {
     title: 'Session status',

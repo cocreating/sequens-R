@@ -44,8 +44,8 @@ test('12 AudioWorklet Acid presets render clean level-matched audition reference
     for (const moduleName of ['Drums', 'Bass', 'Chords']) {
       await page.getByRole('listitem', { name: moduleName }).getByRole('button', { name: `Mute ${moduleName}` }).click();
     }
-    await page.getByLabel('New module').selectOption('acid');
     await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+    await page.locator('.module-choice[data-module-type="acid"]').click();
     const acid = page.getByRole('listitem', { name: 'Acid' });
     await acid.locator('.module-advanced > summary').click();
     await acid.getByLabel('Seed', { exact: true }).fill('1946157057');

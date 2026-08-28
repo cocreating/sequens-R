@@ -8,7 +8,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Delivered
 
-- A sticky global header containing Tap BPM, Workspace, Mixer, the visibly labelled Add Module action, a stable Play/Pause toggle, Stop, Share, and General Help. Its action group wraps onto additional rows at constrained widths instead of overflowing. The former sticky performance deck now moves with the document.
+- A sticky global header containing Workspace, Mixer, the visibly labelled Add Module action, transparent icon-only Random, Stop, Share, General Help, Tap BPM, and a stable Play/Pause toggle. Its action group wraps instead of overflowing; TAP and Play/Pause finish the focus order and occupy the dedicated second row on mobile. The former sticky performance deck now moves with the document.
 - Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. Hovering or focusing the labelled BPM number reveals a 20–300 native vertical range control; keyboard and touch-focus access do not depend on hover. Tempo, Root, and Scale remain on one compact row, and manual entry also writes whole values.
 - Pause preserves the current transport beat, freezes the header/grid/piano playheads on it, and clears scheduled internal/MIDI events; Play continues from that beat while Stop resets to zero and hides the playheads.
 - Responsive branding that shows `Local generative MIDI`, a build-derived current-version badge, and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
@@ -48,7 +48,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Selecting module Help closes the actions disclosure and restores focus to its summary, preventing the relocated panel from obscuring the second-row switches.
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
 - Decorative SVG icons are marked `aria-hidden="true"` and cannot receive focus; text-labelled controls keep their visible name while icon-only controls use explicit accessible names.
-- The compact module-type select retains the `New module` accessible name even though its former visible caption was removed. Its visibly and programmatically named `Add Module` action now lives in the global header, so it remains available while the rack scrolls.
+- The former module-type select has been removed. The visibly and programmatically named `Add Module` header action opens a native top-layer dialog containing ten keyboard-focusable module choices, each with an icon, name, and concise purpose statement. Choosing one adds it immediately, closes the library, and preserves the 16-module limit.
 - Icon-only controls retain explicit accessible names, pressed state where applicable, and 44 px touch targets.
 - Mixer PAN and SENDS visibility toggles expose dynamic Show/Hide accessible names and pressed state; hiding either group removes its controls from the keyboard and accessibility trees.
 

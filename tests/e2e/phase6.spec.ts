@@ -12,8 +12,8 @@ const labels = {
 } as const;
 
 async function addModule(page: Page, type: keyof typeof labels): Promise<void> {
-  await page.getByLabel('New module').selectOption(type);
   await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+  await page.locator(`.module-choice[data-module-type="${type}"]`).click();
   await expect(page.getByText(`${labels[type]} added`)).toBeVisible();
 }
 
@@ -26,10 +26,12 @@ for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }
 
     const addModuleButton = page.getByRole('button', { name: 'Add Module', exact: true });
     await expect(addModuleButton).toContainText('Add Module');
-    expect(await addModuleButton.evaluate((button) => button.parentElement?.classList.contains('app-header-actions'))).toBe(true);
+    expect(await addModuleButton.evaluate((button) => button.closest('.app-header-actions') !== null)).toBe(true);
     const transportFieldTops = await page.locator('.transport-field').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
     expect(new Set(transportFieldTops).size).toBe(1);
-    await expect(page.getByLabel('New module').getByRole('option')).toHaveCount(10);
+    await addModuleButton.click();
+    await expect(page.locator('.module-choice')).toHaveCount(10);
+    await page.getByRole('button', { name: 'Close module library' }).click();
     for (const type of ['acid', 'mixer', 'arp', 'euclid', 'piano', 'cc', 'mod'] as const) await addModule(page, type);
     await expect(page.locator('.module-list > article')).toHaveCount(10);
 

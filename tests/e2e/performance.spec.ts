@@ -28,8 +28,8 @@ function decodePcm16Wav(bytes: Buffer): AudioPcm {
 
 async function addModules(page: Page, types: readonly string[]): Promise<void> {
   for (const type of types) {
-    await page.getByLabel('New module').selectOption(type);
     await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+    await page.locator(`.module-choice[data-module-type="${type}"]`).click();
   }
 }
 

@@ -1,8 +1,8 @@
 import { expect, test } from '@playwright/test';
 
 async function addModule(page: import('@playwright/test').Page, type: string): Promise<void> {
-  await page.getByLabel('New module').selectOption(type);
   await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+  await page.locator(`.module-choice[data-module-type="${type}"]`).click();
 }
 
 test.describe('Piano Roll pro workflow', () => {

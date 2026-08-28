@@ -84,9 +84,17 @@
     pause: () => pause(),
     stop: () => stop(),
   });
-  const moduleLabels: Readonly<Record<ModuleType, string>> = {
-    drums: 'Drums', bass: 'Bass', acid: 'Acid', chords: 'Chords', mixer: 'Mixer',
-    arp: 'Arp', euclid: 'Euclid', piano: 'Piano roll', cc: 'CC Control', mod: 'Mod',
+  const moduleCatalog: Readonly<Record<ModuleType, { label: string; description: string; icon: string }>> = {
+    drums: { label: 'Drums', description: 'Eight-lane rhythmic step sequencer', icon: 'rectangle-group' },
+    bass: { label: 'Bass', description: 'Monophonic low-end pattern generator', icon: 'musical-note' },
+    acid: { label: 'Acid', description: 'Resonant 303-style melodic sequence', icon: 'adjustments-horizontal' },
+    chords: { label: 'Chords', description: 'Polyphonic harmonic progressions', icon: 'squares' },
+    mixer: { label: 'Mixer', description: 'Rack levels, panorama, and effects', icon: 'adjustments-horizontal' },
+    arp: { label: 'Arp', description: 'Chord-driven melodic arpeggiator', icon: 'arrow-path' },
+    euclid: { label: 'Euclid', description: 'Polymetric Euclidean percussion', icon: 'sparkles' },
+    piano: { label: 'Piano roll', description: 'Editable notes, velocity, and accents', icon: 'musical-note' },
+    cc: { label: 'CC Control', description: 'Record external MIDI automation', icon: 'cpu-chip' },
+    mod: { label: 'Mod', description: 'Tempo-synced external MIDI LFOs', icon: 'arrow-path' },
   };
   const initialRack = createRackState(STARTER_RACK);
   const tempoTapper = new TapTempo();
@@ -96,7 +104,6 @@
   const rackHistory = new RackHistory(initialRack);
   let playing = $state(false);
   let playheadBeat = $state<number | null>(null);
-  let selectedModuleType = $state<ModuleType>('acid');
   let status = $state('Starter rack ready');
   let error = $state('');
   let lastStopTime = Number.NEGATIVE_INFINITY;
@@ -677,12 +684,12 @@
     status = 'Mutation reverted';
   }
 
-  function addModule(): void {
+  function addModule(type: ModuleType): void {
     if (rack.modules.length >= 16) {
       status = 'The 16-module rack limit is reached';
       return;
     }
-    const nextModule = createModule(selectedModuleType);
+    const nextModule = createModule(type);
     void runViewTransition(async () => {
       replaceRack({
         ...rack,
@@ -695,7 +702,7 @@
       });
       await tick();
     });
-    status = `${moduleLabels[selectedModuleType]} added`;
+    status = `${moduleCatalog[type].label} added`;
   }
 
   function duplicateModule(id: string): void {
@@ -951,52 +958,87 @@
   </div>
   {#if supported && initialized}
     <div class="app-header-actions" role="group" aria-label="Primary actions" onpointermove={showAppHelp} onfocusin={showAppHelp}>
-      <button type="button" class="header-action header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={tapTempo}>TAP</button>
-      <button
-        type="button"
-        class="header-action workspace-toggle has-icon icon-only"
-        data-app-help-key="workspace"
-        aria-label="Workspace"
-        popovertarget="studio-workspace"
-      ><Icon name="squares" /></button>
-      <button
-        type="button"
-        class="header-action mixer-toggle has-icon icon-only"
-        data-app-help-key="mixer"
-        aria-label="Mixer"
-        popovertarget="studio-mixer"
-      ><Icon name="adjustments-horizontal" /></button>
-      <button
-        id="add-module-button"
-        type="button"
-        class="header-action has-icon"
-        data-app-help-key="add-module"
-        aria-label="Add Module"
-        onclick={addModule}
-        disabled={rack.modules.length >= 16}
-      ><Icon name="plus" /><span>Add Module</span></button>
-      <button
-        type="button"
-        class="header-action header-play"
-        data-app-help-key={playing ? 'pause' : 'play'}
-        data-playing={playing}
-        aria-label={playing ? 'Pause' : 'Play'}
-        onclick={playing ? pause : play}
-      ><Icon name={playing ? 'pause' : 'play'} /></button>
-      <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
-      <button type="button" class="header-action has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
-      <button
-        type="button"
-        class="app-help-toggle"
-        aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
-        aria-pressed={appHelpActive}
-        aria-controls="app-help-readout"
-        onclick={toggleAppHelp}
-      ><Icon name="question-mark-circle" /></button>
+      <div class="header-core-actions">
+        <button
+          type="button"
+          class="header-action workspace-toggle has-icon icon-only"
+          data-app-help-key="workspace"
+          aria-label="Workspace"
+          popovertarget="studio-workspace"
+        ><Icon name="squares" /></button>
+        <button
+          type="button"
+          class="header-action mixer-toggle has-icon icon-only"
+          data-app-help-key="mixer"
+          aria-label="Mixer"
+          popovertarget="studio-mixer"
+        ><Icon name="adjustments-horizontal" /></button>
+        <button
+          id="add-module-button"
+          type="button"
+          class="header-action has-icon"
+          data-app-help-key="add-module"
+          aria-label="Add Module"
+          aria-haspopup="dialog"
+          popovertarget="module-picker"
+          disabled={rack.modules.length >= 16}
+        ><Icon name="plus" /><span>Add Module</span></button>
+        <button type="button" class="header-action header-random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
+      </div>
+      <div class="header-end-actions">
+        <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
+        <button type="button" class="header-action has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
+        <button
+          type="button"
+          class="app-help-toggle"
+          aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
+          aria-pressed={appHelpActive}
+          aria-controls="app-help-readout"
+          onclick={toggleAppHelp}
+        ><Icon name="question-mark-circle" /></button>
+        <button type="button" class="header-action header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={tapTempo}>TAP</button>
+        <button
+          type="button"
+          class="header-action header-play"
+          data-app-help-key={playing ? 'pause' : 'play'}
+          data-playing={playing}
+          aria-label={playing ? 'Pause' : 'Play'}
+          onclick={playing ? pause : play}
+        ><Icon name={playing ? 'pause' : 'play'} /></button>
+      </div>
     </div>
   {/if}
   <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
 </header>
+
+{#if supported && initialized}
+  <div class="module-picker" id="module-picker" popover role="dialog" aria-labelledby="module-picker-title" style={`--app-header-height: ${headerHeight}px`}>
+    <header>
+      <div>
+        <p>Module library</p>
+        <h2 id="module-picker-title">Add a module</h2>
+      </div>
+      <button type="button" class="icon-only" aria-label="Close module library" popovertarget="module-picker" popovertargetaction="hide"><Icon name="x-mark" /></button>
+    </header>
+    <div class="module-picker-grid">
+      {#each MODULE_TYPES as type (type)}
+        <button
+          type="button"
+          class="module-choice"
+          data-module-type={type}
+          aria-label={`Add ${moduleCatalog[type].label} module`}
+          popovertarget="module-picker"
+          popovertargetaction="hide"
+          onclick={() => addModule(type)}
+        >
+          <Icon name={moduleCatalog[type].icon} />
+          <strong>{moduleCatalog[type].label}</strong>
+          <span>{moduleCatalog[type].description}</span>
+        </button>
+      {/each}
+    </div>
+  </div>
+{/if}
 
 {#if supported && initialized}
   <aside class="app-help-readout" id="app-help-readout" aria-labelledby="app-help-title" hidden={!appHelpActive} style={`--app-header-height: ${headerHeight}px`}>
@@ -1017,12 +1059,6 @@
   <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp} style={`--app-header-height: ${headerHeight}px`}>
     <div class="performance-deck">
       <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
-      <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
-        <button type="button" class="random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
-        <select id="module-type" aria-label="New module" data-app-help-key="module-type" bind:value={selectedModuleType}>
-          {#each MODULE_TYPES as type (type)}<option value={type}>{moduleLabels[type]}</option>{/each}
-        </select>
-      </section>
     </div>
 
     <p class="session-status" data-app-help-key="status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>

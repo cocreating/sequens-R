@@ -65,8 +65,8 @@ test.describe('Phase 5 polish', () => {
       Object.defineProperty(AudioContext.prototype, 'renderCapacity', { configurable: true, get: () => renderCapacity });
     });
     await page.goto('/');
-    await page.getByLabel('New module').selectOption('acid');
     await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+    await page.locator('.module-choice[data-module-type="acid"]').click();
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Save', exact: true }).click();
     await page.getByRole('button', { name: 'Close workspace' }).click();
@@ -95,8 +95,8 @@ test.describe('Phase 5 polish', () => {
       Object.defineProperty(Element.prototype, 'animate', { configurable: true, value: undefined });
     });
     await page.goto('/');
-    await page.getByLabel('New module').selectOption('acid');
     await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+    await page.locator('.module-choice[data-module-type="acid"]').click();
     await page.getByRole('button', { name: 'Play', exact: true }).click();
     await expect(page.getByText('Transport playing')).toBeVisible();
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();
@@ -115,8 +115,8 @@ test.describe('Phase 5 polish', () => {
     await page.keyboard.press('ArrowLeft');
     await expect(page.getByRole('tab', { selected: true })).toContainText('Rack 1');
     await page.getByRole('button', { name: 'Close workspace' }).click();
-    await page.getByLabel('New module').selectOption('piano');
     await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+    await page.locator('.module-choice[data-module-type="piano"]').click();
     const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
     await expect(piano.getByRole('button', { name: 'Add note' }).locator('svg')).toBeVisible();
     await piano.getByRole('button', { name: 'Add note' }).click();
@@ -178,12 +178,18 @@ test.describe('Phase 5 polish', () => {
     const addModule = page.getByRole('button', { name: 'Add Module', exact: true });
     await expect(addModule).toContainText('Add Module');
     await expect(page.locator('.app-header-actions')).toContainText('Add Module');
-    expect(await addModule.evaluate((button) => button.parentElement?.classList.contains('app-header-actions'))).toBe(true);
+    expect(await addModule.evaluate((button) => button.closest('.app-header-actions') !== null)).toBe(true);
 
-    const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
+    await addModule.click();
+    await expect(page.getByRole('dialog', { name: 'Add a module' })).toBeVisible();
+    await expect(page.locator('.module-choice')).toHaveCount(10);
+    await expect(page.locator('.module-choice[data-module-type="acid"]')).toContainText('Resonant 303-style melodic sequence');
+    await page.getByRole('button', { name: 'Close module library' }).click();
+
+    const actionTops = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
-    const actionNames = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(actionNames.slice(0, 5)).toEqual(['Tap BPM', 'Workspace', 'Mixer', 'Add Module', 'Play']);
+    const actionNames = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
+    expect(actionNames).toEqual(['Workspace', 'Mixer', 'Add Module', 'Random', 'Stop', 'Share', 'Turn on general help', 'Tap BPM', 'Play']);
 
     const tempo = page.locator('#tempo');
     await expect(tempo).toHaveAttribute('step', '1');
@@ -234,10 +240,17 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand-title-compact')).toBeVisible();
     await expect(page.locator('.brand-title-compact')).toHaveCSS('border-radius', '50%');
     expect(await page.getByRole('heading', { name: 'sequens-R' }).evaluate((heading) => (heading as HTMLElement).innerText)).toBe('s-R');
-    const mobileActions = await page.locator('.app-header-actions').boundingBox();
-    expect(mobileActions).not.toBeNull();
-    expect(mobileActions!.x).toBeGreaterThanOrEqual(0);
-    expect(mobileActions!.x + mobileActions!.width).toBeLessThanOrEqual(375);
+    const [mobileCoreActions, mobileEndActions] = await Promise.all([
+      page.locator('.header-core-actions').boundingBox(),
+      page.locator('.header-end-actions').boundingBox(),
+    ]);
+    expect(mobileCoreActions).not.toBeNull();
+    expect(mobileEndActions).not.toBeNull();
+    expect(mobileCoreActions!.x + mobileCoreActions!.width).toBeLessThanOrEqual(375);
+    expect(mobileEndActions!.x + mobileEndActions!.width).toBeLessThanOrEqual(375);
+    expect(mobileEndActions!.y).toBeGreaterThan(mobileCoreActions!.y);
+    const mobileOrder = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
+    expect(mobileOrder.slice(-2)).toEqual(['Tap BPM', 'Play']);
 
     await expect(page.locator('.app-header')).toHaveCSS('position', 'sticky');
     await expect(page.locator('.performance-deck')).toHaveCSS('position', 'relative');

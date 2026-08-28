@@ -45,16 +45,16 @@ test('the mobile critical path loads, plays, changes, shares, and reopens', asyn
 test('modules can change while transport is running', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Play', exact: true }).click();
-  await page.getByLabel('New module').selectOption('acid');
   await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+  await page.locator('.module-choice[data-module-type="acid"]').click();
   await expect(page.locator('article')).toHaveCount(4);
   const acid = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'acid module name' }) });
   await acid.locator('.module-menu > summary').click();
   await acid.getByRole('button', { name: 'Delete Acid' }).click();
   await expect(page.locator('article')).toHaveCount(3);
 
-  await page.getByLabel('New module').selectOption('mixer');
   await page.getByRole('button', { name: 'Add Module', exact: true }).click();
+  await page.locator('.module-choice[data-module-type="mixer"]').click();
   await page.getByRole('button', { name: 'Mute Bass from mixer' }).click();
   await expect(page.getByRole('button', { name: 'Mute Bass', exact: true })).toHaveAttribute('aria-pressed', 'true');
 

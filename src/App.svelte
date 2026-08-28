@@ -18,7 +18,7 @@
     type ProjectDocument,
     type ProjectScene,
   } from './lib/project/model';
-  import { DEMO_PROJECT_INDEX_URL, demoProjectUrl, parseDemoProjectIndex, type DemoProjectEntry } from './lib/project/demos';
+  import { DEMO_PROJECT_INDEX_URL, demoProjectUrl, groupDemoProjects, parseDemoProjectIndex, type DemoProjectEntry } from './lib/project/demos';
   import { loadCurrentProject, requestPersistentStorage, saveCurrentProject } from './lib/project/storage';
   import { loadRackFromFragment, rackToFragment } from './lib/share/fragment';
   import { MODULE_TYPES } from './lib/share/schema';
@@ -130,6 +130,7 @@
   let mixerOpen = $state(false);
   let workspaceOpen = $state(false);
   let appHelp = $derived(appHelpFor(appHelpKey));
+  let demoProjectGroups = $derived(groupDemoProjects(demoProjects));
 
   onDestroy(() => {
     if (diagnosticTimer !== null) window.clearTimeout(diagnosticTimer);
@@ -1087,11 +1088,18 @@
             {:else if demoProjectsLoaded && demoProjects.length === 0}
               <p class="demo-projects-state">No demo projects are available.</p>
             {:else}
-              <ul class="demo-projects-list">
-                {#each demoProjects as entry (entry.file)}
-                  <li><button type="button" onclick={() => void loadDemoProject(entry)} disabled={demoProjectLoadingFile !== null}><strong>{entry.name}</strong>{#if entry.description}<span>{entry.description}</span>{/if}{#if demoProjectLoadingFile === entry.file}<small>Loading…</small>{/if}</button></li>
+              <div class="demo-projects-groups">
+                {#each demoProjectGroups as group, genreIndex (group.genre)}
+                  <section class="demo-projects-group" aria-labelledby={`demo-project-genre-${genreIndex}`}>
+                    <div class="demo-projects-genre-heading"><h3 id={`demo-project-genre-${genreIndex}`}>{group.genre}</h3><span>{group.projects.length} projects</span></div>
+                    <ul class="demo-projects-list">
+                      {#each group.projects as entry (entry.file)}
+                        <li><button type="button" onclick={() => void loadDemoProject(entry)} disabled={demoProjectLoadingFile !== null}><strong>{entry.name}</strong>{#if entry.description}<span>{entry.description}</span>{/if}{#if demoProjectLoadingFile === entry.file}<small>Loading…</small>{/if}</button></li>
+                      {/each}
+                    </ul>
+                  </section>
                 {/each}
-              </ul>
+              </div>
             {/if}
           </div>
 

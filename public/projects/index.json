@@ -1,78 +1,93 @@
 {
   "projects": [
     {
-      "name": "Glass Invention",
-      "file": "glass-invention.sequens-r.json",
-      "description": "96 BPM D dorian: an original Baroque-style broken-triad study for expressive Piano and a quiet answering arpeggio."
-    },
-    {
       "name": "Moonlit Nocturne",
       "file": "moonlit-nocturne.sequens-r.json",
+      "genre": "Neoclassical Ambient",
       "description": "66 BPM C♯ minor: a Romantic-style two-bar question with felt Piano dynamics over one slow dark harmony bed."
     },
     {
       "name": "Pastoral Morning",
       "file": "pastoral-morning.sequens-r.json",
+      "genre": "Neoclassical Ambient",
       "description": "82 BPM F major: a gentle Classical answer phrase, slow-bloom harmony, and only the lightest pastoral pulse."
-    },
-    {
-      "name": "Quiet Canon",
-      "file": "quiet-canon.sequens-r.json",
-      "description": "88 BPM C major: an original sequential canon idea shared between a warm Piano theme and a restrained dew-pluck echo."
     },
     {
       "name": "Water Garden",
       "file": "water-garden.sequens-r.json",
+      "genre": "Neoclassical Ambient",
       "description": "74 BPM D♭ lydian: an Impressionist color weave for shimmering Piano with one slow, irregular tide underneath."
-    },
-    {
-      "name": "Velvet Sarabande",
-      "file": "velvet-sarabande.sequens-r.json",
-      "description": "62 BPM G minor: a stately Baroque-style arch with soft Piano accents and a single velvet chordal shadow."
     },
     {
       "name": "Winter Largo",
       "file": "winter-largo.sequens-r.json",
+      "genre": "Neoclassical Ambient",
       "description": "56 BPM E minor: a Piano-only slow movement that leaves velocity, accents, note length, and space fully exposed."
-    },
-    {
-      "name": "Classical Allegretto",
-      "file": "classical-allegretto.sequens-r.json",
-      "description": "112 BPM B♭ major: a bright Classical turnaround carried by articulate Piano, light bass, and a courteous chamber pulse."
-    },
-    {
-      "name": "Clockwork Minuet",
-      "file": "clockwork-minuet.sequens-r.json",
-      "description": "104 BPM A minor: an offbeat Classical ladder with tiny clockwork percussion and a muted Euclidean counter-rhythm."
-    },
-    {
-      "name": "Romantic Waltz Glow",
-      "file": "romantic-waltz-glow.sequens-r.json",
-      "description": "78 BPM E♭ major: a long three-part Romantic arc, glowing Piano dynamics, and one wide halo of harmony."
-    },
-    {
-      "name": "Gentle Fugue Pulse",
-      "file": "gentle-fugue-pulse.sequens-r.json",
-      "description": "100 BPM D minor: a developing contrapuntal motif, a low answering arpeggio, and a sparse modern pulse."
     },
     {
       "name": "Dreaming Étude",
       "file": "dreaming-etude.sequens-r.json",
+      "genre": "Neoclassical Ambient",
       "description": "70 BPM B minor: a Piano-only wide-interval étude designed to reveal the new 64-step phrasing and dynamic lane."
+    },
+    {
+      "name": "Glass Invention",
+      "file": "glass-invention.sequens-r.json",
+      "genre": "Post-Classical Minimalism",
+      "description": "96 BPM D dorian: an original Baroque-style broken-triad study for expressive Piano and a quiet answering arpeggio."
+    },
+    {
+      "name": "Quiet Canon",
+      "file": "quiet-canon.sequens-r.json",
+      "genre": "Post-Classical Minimalism",
+      "description": "88 BPM C major: an original sequential canon idea shared between a warm Piano theme and a restrained dew-pluck echo."
+    },
+    {
+      "name": "Velvet Sarabande",
+      "file": "velvet-sarabande.sequens-r.json",
+      "genre": "Post-Classical Minimalism",
+      "description": "62 BPM G minor: a stately Baroque-style arch with soft Piano accents and a single velvet chordal shadow."
+    },
+    {
+      "name": "Clockwork Minuet",
+      "file": "clockwork-minuet.sequens-r.json",
+      "genre": "Post-Classical Minimalism",
+      "description": "104 BPM A minor: an offbeat Classical ladder with tiny clockwork percussion and a muted Euclidean counter-rhythm."
+    },
+    {
+      "name": "Gentle Fugue Pulse",
+      "file": "gentle-fugue-pulse.sequens-r.json",
+      "genre": "Post-Classical Minimalism",
+      "description": "100 BPM D minor: a developing contrapuntal motif, a low answering arpeggio, and a sparse modern pulse."
+    },
+    {
+      "name": "Classical Allegretto",
+      "file": "classical-allegretto.sequens-r.json",
+      "genre": "Melodic Electronica",
+      "description": "112 BPM B♭ major: a bright Classical turnaround carried by articulate Piano, light bass, and a courteous chamber pulse."
+    },
+    {
+      "name": "Romantic Waltz Glow",
+      "file": "romantic-waltz-glow.sequens-r.json",
+      "genre": "Melodic Electronica",
+      "description": "78 BPM E♭ major: a long three-part Romantic arc, glowing Piano dynamics, and one wide halo of harmony."
     },
     {
       "name": "Sweet Electro Invention",
       "file": "sweet-electro-invention.sequens-r.json",
+      "genre": "Melodic Electronica",
       "description": "118 BPM E minor: a friendly electronic chamber piece with syncopated Piano sparkle, soft pixels, and a featherweight beat."
     },
     {
       "name": "Ambient Pulse Canon",
       "file": "ambient-pulse-canon.sequens-r.json",
+      "genre": "Melodic Electronica",
       "description": "108 BPM A dorian: a sweet octave dialogue for Piano, clear low strings, and an understated electronic heartbeat."
     },
     {
       "name": "Luminous Rondo",
       "file": "luminous-rondo.sequens-r.json",
+      "genre": "Melodic Electronica",
       "description": "126 BPM C mixolydian: a graceful electronic rondo with a long Piano journey, soft keys, and a warm dance-floor pulse."
     }
   ]

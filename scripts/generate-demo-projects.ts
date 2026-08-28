@@ -8,6 +8,8 @@ import { pianoMelodyPattern } from '../src/lib/ui/piano-melodies';
 import { PIANO_PITCH_MAX, PIANO_PITCH_MIN, setPianoEventAccent, setPianoEventVelocity } from '../src/lib/ui/piano-roll-model';
 
 type SoundModuleType = Exclude<ModuleType, 'mixer' | 'cc' | 'mod'>;
+const DEMO_GENRES = ['Neoclassical Ambient', 'Post-Classical Minimalism', 'Melodic Electronica'] as const;
+type DemoGenre = (typeof DEMO_GENRES)[number];
 
 interface ModuleSpec {
   type: Exclude<SoundModuleType, 'drums' | 'piano'>;
@@ -49,6 +51,7 @@ interface PianoSpec {
 interface DemoSpec {
   slug: string;
   name: string;
+  genre: DemoGenre;
   description: string;
   bpm: number;
   key: MusicalKey;
@@ -374,6 +377,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'glass-invention',
     name: 'Glass Invention',
+    genre: 'Post-Classical Minimalism',
     description: '96 BPM D dorian: an original Baroque-style broken-triad study for expressive Piano and a quiet answering arpeggio.',
     bpm: 96,
     key: key(2, 'dorian'),
@@ -389,6 +393,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'moonlit-nocturne',
     name: 'Moonlit Nocturne',
+    genre: 'Neoclassical Ambient',
     description: '66 BPM C♯ minor: a Romantic-style two-bar question with felt Piano dynamics over one slow dark harmony bed.',
     bpm: 66,
     key: key(1, 'minor'),
@@ -404,6 +409,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'pastoral-morning',
     name: 'Pastoral Morning',
+    genre: 'Neoclassical Ambient',
     description: '82 BPM F major: a gentle Classical answer phrase, slow-bloom harmony, and only the lightest pastoral pulse.',
     bpm: 82,
     key: key(5, 'major'),
@@ -420,6 +426,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'quiet-canon',
     name: 'Quiet Canon',
+    genre: 'Post-Classical Minimalism',
     description: '88 BPM C major: an original sequential canon idea shared between a warm Piano theme and a restrained dew-pluck echo.',
     bpm: 88,
     key: key(0, 'major'),
@@ -435,6 +442,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'water-garden',
     name: 'Water Garden',
+    genre: 'Neoclassical Ambient',
     description: '74 BPM D♭ lydian: an Impressionist color weave for shimmering Piano with one slow, irregular tide underneath.',
     bpm: 74,
     key: key(1, 'lydian'),
@@ -450,6 +458,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'velvet-sarabande',
     name: 'Velvet Sarabande',
+    genre: 'Post-Classical Minimalism',
     description: '62 BPM G minor: a stately Baroque-style arch with soft Piano accents and a single velvet chordal shadow.',
     bpm: 62,
     key: key(7, 'minor'),
@@ -465,6 +474,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'winter-largo',
     name: 'Winter Largo',
+    genre: 'Neoclassical Ambient',
     description: '56 BPM E minor: a Piano-only slow movement that leaves velocity, accents, note length, and space fully exposed.',
     bpm: 56,
     key: key(4, 'minor'),
@@ -478,6 +488,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'classical-allegretto',
     name: 'Classical Allegretto',
+    genre: 'Melodic Electronica',
     description: '112 BPM B♭ major: a bright Classical turnaround carried by articulate Piano, light bass, and a courteous chamber pulse.',
     bpm: 112,
     key: key(10, 'major'),
@@ -494,6 +505,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'clockwork-minuet',
     name: 'Clockwork Minuet',
+    genre: 'Post-Classical Minimalism',
     description: '104 BPM A minor: an offbeat Classical ladder with tiny clockwork percussion and a muted Euclidean counter-rhythm.',
     bpm: 104,
     key: key(9, 'minor'),
@@ -510,6 +522,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'romantic-waltz-glow',
     name: 'Romantic Waltz Glow',
+    genre: 'Melodic Electronica',
     description: '78 BPM E♭ major: a long three-part Romantic arc, glowing Piano dynamics, and one wide halo of harmony.',
     bpm: 78,
     key: key(3, 'major'),
@@ -525,6 +538,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'gentle-fugue-pulse',
     name: 'Gentle Fugue Pulse',
+    genre: 'Post-Classical Minimalism',
     description: '100 BPM D minor: a developing contrapuntal motif, a low answering arpeggio, and a sparse modern pulse.',
     bpm: 100,
     key: key(2, 'minor'),
@@ -541,6 +555,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'dreaming-etude',
     name: 'Dreaming Étude',
+    genre: 'Neoclassical Ambient',
     description: '70 BPM B minor: a Piano-only wide-interval étude designed to reveal the new 64-step phrasing and dynamic lane.',
     bpm: 70,
     key: key(11, 'minor'),
@@ -554,6 +569,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'sweet-electro-invention',
     name: 'Sweet Electro Invention',
+    genre: 'Melodic Electronica',
     description: '118 BPM E minor: a friendly electronic chamber piece with syncopated Piano sparkle, soft pixels, and a featherweight beat.',
     bpm: 118,
     key: key(4, 'minor'),
@@ -574,6 +590,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'ambient-pulse-canon',
     name: 'Ambient Pulse Canon',
+    genre: 'Melodic Electronica',
     description: '108 BPM A dorian: a sweet octave dialogue for Piano, clear low strings, and an understated electronic heartbeat.',
     bpm: 108,
     key: key(9, 'dorian'),
@@ -590,6 +607,7 @@ const demos: readonly DemoSpec[] = [
   {
     slug: 'luminous-rondo',
     name: 'Luminous Rondo',
+    genre: 'Melodic Electronica',
     description: '126 BPM C mixolydian: a graceful electronic rondo with a long Piano journey, soft keys, and a warm dance-floor pulse.',
     bpm: 126,
     key: key(0, 'mixolydian'),
@@ -616,8 +634,14 @@ for (const demo of demos) {
   writeFileSync(resolve(OUTPUT_DIR, `${demo.slug}.sequens-r.json`), projectToJson(project), 'utf8');
 }
 
+const catalogDemos = DEMO_GENRES.flatMap((genre) => {
+  const genreDemos = demos.filter((demo) => demo.genre === genre);
+  if (genreDemos.length !== 5) throw new RangeError(`${genre} must contain exactly five demo projects.`);
+  return genreDemos;
+});
+
 writeFileSync(resolve(OUTPUT_DIR, 'index.json'), `${JSON.stringify({
-  projects: demos.map(({ name, slug, description }) => ({ name, file: `${slug}.sequens-r.json`, description })),
+  projects: catalogDemos.map(({ name, slug, genre, description }) => ({ name, file: `${slug}.sequens-r.json`, genre, description })),
 }, null, 2)}\n`, 'utf8');
 
 console.log(`Generated ${demos.length} demo projects in ${OUTPUT_DIR}.`);

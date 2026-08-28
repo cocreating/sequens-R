@@ -36,6 +36,11 @@ test('lists and loads a bundled demo project', async ({ page }) => {
   await page.getByRole('button', { name: 'Demos projects' }).click();
   await expect(page.getByRole('heading', { name: 'Demos projects' })).toBeVisible();
   await expect(page.locator('.demo-projects-list button')).toHaveCount(15);
+  for (const genre of ['Neoclassical Ambient', 'Post-Classical Minimalism', 'Melodic Electronica']) {
+    const group = page.locator('.demo-projects-group').filter({ has: page.getByRole('heading', { name: genre, exact: true }) });
+    await expect(group).toBeVisible();
+    await expect(group.locator('.demo-projects-list button')).toHaveCount(5);
+  }
   await expect(page.getByRole('button', { name: /Dreaming Étude/u })).toBeVisible();
   await page.locator('.demo-projects-list button').filter({ has: page.getByText('Glass Invention', { exact: true }) }).click();
   await expect(page.getByText('Glass Invention demo loaded and saved locally')).toBeVisible();

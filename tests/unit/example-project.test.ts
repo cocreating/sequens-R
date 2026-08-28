@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { groupDemoProjects, parseDemoProjectIndex } from '../../src/lib/project/demos';
 import { projectFromJson } from '../../src/lib/project/model';
 
 describe('legacy project fixtures', () => {
@@ -31,27 +32,31 @@ describe('legacy project fixtures', () => {
 describe('bundled Piano showcase projects', () => {
   it('imports all fifteen minimal demos with expressive Piano patterns, scenes, and released sounds', () => {
     const expectedFiles = [
-      'glass-invention.sequens-r.json',
       'moonlit-nocturne.sequens-r.json',
       'pastoral-morning.sequens-r.json',
-      'quiet-canon.sequens-r.json',
       'water-garden.sequens-r.json',
-      'velvet-sarabande.sequens-r.json',
       'winter-largo.sequens-r.json',
-      'classical-allegretto.sequens-r.json',
-      'clockwork-minuet.sequens-r.json',
-      'romantic-waltz-glow.sequens-r.json',
-      'gentle-fugue-pulse.sequens-r.json',
       'dreaming-etude.sequens-r.json',
+      'glass-invention.sequens-r.json',
+      'quiet-canon.sequens-r.json',
+      'velvet-sarabande.sequens-r.json',
+      'clockwork-minuet.sequens-r.json',
+      'gentle-fugue-pulse.sequens-r.json',
+      'classical-allegretto.sequens-r.json',
+      'romantic-waltz-glow.sequens-r.json',
       'sweet-electro-invention.sequens-r.json',
       'ambient-pulse-canon.sequens-r.json',
       'luminous-rondo.sequens-r.json',
     ];
-    const index = JSON.parse(readFileSync(new URL('../../public/projects/index.json', import.meta.url), 'utf8')) as {
-      projects: { file: string }[];
-    };
+    const index = parseDemoProjectIndex(JSON.parse(readFileSync(new URL('../../public/projects/index.json', import.meta.url), 'utf8')));
+    const groups = groupDemoProjects(index);
 
-    expect(index.projects.map(({ file }) => file)).toEqual(expectedFiles);
+    expect(index.map(({ file }) => file)).toEqual(expectedFiles);
+    expect(groups.map(({ genre, projects }) => [genre, projects.length])).toEqual([
+      ['Neoclassical Ambient', 5],
+      ['Post-Classical Minimalism', 5],
+      ['Melodic Electronica', 5],
+    ]);
     for (const file of expectedFiles) {
       const source = readFileSync(new URL(`../../public/projects/${file}`, import.meta.url), 'utf8');
       const project = projectFromJson(source);

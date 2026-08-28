@@ -64,7 +64,12 @@
   .demo-projects-heading p { margin-block-end: var(--space-1); color: var(--color-structure); font: 700 0.68rem/1 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; }
   .demo-projects-heading h2 { margin: 0; font-size: 1rem; }
   .demo-projects-state { margin: var(--space-4) 0 0; }
-  .demo-projects-list { display: grid; gap: var(--space-2); margin: var(--space-4) 0 0; padding: 0; list-style: none; }
+  .demo-projects-groups { display: grid; gap: var(--space-4); margin-block-start: var(--space-4); }
+  .demo-projects-group { display: grid; gap: var(--space-2); }
+  .demo-projects-genre-heading { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); padding-block-end: var(--space-1); border-block-end: 1px solid var(--color-surface-raised); }
+  .demo-projects-genre-heading h3 { margin: 0; font-size: 0.84rem; }
+  .demo-projects-genre-heading span { color: var(--color-structure); font: 700 0.66rem/1 var(--font-data); letter-spacing: 0.05em; text-transform: uppercase; }
+  .demo-projects-list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
   .demo-projects-list button { display: grid; gap: var(--space-1); width: 100%; text-align: start; }
   .demo-projects-list span, .demo-projects-list small { color: var(--color-text-muted); font-size: 0.78rem; font-weight: 500; }
   .transport { display: grid; gap: var(--space-2); padding: var(--space-2); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }

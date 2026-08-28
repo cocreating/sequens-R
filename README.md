@@ -33,7 +33,7 @@ The Vite server sends COOP/COEP headers. Open the printed localhost URL rather t
 
 ## Bundled demo projects
 
-The Workspace demo picker ships fifteen minimal schema-version-5 projects built around the upgraded Piano roll. The catalog moves from high-energy genre sketches toward original ambient, Classical, Baroque, Romantic, and Impressionist-style studies, with three restrained sweet-electronic hybrids. Tempos range from 56 to 126 BPM, every project contains an expressive Piano theme with varied velocity and accents, and the arrangements range from one to three modules. Their four scenes are Prelude, Theme, Variation, and Finale.
+The Workspace demo picker ships fifteen minimal schema-version-5 projects built around the upgraded Piano roll. The list is classified into three contemporary genres with five projects each: Neoclassical Ambient, Post-Classical Minimalism, and Melodic Electronica. Tempos range from 56 to 126 BPM, every project contains an expressive Piano theme with varied velocity and accents, and the arrangements range from one to three modules. Their four scenes are Prelude, Theme, Variation, and Finale.
 
 The demos store their channel levels, pan, sends, delay/reverb returns, and master character in the rack's normal mix state. They do not add Mixer modules; use the permanent Mixer button beside Workspace to edit the shared rack mix. The original musical material uses key-aware scale-degree phrases inspired by classical forms and techniques rather than copied master melodies. The former Basic Electro files remain unlisted compatibility fixtures and are not part of the fifteen-project shipping catalog.
 

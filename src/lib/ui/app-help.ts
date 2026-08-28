@@ -38,7 +38,7 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   },
   'demo-projects': {
     title: 'Demos projects',
-    body: 'Lists bundled example projects. Selecting one validates it through the normal import path and saves it as the current local project.',
+    body: 'Lists bundled examples in contemporary genre groups. Selecting one validates it through the normal import path and saves it as the current local project.',
   },
   'rack-switcher': {
     title: 'Studio lanes',

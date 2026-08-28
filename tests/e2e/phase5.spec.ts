@@ -200,9 +200,9 @@ test.describe('Phase 5 polish', () => {
       tempoTrigger.boundingBox(),
     ]);
     expect(desktopTapBox!.x + desktopTapBox!.width).toBeLessThanOrEqual(desktopTempoBox!.x);
-    await expect(desktopInitialActions.locator('.transport-fields > button')).toHaveCount(4);
-    await expect(desktopInitialActions.locator('.transport-fields > button svg')).toHaveCount(3);
-    expect(await desktopInitialActions.locator('.transport-fields > button').allTextContents()).toEqual(['TAB', '', '', '']);
+    await expect(desktopInitialActions.locator('.transport-fields > button')).toHaveCount(3);
+    await expect(desktopInitialActions.locator('.transport-fields > button svg')).toHaveCount(2);
+    expect(await desktopInitialActions.locator('.transport-fields > button').allTextContents()).toEqual(['TAB', '', '']);
     await expect(desktopInitialActions.locator('.transport select')).toHaveCount(0);
     await tempoTrigger.click();
     const tempo = page.locator('#tempo');
@@ -218,12 +218,14 @@ test.describe('Phase 5 polish', () => {
     const fieldTops = await page.locator('.transport-fields > button').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
     expect(new Set(fieldTops).size).toBe(1);
     await page.getByRole('button', { name: 'Close tempo controls' }).click();
-    await desktopInitialActions.getByRole('button', { name: 'Root C' }).click();
-    await page.getByRole('group', { name: 'Root note' }).getByRole('button', { name: 'D', exact: true }).click();
-    await expect(desktopInitialActions.getByRole('button', { name: 'Root D' })).toBeVisible();
-    await desktopInitialActions.getByRole('button', { name: 'Scale minor' }).click();
-    await page.getByRole('group', { name: 'Scale' }).getByRole('button', { name: 'dorian', exact: true }).click();
-    await expect(desktopInitialActions.getByRole('button', { name: 'Scale dorian' })).toBeVisible();
+    await desktopInitialActions.getByRole('button', { name: 'Key C minor' }).click();
+    const keyPanel = page.getByRole('dialog', { name: 'Root & scale' });
+    await keyPanel.getByRole('group', { name: 'Root note' }).getByRole('button', { name: 'D', exact: true }).click();
+    await expect(keyPanel).toBeVisible();
+    await keyPanel.getByRole('group', { name: 'Scale' }).getByRole('button', { name: 'dorian', exact: true }).click();
+    await expect(desktopInitialActions.getByRole('button', { name: 'Key D dorian' })).toBeVisible();
+    await expect(keyPanel).toBeVisible();
+    await page.getByRole('button', { name: 'Close key controls' }).click();
     await page.getByRole('button', { name: 'Tap BPM' }).click();
     await expect(page.getByText('Tap tempo · tap again')).toBeVisible();
     await page.waitForTimeout(500);

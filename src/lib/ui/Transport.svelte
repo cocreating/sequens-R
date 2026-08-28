@@ -27,11 +27,8 @@
     <button type="button" class="transport-trigger icon-only" data-app-help-key="tempo" aria-label={`Tempo ${Math.round(bpm)} BPM`} aria-haspopup="dialog" popovertarget="tempo-controls">
       <Icon name="clock" />
     </button>
-    <button type="button" class="transport-trigger icon-only" data-app-help-key="root" aria-label={`Root ${ROOT_NAMES[root] ?? ROOT_NAMES[0]}`} aria-haspopup="dialog" popovertarget="root-controls">
+    <button type="button" class="transport-trigger icon-only" data-app-help-key="key" aria-label={`Key ${ROOT_NAMES[root] ?? ROOT_NAMES[0]} ${scale}`} aria-haspopup="dialog" popovertarget="key-controls">
       <Icon name="musical-note" />
-    </button>
-    <button type="button" class="transport-trigger icon-only" data-app-help-key="scale" aria-label={`Scale ${scale}`} aria-haspopup="dialog" popovertarget="scale-controls">
-      <Icon name="bars-3" />
     </button>
   </div>
 
@@ -53,33 +50,31 @@
     </div>
   </div>
 
-  <div id="root-controls" class="transport-popover" popover role="dialog" aria-labelledby="root-controls-heading">
+  <div id="key-controls" class="transport-popover key-popover" popover role="dialog" aria-labelledby="key-controls-heading">
     <div class="transport-popover-heading">
       <div>
         <p>Musical context</p>
-        <h2 id="root-controls-heading">Root note</h2>
+        <h2 id="key-controls-heading">Root &amp; scale</h2>
       </div>
-      <button type="button" class="icon-only" aria-label="Close root controls" popovertarget="root-controls" popovertargetaction="hide"><Icon name="x-mark" /></button>
+      <button type="button" class="icon-only" aria-label="Close key controls" popovertarget="key-controls" popovertargetaction="hide"><Icon name="x-mark" /></button>
     </div>
-    <div class="transport-option-grid root-option-grid" role="group" aria-label="Root note">
-      {#each ROOT_NAMES as name, index (name)}
-        <button type="button" aria-pressed={root === index} popovertarget="root-controls" popovertargetaction="hide" onclick={() => onkey(index, scale)}>{name}</button>
-      {/each}
-    </div>
-  </div>
-
-  <div id="scale-controls" class="transport-popover scale-popover" popover role="dialog" aria-labelledby="scale-controls-heading">
-    <div class="transport-popover-heading">
-      <div>
-        <p>Musical context</p>
-        <h2 id="scale-controls-heading">Scale</h2>
+    <div class="key-controls-grid">
+      <div class="key-control-group">
+        <h3>Root note</h3>
+        <div class="transport-option-grid root-option-grid" role="group" aria-label="Root note">
+          {#each ROOT_NAMES as name, index (name)}
+            <button type="button" aria-pressed={root === index} onclick={() => onkey(index, scale)}>{name}</button>
+          {/each}
+        </div>
       </div>
-      <button type="button" class="icon-only" aria-label="Close scale controls" popovertarget="scale-controls" popovertargetaction="hide"><Icon name="x-mark" /></button>
-    </div>
-    <div class="transport-option-grid scale-option-grid" role="group" aria-label="Scale">
-      {#each SCALE_NAMES as name (name)}
-        <button type="button" aria-pressed={scale === name} popovertarget="scale-controls" popovertargetaction="hide" onclick={() => onkey(root, name)}>{name}</button>
-      {/each}
+      <div class="key-control-group">
+        <h3>Scale</h3>
+        <div class="transport-option-grid scale-option-grid" role="group" aria-label="Scale">
+          {#each SCALE_NAMES as name (name)}
+            <button type="button" aria-pressed={scale === name} onclick={() => onkey(root, name)}>{name}</button>
+          {/each}
+        </div>
+      </div>
     </div>
   </div>
 </div>

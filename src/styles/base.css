@@ -112,6 +112,9 @@
   .transport-popover-heading { display: flex; align-items: end; justify-content: space-between; gap: var(--space-3); margin-block-end: var(--space-4); }
   .transport-popover-heading p { margin-block-end: var(--space-1); color: var(--color-structure); font: 700 0.68rem/1 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; }
   .transport-popover-heading h2 { margin: 0; font-size: 1.15rem; }
+  .key-controls-grid, .key-control-group { display: grid; gap: var(--space-3); }
+  .key-controls-grid { gap: var(--space-4); }
+  .key-control-group h3 { margin: 0; color: var(--color-text-muted); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; }
   .transport-option-grid { display: grid; gap: var(--space-2); }
   .root-option-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .scale-option-grid { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }

@@ -21,7 +21,7 @@ state: dark theme, restored local rack, stopped transport, floating Workspace op
 
 - Information architecture matches the target: performance controls are first, desktop utilities occupy a left rail, mobile utilities collapse to one row, and the rack begins above the mobile fold.
 - Desktop uses three parallel lanes at the target viewport. The implementation is intentionally denser than the concept because it retains the complete slot, mutation, drum-lane, routing, and persistence behavior.
-- Mobile retains root and scale next to tempo rather than reducing the key to one compact token; this is an intentional functional deviation that still fits without horizontal overflow.
+- Mobile reduces root and scale to one compact Key icon next to Tempo. The combined floating panel keeps both option grids visible and open between selections, preserving fast two-part key changes without horizontal overflow.
 
 ## Focused region comparison evidence
 
@@ -60,9 +60,9 @@ Post-fix evidence:
 
 ### Iteration 2 · passed
 
-No actionable P0, P1, or P2 mismatch remains. Residual differences are acceptable product constraints: the implementation carries full production controls, keeps root/scale visible, and uses one responsive top-layer Workspace panel instead of three concept-only utility shortcuts. The same icon-only toolbox access follows TAP on desktop and mobile, while the rack retains the full document width beneath it.
+No actionable P0, P1, or P2 mismatch remains. Residual differences are acceptable product constraints: the implementation carries full production controls, combines root and scale behind one value-aware Key trigger, and uses one responsive top-layer Workspace panel instead of three concept-only utility shortcuts. The same icon-only toolbox access follows the compact transport on desktop and mobile, while the rack retains the full document width beneath it.
 
-Primary interactions tested: Tap BPM with whole-number output, bounded one-BPM minus/plus stepping, Play/Pause/Resume/Stop, frozen paused playheads, keyboard-accessible parameter change in automated Chrome, Workspace persistence, module actions menu, module MIDI export, Output & advanced routing, add/delete module, scenes, save/import/export/share, accessible icon names, and responsive mobile/desktop transitions.
+Primary interactions tested: visible TAB tap-tempo with whole-number output, number and vertical-slider tempo editing, combined root/scale selection without panel dismissal, Play/Pause/Resume/Stop, frozen paused playheads, keyboard-accessible parameter change in automated Chrome, Workspace persistence, module actions menu, module MIDI export, Output & advanced routing, add/delete module, scenes, save/import/export/share, accessible icon names, and responsive mobile/desktop transitions.
 
 Console errors checked: page-error assertions pass in the critical and desktop module Chrome flows; the complete automated suite is required before handoff.
 

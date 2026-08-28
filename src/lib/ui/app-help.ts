@@ -96,13 +96,9 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
     title: 'Tempo',
     body: 'Opens a floating panel for setting the shared transport speed from 20 to 300 whole beats per minute with a number field or vertical slider.',
   },
-  root: {
-    title: 'Root note',
-    body: 'Opens a floating note grid for setting the tonal center used by in-key melodic generators and the piano roll.',
-  },
-  scale: {
-    title: 'Scale',
-    body: 'Opens a floating option panel for choosing the pitch collection used by melodic generation and in-key piano editing.',
+  key: {
+    title: 'Root and scale',
+    body: 'Opens one floating panel for changing both the tonal center and pitch collection used by melodic generation and in-key piano editing.',
   },
   scenes: {
     title: 'Scenes',

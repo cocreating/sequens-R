@@ -36,8 +36,7 @@
   .brand-kicker p { margin: 0; }
   .app-version { border: 1px solid var(--color-surface-raised); border-radius: 999px; padding: 0.18rem 0.42rem; color: var(--color-text-muted); letter-spacing: 0.04em; white-space: nowrap; }
   .app-header-actions { position: relative; z-index: 1; display: flex; flex: 1 1 18rem; flex-wrap: wrap; align-items: center; justify-content: end; gap: var(--space-1); min-width: 0; }
-  .header-initial-core-actions { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2); align-items: end; min-width: 0; padding-block-end: var(--space-2); }
-  .header-initial-core-actions > .header-tap { align-self: end; font-family: var(--font-data); }
+  .header-initial-core-actions { position: relative; min-width: 0; padding-block-end: var(--space-2); }
   .header-core-actions, .header-end-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: end; gap: var(--space-1); min-width: 0; }
   :is(.header-core-actions, .header-end-actions) > button { flex: 0 0 auto; padding-inline: var(--space-2); font-family: var(--font-data); }
   .header-random { background: transparent; }
@@ -85,7 +84,7 @@
   .demo-projects-list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
   .demo-projects-list button { display: grid; gap: var(--space-1); width: 100%; text-align: start; }
   .demo-projects-list span, .demo-projects-list small { color: var(--color-text-muted); font-size: 0.78rem; font-weight: 500; }
-  .transport { display: grid; gap: var(--space-2); padding: var(--space-2); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
+  .transport { display: grid; gap: var(--space-2); }
   .scene-panel { display: grid; gap: var(--space-3); margin-block-start: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
   .scene-heading { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--space-3); }
   .scene-heading p { margin-block-end: var(--space-1); color: var(--color-structure); font: 700 0.68rem/1 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; }
@@ -104,17 +103,26 @@
   .rack-tabs { padding-block-start: var(--space-2); border-block-start: 1px solid var(--color-surface-raised); }
   .rack-tabs [aria-selected="true"] { border-color: var(--color-playing); border-width: 2px; background: var(--color-surface-raised); }
   .rack-switcher > label { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
-  .transport-fields { display: grid; grid-template-columns: minmax(5.75rem, 0.9fr) minmax(3.75rem, 0.5fr) minmax(6.25rem, 1fr); gap: var(--space-1); align-items: end; }
-  .transport-field { display: grid; gap: var(--space-1); min-width: 0; }
-  .transport-fields label { color: var(--color-text-muted); font-size: 0.65rem; letter-spacing: 0.05em; text-transform: uppercase; }
-  .transport-field > select { width: 100%; min-width: 0; }
-  .tempo-field { position: relative; display: grid; align-items: center; }
-  .tempo-field > input { width: 100%; min-width: 0; appearance: textfield; font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: center; }
-  .tempo-field > input::-webkit-inner-spin-button, .tempo-field > input::-webkit-outer-spin-button { appearance: none; margin: 0; }
-  .tempo-slider-popover { position: absolute; z-index: 8; inset: calc(100% + var(--space-1)) 0 auto auto; display: grid; place-items: center; width: var(--touch-target); height: 10rem; border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding-block: var(--space-2); background: var(--color-canvas); box-shadow: 0 0.75rem 1.5rem rgb(0 0 0 / 45%); visibility: hidden; opacity: 0; translate: 0 calc(-1 * var(--space-1)); pointer-events: none; transition: opacity 120ms ease, translate 120ms ease, visibility 120ms; }
-  .tempo-field:is(:hover, :focus-within) .tempo-slider-popover { visibility: visible; opacity: 1; translate: 0; pointer-events: auto; }
-  .tempo-slider-popover input[type="range"] { width: var(--touch-target); height: 8.5rem; min-height: 0; margin: 0; padding: 0; background: transparent; writing-mode: vertical-lr; direction: rtl; cursor: ns-resize; }
-  .tempo-field span { display: none; color: var(--color-text-muted); font: 0.75rem var(--font-data); }
+  .transport-fields { display: flex; align-items: center; gap: var(--space-1); }
+  .transport-trigger { flex: 0 0 auto; background: transparent; }
+  .transport-trigger.header-tap { padding-inline: var(--space-2); font-family: var(--font-data); }
+  .transport-trigger .icon { width: 1.2rem; height: 1.2rem; }
+  .transport-popover { width: min(28rem, calc(100vw - 1rem)); max-height: min(80dvh, 34rem); margin: auto; border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding: var(--space-4); background: var(--color-canvas); color: var(--color-text); box-shadow: 0 1rem 3rem rgb(0 0 0 / 60%); overflow-y: auto; }
+  .transport-popover::backdrop { background: rgb(0 0 0 / 42%); }
+  .transport-popover-heading { display: flex; align-items: end; justify-content: space-between; gap: var(--space-3); margin-block-end: var(--space-4); }
+  .transport-popover-heading p { margin-block-end: var(--space-1); color: var(--color-structure); font: 700 0.68rem/1 var(--font-data); letter-spacing: 0.08em; text-transform: uppercase; }
+  .transport-popover-heading h2 { margin: 0; font-size: 1.15rem; }
+  .transport-option-grid { display: grid; gap: var(--space-2); }
+  .root-option-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .scale-option-grid { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+  .transport-option-grid button { min-width: 0; font-family: var(--font-data); }
+  .tempo-panel-controls { display: grid; grid-template-columns: minmax(8rem, 1fr) var(--touch-target); gap: var(--space-4); align-items: center; }
+  .tempo-number-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-1) var(--space-2); align-items: center; }
+  .tempo-number-field label { grid-column: 1 / -1; color: var(--color-text-muted); font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; }
+  .tempo-number-field input { width: 100%; min-width: 0; appearance: textfield; font-family: var(--font-data); font-variant-numeric: tabular-nums; text-align: center; }
+  .tempo-number-field input::-webkit-inner-spin-button, .tempo-number-field input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+  .tempo-number-field span { color: var(--color-text-muted); font: 0.75rem var(--font-data); }
+  .tempo-panel-controls input[type="range"] { width: var(--touch-target); height: 10rem; min-height: 10rem; margin: 0; padding: 0; background: transparent; writing-mode: vertical-lr; direction: rtl; cursor: ns-resize; }
   .hardware-panel { display: grid; gap: var(--space-3); margin-block-start: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
   .desktop-studio-panel { display: grid; gap: var(--space-3); margin-block-start: var(--space-3); padding: var(--space-3); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
   .audio-output-control { display: grid; grid-template-columns: auto minmax(12rem, 1fr) auto; gap: var(--space-2); align-items: center; }
@@ -397,16 +405,15 @@
     .brand-title-full { display: block; }
     .brand-title-compact { display: none; }
     .transport { align-items: center; }
-    .transport-fields { grid-template-columns: minmax(6.5rem, 0.9fr) minmax(4rem, 0.5fr) minmax(7rem, 1fr); }
     .project-tools { grid-template-columns: auto minmax(12rem, 1fr) repeat(6, auto); }
     .project-tools > button:nth-of-type(n + 3), .import-project { grid-row: auto; }
     .parameters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
   @media (min-width: 64rem) {
     .app-header, main { width: min(100% - 2rem, 96rem); }
-    .app-header .header-initial-core-actions { flex: 1 1 25rem; padding-block-end: 0; }
+    .app-header .header-initial-core-actions { flex: 0 0 auto; padding-block-end: 0; }
     .app-header .app-header-actions { flex: 0 1 auto; }
-    .app-header .transport { min-width: 22rem; padding: var(--space-1); }
+    .app-header .transport { min-width: 0; }
     main { display: block; }
     .utility-stack .project-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .utility-stack .project-tools > label:first-child { grid-column: 1; }

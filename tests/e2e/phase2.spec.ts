@@ -140,9 +140,11 @@ test('saving restores the exact project after reload', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('textbox', { name: 'Project' }).fill('Persistent Session');
-  await page.getByLabel('Tempo').fill('138');
-  await page.getByLabel('Tempo').blur();
   await page.getByRole('button', { name: 'Close workspace' }).click();
+  await page.getByRole('button', { name: /^Tempo \d+ BPM$/u }).click();
+  await page.getByRole('spinbutton', { name: 'Tempo' }).fill('138');
+  await page.getByRole('spinbutton', { name: 'Tempo' }).blur();
+  await page.getByRole('button', { name: 'Close tempo controls' }).click();
   const bass = page.getByRole('listitem', { name: 'Bass' });
   await bass.locator('.module-advanced > summary').click();
   await bass.getByRole('button', { name: 'Bass slot 3' }).click();
@@ -154,9 +156,11 @@ test('saving restores the exact project after reload', async ({ page }) => {
 
   await page.reload();
   await expect(page.getByText('Local project restored')).toBeVisible();
+  await page.getByRole('button', { name: /^Tempo \d+ BPM$/u }).click();
+  await expect(page.getByRole('spinbutton', { name: 'Tempo' })).toHaveValue('138');
+  await page.getByRole('button', { name: 'Close tempo controls' }).click();
   await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Persistent Session');
-  await expect(page.getByLabel('Tempo')).toHaveValue('138');
   await page.getByRole('button', { name: 'Close workspace' }).click();
   const restoredBass = page.getByRole('listitem', { name: 'Bass' });
   await restoredBass.locator('.module-advanced > summary').click();

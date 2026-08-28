@@ -94,15 +94,15 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   },
   tempo: {
     title: 'Tempo',
-    body: 'Sets the shared transport speed from 20 to 300 whole beats per minute. Use the minus and plus buttons for one-BPM changes.',
+    body: 'Opens a floating panel for setting the shared transport speed from 20 to 300 whole beats per minute with a number field or vertical slider.',
   },
   root: {
     title: 'Root note',
-    body: 'Sets the tonal center used by in-key melodic generators and the piano roll.',
+    body: 'Opens a floating note grid for setting the tonal center used by in-key melodic generators and the piano roll.',
   },
   scale: {
     title: 'Scale',
-    body: 'Chooses the pitch collection used by melodic generation and in-key piano editing.',
+    body: 'Opens a floating option panel for choosing the pitch collection used by melodic generation and in-key piano editing.',
   },
   scenes: {
     title: 'Scenes',

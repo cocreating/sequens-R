@@ -75,10 +75,11 @@ test('Phase 7 acceptance prepares the fixed C10 rack and copies an explicit evid
   await page.getByText('Diagnostics', { exact: true }).click();
   await page.getByRole('button', { name: 'Prepare 16-module C10 rack' }).click();
   await expect(page.locator('article')).toHaveCount(16);
-  await expect(page.locator('#tempo')).toHaveValue('140');
   await expect(page.locator('.session-status')).toContainText('C10 rack prepared');
-
   await page.getByRole('button', { name: 'Close workspace' }).click();
+  await page.getByRole('button', { name: 'Tempo 140 BPM' }).click();
+  await expect(page.getByRole('spinbutton', { name: 'Tempo' })).toHaveValue('140');
+  await page.getByRole('button', { name: 'Close tempo controls' }).click();
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   const diagnosticsPanel = page.locator('.diagnostics-panel');

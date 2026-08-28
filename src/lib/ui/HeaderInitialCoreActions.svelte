@@ -17,6 +17,5 @@
 </script>
 
 <div class="header-initial-core-actions" role="group" aria-label="Global timing and musical key" onpointermove={oninterest} onfocusin={oninterest}>
-  <button type="button" class="header-action header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={ontap}>TAP</button>
-  <Transport {bpm} {root} {scale} {onbpm} {onbpmcommit} {onkey} />
+  <Transport {bpm} {root} {scale} {ontap} {onbpm} {onbpmcommit} {onkey} />
 </div>

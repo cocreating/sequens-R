@@ -164,7 +164,7 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand p')).toBeVisible();
     await expect(page.locator('.brand-title-full')).toBeVisible();
     await expect(page.locator('.brand-title-compact')).toBeHidden();
-    await expect(page.getByRole('button', { name: 'Tap BPM' })).toHaveText('TAP');
+    await expect(page.getByRole('button', { name: 'Tap BPM' })).toHaveText('TAB');
     await expect(page.locator('.header-play svg')).toBeVisible();
     await expect(page.locator('.header-play svg')).toHaveAttribute('data-tone', 'positive');
     await expect(page.getByRole('button', { name: 'Stop' }).locator('svg')).toBeVisible();
@@ -194,27 +194,36 @@ test.describe('Phase 5 polish', () => {
     await expect(desktopInitialActions).toBeVisible();
     expect(await desktopInitialActions.evaluate((initial) => initial.nextElementSibling?.classList.contains('app-header-actions'))).toBe(true);
 
-    const tempo = page.locator('#tempo');
+    const tempoTrigger = desktopInitialActions.getByRole('button', { name: /^Tempo \d+ BPM$/u });
     const [desktopTapBox, desktopTempoBox] = await Promise.all([
       desktopInitialActions.getByRole('button', { name: 'Tap BPM' }).boundingBox(),
-      tempo.boundingBox(),
+      tempoTrigger.boundingBox(),
     ]);
     expect(desktopTapBox!.x + desktopTapBox!.width).toBeLessThanOrEqual(desktopTempoBox!.x);
+    await expect(desktopInitialActions.locator('.transport-fields > button')).toHaveCount(4);
+    await expect(desktopInitialActions.locator('.transport-fields > button svg')).toHaveCount(3);
+    expect(await desktopInitialActions.locator('.transport-fields > button').allTextContents()).toEqual(['TAB', '', '', '']);
+    await expect(desktopInitialActions.locator('.transport select')).toHaveCount(0);
+    await tempoTrigger.click();
+    const tempo = page.locator('#tempo');
     await expect(tempo).toHaveAttribute('step', '1');
     await expect(page.getByRole('button', { name: 'Decrease BPM' })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Increase BPM' })).toHaveCount(0);
     const tempoSlider = page.getByRole('slider', { name: 'Adjust BPM' });
-    await expect(tempoSlider).toBeHidden();
-    await tempo.hover();
     await expect(tempoSlider).toBeVisible();
     await tempoSlider.focus();
     await page.keyboard.press('ArrowUp');
     await expect(tempo).toHaveValue('119');
-    await tempo.focus();
-    await expect(tempoSlider).toBeVisible();
     await tempo.fill('118');
-    const fieldTops = await page.locator('.transport-field').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
+    const fieldTops = await page.locator('.transport-fields > button').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
     expect(new Set(fieldTops).size).toBe(1);
+    await page.getByRole('button', { name: 'Close tempo controls' }).click();
+    await desktopInitialActions.getByRole('button', { name: 'Root C' }).click();
+    await page.getByRole('group', { name: 'Root note' }).getByRole('button', { name: 'D', exact: true }).click();
+    await expect(desktopInitialActions.getByRole('button', { name: 'Root D' })).toBeVisible();
+    await desktopInitialActions.getByRole('button', { name: 'Scale minor' }).click();
+    await page.getByRole('group', { name: 'Scale' }).getByRole('button', { name: 'dorian', exact: true }).click();
+    await expect(desktopInitialActions.getByRole('button', { name: 'Scale dorian' })).toBeVisible();
     await page.getByRole('button', { name: 'Tap BPM' }).click();
     await expect(page.getByText('Tap tempo · tap again')).toBeVisible();
     await page.waitForTimeout(500);
@@ -263,7 +272,7 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.app-header > .header-initial-core-actions')).toHaveCount(0);
     const [mobileTapBox, mobileTempoBox] = await Promise.all([
       page.locator('main > .header-initial-core-actions').getByRole('button', { name: 'Tap BPM' }).boundingBox(),
-      tempo.boundingBox(),
+      page.locator('main > .header-initial-core-actions').getByRole('button', { name: /^Tempo \d+ BPM$/u }).boundingBox(),
     ]);
     expect(mobileTapBox!.x + mobileTapBox!.width).toBeLessThanOrEqual(mobileTempoBox!.x);
 

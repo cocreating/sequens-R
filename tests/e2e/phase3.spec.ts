@@ -65,7 +65,9 @@ test('MIDI remains opt-in, routes timestamped notes, clocks, and discovers hot-p
   expect(calls.filter(({ data }) => data[1] === 123 || data[1] === 120)).toHaveLength(32);
   expect(calls.filter(({ timestamp }) => timestamp !== undefined).every(({ timestamp }) => Number.isFinite(timestamp))).toBe(true);
 
-  await page.getByLabel('Tempo').fill('300');
+  await page.getByRole('button', { name: /^Tempo \d+ BPM$/u }).click();
+  await page.getByRole('spinbutton', { name: 'Tempo' }).fill('300');
+  await page.getByRole('button', { name: 'Close tempo controls' }).click();
   await page.evaluate(() => { (window as typeof window & { __midiCalls: unknown[] }).__midiCalls.length = 0; });
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await page.waitForTimeout(50);

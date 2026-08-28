@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from './Icon.svelte';
   import type { ParamDefinition } from '../core/pattern';
   import RotaryKnob from './RotaryKnob.svelte';
 
@@ -92,7 +93,7 @@
     <label for={id}>{definition.label}</label>
     <span class="stepper-unit">{definition.unit ?? ''}</span>
     <div class="stepper-control">
-      <button type="button" aria-label={`Decrease ${definition.label}`} disabled={value <= definition.min} onclick={() => setValue(value - definition.step)}>−</button>
+      <button type="button" class="icon-only" aria-label={`Decrease ${definition.label}`} disabled={value <= definition.min} onclick={() => setValue(value - definition.step)}><Icon name="minus" /></button>
       <input
         {id}
         name={definition.key}
@@ -105,7 +106,7 @@
         oninput={update}
         onchange={oncommit}
       />
-      <button type="button" aria-label={`Increase ${definition.label}`} disabled={value >= definition.max} onclick={() => setValue(value + definition.step)}>+</button>
+      <button type="button" class="icon-only" aria-label={`Increase ${definition.label}`} disabled={value >= definition.max} onclick={() => setValue(value + definition.step)}><Icon name="plus" /></button>
     </div>
   {:else}
     <label for={id}>{definition.label}</label>

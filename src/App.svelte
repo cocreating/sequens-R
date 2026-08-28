@@ -66,6 +66,8 @@
   import { runViewTransition } from './lib/platform/view-transition';
   import CompositorPlayhead from './lib/ui/CompositorPlayhead.svelte';
   import DiagnosticsPanel from './lib/ui/DiagnosticsPanel.svelte';
+  import Icon from './lib/ui/Icon.svelte';
+  import { createC10AcceptanceRack } from './lib/diagnostics/phase7-acceptance';
   import type { AudioDiagnostics } from './lib/audio/engine';
   import { appHelpFor } from './lib/ui/app-help';
   import { DEFAULT_RACK_MIX, presetById, type RackMixState } from './lib/audio/sound';
@@ -329,6 +331,11 @@
     syncHistoryButtons();
     engine.publishSound(toSoundSnapshot(rack));
     scheduleSave();
+  }
+
+  function prepareC10AcceptanceRack(): void {
+    replaceRack(createC10AcceptanceRack());
+    status = 'Phase 7 C10 rack prepared · Start transport and run Diagnostics · Undo is available';
   }
 
   function endCoalescing(): void {
@@ -932,18 +939,18 @@
       <button type="button" class="header-action header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={tapTempo}>TAP</button>
       <button
         type="button"
-        class="header-action workspace-toggle has-emoticon icon-only"
+        class="header-action workspace-toggle has-icon icon-only"
         data-app-help-key="workspace"
         aria-label="Workspace"
         popovertarget="studio-workspace"
-      ><span class="button-emoticon" aria-hidden="true">🧰</span></button>
+      ><Icon name="squares" /></button>
       <button
         type="button"
-        class="header-action mixer-toggle has-emoticon icon-only"
+        class="header-action mixer-toggle has-icon icon-only"
         data-app-help-key="mixer"
         aria-label="Mixer"
         popovertarget="studio-mixer"
-      ><span class="button-emoticon" aria-hidden="true">🎚️</span></button>
+      ><Icon name="adjustments-horizontal" /></button>
       <button
         type="button"
         class="header-action header-play"
@@ -951,9 +958,9 @@
         data-playing={playing}
         aria-label={playing ? 'Pause' : 'Play'}
         onclick={playing ? pause : play}
-      >{playing ? '⏸' : '▶'}</button>
-      <button type="button" class="header-action" data-app-help-key="stop" aria-label="Stop" onclick={stop}>◼</button>
-      <button type="button" class="header-action has-emoticon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><span class="button-emoticon" aria-hidden="true">🔗</span></button>
+      ><Icon name={playing ? 'pause' : 'play'} /></button>
+      <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
+      <button type="button" class="header-action has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
       <button
         type="button"
         class="app-help-toggle"
@@ -961,7 +968,7 @@
         aria-pressed={appHelpActive}
         aria-controls="app-help-readout"
         onclick={toggleAppHelp}
-      ><span aria-hidden="true">?</span></button>
+      ><Icon name="question-mark-circle" /></button>
     </div>
   {/if}
   <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
@@ -969,7 +976,7 @@
 
 {#if supported && initialized}
   <aside class="app-help-readout" id="app-help-readout" aria-labelledby="app-help-title" hidden={!appHelpActive}>
-    <div class="app-help-marker" aria-hidden="true">?</div>
+    <div class="app-help-marker" aria-hidden="true"><Icon name="question-mark-circle" /></div>
     <div>
       <p class="app-help-kicker">General Help · hover or focus a panel</p>
       <h2 id="app-help-title">{appHelp.title}</h2>
@@ -987,12 +994,12 @@
     <div class="performance-deck">
       <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
       <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
-        <button type="button" class="random has-emoticon" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><span class="button-emoticon" aria-hidden="true">🎲</span></button>
+        <button type="button" class="random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
         <div class="add-module">
           <select id="module-type" aria-label="New module" data-app-help-key="module-type" bind:value={selectedModuleType}>
             {#each MODULE_TYPES as type (type)}<option value={type}>{moduleLabels[type]}</option>{/each}
           </select>
-          <button id="add-module-button" type="button" class="has-emoticon" data-app-help-key="add-module" aria-label="Add Module" onclick={addModule} disabled={rack.modules.length >= 16}><span class="button-emoticon" aria-hidden="true">➕</span><span>Add Module</span></button>
+          <button id="add-module-button" type="button" class="has-icon" data-app-help-key="add-module" aria-label="Add Module" onclick={addModule} disabled={rack.modules.length >= 16}><Icon name="plus" /><span>Add Module</span></button>
         </div>
       </section>
     </div>
@@ -1016,7 +1023,7 @@
             <button class="mixer-heading-toggle" type="button" aria-label={mixerPanVisible ? 'Hide PAN controls' : 'Show PAN controls'} aria-pressed={mixerPanVisible} onclick={() => { mixerPanVisible = !mixerPanVisible; }}>PAN</button>
             <button class="mixer-heading-toggle" type="button" aria-label={mixerSendsVisible ? 'Hide SENDS controls' : 'Show SENDS controls'} aria-pressed={mixerSendsVisible} onclick={() => { mixerSendsVisible = !mixerSendsVisible; }}>SENDS</button>
           </div>
-          <button type="button" aria-label="Close mixer" popovertarget="studio-mixer" popovertargetaction="hide">×</button>
+          <button type="button" class="icon-only" aria-label="Close mixer" popovertarget="studio-mixer" popovertargetaction="hide"><Icon name="x-mark" /></button>
         </div>
       </header>
       {#if mixerOpen}
@@ -1046,26 +1053,26 @@
           <h2 id="workspace-heading">Workspace</h2>
           <small>{project.name}</small>
         </div>
-        <button type="button" aria-label="Close workspace" popovertarget="studio-workspace" popovertargetaction="hide">×</button>
+        <button type="button" class="icon-only" aria-label="Close workspace" popovertarget="studio-workspace" popovertargetaction="hide"><Icon name="x-mark" /></button>
       </header>
       {#if workspaceOpen}<div class="workspace-utilities">
         <div class="utility-stack">
           <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
             <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
-            <button type="button" class="has-emoticon icon-only" data-app-help-key="undo" aria-label="Undo" onclick={undo} disabled={!canUndo}><span class="button-emoticon" aria-hidden="true">↩️</span></button>
-            <button type="button" class="has-emoticon icon-only" data-app-help-key="redo" aria-label="Redo" onclick={redo} disabled={!canRedo}><span class="button-emoticon" aria-hidden="true">↪️</span></button>
-            <button type="button" class="has-emoticon icon-only" data-app-help-key="save" aria-label={sharedDraft ? 'Save draft' : 'Save'} onclick={saveProject}><span class="button-emoticon" aria-hidden="true">💾</span></button>
-            <button type="button" class="has-emoticon icon-only" data-app-help-key="export-project" aria-label="Export" onclick={() => void exportProject()}><span class="button-emoticon" aria-hidden="true">📤</span></button>
-            <label class="import-project has-emoticon icon-only" data-app-help-key="import-project" for="project-import"><span class="button-emoticon" aria-hidden="true">📥</span><span class="visually-hidden">Import</span></label>
+            <button type="button" class="has-icon icon-only" data-app-help-key="undo" aria-label="Undo" onclick={undo} disabled={!canUndo}><Icon name="arrow-uturn-left" /></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="redo" aria-label="Redo" onclick={redo} disabled={!canRedo}><Icon name="arrow-uturn-right" /></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="save" aria-label={sharedDraft ? 'Save draft' : 'Save'} onclick={saveProject}><Icon name="document-check" /></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="export-project" aria-label="Export" onclick={() => void exportProject()}><Icon name="document-arrow-up" /></button>
+            <label class="import-project has-icon icon-only" data-app-help-key="import-project" for="project-import"><Icon name="document-arrow-down" /><span class="visually-hidden">Import</span></label>
             <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
-            <button type="button" class="demo-projects-trigger has-emoticon icon-only" data-app-help-key="demo-projects" popovertarget="demo-projects-popover" aria-label="Demos projects" onclick={() => void loadDemoProjectIndex()}><span class="button-emoticon" aria-hidden="true">📂</span></button>
+            <button type="button" class="demo-projects-trigger has-icon icon-only" data-app-help-key="demo-projects" popovertarget="demo-projects-popover" aria-label="Demos projects" onclick={() => void loadDemoProjectIndex()}><Icon name="folder-open" /></button>
           </section>
 
           <div bind:this={demoProjectsPopover} class="demo-projects-popover" id="demo-projects-popover" popover aria-labelledby="demo-projects-heading">
             <div class="demo-projects-heading">
               <div><p>Bundled examples</p><h2 id="demo-projects-heading">Demos projects</h2></div>
-              <button type="button" popovertarget="demo-projects-popover" popovertargetaction="hide" aria-label="Close demos projects">×</button>
+              <button type="button" class="icon-only" popovertarget="demo-projects-popover" popovertargetaction="hide" aria-label="Close demos projects"><Icon name="x-mark" /></button>
             </div>
             {#if demoProjectsLoading}
               <p class="demo-projects-state" role="status">Loading demo projects…</p>
@@ -1087,8 +1094,8 @@
               <div class="rack-switcher-heading">
                 <div><p>Project racks</p><h2 id="rack-switcher-heading">Studio lanes</h2></div>
                 <div class="rack-actions">
-                  <button type="button" class="has-emoticon icon-only" data-app-help-key="new-rack" aria-label="New rack" onclick={addRack}><span class="button-emoticon" aria-hidden="true">➕</span></button>
-                  <button type="button" class="has-emoticon icon-only" data-app-help-key="duplicate-rack" aria-label="Duplicate rack" onclick={duplicateRack}><span class="button-emoticon" aria-hidden="true">📑</span></button>
+                  <button type="button" class="has-icon icon-only" data-app-help-key="new-rack" aria-label="New rack" onclick={addRack}><Icon name="plus" /></button>
+                  <button type="button" class="has-icon icon-only" data-app-help-key="duplicate-rack" aria-label="Duplicate rack" onclick={duplicateRack}><Icon name="squares" /></button>
                   <button type="button" data-app-help-key="delete-rack" onclick={deleteRack} disabled={project.racks.length <= 1}>Delete rack</button>
                 </div>
               </div>
@@ -1131,11 +1138,18 @@
             <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
               {#each [1, 2, 4, 8] as bars (bars)}<option value={bars}>{bars} {bars === 1 ? 'bar' : 'bars'}</option>{/each}
             </select>
-            <button type="button" class="has-emoticon icon-only" data-app-help-key="rack-midi" aria-label="Rack MIDI" onclick={() => void exportMidi()} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎼</span></button>
-            <button type="button" class="has-emoticon icon-only" data-app-help-key="mix-wav" aria-label="Mix WAV" onclick={bounceMix} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎧</span></button>
-            <button type="button" class="has-emoticon icon-only" data-app-help-key="wav-stems" aria-label="WAV stems" onclick={bounceStems} disabled={exportingAudio}><span class="button-emoticon" aria-hidden="true">🎚️</span></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="rack-midi" aria-label="Rack MIDI" onclick={() => void exportMidi()} disabled={exportingAudio}><Icon name="musical-note" /></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="mix-wav" aria-label="Mix WAV" onclick={bounceMix} disabled={exportingAudio}><Icon name="speaker-wave" /></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="wav-stems" aria-label="WAV stems" onclick={bounceStems} disabled={exportingAudio}><Icon name="rectangle-group" /></button>
           </section>
-          <DiagnosticsPanel diagnostics={audioDiagnostics} crossOriginIsolated={window.crossOriginIsolated} />
+          <DiagnosticsPanel
+            diagnostics={audioDiagnostics}
+            crossOriginIsolated={window.crossOriginIsolated}
+            bpm={rack.bpm}
+            moduleCount={rack.modules.length}
+            {playing}
+            onpreparec10={prepareC10AcceptanceRack}
+          />
         </div>
       </div>{/if}
     </aside>

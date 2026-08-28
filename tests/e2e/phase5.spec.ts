@@ -118,7 +118,7 @@ test.describe('Phase 5 polish', () => {
     await page.getByLabel('New module').selectOption('piano');
     await page.getByRole('button', { name: 'Add Module', exact: true }).click();
     const piano = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'piano module name' }) });
-    await expect(piano.getByRole('button', { name: 'Add note' })).toHaveText('➕');
+    await expect(piano.getByRole('button', { name: 'Add note' }).locator('svg')).toBeVisible();
     await piano.getByRole('button', { name: 'Add note' }).click();
     await expect(piano.locator('.piano-note')).toHaveCount(1);
     await piano.locator('.piano-note').focus();
@@ -165,12 +165,12 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand-title-full')).toBeVisible();
     await expect(page.locator('.brand-title-compact')).toBeHidden();
     await expect(page.getByRole('button', { name: 'Tap BPM' })).toHaveText('TAP');
-    await expect(page.locator('.header-play')).toHaveText('▶');
-    await expect(page.getByRole('button', { name: 'Stop' })).toHaveText('◼');
-    await expect(page.getByRole('button', { name: 'Share' })).toHaveText('🔗');
-    await expect(page.locator('.app-help-toggle')).toHaveText('?');
-    await expect(page.getByRole('button', { name: 'Random' })).toHaveText('🎲');
-    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toHaveText('➕Add Module');
+    await expect(page.locator('.header-play svg')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Stop' }).locator('svg')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Share' }).locator('svg')).toBeVisible();
+    await expect(page.locator('.app-help-toggle svg')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Random' }).locator('svg')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toContainText('Add Module');
 
     const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
@@ -204,7 +204,7 @@ test.describe('Phase 5 polish', () => {
     await expect(page.getByText(/Tap tempo · \d+ BPM/u)).toBeVisible();
 
     await page.getByRole('button', { name: 'Play', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Pause', exact: true })).toHaveText('⏸');
+    await expect(page.getByRole('button', { name: 'Pause', exact: true }).locator('svg')).toBeVisible();
     await expect(page.getByText('Transport playing')).toBeVisible();
     await expect.poll(async () => Number(await page.locator('.bar-progress').getAttribute('data-sync-beat'))).toBeGreaterThan(0);
     await page.getByRole('button', { name: 'Pause', exact: true }).click();
@@ -214,10 +214,10 @@ test.describe('Phase 5 polish', () => {
     const frozenStepPlayhead = page.locator('.step-grid .compositor-playhead').first();
     await expect(frozenStepPlayhead).toHaveAttribute('data-playhead-state', 'paused');
     expect(await frozenStepPlayhead.evaluate((playhead) => (playhead as HTMLElement).style.transform)).not.toBe('translateX(-100%)');
-    await expect(page.getByRole('button', { name: 'Play', exact: true })).toHaveText('▶');
+    await expect(page.getByRole('button', { name: 'Play', exact: true }).locator('svg')).toBeVisible();
     await expect(page.getByText('Transport paused')).toBeVisible();
     await page.getByRole('button', { name: 'Play', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Pause', exact: true })).toHaveText('⏸');
+    await expect(page.getByRole('button', { name: 'Pause', exact: true }).locator('svg')).toBeVisible();
     expect(Number(await page.locator('.bar-progress').getAttribute('data-sync-beat'))).toBeCloseTo(pausedBeat, 3);
     await page.getByRole('button', { name: 'Stop' }).click();
     await expect(page.locator('.bar-progress')).toHaveAttribute('data-sync-beat', '');
@@ -234,32 +234,18 @@ test.describe('Phase 5 polish', () => {
     expect(mobileActions!.x + mobileActions!.width).toBeLessThanOrEqual(375);
   });
 
-  test('uses compact emoticons for recognizable workspace actions', async ({ page }) => {
+  test('uses compact Heroicons for recognizable workspace actions', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('button', { name: 'Workspace', exact: true })).toHaveText('🧰');
+    await expect(page.getByRole('button', { name: 'Workspace', exact: true }).locator('svg')).toBeVisible();
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();
 
-    const iconActions = [
-      ['Undo', '↩️'],
-      ['Redo', '↪️'],
-      ['Save', '💾'],
-      ['Export', '📤'],
-      ['Demos projects', '📂'],
-      ['New rack', '➕'],
-      ['Duplicate rack', '📑'],
-      ['Capture scene', '📸'],
-      ['Connect hardware', '🎛️'],
-      ['Refresh outputs', '🔄'],
-      ['Rack MIDI', '🎼'],
-      ['Mix WAV', '🎧'],
-      ['WAV stems', '🎚️'],
-    ] as const;
+    const iconActions = ['Undo', 'Redo', 'Save', 'Export', 'Demos projects', 'New rack', 'Duplicate rack', 'Capture scene', 'Connect hardware', 'Refresh outputs', 'Rack MIDI', 'Mix WAV', 'WAV stems'] as const;
 
-    for (const [name, emoticon] of iconActions) {
-      await expect(page.getByRole('button', { name, exact: true })).toHaveText(emoticon);
+    for (const name of iconActions) {
+      await expect(page.getByRole('button', { name, exact: true }).locator('svg')).toBeVisible();
     }
-    await expect(page.locator('.import-project .button-emoticon')).toHaveText('📥');
-    await expect(page.locator('.module-menu > summary').first()).toHaveText('⋯');
+    await expect(page.locator('.import-project svg')).toBeVisible();
+    await expect(page.locator('.module-menu > summary').first().locator('svg')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Delete rack' })).toHaveText('Delete rack');
   });
 

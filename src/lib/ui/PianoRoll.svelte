@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from './Icon.svelte';
   import type { MusicalKey, NoteEvent, Pattern } from '../core/pattern';
   import { SCALE_INTERVALS } from '../core/theory/scales';
   import CompositorPlayhead from './CompositorPlayhead.svelte';
@@ -168,17 +169,17 @@
 
 <section class:mobile-piano-roll={mobile} class="piano-roll-editor" data-help-key="piano-roll" aria-labelledby={`${editorId}-heading`}>
   <div class="piano-roll-heading">
-    <div><h3 id={`${editorId}-heading`}>Piano roll</h3><button type="button" class="has-emoticon icon-only" data-help-key="add-note" aria-label="Add note" onclick={addKeyboardNote}><span class="button-emoticon" aria-hidden="true">➕</span></button></div>
+    <div><h3 id={`${editorId}-heading`}>Piano roll</h3><button type="button" class="has-icon icon-only" data-help-key="add-note" aria-label="Add note" onclick={addKeyboardNote}><Icon name="plus" /></button></div>
     <p>{mobile ? 'Tap the grid to add · tap a note to select · use Edit selected for precise changes.' : 'Click to add · drag to move · drag a note’s right edge to resize · Delete removes.'}</p>
   </div>
   {#if mobile}
     <details class="piano-selection-tools" open={selectedNote !== null}>
       <summary>Edit selected{selectedNote === null ? ' · select a note first' : ` · MIDI ${selectedNote.pitch}, step ${Math.floor(selectedNote.startStep) + 1}`}</summary>
       <div role="group" aria-label="Selected note controls">
-        <button type="button" aria-label="Move selected note left" disabled={selectedNote === null} onclick={() => editSelected(-1, 0)}>←</button>
-        <button type="button" aria-label="Move selected note right" disabled={selectedNote === null} onclick={() => editSelected(1, 0)}>→</button>
-        <button type="button" aria-label="Move selected note up" disabled={selectedNote === null} onclick={() => editSelected(0, 1)}>↑</button>
-        <button type="button" aria-label="Move selected note down" disabled={selectedNote === null} onclick={() => editSelected(0, -1)}>↓</button>
+        <button type="button" class="icon-only" aria-label="Move selected note left" disabled={selectedNote === null} onclick={() => editSelected(-1, 0)}><Icon name="chevron-left" /></button>
+        <button type="button" class="icon-only" aria-label="Move selected note right" disabled={selectedNote === null} onclick={() => editSelected(1, 0)}><Icon name="chevron-right" /></button>
+        <button type="button" class="icon-only" aria-label="Move selected note up" disabled={selectedNote === null} onclick={() => editSelected(0, 1)}><Icon name="arrow-up" /></button>
+        <button type="button" class="icon-only" aria-label="Move selected note down" disabled={selectedNote === null} onclick={() => editSelected(0, -1)}><Icon name="arrow-down" /></button>
         <button type="button" aria-label="Shorten selected note" disabled={selectedNote === null} onclick={() => editSelected(-1, 0, true)}>Shorten</button>
         <button type="button" aria-label="Lengthen selected note" disabled={selectedNote === null} onclick={() => editSelected(1, 0, true)}>Lengthen</button>
         <button type="button" class="delete" aria-label="Delete selected note" disabled={selectedNote === null} onclick={deleteSelected}>Delete</button>

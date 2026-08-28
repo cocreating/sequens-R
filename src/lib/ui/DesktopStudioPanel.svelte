@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from './Icon.svelte';
   interface Props {
     audioOutputs: readonly MediaDeviceInfo[];
     selectedOutputId: string;
@@ -23,7 +24,7 @@
         <option value={output.deviceId}>{output.label || `Audio output ${output.deviceId.slice(0, 6)}`}</option>
       {/each}
     </select>
-    <button type="button" class="has-emoticon icon-only" data-app-help-key="refresh-outputs" aria-label="Refresh outputs" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}><span class="button-emoticon" aria-hidden="true">🔄</span></button>
+    <button type="button" class="has-icon icon-only" data-app-help-key="refresh-outputs" aria-label="Refresh outputs" onclick={onrefreshoutputs} disabled={!outputSelectionSupported}><Icon name="arrow-path" /></button>
     {#if !outputSelectionSupported}<p>Audio output selection is unavailable; the system default remains active.</p>{/if}
   </div>
   <details data-app-help-key="shortcuts">

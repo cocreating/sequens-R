@@ -794,3 +794,25 @@ The Android report of rough playback and clipped/distorted sound above three mod
 - a real Chromium WAV regression covers both 5- and 14-module racks and requires audible output plus true peak ≤ −1 dBTP. In the final full-suite run, the generated one-bar results were −15.27 LUFS-I/−3.10 dBTP and −13.28 LUFS-I/−1.30 dBTP respectively. Existing six-kit and family-reference loudness/true-peak gates remain unchanged.
 
 `npm run verify` passes end to end: strict Svelte/TypeScript diagnostics report 0 errors and warnings, 113 unit tests pass, the production build is 103.64 KiB gzip initial JavaScript against the 200 KiB budget, and all 54 Playwright tests pass. Scheduler-message jitter measured 0.079 ms σ during that parallel browser run. These desktop/headless measurements verify regressions and implementation behavior, not device CPU capacity. The user must rerun the named 16-module/140-BPM scenario on the mid-range Android phone and record `renderCapacity`, xruns, UI frame time, audio latency, touch behavior, and physical MIDI jitter before C10 or Phase 7 can be accepted.
+
+## Phase 7 physical/listening acceptance harness · 2026-08-28
+
+The remaining plan now has an in-app evidence workflow inside Workspace → Diagnostics:
+
+1. **Prepare 16-module C10 rack** replaces the current rack with a fixed, deterministic 16-audible-module arrangement at 140 BPM. It is a normal rack-history operation, so Undo restores the previous rack.
+2. Start transport and press **Start 10-minute run**. The tracker samples diagnostics once per second, retains worst observed average/peak render load, underrun ratio, latency, scheduler-message jitter, active voices, newly dropped internal notes, cross-origin isolation, and elapsed time. It stops automatically after 600 seconds or if transport/scenario changes.
+3. Enter the measurements that browser APIs cannot prove: physical xrun count, profiled UI frame work, and loopback/hardware MIDI jitter.
+4. Check Mixer, Piano, Euclid, and final mixed-starter listening gates only after the loudness-matched human review, and record listening notes.
+5. **Copy report** produces a Markdown evidence record containing app version, timestamp, device user agent, every C10 result, Render Capacity availability, and the explicit listening decisions.
+
+The harness never marks the phase accepted, persists an approval, relaxes a threshold, or substitutes headless measurements for the reference phone. Missing APIs/measurements are reported as missing; a short interrupted run fails duration; unchecked listening items stay open. Unit coverage validates deterministic scenario construction, worst-value aggregation, dropped-note deltas, thresholds, missing metrics, and report output. Playwright validates the complete prepare/play/record/manual-evidence/listening/copy flow.
+
+Post-harness verification passes end to end: Svelte/TypeScript reports 0 errors and warnings; 117 unit tests pass across 17 files; the production PWA builds at 107.25 KiB gzip initial JavaScript with a 377.44 KiB/10-entry offline shell; and all 55 Playwright tests pass. The parallel run measured 0.087 ms σ scheduler-message jitter. These results validate the harness and preserve every automated Phase 7 gate, but they do not close the physical/listening evidence recorded by the harness.
+
+## Final interface consistency pass · 2026-08-28
+
+The closing Phase 7 UI pass removes the remaining platform-dependent emoticons and typographic action glyphs from the header, Workspace, rack/module chrome, transport steppers, hardware/output tools, scenes, and Piano roll. A single local `Icon.svelte` component now renders the selected 24 px outline Heroicon paths as decorative, non-focusable SVG. Icons inherit `currentColor` and require no runtime package, font, request, or persistence/schema change.
+
+Controls keep their existing explicit accessible names, pressed/expanded state, disabled boundaries, and 44 CSS px targets. Commands whose meaning or consequence needs words continue to display text; `Add Module` also retains its visible label. Browser regressions now assert SVG presence and accessible role/name instead of platform-specific emoji text, preserving the interaction contracts while making rendering consistent across Android, desktop Chrome, and the integrated local-test browser.
+
+Final verification passes end to end: Svelte/TypeScript reports 0 errors and warnings; 117 unit tests pass across 17 files; the production PWA stays within budget at 110.09 KiB gzip initial JavaScript and 384.27 KiB across 10 offline-shell entries; and all 55 Playwright checks pass. Scheduler-message jitter measured 0.107 ms σ. The real-browser mix regression measured −15.49 LUFS-I/−3.07 dBTP for five modules and −13.81 LUFS-I/−1.06 dBTP for fourteen modules. These results close the automated final-plan work; only the explicit reference-device C10 report and human listening decisions remain outside automation.

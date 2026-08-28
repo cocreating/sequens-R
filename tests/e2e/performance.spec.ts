@@ -67,3 +67,42 @@ test('five- and fourteen-module racks retain true-peak headroom', async ({ page 
   expect(fourteenModules.truePeakDbtp).toBeLessThanOrEqual(-1);
   console.log(`Performance mix evidence: 5 modules ${fiveModules.integratedLufs!.toFixed(2)} LUFS-I / ${fiveModules.truePeakDbtp.toFixed(2)} dBTP; 14 modules ${fourteenModules.integratedLufs!.toFixed(2)} LUFS-I / ${fourteenModules.truePeakDbtp.toFixed(2)} dBTP.`);
 });
+
+test('Phase 7 acceptance prepares the fixed C10 rack and copies an explicit evidence report', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
+  await page.getByText('Diagnostics', { exact: true }).click();
+  await page.getByRole('button', { name: 'Prepare 16-module C10 rack' }).click();
+  await expect(page.locator('article')).toHaveCount(16);
+  await expect(page.locator('#tempo')).toHaveValue('140');
+  await expect(page.locator('.session-status')).toContainText('C10 rack prepared');
+
+  await page.getByRole('button', { name: 'Close workspace' }).click();
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
+  const diagnosticsPanel = page.locator('.diagnostics-panel');
+  if (!await diagnosticsPanel.evaluate((element) => (element as HTMLDetailsElement).open)) await diagnosticsPanel.locator('summary').click();
+  await page.getByRole('button', { name: 'Start 10-minute run' }).click();
+  await expect(page.locator('#c10-progress')).toBeVisible();
+  await page.waitForTimeout(1_100);
+  await page.getByRole('button', { name: 'Stop run' }).click();
+
+  await page.locator('#c10-xruns').fill('0');
+  await page.locator('#c10-ui-frame').fill('7.5');
+  await page.locator('#c10-midi-jitter').fill('0.8');
+  await page.getByRole('checkbox', { name: 'Mixer', exact: true }).check();
+  await page.getByRole('checkbox', { name: 'Piano', exact: true }).check();
+  await page.getByRole('checkbox', { name: 'Euclid', exact: true }).check();
+  await page.getByRole('checkbox', { name: 'Final mixed starter', exact: true }).check();
+  await page.locator('#phase7-listening-notes').fill('Reference-device listening recorded by the operator.');
+  await expect(page.getByText('All listening decisions are recorded.')).toBeVisible();
+  await expect(page.getByText('Android C10 remains open until every check passes.')).toBeVisible();
+
+  await page.getByRole('button', { name: 'Copy report' }).click();
+  const report = await page.evaluate(() => navigator.clipboard.readText());
+  expect(report).toContain('# Phase 7 acceptance report');
+  expect(report).toContain('- [x] Mixer');
+  expect(report).toContain('Duration ≥ 10 minutes');
+  expect(report).toContain('Reference-device listening recorded by the operator.');
+});

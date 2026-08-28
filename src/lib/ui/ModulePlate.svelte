@@ -13,6 +13,7 @@
   import type { RackMixState } from '../audio/sound';
   import type { MeterReading } from '../audio/rack-graph';
   import { MODULE_COLOR_OPTIONS, moduleColorValue, type ModuleColor } from '../state/module-color';
+  import Icon from './Icon.svelte';
 
   interface Props {
     module: RackModule;
@@ -130,13 +131,13 @@
 >
   <div class="module-progress" aria-hidden="true"></div>
   <header class="module-header">
-    <span use:dragHandle class="drag-handle" data-help-key="reorder" aria-label={`Reorder ${module.name}`}>⠿</span>
+    <span use:dragHandle class="drag-handle" data-help-key="reorder" aria-label={`Reorder ${module.name}`}><Icon name="bars-3" /></span>
     {#if desktopSurface}
-      <button type="button" class="module-width-toggle has-emoticon icon-only" data-help-key="module-width" aria-label={`Full-width layout for ${module.name}`} aria-pressed={fullWidth} onclick={() => { fullWidth = !fullWidth; }}><span class="button-emoticon" aria-hidden="true">↔️</span></button>
+      <button type="button" class="module-width-toggle has-icon icon-only" data-help-key="module-width" aria-label={`Full-width layout for ${module.name}`} aria-pressed={fullWidth} onclick={() => { fullWidth = !fullWidth; }}><Icon name="arrows-pointing-out" /></button>
     {/if}
-    <button type="button" class="module-collapse-toggle" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}>{module.collapsed ? '+' : '−'}</button>
+    <button type="button" class="module-collapse-toggle icon-only" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}><Icon name={module.collapsed ? 'plus' : 'minus'} /></button>
     <details class="module-menu">
-      <summary aria-label={`${module.name} actions`}>⋯</summary>
+      <summary aria-label={`${module.name} actions`}><Icon name="ellipsis-vertical" /></summary>
       <div class="module-menu-popover">
         {#if desktopSurface}
           <button
@@ -147,7 +148,7 @@
             aria-pressed={helpActive}
             aria-controls={`${module.id}-help`}
             onclick={selectHelpAction}
-          ><span aria-hidden="true">?</span> Help</button>
+          ><Icon name="question-mark-circle" /> Help</button>
         {/if}
         <label class="module-color-control" data-help-key="module-color">
           <span>Color</span>
@@ -168,7 +169,7 @@
     </details>
     <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
     <div class="module-switches">
-      <button type="button" data-help-key="monitor" aria-label={`Monitor ${module.name}`} aria-pressed={module.monitor} onclick={() => onpatch({ monitor: !module.monitor })}>◖</button>
+      <button type="button" class="icon-only" data-help-key="monitor" aria-label={`Monitor ${module.name}`} aria-pressed={module.monitor} onclick={() => onpatch({ monitor: !module.monitor })}><Icon name="speaker-wave" /></button>
       <button type="button" data-help-key="solo" aria-label={`Solo ${module.name}`} aria-pressed={module.solo} onclick={() => onpatch({ solo: !module.solo })}>S</button>
       <button type="button" data-help-key="mute" aria-label={`Mute ${module.name}`} aria-pressed={module.mute} onclick={() => onpatch({ mute: !module.mute })}>M</button>
     </div>
@@ -176,7 +177,7 @@
 
   {#if desktopSurface}
     <section class="module-help-panel" id={`${module.id}-help`} aria-labelledby={`${module.id}-help-title`} hidden={!helpActive}>
-      <div class="module-help-marker" aria-hidden="true">?</div>
+      <div class="module-help-marker" aria-hidden="true"><Icon name="question-mark-circle" /></div>
       <div>
         <p class="module-help-kicker">Contextual help · hover or focus a control</p>
         <h3 id={`${module.id}-help-title`}>{activeHelp.title}</h3>

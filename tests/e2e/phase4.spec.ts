@@ -8,7 +8,7 @@ test.describe('Phase 4 desktop studio', () => {
     await expect(page.getByLabel('Application version 0.0.1')).toHaveText('v0.0.1');
     const workspaceButton = page.getByRole('button', { name: 'Workspace', exact: true });
     const workspace = page.locator('#studio-workspace');
-    await expect(workspaceButton).toHaveText('🧰');
+    await expect(workspaceButton.locator('svg')).toBeVisible();
     await expect(workspace).toBeHidden();
     await workspaceButton.click();
     await expect(workspace).toBeVisible();
@@ -24,7 +24,7 @@ test.describe('Phase 4 desktop studio', () => {
     const mixer = page.locator('#studio-mixer');
     const workspace = page.locator('#studio-workspace');
 
-    await expect(mixerButton).toHaveText('🎚️');
+    await expect(mixerButton.locator('svg')).toBeVisible();
     await expect(mixer).toBeHidden();
     await mixerButton.click();
     await expect(mixer).toBeVisible();

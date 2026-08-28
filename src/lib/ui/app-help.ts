@@ -198,7 +198,7 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   },
   diagnostics: {
     title: 'Audio diagnostics',
-    body: 'Reveals audio state, latency, scheduler jitter, active voices, render load, underruns, and isolation status.',
+    body: 'Reveals audio state, latency, scheduler jitter, active voices, render load, underruns, and isolation status. The Phase 7 harness prepares and records the fixed Android C10 acceptance scenario without auto-approving it.',
   },
   'module-lanes': {
     title: 'Module lanes',

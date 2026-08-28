@@ -1,5 +1,6 @@
 <script lang="ts">
   import { tick } from 'svelte';
+  import Icon from './Icon.svelte';
   import type { ProjectScene } from '../project/model';
   import type { RackModule } from '../state/rack';
 
@@ -28,7 +29,7 @@
 <section class="scene-panel" data-app-help-key="scenes" aria-labelledby="scene-heading">
   <div class="scene-heading">
     <div><p>Pattern snapshots</p><h2 id="scene-heading">Scenes</h2></div>
-    <button id="capture-scene-button" type="button" class="has-emoticon icon-only" data-app-help-key="capture-scene" aria-label="Capture scene" onclick={oncapture}><span class="button-emoticon" aria-hidden="true">📸</span></button>
+    <button id="capture-scene-button" type="button" class="has-icon icon-only" data-app-help-key="capture-scene" aria-label="Capture scene" onclick={oncapture}><Icon name="camera" /></button>
   </div>
   <p class="scene-help">Capture the active slot of every module. Launches land together on the next bar while playing.</p>
   {#if scenes.length === 0}
@@ -40,7 +41,7 @@
           <label for={`${scene.id}-name`} data-app-help-key="scene-name">Scene {index + 1} name</label>
           <input id={`${scene.id}-name`} data-app-help-key="scene-name" value={scene.name} oninput={(event) => onrename(scene.id, event.currentTarget.value)} />
           <button type="button" data-app-help-key="launch-scene" disabled={!appliesToRack(scene)} onclick={() => onlaunch(scene)}>Launch {scene.name}</button>
-          <button type="button" class="delete" data-app-help-key="delete-scene" aria-label={`Delete ${scene.name}`} onclick={() => void removeScene(scene.id)}>×</button>
+          <button type="button" class="delete icon-only" data-app-help-key="delete-scene" aria-label={`Delete ${scene.name}`} onclick={() => void removeScene(scene.id)}><Icon name="trash" /></button>
         </li>
       {/each}
     </ul>

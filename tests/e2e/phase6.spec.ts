@@ -24,7 +24,7 @@ for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }
     page.on('pageerror', (error) => pageErrors.push(error));
     await page.goto('/');
 
-    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toHaveText('➕Add Module');
+    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toContainText('Add Module');
     expect(await page.locator('.performance-deck').evaluate((deck) => {
       const [transport, rackTools] = Array.from(deck.children);
       if (transport === undefined || rackTools === undefined) return false;

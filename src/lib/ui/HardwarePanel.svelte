@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Icon from './Icon.svelte';
   import type { MidiManagerState } from '../midi/manager';
 
   interface Props {
@@ -15,7 +16,7 @@
     <h2 id="hardware-heading">Hardware MIDI</h2>
     <p>MIDI access is optional. Internal sound and exports work without it.</p>
   </div>
-  <button type="button" class="has-emoticon icon-only" data-app-help-key="connect-hardware" aria-label={state.connected ? 'Refresh hardware' : 'Connect hardware'} onclick={onconnect}><span class="button-emoticon" aria-hidden="true">{state.connected ? '🔄' : '🎛️'}</span></button>
+  <button type="button" class="has-icon icon-only" data-app-help-key="connect-hardware" aria-label={state.connected ? 'Refresh hardware' : 'Connect hardware'} onclick={onconnect}><Icon name={state.connected ? 'arrow-path' : 'cpu-chip'} /></button>
   {#if state.permission === 'denied'}
     <p class="midi-recovery" role="alert">MIDI access is blocked. Open this site’s permissions in the browser address bar, allow MIDI devices, then try again.</p>
   {/if}

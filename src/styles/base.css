@@ -3,10 +3,10 @@
   button, input, select { min-height: var(--touch-target); color: inherit; font-size: 1rem; }
   button, select, input { border: 1px solid var(--color-structure); border-radius: var(--radius-sm); background: var(--color-surface); }
   button { min-width: var(--touch-target); padding: var(--space-2) var(--space-3); cursor: pointer; font-weight: 750; }
-  .has-emoticon { display: inline-flex; align-items: center; justify-content: center; gap: 0.45em; }
-  .button-emoticon { flex: 0 0 auto; font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-size: 0.92em; line-height: 1; }
+  .has-icon { display: inline-flex; align-items: center; justify-content: center; gap: 0.45em; }
+  .icon { display: block; flex: 0 0 auto; }
   .icon-only { padding-inline: var(--space-2); }
-  .icon-only .button-emoticon { font-size: 1.05rem; }
+  .icon-only .icon { width: 1.1rem; height: 1.1rem; }
   button:active { border-color: var(--color-playing); translate: 0 1px; }
   button[aria-pressed="true"] { border-color: var(--color-playing); border-width: 2px; background: var(--color-surface-raised); }
   button:disabled { cursor: default; opacity: 0.72; }
@@ -31,7 +31,7 @@
   body:has(.studio-mixer:popover-open) .mixer-toggle { border-color: var(--color-playing); background: var(--color-surface-raised); }
   .header-play[data-playing="true"] { border-color: var(--color-playing); background: var(--color-playing); color: var(--color-canvas); }
   .app-help-toggle { display: inline-flex; align-items: center; justify-content: center; border-color: var(--color-structure); white-space: nowrap; }
-  .app-help-toggle span { display: grid; place-items: center; width: 1.4rem; height: 1.4rem; border: 1px solid currentColor; border-radius: 50%; font: 800 0.8rem/1 var(--font-data); }
+  .app-help-toggle .icon { width: 1.25rem; height: 1.25rem; }
   .app-help-toggle[aria-pressed="true"] { border-color: var(--color-playing); background: var(--color-playing); color: var(--color-canvas); }
   .app-help-readout { position: fixed; z-index: 8; inset: 6rem max(var(--space-4), calc((100vw - 96rem) / 2)) auto auto; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-3); width: min(27rem, calc(100vw - 2rem)); min-height: 8rem; border: 1px solid var(--color-playing); border-radius: var(--radius-sm); padding: var(--space-4); background: color-mix(in oklab, var(--color-playing) 8%, var(--color-canvas)); box-shadow: 0 1rem 3rem rgb(0 0 0 / 45%); pointer-events: none; }
   .app-help-readout[hidden] { display: none; }
@@ -123,6 +123,26 @@
   .diagnostics-panel dd { margin: var(--space-1) 0 0; font: 0.78rem var(--font-data); font-variant-numeric: tabular-nums; }
   .diagnostics-panel .warning, .diagnostic-warning { color: var(--color-danger); }
   .diagnostic-warning { margin: var(--space-2) 0 0; font-weight: 750; }
+  .phase7-acceptance { display: grid; gap: var(--space-3); margin-block-start: var(--space-4); border-block-start: 1px solid var(--color-surface-raised); padding-block-start: var(--space-3); }
+  .phase7-acceptance h3, .phase7-acceptance p { margin: 0; }
+  .phase7-acceptance > div > p { margin-block-start: var(--space-1); color: var(--color-text-muted); }
+  .acceptance-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+  .acceptance-progress { display: flex; justify-content: space-between; gap: var(--space-2); font-weight: 750; }
+  .phase7-acceptance progress { width: 100%; accent-color: var(--color-playing); }
+  .phase7-acceptance fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: var(--space-2); margin: 0; border: 1px solid var(--color-surface-raised); padding: var(--space-3); }
+  .phase7-acceptance legend { padding-inline: var(--space-1); font-weight: 750; }
+  .phase7-acceptance fieldset label { display: grid; gap: var(--space-1); color: var(--color-text-muted); font-size: 0.78rem; }
+  .phase7-acceptance input[type='number'] { width: 100%; }
+  .acceptance-checks { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
+  .acceptance-checks li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-2); align-items: baseline; border-block-start: 1px solid var(--color-surface-raised); padding-block-start: var(--space-1); }
+  .acceptance-checks li[data-result='pass'], .acceptance-pass { color: var(--color-playing); }
+  .acceptance-checks li[data-result='fail'] { color: var(--color-danger); }
+  .acceptance-checks li[data-result='missing'] { color: var(--color-text-muted); }
+  .acceptance-checks data { font: 0.78rem var(--font-data); font-variant-numeric: tabular-nums; }
+  .listening-gates label:has(input[type='checkbox']) { display: flex; grid-column: span 1; align-items: center; gap: var(--space-2); }
+  .listening-notes { grid-column: 1 / -1; }
+  .listening-notes textarea { width: 100%; resize: vertical; }
+  .acceptance-status { min-height: 1.2em; }
   .error { border-inline-start: 0.25rem solid var(--color-danger); padding: var(--space-3); background: var(--color-surface); }
   .studio-workspace, .studio-mixer { --studio-popover-top: max(4.75rem, calc(env(safe-area-inset-top) + 4rem)); position: fixed; z-index: 9; top: var(--studio-popover-top); bottom: auto; height: calc(100dvh - var(--studio-popover-top) - var(--space-2)); max-height: none; margin: 0; border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding: 0; background: var(--color-canvas); color: var(--color-text); box-shadow: 0 1rem 3rem rgb(0 0 0 / 55%); overflow: hidden; }
   .studio-workspace { right: max(var(--space-2), calc((100vw - 96rem) / 2)); left: auto; width: min(28rem, calc(100vw - 1rem)); }

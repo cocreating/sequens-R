@@ -408,7 +408,7 @@ An improvement is not complete until all applicable items are recorded:
 
 ## 16. Suggested next sequence
 
-1. Close current Phase 7 acceptance: Mixer, Piano, Euclid, final mixed starter, and Android C10. The local browser scheduler-message gate passed after the 2026-08-27 interval-jitter correction; physical MIDI jitter remains inside C10.
+1. Close current Phase 7 acceptance: use the Workspace → Diagnostics acceptance harness on the reference Android phone, record the full ten-minute C10 report, and complete Mixer, Piano, Euclid, and final mixed-starter listening. The local browser scheduler-message gate passed after the 2026-08-27 interval-jitter correction; physical MIDI jitter remains part of C10.
 2. Run a short product-use observation period before choosing module expansion work.
 3. Prefer workflow depth first: Piano editing, explicit Chords context sources, CC automation editing, and Drum per-step expression.
 4. Add synthesis breadth only when listening feedback identifies a concrete missing role.

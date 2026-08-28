@@ -1,5 +1,6 @@
 <script lang="ts">
   import { SCALE_NAMES, type ScaleName } from '../core/pattern';
+  import Icon from './Icon.svelte';
 
   const ROOT_NAMES = ['C', 'C♯', 'D', 'E♭', 'E', 'F', 'F♯', 'G', 'A♭', 'A', 'B♭', 'B'] as const;
 
@@ -29,8 +30,8 @@
     <div class="transport-field tempo-control" data-app-help-key="tempo">
       <label for="tempo">Tempo</label>
       <div class="tempo-field">
-        <button type="button" aria-label="Decrease BPM" disabled={bpm <= 20} onclick={() => adjustBpm(-1)}>−</button>
-        <button type="button" aria-label="Increase BPM" disabled={bpm >= 300} onclick={() => adjustBpm(1)}>+</button>
+        <button type="button" class="icon-only" aria-label="Decrease BPM" disabled={bpm <= 20} onclick={() => adjustBpm(-1)}><Icon name="minus" /></button>
+        <button type="button" class="icon-only" aria-label="Increase BPM" disabled={bpm >= 300} onclick={() => adjustBpm(1)}><Icon name="plus" /></button>
         <input id="tempo" name="tempo" type="number" min="20" max="300" step="1" value={bpm} oninput={(event) => onbpm(numberValue(event))} onchange={onbpmcommit} />
         <span>BPM</span>
       </div>
@@ -38,13 +39,13 @@
     <div class="transport-field" data-app-help-key="root">
       <label for="root">Root</label>
       <select id="root" name="root" value={root} onchange={(event) => onkey(numberValue(event), scale)}>
-        {#each ROOT_NAMES as name, index}<option value={index}>{name}</option>{/each}
+        {#each ROOT_NAMES as name, index (name)}<option value={index}>{name}</option>{/each}
       </select>
     </div>
     <div class="transport-field transport-field-scale" data-app-help-key="scale">
       <label for="scale">Scale</label>
       <select id="scale" name="scale" value={scale} onchange={(event) => onkey(root, (event.currentTarget as HTMLSelectElement).value as ScaleName)}>
-        {#each SCALE_NAMES as name}<option value={name}>{name}</option>{/each}
+        {#each SCALE_NAMES as name (name)}<option value={name}>{name}</option>{/each}
       </select>
     </div>
   </div>

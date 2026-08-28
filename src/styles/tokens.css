@@ -9,6 +9,14 @@
     --color-text-muted: oklch(72% 0.012 240);
     --color-playing: oklch(91% 0.22 117);
     --color-danger: oklch(70% 0.18 28);
+    --color-icon-positive: oklch(86% 0.18 145);
+    --color-icon-warning: oklch(87% 0.16 85);
+    --color-icon-danger: oklch(74% 0.19 28);
+    --color-icon-navigation: oklch(82% 0.13 245);
+    --color-icon-creative: oklch(82% 0.16 315);
+    --color-icon-file: oklch(87% 0.14 75);
+    --color-icon-audio: oklch(83% 0.13 195);
+    --color-icon-help: oklch(91% 0.17 105);
     --space-1: 0.25rem;
     --space-2: 0.5rem;
     --space-3: 0.75rem;

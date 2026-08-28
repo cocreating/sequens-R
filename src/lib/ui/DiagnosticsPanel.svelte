@@ -153,7 +153,7 @@
     {#if checks.length > 0}
       <ul class="acceptance-checks" aria-label="C10 acceptance checks">
         {#each checks as check (check.id)}
-          <li data-result={check.result}><span class="diagnostic-result-icon" aria-hidden="true">{#if check.result === 'pass'}<Icon name="check" />{:else if check.result === 'fail'}<Icon name="x-mark" />{:else}<Icon name="minus" />{/if}</span><span>{check.label}</span><data>{check.value}</data></li>
+          <li data-result={check.result}><span class="diagnostic-result-icon" aria-hidden="true">{#if check.result === 'pass'}<Icon name="check" />{:else if check.result === 'fail'}<Icon name="x-mark" tone="danger" />{:else}<Icon name="minus" />{/if}</span><span>{check.label}</span><data>{check.value}</data></li>
         {/each}
       </ul>
       <p class:acceptance-pass={c10Passed} class:diagnostic-warning={!c10Passed}>{c10Passed ? 'Android C10 evidence passes every recorded budget.' : 'Android C10 remains open until every check passes.'}</p>

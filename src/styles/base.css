@@ -4,11 +4,21 @@
   button, select, input { border: 1px solid var(--color-structure); border-radius: var(--radius-sm); background: var(--color-surface); }
   button { min-width: var(--touch-target); padding: var(--space-2) var(--space-3); cursor: pointer; font-weight: 750; }
   .has-icon { display: inline-flex; align-items: center; justify-content: center; gap: 0.45em; }
-  .icon { display: block; flex: 0 0 auto; }
+  .icon { display: block; flex: 0 0 auto; color: var(--color-text-muted); transition: color 140ms ease, filter 140ms ease; }
+  .icon[data-tone='positive'] { color: var(--color-icon-positive); }
+  .icon[data-tone='warning'] { color: var(--color-icon-warning); }
+  .icon[data-tone='danger'] { color: var(--color-icon-danger); }
+  .icon[data-tone='navigation'] { color: var(--color-icon-navigation); }
+  .icon[data-tone='creative'] { color: var(--color-icon-creative); }
+  .icon[data-tone='file'] { color: var(--color-icon-file); }
+  .icon[data-tone='audio'] { color: var(--color-icon-audio); }
+  .icon[data-tone='help'] { color: var(--color-icon-help); }
+  :is(button, summary, label):not(:disabled):hover > .icon { filter: brightness(1.12) drop-shadow(0 0 0.25rem color-mix(in oklab, currentColor 35%, transparent)); }
   .icon-only { padding-inline: var(--space-2); }
   .icon-only .icon { width: 1.1rem; height: 1.1rem; }
   button:active { border-color: var(--color-playing); translate: 0 1px; }
   button[aria-pressed="true"] { border-color: var(--color-playing); border-width: 2px; background: var(--color-surface-raised); }
+  :is(button[aria-pressed="true"], .header-play[data-playing="true"], .app-help-toggle[aria-pressed="true"]) .icon { color: inherit; filter: none; }
   button:disabled { cursor: default; opacity: 0.72; }
   input, select { padding-inline: var(--space-2); }
   input[type="range"] { accent-color: var(--color-structure); }

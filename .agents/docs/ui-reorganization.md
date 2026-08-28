@@ -35,6 +35,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Named Kick, Snare, Closed hat, Open hat, Clap, Tom, Rim, and Perc drum lanes.
 - Icon-only affordances for recognizable frequent actions: Play/Pause, Stop, Share, General Help, Random, Undo/Redo, Save, project export/import/demo discovery, rack creation/duplication, scene capture, hardware connect/refresh, music exports, and piano-note creation. The module creation action deliberately keeps its `Add Module` text label. Ambiguous or higher-consequence controls such as Delete, Mutate/Revert, scene launch, recording, advanced routing, and module-menu commands retain visible text.
 - The final Phase 7 UI pass replaces platform-dependent emoticons and text glyphs with one local, dependency-free `Icon.svelte` renderer containing the selected 24 px outline Heroicon paths. SVGs inherit `currentColor`, remain decorative, and share consistent stroke, sizing, focus, pressed-state, disabled-state, and high-contrast behavior without loading an icon font or external asset.
+- A restrained semantic palette makes the command language easier to scan and remember: green marks positive/play/create actions, amber pause and file operations, red stop/destructive results, blue navigation/share, violet creative/workspace actions, cyan audio/hardware, and yellow help. Active filled controls deliberately return their icon to inherited foreground color so state contrast remains stronger than category color.
 
 ## Accessibility and behavior
 

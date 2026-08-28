@@ -1,10 +1,46 @@
 <script lang="ts">
+  type IconTone = 'neutral' | 'positive' | 'warning' | 'danger' | 'navigation' | 'creative' | 'file' | 'audio' | 'help';
+
   interface Props {
     name: string;
     size?: string;
+    tone?: IconTone;
   }
 
-  let { name, size = '1.25em' }: Props = $props();
+  let { name, size = '1.25em', tone }: Props = $props();
+
+  const tones: Record<string, IconTone> = {
+    'adjustments-horizontal': 'audio',
+    'arrow-down': 'navigation',
+    'arrow-path': 'navigation',
+    'arrow-up': 'navigation',
+    'arrow-uturn-left': 'navigation',
+    'arrow-uturn-right': 'navigation',
+    'arrows-pointing-out': 'navigation',
+    camera: 'creative',
+    check: 'positive',
+    'chevron-down': 'navigation',
+    'chevron-left': 'navigation',
+    'chevron-right': 'navigation',
+    'chevron-up': 'navigation',
+    'cpu-chip': 'audio',
+    'document-arrow-down': 'file',
+    'document-arrow-up': 'file',
+    'document-check': 'positive',
+    'folder-open': 'file',
+    link: 'navigation',
+    'musical-note': 'audio',
+    pause: 'warning',
+    play: 'positive',
+    plus: 'positive',
+    'question-mark-circle': 'help',
+    'rectangle-group': 'audio',
+    'speaker-wave': 'audio',
+    sparkles: 'creative',
+    squares: 'creative',
+    stop: 'danger',
+    trash: 'danger'
+  };
 
   // Paths are the 24 px outline Heroicons supplied in Pictures/ICONS/herohicons.
   const paths: Record<string, string[]> = {
@@ -45,7 +81,7 @@
   };
 </script>
 
-<svg class="icon" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+<svg class="icon" data-tone={tone ?? tones[name] ?? 'neutral'} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
   {#each paths[name] ?? paths['question-mark-circle'] as path (path)}
     <path d={path}></path>
   {/each}

@@ -166,10 +166,15 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand-title-compact')).toBeHidden();
     await expect(page.getByRole('button', { name: 'Tap BPM' })).toHaveText('TAP');
     await expect(page.locator('.header-play svg')).toBeVisible();
+    await expect(page.locator('.header-play svg')).toHaveAttribute('data-tone', 'positive');
     await expect(page.getByRole('button', { name: 'Stop' }).locator('svg')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Stop' }).locator('svg')).toHaveAttribute('data-tone', 'danger');
     await expect(page.getByRole('button', { name: 'Share' }).locator('svg')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Share' }).locator('svg')).toHaveAttribute('data-tone', 'navigation');
     await expect(page.locator('.app-help-toggle svg')).toBeVisible();
+    await expect(page.locator('.app-help-toggle svg')).toHaveAttribute('data-tone', 'help');
     await expect(page.getByRole('button', { name: 'Random' }).locator('svg')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Random' }).locator('svg')).toHaveAttribute('data-tone', 'creative');
     await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toContainText('Add Module');
 
     const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));

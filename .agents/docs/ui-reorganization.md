@@ -8,14 +8,15 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Delivered
 
-- Compact global header containing Tap BPM, a stable Play/Pause toggle, Stop, Share, and General Help, followed by a performance deck for tempo, key, Random, and module creation. On mobile, the transport and rack actions stay in one horizontal, contained-scroll row rather than stacking; desktop keeps its two-column deck.
-- Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. The labelled BPM field adds 44 px minus/plus controls on its left for one-BPM changes, with disabled 20/300 boundaries; manual entry also writes whole values.
+- A sticky global header containing Tap BPM, Workspace, Mixer, the visibly labelled Add Module action, a stable Play/Pause toggle, Stop, Share, and General Help. Its action group wraps onto additional rows at constrained widths instead of overflowing. The former sticky performance deck now moves with the document.
+- Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. Hovering or focusing the labelled BPM number reveals a 20–300 native vertical range control; keyboard and touch-focus access do not depend on hover. Tempo, Root, and Scale remain on one compact row, and manual entry also writes whole values.
 - Pause preserves the current transport beat, freezes the header/grid/piano playheads on it, and clears scheduled internal/MIDI events; Play continues from that beat while Stop resets to zero and hides the playheads.
 - Responsive branding that shows `Local generative MIDI`, a build-derived current-version badge, and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
 - Mobile critical path with the rack directly after the performance controls and Workspace removed from document flow.
 - Desktop studio with three full-width parallel module lanes at 1440 CSS px.
 - Workspace utilities live in a top-layer floating panel opened by an icon-only toolbox button immediately after TAP. The native popover supports light dismiss and Escape, restores focus to its trigger, and scrolls internally within the viewport.
 - The rack mixer is an always-available full-width top-layer panel opened by the header button beside Workspace. It exposes the existing shared rack mix without requiring a Mixer module in the rack; saved Mixer modules remain compatible duplicate views. Channel gain uses keyboard-accessible native vertical faders with hardware-style caps and bottom-up fill; channels and the rack master pair them with live 12-segment green/amber/red dBFS LED ladders.
+- The mobile `s-R` title is presented as a padded circular mark. Once the document has scrolled 240 CSS px, a fixed icon-only up-arrow appears near the safe-area bottom edge; it returns to the top smoothly unless reduced motion is requested.
 - The floating mixer starts with PAN and SENDS hidden to prioritize channel levels. Two pressed-state toggles in its heading reveal or hide PAN and both send controls across every channel. Its responsive grid fits up to six channels per row: four, five, or six as desktop and mobile-landscape space permits, while narrow portrait layouts retain their compact two- or three-channel rows.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
 - An icon-only `Demos projects` action directly after project import, retaining its explicit accessible name while opening a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
@@ -47,7 +48,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Selecting module Help closes the actions disclosure and restores focus to its summary, preventing the relocated panel from obscuring the second-row switches.
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
 - Decorative SVG icons are marked `aria-hidden="true"` and cannot receive focus; text-labelled controls keep their visible name while icon-only controls use explicit accessible names.
-- The compact module-type select retains the `New module` accessible name even though its former visible caption was removed to keep the one-row mobile deck compact; the adjacent action is visibly and programmatically named `Add Module`.
+- The compact module-type select retains the `New module` accessible name even though its former visible caption was removed. Its visibly and programmatically named `Add Module` action now lives in the global header, so it remains available while the rack scrolls.
 - Icon-only controls retain explicit accessible names, pressed state where applicable, and 44 px touch targets.
 - Mixer PAN and SENDS visibility toggles expose dynamic Show/Hide accessible names and pressed state; hiding either group removes its controls from the keyboard and accessibility trees.
 

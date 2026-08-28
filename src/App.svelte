@@ -129,6 +129,8 @@
   let mixerSendsVisible = $state(false);
   let mixerOpen = $state(false);
   let workspaceOpen = $state(false);
+  let pageScrollY = $state(0);
+  let headerHeight = $state(0);
   let appHelp = $derived(appHelpFor(appHelpKey));
   let demoProjectGroups = $derived(groupDemoProjects(demoProjects));
 
@@ -166,6 +168,11 @@
   function handleDesktopChange(event: MediaQueryListEvent): void {
     desktopSurface = event.matches;
     if (!desktopSurface) normalizeMobileDenseModules();
+  }
+
+  function scrollToTop(): void {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
   }
 
   function normalizeMobileDenseModules(): void {
@@ -930,10 +937,11 @@
   }
 </script>
 
+<svelte:window bind:scrollY={pageScrollY} />
 <svelte:head><title>sequens-R · generative MIDI sequencer</title></svelte:head>
 
 <a class="skip-link" href="#rack">Skip to rack</a>
-<header class:playing class:app-help-active={appHelpActive} class="app-header">
+<header bind:clientHeight={headerHeight} class:playing class:app-help-active={appHelpActive} class="app-header">
   <div class="brand">
     <div class="brand-kicker">
       <p>Local generative MIDI</p>
@@ -959,6 +967,15 @@
         popovertarget="studio-mixer"
       ><Icon name="adjustments-horizontal" /></button>
       <button
+        id="add-module-button"
+        type="button"
+        class="header-action has-icon"
+        data-app-help-key="add-module"
+        aria-label="Add Module"
+        onclick={addModule}
+        disabled={rack.modules.length >= 16}
+      ><Icon name="plus" /><span>Add Module</span></button>
+      <button
         type="button"
         class="header-action header-play"
         data-app-help-key={playing ? 'pause' : 'play'}
@@ -982,7 +999,7 @@
 </header>
 
 {#if supported && initialized}
-  <aside class="app-help-readout" id="app-help-readout" aria-labelledby="app-help-title" hidden={!appHelpActive}>
+  <aside class="app-help-readout" id="app-help-readout" aria-labelledby="app-help-title" hidden={!appHelpActive} style={`--app-header-height: ${headerHeight}px`}>
     <div class="app-help-marker" aria-hidden="true"><Icon name="question-mark-circle" /></div>
     <div>
       <p class="app-help-kicker">General Help · hover or focus a panel</p>
@@ -997,17 +1014,14 @@
 {:else if !initialized}
   <main class="loading" aria-busy="true"><p>Loading local project…</p></main>
 {:else}
-  <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp}>
+  <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp} style={`--app-header-height: ${headerHeight}px`}>
     <div class="performance-deck">
       <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
       <section class="rack-tools" data-app-help-key="rack-actions" aria-label="Rack actions">
         <button type="button" class="random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
-        <div class="add-module">
-          <select id="module-type" aria-label="New module" data-app-help-key="module-type" bind:value={selectedModuleType}>
-            {#each MODULE_TYPES as type (type)}<option value={type}>{moduleLabels[type]}</option>{/each}
-          </select>
-          <button id="add-module-button" type="button" class="has-icon" data-app-help-key="add-module" aria-label="Add Module" onclick={addModule} disabled={rack.modules.length >= 16}><Icon name="plus" /><span>Add Module</span></button>
-        </div>
+        <select id="module-type" aria-label="New module" data-app-help-key="module-type" bind:value={selectedModuleType}>
+          {#each MODULE_TYPES as type (type)}<option value={type}>{moduleLabels[type]}</option>{/each}
+        </select>
       </section>
     </div>
 
@@ -1220,4 +1234,8 @@
       {/each}
     </section>
   </main>
+{/if}
+
+{#if pageScrollY > 240}
+  <button type="button" class="back-to-top icon-only" aria-label="Scroll to top" onclick={scrollToTop}><Icon name="arrow-up" /></button>
 {/if}

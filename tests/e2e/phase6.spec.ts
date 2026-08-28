@@ -24,12 +24,11 @@ for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }
     page.on('pageerror', (error) => pageErrors.push(error));
     await page.goto('/');
 
-    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toContainText('Add Module');
-    expect(await page.locator('.performance-deck').evaluate((deck) => {
-      const [transport, rackTools] = Array.from(deck.children);
-      if (transport === undefined || rackTools === undefined) return false;
-      return Math.abs(transport.getBoundingClientRect().top - rackTools.getBoundingClientRect().top) < 1;
-    })).toBe(true);
+    const addModuleButton = page.getByRole('button', { name: 'Add Module', exact: true });
+    await expect(addModuleButton).toContainText('Add Module');
+    expect(await addModuleButton.evaluate((button) => button.parentElement?.classList.contains('app-header-actions'))).toBe(true);
+    const transportFieldTops = await page.locator('.transport-field').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
+    expect(new Set(transportFieldTops).size).toBe(1);
     await expect(page.getByLabel('New module').getByRole('option')).toHaveCount(10);
     for (const type of ['acid', 'mixer', 'arp', 'euclid', 'piano', 'cc', 'mod'] as const) await addModule(page, type);
     await expect(page.locator('.module-list > article')).toHaveCount(10);

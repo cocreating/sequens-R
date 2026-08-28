@@ -175,32 +175,32 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.app-help-toggle svg')).toHaveAttribute('data-tone', 'help');
     await expect(page.getByRole('button', { name: 'Random' }).locator('svg')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Random' }).locator('svg')).toHaveAttribute('data-tone', 'creative');
-    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toContainText('Add Module');
+    const addModule = page.getByRole('button', { name: 'Add Module', exact: true });
+    await expect(addModule).toContainText('Add Module');
+    await expect(page.locator('.app-header-actions')).toContainText('Add Module');
+    expect(await addModule.evaluate((button) => button.parentElement?.classList.contains('app-header-actions'))).toBe(true);
 
     const actionTops = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
     const actionNames = await page.locator('.app-header-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(actionNames.slice(0, 4)).toEqual(['Tap BPM', 'Workspace', 'Mixer', 'Play']);
+    expect(actionNames.slice(0, 5)).toEqual(['Tap BPM', 'Workspace', 'Mixer', 'Add Module', 'Play']);
 
     const tempo = page.locator('#tempo');
     await expect(tempo).toHaveAttribute('step', '1');
-    const decreaseTempo = page.getByRole('button', { name: 'Decrease BPM' });
-    const increaseTempo = page.getByRole('button', { name: 'Increase BPM' });
-    await decreaseTempo.click();
-    await expect(tempo).toHaveValue('117');
-    await increaseTempo.click();
-    await expect(tempo).toHaveValue('118');
-    const [decreaseBox, increaseBox, tempoBox] = await Promise.all([decreaseTempo.boundingBox(), increaseTempo.boundingBox(), tempo.boundingBox()]);
-    expect(decreaseBox).not.toBeNull();
-    expect(increaseBox).not.toBeNull();
-    expect(tempoBox).not.toBeNull();
-    expect(decreaseBox!.x + decreaseBox!.width).toBeLessThanOrEqual(tempoBox!.x);
-    expect(increaseBox!.x + increaseBox!.width).toBeLessThanOrEqual(tempoBox!.x);
-    await tempo.fill('20');
-    await expect(decreaseTempo).toBeDisabled();
-    await tempo.fill('300');
-    await expect(increaseTempo).toBeDisabled();
+    await expect(page.getByRole('button', { name: 'Decrease BPM' })).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Increase BPM' })).toHaveCount(0);
+    const tempoSlider = page.getByRole('slider', { name: 'Adjust BPM' });
+    await expect(tempoSlider).toBeHidden();
+    await tempo.hover();
+    await expect(tempoSlider).toBeVisible();
+    await tempoSlider.focus();
+    await page.keyboard.press('ArrowUp');
+    await expect(tempo).toHaveValue('119');
+    await tempo.focus();
+    await expect(tempoSlider).toBeVisible();
     await tempo.fill('118');
+    const fieldTops = await page.locator('.transport-field').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
+    expect(new Set(fieldTops).size).toBe(1);
     await page.getByRole('button', { name: 'Tap BPM' }).click();
     await expect(page.getByText('Tap tempo · tap again')).toBeVisible();
     await page.waitForTimeout(500);
@@ -232,11 +232,21 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand p')).toBeHidden();
     await expect(page.locator('.brand-title-full')).toBeHidden();
     await expect(page.locator('.brand-title-compact')).toBeVisible();
+    await expect(page.locator('.brand-title-compact')).toHaveCSS('border-radius', '50%');
     expect(await page.getByRole('heading', { name: 'sequens-R' }).evaluate((heading) => (heading as HTMLElement).innerText)).toBe('s-R');
     const mobileActions = await page.locator('.app-header-actions').boundingBox();
     expect(mobileActions).not.toBeNull();
     expect(mobileActions!.x).toBeGreaterThanOrEqual(0);
     expect(mobileActions!.x + mobileActions!.width).toBeLessThanOrEqual(375);
+
+    await expect(page.locator('.app-header')).toHaveCSS('position', 'sticky');
+    await expect(page.locator('.performance-deck')).toHaveCSS('position', 'relative');
+    await expect(page.getByRole('button', { name: 'Scroll to top' })).toHaveCount(0);
+    await page.evaluate(() => window.scrollTo(0, 500));
+    await expect(page.getByRole('button', { name: 'Scroll to top' })).toBeVisible();
+    expect((await page.locator('.app-header').boundingBox())!.y).toBeCloseTo(0, 0);
+    await page.getByRole('button', { name: 'Scroll to top' }).click();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   });
 
   test('uses compact Heroicons for recognizable workspace actions', async ({ page }) => {

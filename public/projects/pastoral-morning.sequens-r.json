@@ -1,0 +1,856 @@
+{
+  "schemaVersion": 5,
+  "id": "demo-project-pastoral-morning",
+  "name": "Pastoral Morning",
+  "racks": [
+    {
+      "id": "rack-pastoral-morning",
+      "name": "Pastoral Morning Rack",
+      "state": {
+        "bpm": 82,
+        "key": {
+          "root": 5,
+          "scale": "major"
+        },
+        "modules": [
+          {
+            "id": "drums-pastoral-morning-1",
+            "type": "drums",
+            "name": "Pastoral Pulse",
+            "color": "ember",
+            "seed": 1025635733,
+            "params": {
+              "steps": 32,
+              "groove": 5,
+              "swing": 22,
+              "humanize": 12,
+              "overrideLanes": 255,
+              "lane0": 65537,
+              "lane1": 16777472,
+              "lane2": 67372036,
+              "lane3": 1077952576,
+              "lane4": 268439552,
+              "lane5": 0,
+              "lane6": 8388736,
+              "lane7": 2147483648
+            },
+            "slots": [
+              {
+                "seed": 1025635733,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 67372036,
+                  "lane3": 1077952576,
+                  "lane4": 268439552,
+                  "lane5": 0,
+                  "lane6": 8388736,
+                  "lane7": 2147483648
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1008858114,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 67372036,
+                  "lane3": 1077952576,
+                  "lane4": 268439552,
+                  "lane5": 0,
+                  "lane6": 1149239424,
+                  "lane7": 4026531840
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 992080495,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 15,
+                  "humanize": 8,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 262148,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 975302876,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 1431655765,
+                  "lane3": 1077952576,
+                  "lane4": 269488128,
+                  "lane5": 0,
+                  "lane6": 8388736,
+                  "lane7": 4026531840
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 958525257,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 67372036,
+                  "lane3": 1077952576,
+                  "lane4": 268439552,
+                  "lane5": 0,
+                  "lane6": 16777472,
+                  "lane7": 1
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 941747638,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 67372036,
+                  "lane3": 1077952576,
+                  "lane4": 268439552,
+                  "lane5": 0,
+                  "lane6": 33554944,
+                  "lane7": 2147483648
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 924970019,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 11,
+                  "humanize": 0,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 67372036,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 908192400,
+                "params": {
+                  "steps": 32,
+                  "groove": 5,
+                  "swing": 22,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 1358954752,
+                  "lane2": 67372036,
+                  "lane3": 1077952576,
+                  "lane4": 268439552,
+                  "lane5": 0,
+                  "lane6": 3967811712,
+                  "lane7": 3959422976
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.36,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "drums-core-v2",
+              "params": {
+                "tone": 55,
+                "punch": 65,
+                "decay": 45
+              },
+              "pan": 0,
+              "delaySend": 0,
+              "reverbSend": 18
+            },
+            "midi": {
+              "portId": null,
+              "channel": 10
+            },
+            "automation": []
+          },
+          {
+            "id": "chords-pastoral-morning-2",
+            "type": "chords",
+            "name": "Meadow Harmony",
+            "color": "plum",
+            "seed": 3380889127,
+            "params": {
+              "length": 4,
+              "quality": 0,
+              "duration": 20,
+              "strum": 24
+            },
+            "slots": [
+              {
+                "seed": 3380889127,
+                "params": {
+                  "length": 4,
+                  "quality": 0,
+                  "duration": 20,
+                  "strum": 24
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3364111508,
+                "params": {
+                  "length": 4,
+                  "quality": 0,
+                  "duration": 20,
+                  "strum": 42
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3414444365,
+                "params": {
+                  "length": 4,
+                  "quality": 0,
+                  "duration": 20,
+                  "strum": 62
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3397666746,
+                "params": {
+                  "length": 4,
+                  "quality": 1,
+                  "duration": 20,
+                  "strum": 16
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3313778651,
+                "params": {
+                  "length": 4,
+                  "quality": 3,
+                  "duration": 20,
+                  "strum": 24
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3297001032,
+                "params": {
+                  "length": 4,
+                  "quality": 4,
+                  "duration": 20,
+                  "strum": 34
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3347333889,
+                "params": {
+                  "length": 3,
+                  "quality": 0,
+                  "duration": 20,
+                  "strum": 24
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3330556270,
+                "params": {
+                  "length": 5,
+                  "quality": 0,
+                  "duration": 20,
+                  "strum": 52
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.18,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "chords-pad-v2",
+              "params": {
+                "tone": 38,
+                "attack": 72,
+                "release": 82,
+                "width": 68,
+                "chorus": 46
+              },
+              "pan": -14,
+              "delaySend": 0,
+              "reverbSend": 52
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "piano-pastoral-morning-3",
+            "type": "piano",
+            "name": "Morning Answer",
+            "color": "indigo",
+            "seed": 4279371330,
+            "params": {
+              "length": 0,
+              "inKey": 1
+            },
+            "slots": [
+              {
+                "seed": 4279371330,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 3,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 1.5,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 58,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1181653,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 2,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 7,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 10,
+                      "durationSteps": 1.5,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 2,
+                      "pitch": 58,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 15,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 98
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 4245816092,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2.4,
+                      "pitch": 53,
+                      "velocity": 92,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 1.7999999999999998,
+                      "pitch": 60,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2.4,
+                      "pitch": 55,
+                      "velocity": 78
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 4262593711,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 65,
+                      "velocity": 94,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 3,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 1.5,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 58,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 70,
+                      "velocity": 64
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 4212260854,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2.9,
+                      "pitch": 53,
+                      "velocity": 84,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 3,
+                      "durationSteps": 2.9,
+                      "pitch": 57,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2.175,
+                      "pitch": 60,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2.9,
+                      "pitch": 58,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2.9,
+                      "pitch": 55,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2.9,
+                      "pitch": 53,
+                      "velocity": 54
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 4229038473,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 65,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 3,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 1.5,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 58,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 4178705616,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 58,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 1.5,
+                      "pitch": 60,
+                      "velocity": 90
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 4195483235,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 124,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 3.12,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 1.5,
+                      "pitch": 60,
+                      "velocity": 86
+                    },
+                    {
+                      "startStep": 8.12,
+                      "durationSteps": 2,
+                      "pitch": 58,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 110
+                    },
+                    {
+                      "startStep": 14.12,
+                      "durationSteps": 2,
+                      "pitch": 53,
+                      "velocity": 78
+                    }
+                  ]
+                }
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": false,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.5,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "piano-soft-v2",
+              "params": {
+                "tone": 34,
+                "bell": 18,
+                "decay": 72,
+                "tremolo": 8
+              },
+              "pan": 8,
+              "delaySend": 12,
+              "reverbSend": 44
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 1,
+          "delayFeedback": 46,
+          "delayReturn": 18,
+          "reverbReturn": 60,
+          "masterCharacter": 12
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-pastoral-morning",
+  "scenes": [
+    {
+      "id": "scene-pastoral-morning-prelude",
+      "name": "Prelude",
+      "assignments": {
+        "drums-pastoral-morning-1": 4,
+        "chords-pastoral-morning-2": 4,
+        "piano-pastoral-morning-3": 4
+      }
+    },
+    {
+      "id": "scene-pastoral-morning-theme",
+      "name": "Theme",
+      "assignments": {
+        "drums-pastoral-morning-1": 0,
+        "chords-pastoral-morning-2": 0,
+        "piano-pastoral-morning-3": 0
+      }
+    },
+    {
+      "id": "scene-pastoral-morning-variation",
+      "name": "Variation",
+      "assignments": {
+        "drums-pastoral-morning-1": 1,
+        "chords-pastoral-morning-2": 1,
+        "piano-pastoral-morning-3": 1
+      }
+    },
+    {
+      "id": "scene-pastoral-morning-finale",
+      "name": "Finale",
+      "assignments": {
+        "drums-pastoral-morning-1": 3,
+        "chords-pastoral-morning-2": 3,
+        "piano-pastoral-morning-3": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Pastoral Morning",
+    "demo": true
+  },
+  "createdAt": 1787911200000,
+  "updatedAt": 1787911200000
+}

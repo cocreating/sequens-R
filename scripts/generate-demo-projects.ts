@@ -1,10 +1,11 @@
-import { writeFileSync } from 'node:fs';
+import { rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { ModuleType, MusicalKey, NoteEvent, Pattern, ScaleName } from '../src/lib/core/pattern';
-import { SCALE_INTERVALS } from '../src/lib/core/theory/scales';
 import { soundForPreset, type RackMixState } from '../src/lib/audio/sound';
 import { createProject, projectToJson, type ProjectDocument } from '../src/lib/project/model';
 import { createModule, type PatternSlot, type RackModule, type RackState } from '../src/lib/state/rack';
+import { pianoMelodyPattern } from '../src/lib/ui/piano-melodies';
+import { PIANO_PITCH_MAX, PIANO_PITCH_MIN, setPianoEventAccent, setPianoEventVelocity } from '../src/lib/ui/piano-roll-model';
 
 type SoundModuleType = Exclude<ModuleType, 'mixer' | 'cc' | 'mod'>;
 
@@ -37,8 +38,7 @@ interface DrumSpec {
 interface PianoSpec {
   name: string;
   seed: number;
-  length: 16 | 32 | 64;
-  events: readonly NoteEvent[];
+  melodyId: string;
   presetId: string;
   level: number;
   pan?: number;
@@ -53,13 +53,13 @@ interface DemoSpec {
   bpm: number;
   key: MusicalKey;
   mix: RackMixState;
-  drums: DrumSpec;
+  drums?: DrumSpec;
   modules: readonly ModuleSpec[];
   piano: PianoSpec;
 }
 
 const OUTPUT_DIR = resolve(process.cwd(), 'public/projects');
-const CREATED_AT = Date.UTC(2026, 7, 27, 10, 0, 0);
+const CREATED_AT = Date.UTC(2026, 7, 28, 10, 0, 0);
 
 const DEFAULT_COLORS: Readonly<Record<ModuleType, RackModule['color']>> = {
   drums: 'ember',
@@ -101,51 +101,6 @@ function laneMask(steps: readonly number[]): number {
   return mask;
 }
 
-function pitch(key: MusicalKey, degree: number, octave: number): number {
-  const intervals = SCALE_INTERVALS[key.scale];
-  const normalizedDegree = ((degree % intervals.length) + intervals.length) % intervals.length;
-  const octaveOffset = Math.floor(degree / intervals.length);
-  return key.root + intervals[normalizedDegree]! + (octave + octaveOffset + 1) * 12;
-}
-
-function chord(key: MusicalKey, degree: number, octave: number, quality: 'triad' | 'seventh' | 'ninth' = 'triad'): number[] {
-  const offsets = quality === 'triad' ? [0, 2, 4] : quality === 'seventh' ? [0, 2, 4, 6] : [0, 2, 4, 6, 8];
-  return offsets.map((offset) => pitch(key, degree + offset, octave));
-}
-
-function note(startStep: number, notePitch: number, durationSteps: number, velocity: number, extras: Pick<NoteEvent, 'accent' | 'slide'> = {}): NoteEvent {
-  return { startStep, pitch: notePitch, durationSteps, velocity, ...extras };
-}
-
-function sequence(
-  notePitches: readonly number[],
-  length: number,
-  stride = 1,
-  gate = 0.72,
-  velocities: readonly number[] = [104, 82, 94, 76],
-  timing: readonly number[] = [0],
-): NoteEvent[] {
-  const events: NoteEvent[] = [];
-  for (let step = 0, index = 0; step < length; step += stride, index += 1) {
-    const offset = timing[index % timing.length] ?? 0;
-    events.push(note(Math.max(0, step + offset), notePitches[index % notePitches.length]!, stride * gate, velocities[index % velocities.length]!));
-  }
-  return events;
-}
-
-function chordStabs(
-  key: MusicalKey,
-  starts: readonly number[],
-  degrees: readonly number[],
-  quality: 'triad' | 'seventh' | 'ninth',
-  duration: number,
-  octave = 3,
-): NoteEvent[] {
-  return starts.flatMap((start, index) => chord(key, degrees[index % degrees.length]!, octave, quality).map((notePitch, voice) => (
-    note(start + voice * 0.035, notePitch, Math.max(0.2, duration - voice * 0.035), 100 - voice * 6)
-  )));
-}
-
 function pattern(lengthSteps: number, events: readonly NoteEvent[]): Pattern {
   return {
     lengthSteps,
@@ -163,22 +118,26 @@ function transformPattern(base: Pattern, transform: (event: NoteEvent, index: nu
   }));
 }
 
-function pianoPatterns(length: 16 | 32 | 64, events: readonly NoteEvent[]): Pattern[] {
-  const base = pattern(length, events);
+function pianoPatterns(base: Pattern): Pattern[] {
+  const length = base.lengthSteps;
   return [
     base,
     transformPattern(base, (event) => ({ ...event, startStep: (event.startStep + 4) % length })),
-    transformPattern(base, (event, index) => index % 2 === 0 ? { ...event, velocity: Math.max(42, event.velocity - 20), durationSteps: event.durationSteps * 1.2 } : null),
-    transformPattern(base, (event, index) => index % 3 === 0 && event.pitch <= 115
-      ? [event, { ...event, pitch: event.pitch + 12, velocity: Math.max(48, event.velocity - 18) }]
+    transformPattern(base, (event, index) => index % 2 === 0
+      ? { ...setPianoEventVelocity(event, event.velocity - 20), durationSteps: event.durationSteps * 1.2 }
+      : null),
+    transformPattern(base, (event, index) => index % 3 === 0
+      ? [event, {
+        ...setPianoEventVelocity(event, event.velocity - 18),
+        pitch: clamp(event.pitch + (event.pitch <= 71 ? 12 : -12), PIANO_PITCH_MIN, PIANO_PITCH_MAX),
+      }]
       : event),
-    transformPattern(base, (event) => ({ ...event, velocity: Math.max(36, event.velocity - 28), durationSteps: Math.min(length, event.durationSteps * 1.45) })),
-    transformPattern(base, (event, index) => ({ ...event, pitch: clamp(event.pitch + (index % 4 === 0 ? 12 : 0), 0, 127) })),
+    transformPattern(base, (event) => ({ ...setPianoEventVelocity(event, event.velocity - 28), durationSteps: Math.min(length, event.durationSteps * 1.45) })),
+    transformPattern(base, (event, index) => ({ ...event, pitch: clamp(event.pitch + (index % 4 === 0 ? 12 : 0), PIANO_PITCH_MIN, PIANO_PITCH_MAX) })),
     transformPattern(base, (event, index) => index % 3 !== 1 ? { ...event, startStep: (event.startStep + 8) % length } : null),
     transformPattern(base, (event, index) => ({
-      ...event,
+      ...setPianoEventVelocity(event, event.velocity + (index % 4 === 0 ? 12 : -4)),
       startStep: Math.min(length - 0.01, event.startStep + (index % 2 === 0 ? 0 : 0.12)),
-      velocity: clamp(event.velocity + (index % 4 === 0 ? 12 : -4), 1, 127),
     })),
   ];
 }
@@ -321,10 +280,15 @@ function createGeneratedModule(slug: string, spec: ModuleSpec, index: number): R
   };
 }
 
-function createPiano(slug: string, spec: PianoSpec, index: number): RackModule {
-  const lengthIndex = spec.length === 16 ? 0 : spec.length === 32 ? 1 : 2;
+function createPiano(slug: string, spec: PianoSpec, key: MusicalKey, index: number): RackModule {
+  const melodyPattern = pianoMelodyPattern(spec.melodyId, key);
+  const basePattern: Pattern = {
+    ...melodyPattern,
+    events: melodyPattern.events.map((event) => event.accent ? setPianoEventAccent(event, true) : event),
+  };
+  const lengthIndex = basePattern.lengthSteps === 16 ? 0 : basePattern.lengthSteps === 32 ? 1 : 2;
   const params = { length: lengthIndex, inKey: 1 };
-  const patterns = pianoPatterns(spec.length, spec.events);
+  const patterns = pianoPatterns(basePattern);
   const slots = patterns.map((slotPattern, slotIndex): PatternSlot => ({
     seed: hashSeed(`${slug}:${spec.name}:${slotIndex}`),
     params: { ...params },
@@ -347,9 +311,9 @@ function createPiano(slug: string, spec: PianoSpec, index: number): RackModule {
 
 function buildProject(spec: DemoSpec): ProjectDocument {
   const modules: RackModule[] = [];
-  modules.push(createDrums(spec.slug, spec.drums, modules.length));
+  if (spec.drums !== undefined) modules.push(createDrums(spec.slug, spec.drums, modules.length));
   for (const moduleSpec of spec.modules) modules.push(createGeneratedModule(spec.slug, moduleSpec, modules.length));
-  modules.push(createPiano(spec.slug, spec.piano, modules.length));
+  modules.push(createPiano(spec.slug, spec.piano, spec.key, modules.length));
   if (modules.length > 3) throw new RangeError(`${spec.name} exceeds the three-module demo limit.`);
 
   const rackId = `rack-${spec.slug}`;
@@ -362,10 +326,10 @@ function buildProject(spec: DemoSpec): ProjectDocument {
     racks: [{ id: rackId, name: `${spec.name} Rack`, state: rack }],
     activeRackId: rackId,
     scenes: [
-      { id: `scene-${spec.slug}-intro`, name: 'Intro', assignments: assignments(4) },
-      { id: `scene-${spec.slug}-main`, name: 'Main', assignments: assignments(0) },
+      { id: `scene-${spec.slug}-prelude`, name: 'Prelude', assignments: assignments(4) },
+      { id: `scene-${spec.slug}-theme`, name: 'Theme', assignments: assignments(0) },
       { id: `scene-${spec.slug}-variation`, name: 'Variation', assignments: assignments(1) },
-      { id: `scene-${spec.slug}-peak`, name: 'Peak', assignments: assignments(3) },
+      { id: `scene-${spec.slug}-finale`, name: 'Finale', assignments: assignments(3) },
     ],
     settings: { genre: spec.name, demo: true },
     createdAt: CREATED_AT,
@@ -378,266 +342,282 @@ const mix = (delayDivision: number, delayFeedback: number, delayReturn: number, 
   delayDivision, delayFeedback, delayReturn, reverbReturn, masterCharacter,
 });
 
-const DETROIT = key(6, 'minor');
-const HOUSE = key(9, 'minor');
-const TRANCE = key(2, 'harmonicMinor');
-const SYNTHWAVE = key(4, 'minor');
-const DUBSTEP = key(0, 'phrygian');
-const AMBIENT = key(3, 'lydian');
-const ELECTRO = key(4, 'blues');
-const HARDSTYLE = key(5, 'harmonicMinor');
-const DNB = key(2, 'minor');
-const DISCO = key(7, 'mixolydian');
+function gentleDrums(name: string, seed: number, swing = 16, presetId = 'drums-core-v2'): DrumSpec {
+  return {
+    name,
+    seed,
+    steps: 32,
+    groove: swing > 24 ? 0 : 5,
+    swing,
+    humanize: 12,
+    lanes: [[0, 16], [8, 24], [2, 10, 18, 26], [6, 14, 22, 30], [12, 28], [], [7, 23], [31]],
+    presetId,
+    level: 0.36,
+    reverbSend: 18,
+  };
+}
+
+const retiredDemoFiles = [
+  'detroit-minimal-techno.sequens-r.json',
+  'deep-tech-house.sequens-r.json',
+  'euphoric-trance.sequens-r.json',
+  'neon-synthwave.sequens-r.json',
+  'halftime-dubstep-trap.sequens-r.json',
+  'ambient-idm-polymeter.sequens-r.json',
+  'electro-funk-machine.sequens-r.json',
+  'hardstyle-overdrive.sequens-r.json',
+  'jungle-drum-and-bass.sequens-r.json',
+  'nu-disco-night-drive.sequens-r.json',
+] as const;
 
 const demos: readonly DemoSpec[] = [
   {
-    slug: 'detroit-minimal-techno',
-    name: 'Detroit Minimal Techno',
-    description: '132 BPM F♯ minor: a minimal locked drum grid, micro-timed mono pulse, and one resonant acid line.',
-    bpm: 132,
-    key: DETROIT,
-    mix: mix(4, 38, 18, 10, 42),
-    drums: {
-      name: '909 Grid', seed: 0x13200101, steps: 32, groove: 3, swing: 8, humanize: 7,
-      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), repeat16([2, 6, 10, 14]), repeat16([6, 14]), repeat16([12]), repeat16([3, 11]), repeat16([7]), [15, 31]],
-      presetId: 'drums-core-v2', level: 0.74, reverbSend: 5,
-    },
+    slug: 'glass-invention',
+    name: 'Glass Invention',
+    description: '96 BPM D dorian: an original Baroque-style broken-triad study for expressive Piano and a quiet answering arpeggio.',
+    bpm: 96,
+    key: key(2, 'dorian'),
+    mix: mix(1, 52, 22, 54, 16),
     modules: [
-      { type: 'acid', name: 'Resonant Wire', seed: 0x13200103, params: { fill: 46, steps: 16, range: 2, decay: 24 }, presetId: 'acid-sharp-v2', level: 0.38, pan: -12, delaySend: 18 },
+      { type: 'arp', name: 'Answering Thread', seed: 0x09600102, params: { direction: 0, rate: 1, span: 1, gate: 72, followChords: 0, octave: 3 }, presetId: 'arp-soft-v2', level: 0.17, pan: -18, delaySend: 18, reverbSend: 34 },
     ],
     piano: {
-      name: 'Micro Pulse', seed: 0x13200105, length: 32,
-      events: sequence([pitch(DETROIT, 0, 3), pitch(DETROIT, 0, 3), pitch(DETROIT, 2, 3), pitch(DETROIT, 0, 3), pitch(DETROIT, 4, 3), pitch(DETROIT, 0, 3), pitch(DETROIT, 5, 3), pitch(DETROIT, 4, 3)], 32, 1, 0.42, [112, 72, 94, 66, 104, 74, 88, 70], [0, 0.04, -0.03, 0.08]),
-      presetId: 'piano-muted-v2', level: 0.38, pan: 8, delaySend: 12,
+      name: 'Invention Voice', seed: 0x09600105, melodyId: 'broken-triad-run',
+      presetId: 'piano-tine-v2', level: 0.5, pan: 10, delaySend: 16, reverbSend: 42,
     },
   },
   {
-    slug: 'deep-tech-house',
-    name: 'Deep Tech House',
-    description: '125 BPM A minor: a spare swung four-on-the-floor, deep pocket bass, and upbeat minor-7 piano stabs.',
-    bpm: 125,
-    key: HOUSE,
-    mix: mix(2, 44, 20, 22, 28),
-    drums: {
-      name: 'Club Drums', seed: 0x12500201, steps: 32, groove: 0, swing: 34, humanize: 12,
-      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), repeat16([0, 2, 4, 6, 8, 10, 12, 14]), repeat16([2, 6, 10, 14]), repeat16([4, 12]), repeat16([7, 15]), repeat16([3, 11]), [14, 30]],
-      presetId: 'drums-core-v2', level: 0.72, reverbSend: 8,
-    },
+    slug: 'moonlit-nocturne',
+    name: 'Moonlit Nocturne',
+    description: '66 BPM C♯ minor: a Romantic-style two-bar question with felt Piano dynamics over one slow dark harmony bed.',
+    bpm: 66,
+    key: key(1, 'minor'),
+    mix: mix(0, 68, 32, 72, 10),
     modules: [
-      { type: 'bass', name: 'Deep Pocket', seed: 0x12500202, params: { style: 4, steps: 16, range: 1, density: 52, drive: 18, octave: 2, gate: 62 }, presetId: 'bass-deep-v2', level: 0.57 },
+      { type: 'chords', name: 'Nocturne Veil', seed: 0x06600202, params: { length: 4, quality: 1, duration: 24, strum: 18 }, presetId: 'chords-dark-v2', level: 0.2, pan: -10, reverbSend: 62 },
     ],
     piano: {
-      name: 'Upbeat Stabs', seed: 0x12500205, length: 32,
-      events: chordStabs(HOUSE, [2.18, 6.18, 10.18, 14.18, 18.18, 22.18, 26.18, 30.18], [0, 0, 5, 3, 0, 0, 4, 3], 'seventh', 1.15, 3),
-      presetId: 'piano-tine-v2', level: 0.48, pan: 10, delaySend: 14, reverbSend: 10,
+      name: 'Nocturne Question', seed: 0x06600205, melodyId: 'two-bar-question',
+      presetId: 'piano-dark-v2', level: 0.54, pan: 8, delaySend: 20, reverbSend: 58,
     },
   },
   {
-    slug: 'euphoric-trance',
-    name: 'Euphoric Trance',
-    description: '142 BPM D harmonic minor: a lean driving rhythm, high triad run, and one three-octave crystal arp.',
-    bpm: 142,
-    key: TRANCE,
-    mix: mix(2, 58, 34, 38, 34),
-    drums: {
-      name: 'Trance Drive', seed: 0x14200301, steps: 32, groove: 0, swing: 0, humanize: 2,
-      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), Array.from({ length: 32 }, (_, step) => step), repeat16([2, 6, 10, 14]), repeat16([4, 12]), repeat16([14]), repeat16([7, 15]), [28, 29, 30, 31]],
-      presetId: 'drums-core-v2', level: 0.73, reverbSend: 12,
-    },
-    modules: [
-      { type: 'arp', name: 'Crystal Runner', seed: 0x14200304, params: { direction: 2, rate: 2, span: 3, gate: 58, followChords: 0, octave: 4 }, presetId: 'arp-crystal-v2', level: 0.25, pan: 14, delaySend: 42, reverbSend: 26 },
-    ],
-    piano: {
-      name: 'High Triad Run', seed: 0x14200305, length: 32,
-      events: [0, 5, 3, 4].flatMap((degree, block) => {
-        const tones = chord(TRANCE, degree, 4, 'triad');
-        const order = [tones[0]!, tones[2]!, tones[1]!, tones[2]!, tones[0]! + 12, tones[2]!, tones[1]!, tones[2]!];
-        return order.map((notePitch, index) => note(block * 8 + index, notePitch, 0.7, [110, 84, 96, 82][index % 4]!));
-      }),
-      presetId: 'piano-bright-v2', level: 0.39, pan: 8, delaySend: 36, reverbSend: 28,
-    },
-  },
-  {
-    slug: 'neon-synthwave',
-    name: 'Neon Synthwave',
-    description: '108 BPM E minor: a minimal gated drum machine, root–fifth–octave pulse, and simple eighth-note arp.',
-    bpm: 108,
-    key: SYNTHWAVE,
-    mix: mix(2, 46, 24, 30, 46),
-    drums: {
-      name: 'Retro Machine', seed: 0x10800401, steps: 32, groove: 3, swing: 5, humanize: 8,
-      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), repeat16([0, 2, 4, 6, 8, 10, 12, 14]), repeat16([6, 14]), repeat16([4, 12]), repeat16([10]), repeat16([3, 11]), [15, 31]],
-      presetId: 'drums-electro-v2', level: 0.7, reverbSend: 18,
-    },
-    modules: [
-      { type: 'arp', name: 'Neon Eighths', seed: 0x10800404, params: { direction: 2, rate: 1, span: 1, gate: 54, followChords: 0, octave: 4 }, presetId: 'arp-copper-v2', level: 0.28, pan: 15, delaySend: 26, reverbSend: 16 },
-    ],
-    piano: {
-      name: 'Root Fifth Octave', seed: 0x10800405, length: 32,
-      events: sequence([pitch(SYNTHWAVE, 0, 2), pitch(SYNTHWAVE, 4, 2), pitch(SYNTHWAVE, 0, 3), pitch(SYNTHWAVE, 4, 2)], 32, 2, 0.74, [112, 88, 104, 82]),
-      presetId: 'piano-dark-v2', level: 0.34, pan: 4, delaySend: 8, reverbSend: 12,
-    },
-  },
-  {
-    slug: 'halftime-dubstep-trap',
-    name: 'Halftime Dubstep Trap',
-    description: '150 BPM C phrygian: a stripped half-time groove, sparse sub pressure, and short fractured top-line bursts.',
-    bpm: 150,
-    key: DUBSTEP,
-    mix: mix(3, 52, 20, 18, 62),
-    drums: {
-      name: 'Half-Time Weight', seed: 0x15000501, steps: 32, groove: 4, swing: 18, humanize: 9,
-      lanes: [[0, 11, 16, 19, 27], [8, 24], [0, 3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30], [6, 14, 22, 30], [8, 24], [15, 31], [5, 13, 21, 29], [14, 15, 30, 31]],
-      presetId: 'drums-halftime-v2', level: 0.77, reverbSend: 8,
-    },
-    modules: [
-      { type: 'bass', name: 'Sub Pressure', seed: 0x15000502, params: { style: 4, steps: 32, range: 1, density: 24, drive: 12, octave: 1, gate: 100 }, presetId: 'bass-sub-v2', level: 0.64 },
-    ],
-    piano: {
-      name: 'Fractured Top Line', seed: 0x15000506, length: 32,
-      events: [note(3, pitch(DUBSTEP, 0, 5), 0.32, 112, { slide: true }), note(3.5, pitch(DUBSTEP, 1, 5), 0.25, 82), note(7, pitch(DUBSTEP, 4, 5), 0.5, 96), note(15, pitch(DUBSTEP, 2, 6), 0.25, 118), note(15.5, pitch(DUBSTEP, 1, 6), 0.2, 88), note(23, pitch(DUBSTEP, 0, 5), 0.6, 104), note(27, pitch(DUBSTEP, 5, 5), 0.25, 110), note(27.5, pitch(DUBSTEP, 4, 5), 0.2, 78)],
-      presetId: 'piano-bell-v2', level: 0.27, pan: 12, delaySend: 38, reverbSend: 18,
-    },
-  },
-  {
-    slug: 'ambient-idm-polymeter',
-    name: 'Ambient IDM Polymeter',
-    description: '82 BPM E♭ lydian: sparse dust, one 5/7/9 Euclidean polymeter, and long overlapping piano lights.',
+    slug: 'pastoral-morning',
+    name: 'Pastoral Morning',
+    description: '82 BPM F major: a gentle Classical answer phrase, slow-bloom harmony, and only the lightest pastoral pulse.',
     bpm: 82,
-    key: AMBIENT,
-    mix: mix(0, 68, 44, 68, 18),
-    drums: {
-      name: 'Sparse Dust', seed: 0x08200601, steps: 32, groove: 5, swing: 22, humanize: 28,
-      lanes: [[0, 13, 23], [9, 25], [2, 7, 15, 20, 28], [11, 27], [18], [5, 21], [3, 14, 30], [12, 29]],
-      presetId: 'drums-odd-v2', level: 0.31, delaySend: 12, reverbSend: 42,
-    },
+    key: key(5, 'major'),
+    mix: mix(1, 46, 18, 60, 12),
+    drums: gentleDrums('Pastoral Pulse', 0x08200301, 22),
     modules: [
-      { type: 'euclid', name: 'Five Seven Nine', seed: 0x08200604, params: { steps1: 5, hits1: 2, rotation1: 1, note1: 51, steps2: 7, hits2: 3, rotation2: 2, note2: 58, steps3: 9, hits3: 4, rotation3: 0, note3: 63, separateChannels: 0 }, presetId: 'euclid-tide-v2', level: 0.27, pan: 22, delaySend: 38, reverbSend: 58 },
+      { type: 'chords', name: 'Meadow Harmony', seed: 0x08200302, params: { length: 4, quality: 0, duration: 20, strum: 24 }, presetId: 'chords-pad-v2', level: 0.18, pan: -14, reverbSend: 52 },
     ],
     piano: {
-      name: 'Overlapping Lights', seed: 0x08200606, length: 64,
-      events: [
-        note(0, pitch(AMBIENT, 0, 3), 22, 62), note(5.25, pitch(AMBIENT, 4, 3), 18, 48), note(12.5, pitch(AMBIENT, 2, 4), 25, 57),
-        note(21.75, pitch(AMBIENT, 6, 3), 20, 43), note(31, pitch(AMBIENT, 3, 4), 26, 66), note(40.25, pitch(AMBIENT, 1, 4), 18, 51),
-        note(49.5, pitch(AMBIENT, 5, 4), 14, 59), note(57.25, pitch(AMBIENT, 0, 5), 10, 46),
-      ],
-      presetId: 'piano-tremolo-v2', level: 0.38, pan: -6, delaySend: 44, reverbSend: 68,
+      name: 'Morning Answer', seed: 0x08200305, melodyId: 'gentle-answer',
+      presetId: 'piano-soft-v2', level: 0.5, pan: 8, delaySend: 12, reverbSend: 44,
     },
   },
   {
-    slug: 'electro-funk-machine',
-    name: 'Electro Funk Machine',
-    description: '126 BPM E blues: a compact syncopated machine beat, scorched acid snap, and staccato low-register riff.',
+    slug: 'quiet-canon',
+    name: 'Quiet Canon',
+    description: '88 BPM C major: an original sequential canon idea shared between a warm Piano theme and a restrained dew-pluck echo.',
+    bpm: 88,
+    key: key(0, 'major'),
+    mix: mix(2, 58, 28, 64, 14),
+    modules: [
+      { type: 'arp', name: 'Canon Echo', seed: 0x08800402, params: { direction: 2, rate: 0, span: 1, gate: 84, followChords: 0, octave: 3 }, presetId: 'arp-soft-v2', level: 0.14, pan: -22, delaySend: 30, reverbSend: 48 },
+    ],
+    piano: {
+      name: 'Canon Theme', seed: 0x08800405, melodyId: 'sequence-bloom',
+      presetId: 'piano-core-v2', level: 0.51, pan: 8, delaySend: 18, reverbSend: 46,
+    },
+  },
+  {
+    slug: 'water-garden',
+    name: 'Water Garden',
+    description: '74 BPM D♭ lydian: an Impressionist color weave for shimmering Piano with one slow, irregular tide underneath.',
+    bpm: 74,
+    key: key(1, 'lydian'),
+    mix: mix(0, 72, 40, 78, 8),
+    modules: [
+      { type: 'euclid', name: 'Garden Tide', seed: 0x07400502, params: { steps1: 7, hits1: 2, rotation1: 1, note1: 49, steps2: 9, hits2: 3, rotation2: 4, note2: 56, steps3: 11, hits3: 3, rotation3: 2, note3: 63, separateChannels: 0 }, presetId: 'euclid-tide-v2', level: 0.14, pan: -16, delaySend: 36, reverbSend: 68 },
+    ],
+    piano: {
+      name: 'Reflected Colors', seed: 0x07400505, melodyId: 'color-weave',
+      presetId: 'piano-bell-v2', level: 0.47, pan: 12, delaySend: 34, reverbSend: 68,
+    },
+  },
+  {
+    slug: 'velvet-sarabande',
+    name: 'Velvet Sarabande',
+    description: '62 BPM G minor: a stately Baroque-style arch with soft Piano accents and a single velvet chordal shadow.',
+    bpm: 62,
+    key: key(7, 'minor'),
+    mix: mix(1, 54, 18, 70, 10),
+    modules: [
+      { type: 'chords', name: 'Sarabande Shadow', seed: 0x06200602, params: { length: 3, quality: 1, duration: 24, strum: 32 }, presetId: 'chords-core-v2', level: 0.17, pan: -12, reverbSend: 56 },
+    ],
+    piano: {
+      name: 'Sarabande Arch', seed: 0x06200605, melodyId: 'balanced-arch',
+      presetId: 'piano-soft-v2', level: 0.53, pan: 9, delaySend: 12, reverbSend: 54,
+    },
+  },
+  {
+    slug: 'winter-largo',
+    name: 'Winter Largo',
+    description: '56 BPM E minor: a Piano-only slow movement that leaves velocity, accents, note length, and space fully exposed.',
+    bpm: 56,
+    key: key(4, 'minor'),
+    mix: mix(0, 64, 24, 76, 6),
+    modules: [],
+    piano: {
+      name: 'Frozen Beacon', seed: 0x05600705, melodyId: 'steady-beacon',
+      presetId: 'piano-dark-v2', level: 0.58, pan: 0, delaySend: 18, reverbSend: 70,
+    },
+  },
+  {
+    slug: 'classical-allegretto',
+    name: 'Classical Allegretto',
+    description: '112 BPM B♭ major: a bright Classical turnaround carried by articulate Piano, light bass, and a courteous chamber pulse.',
+    bpm: 112,
+    key: key(10, 'major'),
+    mix: mix(2, 42, 14, 44, 18),
+    drums: gentleDrums('Chamber Pulse', 0x11200801, 12),
+    modules: [
+      { type: 'bass', name: 'Cello Line', seed: 0x11200802, params: { style: 0, steps: 16, range: 1, density: 26, drive: 0, octave: 2, gate: 78 }, presetId: 'bass-clean-v2', level: 0.23, pan: -6 },
+    ],
+    piano: {
+      name: 'Allegretto Turn', seed: 0x11200805, melodyId: 'turnaround-hook',
+      presetId: 'piano-bright-v2', level: 0.49, pan: 8, delaySend: 10, reverbSend: 30,
+    },
+  },
+  {
+    slug: 'clockwork-minuet',
+    name: 'Clockwork Minuet',
+    description: '104 BPM A minor: an offbeat Classical ladder with tiny clockwork percussion and a muted Euclidean counter-rhythm.',
+    bpm: 104,
+    key: key(9, 'minor'),
+    mix: mix(3, 46, 18, 48, 16),
+    drums: gentleDrums('Clockwork Taps', 0x10400901, 18, 'drums-odd-v2'),
+    modules: [
+      { type: 'euclid', name: 'Minuet Wheels', seed: 0x10400902, params: { steps1: 6, hits1: 2, rotation1: 1, note1: 45, steps2: 8, hits2: 3, rotation2: 2, note2: 52, steps3: 12, hits3: 3, rotation3: 5, note3: 57, separateChannels: 0 }, presetId: 'euclid-cairn-v2', level: 0.13, pan: -12, reverbSend: 38 },
+    ],
+    piano: {
+      name: 'Minuet Ladder', seed: 0x10400905, melodyId: 'offbeat-ladder',
+      presetId: 'piano-muted-v2', level: 0.51, pan: 10, delaySend: 14, reverbSend: 36,
+    },
+  },
+  {
+    slug: 'romantic-waltz-glow',
+    name: 'Romantic Waltz Glow',
+    description: '78 BPM E♭ major: a long three-part Romantic arc, glowing Piano dynamics, and one wide halo of harmony.',
+    bpm: 78,
+    key: key(3, 'major'),
+    mix: mix(1, 62, 24, 72, 12),
+    modules: [
+      { type: 'chords', name: 'Waltz Halo', seed: 0x07801002, params: { length: 3, quality: 1, duration: 20, strum: 46 }, presetId: 'chords-wide-v2', level: 0.18, pan: -10, reverbSend: 64 },
+    ],
+    piano: {
+      name: 'Three-Part Glow', seed: 0x07801005, melodyId: 'three-part-arc',
+      presetId: 'piano-tremolo-v2', level: 0.5, pan: 9, delaySend: 22, reverbSend: 60,
+    },
+  },
+  {
+    slug: 'gentle-fugue-pulse',
+    name: 'Gentle Fugue Pulse',
+    description: '100 BPM D minor: a developing contrapuntal motif, a low answering arpeggio, and a sparse modern pulse.',
+    bpm: 100,
+    key: key(2, 'minor'),
+    mix: mix(2, 56, 24, 54, 16),
+    drums: gentleDrums('Fugue Pulse', 0x10001101, 20),
+    modules: [
+      { type: 'arp', name: 'Lower Answer', seed: 0x10001102, params: { direction: 1, rate: 1, span: 1, gate: 76, followChords: 0, octave: 2 }, presetId: 'arp-dark-v2', level: 0.15, pan: -20, delaySend: 20, reverbSend: 42 },
+    ],
+    piano: {
+      name: 'Developing Subject', seed: 0x10001105, melodyId: 'motif-development',
+      presetId: 'piano-core-v2', level: 0.5, pan: 10, delaySend: 16, reverbSend: 44,
+    },
+  },
+  {
+    slug: 'dreaming-etude',
+    name: 'Dreaming Étude',
+    description: '70 BPM B minor: a Piano-only wide-interval étude designed to reveal the new 64-step phrasing and dynamic lane.',
+    bpm: 70,
+    key: key(11, 'minor'),
+    mix: mix(0, 70, 30, 78, 8),
+    modules: [],
+    piano: {
+      name: 'Wide-Interval Étude', seed: 0x07001205, melodyId: 'wide-interval-study',
+      presetId: 'piano-soft-v2', level: 0.57, pan: 0, delaySend: 20, reverbSend: 68,
+    },
+  },
+  {
+    slug: 'sweet-electro-invention',
+    name: 'Sweet Electro Invention',
+    description: '118 BPM E minor: a friendly electronic chamber piece with syncopated Piano sparkle, soft pixels, and a featherweight beat.',
+    bpm: 118,
+    key: key(4, 'minor'),
+    mix: mix(3, 42, 16, 42, 22),
+    drums: {
+      ...gentleDrums('Soft Voltage', 0x11801301, 24, 'drums-electro-v2'),
+      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), repeat16([2, 6, 10, 14]), repeat16([6, 14]), [], [], repeat16([7]), [31]],
+      level: 0.31,
+    },
+    modules: [
+      { type: 'arp', name: 'Sugar Pixels', seed: 0x11801302, params: { direction: 2, rate: 1, span: 1, gate: 64, followChords: 0, octave: 4 }, presetId: 'arp-pixel-v2', level: 0.16, pan: -16, delaySend: 24, reverbSend: 34 },
+    ],
+    piano: {
+      name: 'Electric Spark', seed: 0x11801305, melodyId: 'syncopated-spark',
+      presetId: 'piano-tine-v2', level: 0.48, pan: 10, delaySend: 18, reverbSend: 34,
+    },
+  },
+  {
+    slug: 'ambient-pulse-canon',
+    name: 'Ambient Pulse Canon',
+    description: '108 BPM A dorian: a sweet octave dialogue for Piano, clear low strings, and an understated electronic heartbeat.',
+    bpm: 108,
+    key: key(9, 'dorian'),
+    mix: mix(2, 50, 20, 56, 18),
+    drums: gentleDrums('Quiet Heartbeat', 0x10801401, 26, 'drums-electro-v2'),
+    modules: [
+      { type: 'bass', name: 'Low String', seed: 0x10801402, params: { style: 4, steps: 32, range: 1, density: 20, drive: 0, octave: 2, gate: 86 }, presetId: 'bass-clean-v2', level: 0.2, pan: -5, reverbSend: 14 },
+    ],
+    piano: {
+      name: 'Octave Dialogue', seed: 0x10801405, melodyId: 'octave-conversation',
+      presetId: 'piano-bell-v2', level: 0.49, pan: 10, delaySend: 24, reverbSend: 46,
+    },
+  },
+  {
+    slug: 'luminous-rondo',
+    name: 'Luminous Rondo',
+    description: '126 BPM C mixolydian: a graceful electronic rondo with a long Piano journey, soft keys, and a warm dance-floor pulse.',
     bpm: 126,
-    key: ELECTRO,
-    mix: mix(4, 40, 18, 12, 58),
+    key: key(0, 'mixolydian'),
+    mix: mix(2, 40, 14, 40, 24),
     drums: {
-      name: 'Voltage Funk', seed: 0x12600701, steps: 32, groove: 3, swing: 16, humanize: 8,
-      lanes: [repeat16([0, 3, 7, 10, 14]), repeat16([4, 12]), repeat16([0, 2, 5, 8, 10, 13]), repeat16([6, 14]), repeat16([4, 11]), repeat16([2, 10]), repeat16([3, 9, 15]), [14, 15, 30, 31]],
-      presetId: 'drums-electro-v2', level: 0.76, reverbSend: 6,
+      ...gentleDrums('Rondo Pulse', 0x12601501, 28, 'drums-latin-v2'),
+      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), repeat16([2, 6, 10, 14]), repeat16([2, 10]), repeat16([12]), [], repeat16([7]), [31]],
+      level: 0.34,
     },
     modules: [
-      { type: 'acid', name: 'Bar-One Snap', seed: 0x12600703, params: { fill: 42, steps: 16, range: 2, decay: 22 }, presetId: 'acid-driven-v2', level: 0.36, pan: -15, delaySend: 10 },
+      { type: 'chords', name: 'Luminous Keys', seed: 0x12601502, params: { length: 4, quality: 1, duration: 12, strum: 20 }, presetId: 'chords-keys-v2', level: 0.19, pan: -12, reverbSend: 30 },
     ],
     piano: {
-      name: 'Staccato Voltage', seed: 0x12600705, length: 32,
-      events: [0, 3, 6, 10, 12, 15, 19, 22, 26, 27, 30].map((start, index) => note(start, [pitch(ELECTRO, 0, 2), pitch(ELECTRO, 2, 2), pitch(ELECTRO, 3, 2), pitch(ELECTRO, 5, 2)][index % 4]!, 0.38, index % 4 === 0 ? 122 : 92, { accent: index % 4 === 0 })),
-      presetId: 'piano-muted-v2', level: 0.35, pan: 9, delaySend: 12,
-    },
-  },
-  {
-    slug: 'hardstyle-overdrive',
-    name: 'Hardstyle Overdrive',
-    description: '156 BPM F harmonic minor: a direct zero-swing kick grid, driven octave bass, and one fast minor-key charge.',
-    bpm: 156,
-    key: HARDSTYLE,
-    mix: mix(4, 32, 12, 24, 82),
-    drums: {
-      name: 'Hard Kick Grid', seed: 0x15600801, steps: 32, groove: 3, swing: 0, humanize: 0,
-      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), Array.from({ length: 32 }, (_, step) => step), repeat16([2, 6, 10, 14]), repeat16([4, 12]), repeat16([3, 7, 11, 15]), repeat16([1, 5, 9, 13]), [12, 13, 14, 15, 28, 29, 30, 31]],
-      presetId: 'drums-electro-v2', level: 0.82, reverbSend: 8,
-    },
-    modules: [
-      { type: 'bass', name: 'Clipped Octaves', seed: 0x15600802, params: { style: 5, steps: 32, range: 3, density: 76, drive: 88, octave: 2, gate: 42 }, presetId: 'bass-driven-v2', level: 0.56 },
-    ],
-    piano: {
-      name: 'Minor Octave Charge', seed: 0x15600806, length: 32,
-      events: sequence([pitch(HARDSTYLE, 0, 4), pitch(HARDSTYLE, 2, 4), pitch(HARDSTYLE, 4, 5), pitch(HARDSTYLE, 6, 4), pitch(HARDSTYLE, 5, 5), pitch(HARDSTYLE, 4, 4), pitch(HARDSTYLE, 2, 5), pitch(HARDSTYLE, 1, 4)], 32, 1, 0.54, [118, 96, 110, 92]),
-      presetId: 'piano-bright-v2', level: 0.31, pan: 10, delaySend: 24, reverbSend: 20,
-    },
-  },
-  {
-    slug: 'jungle-drum-and-bass',
-    name: 'Jungle Drum & Bass',
-    description: '174 BPM D minor: a focused hand-shaped breakbeat, rolling Reese bass, and one shifting melodic hook.',
-    bpm: 174,
-    key: DNB,
-    mix: mix(4, 48, 22, 16, 66),
-    drums: {
-      name: 'Jungle Break', seed: 0x17400901, steps: 32, groove: 1, swing: 12, humanize: 14,
-      lanes: [[0, 10, 16, 19, 26], [4, 12, 20, 28, 31], [0, 2, 5, 7, 8, 11, 14, 16, 18, 21, 23, 24, 27, 30], [6, 15, 22, 31], [12, 28], [9, 25], [3, 13, 19, 29], [7, 14, 23, 30]],
-      presetId: 'drums-broken-v2', level: 0.78, reverbSend: 7,
-    },
-    modules: [
-      { type: 'bass', name: 'Rolling Reese', seed: 0x17400902, params: { style: 3, steps: 32, range: 2, density: 62, drive: 56, octave: 1, gate: 78 }, presetId: 'bass-animated-v2', level: 0.6 },
-    ],
-    piano: {
-      name: 'Shifting Hook', seed: 0x17400905, length: 32,
-      events: [0, 2, 3, 6, 8, 11, 14, 15, 18, 20, 23, 24, 27, 29, 30].map((start, index) => note(start, [pitch(DNB, 0, 4), pitch(DNB, 4, 4), pitch(DNB, 2, 5), pitch(DNB, 6, 4), pitch(DNB, 3, 5)][index % 5]!, index % 3 === 0 ? 1.2 : 0.56, index % 4 === 0 ? 114 : 86)),
-      presetId: 'piano-tine-v2', level: 0.3, pan: 10, delaySend: 26, reverbSend: 14,
-    },
-  },
-  {
-    slug: 'nu-disco-night-drive',
-    name: 'Nu-Disco Night Drive',
-    description: '120 BPM G mixolydian: a light live-feel disco groove, fluid octave bass, and swung seventh-chord picking.',
-    bpm: 120,
-    key: DISCO,
-    mix: mix(5, 42, 20, 24, 38),
-    drums: {
-      name: 'Live Disco Kit', seed: 0x12001001, steps: 32, groove: 0, swing: 46, humanize: 18,
-      lanes: [repeat16([0, 4, 8, 12]), repeat16([4, 12]), repeat16([0, 2, 4, 6, 8, 10, 12, 14]), repeat16([2, 6, 10, 14]), repeat16([4, 12]), repeat16([7, 15]), repeat16([3, 11]), [14, 15, 30, 31]],
-      presetId: 'drums-latin-v2', level: 0.69, reverbSend: 14,
-    },
-    modules: [
-      { type: 'bass', name: 'Octave Glide', seed: 0x12001002, params: { style: 1, steps: 32, range: 2, density: 62, drive: 20, octave: 2, gate: 54 }, presetId: 'bass-pluck-v2', level: 0.55 },
-    ],
-    piano: {
-      name: 'Swing Pick', seed: 0x12001005, length: 32,
-      events: Array.from({ length: 16 }, (_, index) => {
-        const degree = [0, 0, 3, 4][Math.floor(index / 4) % 4]!;
-        const tones = chord(DISCO, degree, 3, 'seventh');
-        const start = index * 2 + (index % 2 === 1 ? 0.28 : 0);
-        return note(start, tones[index % tones.length]!, 1.15, index % 4 === 0 ? 112 : 88);
-      }),
-      presetId: 'piano-tine-v2', level: 0.42, pan: 8, delaySend: 18, reverbSend: 14,
+      name: 'Rondo Journey', seed: 0x12601505, melodyId: 'longform-journey',
+      presetId: 'piano-bright-v2', level: 0.47, pan: 9, delaySend: 16, reverbSend: 32,
     },
   },
 ];
+
+for (const file of retiredDemoFiles) rmSync(resolve(OUTPUT_DIR, file), { force: true });
 
 for (const demo of demos) {
   const project = buildProject(demo);
   writeFileSync(resolve(OUTPUT_DIR, `${demo.slug}.sequens-r.json`), projectToJson(project), 'utf8');
 }
 
-const legacyProjects = [
-  {
-    name: 'Basic Electro',
-    file: 'basic-electro.sequens-r.json',
-    description: 'A 110 BPM C minor demo with Drums and Arp modules.',
-  },
-  {
-    name: 'Basic Electro 2',
-    file: 'basic-electro2.sequens-r.json',
-    description: 'A 110 BPM C minor demo featuring Mixer, Bass, Drums, and Arp modules.',
-  },
-] as const;
-
 writeFileSync(resolve(OUTPUT_DIR, 'index.json'), `${JSON.stringify({
-  projects: [
-    ...demos.map(({ name, slug, description }) => ({ name, file: `${slug}.sequens-r.json`, description })),
-    ...legacyProjects,
-  ],
+  projects: demos.map(({ name, slug, description }) => ({ name, file: `${slug}.sequens-r.json`, description })),
 }, null, 2)}\n`, 'utf8');
 
 console.log(`Generated ${demos.length} demo projects in ${OUTPUT_DIR}.`);

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { projectFromJson } from '../../src/lib/project/model';
 
-describe('bundled example projects', () => {
+describe('legacy project fixtures', () => {
   it('imports Basic Electro through the production project boundary', () => {
     const source = readFileSync(new URL('../../public/projects/basic-electro.sequens-r.json', import.meta.url), 'utf8');
     const project = projectFromJson(source);
@@ -26,24 +26,32 @@ describe('bundled example projects', () => {
     expect(modules?.every(({ sound }) => sound.engineVersion === 2)).toBe(true);
   });
 
-  it('imports the ten genre demos with editable patterns, scenes, and released sounds', () => {
+});
+
+describe('bundled Piano showcase projects', () => {
+  it('imports all fifteen minimal demos with expressive Piano patterns, scenes, and released sounds', () => {
     const expectedFiles = [
-      'detroit-minimal-techno.sequens-r.json',
-      'deep-tech-house.sequens-r.json',
-      'euphoric-trance.sequens-r.json',
-      'neon-synthwave.sequens-r.json',
-      'halftime-dubstep-trap.sequens-r.json',
-      'ambient-idm-polymeter.sequens-r.json',
-      'electro-funk-machine.sequens-r.json',
-      'hardstyle-overdrive.sequens-r.json',
-      'jungle-drum-and-bass.sequens-r.json',
-      'nu-disco-night-drive.sequens-r.json',
+      'glass-invention.sequens-r.json',
+      'moonlit-nocturne.sequens-r.json',
+      'pastoral-morning.sequens-r.json',
+      'quiet-canon.sequens-r.json',
+      'water-garden.sequens-r.json',
+      'velvet-sarabande.sequens-r.json',
+      'winter-largo.sequens-r.json',
+      'classical-allegretto.sequens-r.json',
+      'clockwork-minuet.sequens-r.json',
+      'romantic-waltz-glow.sequens-r.json',
+      'gentle-fugue-pulse.sequens-r.json',
+      'dreaming-etude.sequens-r.json',
+      'sweet-electro-invention.sequens-r.json',
+      'ambient-pulse-canon.sequens-r.json',
+      'luminous-rondo.sequens-r.json',
     ];
     const index = JSON.parse(readFileSync(new URL('../../public/projects/index.json', import.meta.url), 'utf8')) as {
       projects: { file: string }[];
     };
 
-    expect(index.projects.slice(0, 10).map(({ file }) => file)).toEqual(expectedFiles);
+    expect(index.projects.map(({ file }) => file)).toEqual(expectedFiles);
     for (const file of expectedFiles) {
       const source = readFileSync(new URL(`../../public/projects/${file}`, import.meta.url), 'utf8');
       const project = projectFromJson(source);
@@ -52,12 +60,18 @@ describe('bundled example projects', () => {
       const moduleIds = new Set(rack.modules.map(({ id }) => id));
 
       expect(project.schemaVersion).toBe(5);
-      expect(project.scenes.map(({ name }) => name)).toEqual(['Intro', 'Main', 'Variation', 'Peak']);
+      const pianoEvents = piano?.slots[0]?.pattern?.events ?? [];
+
+      expect(project.scenes.map(({ name }) => name)).toEqual(['Prelude', 'Theme', 'Variation', 'Finale']);
+      expect(rack.bpm).toBeLessThanOrEqual(130);
       expect(rack.modules.length).toBeLessThanOrEqual(3);
       expect(rack.modules.every(({ slots }) => slots.length === 8)).toBe(true);
       expect(rack.modules.every(({ sound }) => sound.engineVersion === 2)).toBe(true);
       expect(rack.modules.some(({ type }) => type === 'mixer')).toBe(false);
       expect(piano?.slots.every(({ handEdited, pattern }) => handEdited && pattern !== null)).toBe(true);
+      expect(new Set(pianoEvents.map(({ velocity }) => velocity)).size).toBeGreaterThan(1);
+      expect(pianoEvents.some(({ accent, velocity }) => accent === true && velocity >= 112)).toBe(true);
+      expect(pianoEvents.every(({ pitch }) => pitch >= 36 && pitch <= 83)).toBe(true);
       expect(project.scenes.every(({ assignments }) => Object.keys(assignments).every((id) => moduleIds.has(id)))).toBe(true);
     }
   });

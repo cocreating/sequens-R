@@ -1,64 +1,79 @@
 {
   "projects": [
     {
-      "name": "Detroit Minimal Techno",
-      "file": "detroit-minimal-techno.sequens-r.json",
-      "description": "132 BPM F♯ minor: a minimal locked drum grid, micro-timed mono pulse, and one resonant acid line."
+      "name": "Glass Invention",
+      "file": "glass-invention.sequens-r.json",
+      "description": "96 BPM D dorian: an original Baroque-style broken-triad study for expressive Piano and a quiet answering arpeggio."
     },
     {
-      "name": "Deep Tech House",
-      "file": "deep-tech-house.sequens-r.json",
-      "description": "125 BPM A minor: a spare swung four-on-the-floor, deep pocket bass, and upbeat minor-7 piano stabs."
+      "name": "Moonlit Nocturne",
+      "file": "moonlit-nocturne.sequens-r.json",
+      "description": "66 BPM C♯ minor: a Romantic-style two-bar question with felt Piano dynamics over one slow dark harmony bed."
     },
     {
-      "name": "Euphoric Trance",
-      "file": "euphoric-trance.sequens-r.json",
-      "description": "142 BPM D harmonic minor: a lean driving rhythm, high triad run, and one three-octave crystal arp."
+      "name": "Pastoral Morning",
+      "file": "pastoral-morning.sequens-r.json",
+      "description": "82 BPM F major: a gentle Classical answer phrase, slow-bloom harmony, and only the lightest pastoral pulse."
     },
     {
-      "name": "Neon Synthwave",
-      "file": "neon-synthwave.sequens-r.json",
-      "description": "108 BPM E minor: a minimal gated drum machine, root–fifth–octave pulse, and simple eighth-note arp."
+      "name": "Quiet Canon",
+      "file": "quiet-canon.sequens-r.json",
+      "description": "88 BPM C major: an original sequential canon idea shared between a warm Piano theme and a restrained dew-pluck echo."
     },
     {
-      "name": "Halftime Dubstep Trap",
-      "file": "halftime-dubstep-trap.sequens-r.json",
-      "description": "150 BPM C phrygian: a stripped half-time groove, sparse sub pressure, and short fractured top-line bursts."
+      "name": "Water Garden",
+      "file": "water-garden.sequens-r.json",
+      "description": "74 BPM D♭ lydian: an Impressionist color weave for shimmering Piano with one slow, irregular tide underneath."
     },
     {
-      "name": "Ambient IDM Polymeter",
-      "file": "ambient-idm-polymeter.sequens-r.json",
-      "description": "82 BPM E♭ lydian: sparse dust, one 5/7/9 Euclidean polymeter, and long overlapping piano lights."
+      "name": "Velvet Sarabande",
+      "file": "velvet-sarabande.sequens-r.json",
+      "description": "62 BPM G minor: a stately Baroque-style arch with soft Piano accents and a single velvet chordal shadow."
     },
     {
-      "name": "Electro Funk Machine",
-      "file": "electro-funk-machine.sequens-r.json",
-      "description": "126 BPM E blues: a compact syncopated machine beat, scorched acid snap, and staccato low-register riff."
+      "name": "Winter Largo",
+      "file": "winter-largo.sequens-r.json",
+      "description": "56 BPM E minor: a Piano-only slow movement that leaves velocity, accents, note length, and space fully exposed."
     },
     {
-      "name": "Hardstyle Overdrive",
-      "file": "hardstyle-overdrive.sequens-r.json",
-      "description": "156 BPM F harmonic minor: a direct zero-swing kick grid, driven octave bass, and one fast minor-key charge."
+      "name": "Classical Allegretto",
+      "file": "classical-allegretto.sequens-r.json",
+      "description": "112 BPM B♭ major: a bright Classical turnaround carried by articulate Piano, light bass, and a courteous chamber pulse."
     },
     {
-      "name": "Jungle Drum & Bass",
-      "file": "jungle-drum-and-bass.sequens-r.json",
-      "description": "174 BPM D minor: a focused hand-shaped breakbeat, rolling Reese bass, and one shifting melodic hook."
+      "name": "Clockwork Minuet",
+      "file": "clockwork-minuet.sequens-r.json",
+      "description": "104 BPM A minor: an offbeat Classical ladder with tiny clockwork percussion and a muted Euclidean counter-rhythm."
     },
     {
-      "name": "Nu-Disco Night Drive",
-      "file": "nu-disco-night-drive.sequens-r.json",
-      "description": "120 BPM G mixolydian: a light live-feel disco groove, fluid octave bass, and swung seventh-chord picking."
+      "name": "Romantic Waltz Glow",
+      "file": "romantic-waltz-glow.sequens-r.json",
+      "description": "78 BPM E♭ major: a long three-part Romantic arc, glowing Piano dynamics, and one wide halo of harmony."
     },
     {
-      "name": "Basic Electro",
-      "file": "basic-electro.sequens-r.json",
-      "description": "A 110 BPM C minor demo with Drums and Arp modules."
+      "name": "Gentle Fugue Pulse",
+      "file": "gentle-fugue-pulse.sequens-r.json",
+      "description": "100 BPM D minor: a developing contrapuntal motif, a low answering arpeggio, and a sparse modern pulse."
     },
     {
-      "name": "Basic Electro 2",
-      "file": "basic-electro2.sequens-r.json",
-      "description": "A 110 BPM C minor demo featuring Mixer, Bass, Drums, and Arp modules."
+      "name": "Dreaming Étude",
+      "file": "dreaming-etude.sequens-r.json",
+      "description": "70 BPM B minor: a Piano-only wide-interval étude designed to reveal the new 64-step phrasing and dynamic lane."
+    },
+    {
+      "name": "Sweet Electro Invention",
+      "file": "sweet-electro-invention.sequens-r.json",
+      "description": "118 BPM E minor: a friendly electronic chamber piece with syncopated Piano sparkle, soft pixels, and a featherweight beat."
+    },
+    {
+      "name": "Ambient Pulse Canon",
+      "file": "ambient-pulse-canon.sequens-r.json",
+      "description": "108 BPM A dorian: a sweet octave dialogue for Piano, clear low strings, and an understated electronic heartbeat."
+    },
+    {
+      "name": "Luminous Rondo",
+      "file": "luminous-rondo.sequens-r.json",
+      "description": "126 BPM C mixolydian: a graceful electronic rondo with a long Piano journey, soft keys, and a warm dance-floor pulse."
     }
   ]
 }

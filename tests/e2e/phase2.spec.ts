@@ -35,12 +35,13 @@ test('lists and loads a bundled demo project', async ({ page }) => {
   await expect(page.locator('.import-project')).toBeVisible();
   await page.getByRole('button', { name: 'Demos projects' }).click();
   await expect(page.getByRole('heading', { name: 'Demos projects' })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Basic Electro 2/u })).toBeVisible();
-  await page.locator('.demo-projects-list button').filter({ has: page.getByText('Basic Electro', { exact: true }) }).click();
-  await expect(page.getByText('Basic Electro demo loaded and saved locally')).toBeVisible();
-  await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Basic Electro');
-  await expect(page.getByRole('listitem', { name: 'Drums' })).toBeVisible();
-  await expect(page.getByRole('listitem', { name: 'Arp' })).toBeVisible();
+  await expect(page.locator('.demo-projects-list button')).toHaveCount(15);
+  await expect(page.getByRole('button', { name: /Dreaming Étude/u })).toBeVisible();
+  await page.locator('.demo-projects-list button').filter({ has: page.getByText('Glass Invention', { exact: true }) }).click();
+  await expect(page.getByText('Glass Invention demo loaded and saved locally')).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Glass Invention');
+  await expect(page.getByRole('listitem', { name: 'Answering Thread' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Invention Voice' })).toBeVisible();
 });
 
 test('slots, editable seeds, mutate, and revert stay deterministic', async ({ page }) => {

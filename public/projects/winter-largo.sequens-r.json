@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 5,
+  "id": "demo-project-winter-largo",
+  "name": "Winter Largo",
+  "racks": [
+    {
+      "id": "rack-winter-largo",
+      "name": "Winter Largo Rack",
+      "state": {
+        "bpm": 56,
+        "key": {
+          "root": 4,
+          "scale": "minor"
+        },
+        "modules": [
+          {
+            "id": "piano-winter-largo-1",
+            "type": "piano",
+            "name": "Frozen Beacon",
+            "color": "indigo",
+            "seed": 835025442,
+            "params": {
+              "length": 0,
+              "inKey": 1
+            },
+            "slots": [
+              {
+                "seed": 835025442,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3,
+                      "pitch": 52,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 851803061,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 3,
+                      "pitch": 52,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 90
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 801470204,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3.5999999999999996,
+                      "pitch": 52,
+                      "velocity": 92,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 3.5999999999999996,
+                      "pitch": 59,
+                      "velocity": 70
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 818247823,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3,
+                      "pitch": 52,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3,
+                      "pitch": 64,
+                      "velocity": 94,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 3,
+                      "pitch": 67,
+                      "velocity": 64
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 767914966,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 4.35,
+                      "pitch": 52,
+                      "velocity": 84,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 4.35,
+                      "pitch": 55,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 4.35,
+                      "pitch": 59,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 4.35,
+                      "pitch": 55,
+                      "velocity": 54
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 784692585,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3,
+                      "pitch": 64,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 734359728,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 3,
+                      "pitch": 52,
+                      "velocity": 112,
+                      "accent": true
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 751137347,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 3,
+                      "pitch": 52,
+                      "velocity": 124,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 4.12,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 86
+                    },
+                    {
+                      "startStep": 12.12,
+                      "durationSteps": 3,
+                      "pitch": 55,
+                      "velocity": 78
+                    }
+                  ]
+                }
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": false,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.58,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "piano-dark-v2",
+              "params": {
+                "tone": 14,
+                "bell": 12,
+                "decay": 82,
+                "tremolo": 22
+              },
+              "pan": 0,
+              "delaySend": 18,
+              "reverbSend": 70
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 0,
+          "delayFeedback": 64,
+          "delayReturn": 24,
+          "reverbReturn": 76,
+          "masterCharacter": 6
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-winter-largo",
+  "scenes": [
+    {
+      "id": "scene-winter-largo-prelude",
+      "name": "Prelude",
+      "assignments": {
+        "piano-winter-largo-1": 4
+      }
+    },
+    {
+      "id": "scene-winter-largo-theme",
+      "name": "Theme",
+      "assignments": {
+        "piano-winter-largo-1": 0
+      }
+    },
+    {
+      "id": "scene-winter-largo-variation",
+      "name": "Variation",
+      "assignments": {
+        "piano-winter-largo-1": 1
+      }
+    },
+    {
+      "id": "scene-winter-largo-finale",
+      "name": "Finale",
+      "assignments": {
+        "piano-winter-largo-1": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Winter Largo",
+    "demo": true
+  },
+  "createdAt": 1787911200000,
+  "updatedAt": 1787911200000
+}

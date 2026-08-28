@@ -1,0 +1,692 @@
+{
+  "schemaVersion": 5,
+  "id": "demo-project-velvet-sarabande",
+  "name": "Velvet Sarabande",
+  "racks": [
+    {
+      "id": "rack-velvet-sarabande",
+      "name": "Velvet Sarabande Rack",
+      "state": {
+        "bpm": 62,
+        "key": {
+          "root": 7,
+          "scale": "minor"
+        },
+        "modules": [
+          {
+            "id": "chords-velvet-sarabande-1",
+            "type": "chords",
+            "name": "Sarabande Shadow",
+            "color": "plum",
+            "seed": 1897703530,
+            "params": {
+              "length": 3,
+              "quality": 1,
+              "duration": 24,
+              "strum": 32
+            },
+            "slots": [
+              {
+                "seed": 1897703530,
+                "params": {
+                  "length": 3,
+                  "quality": 1,
+                  "duration": 24,
+                  "strum": 32
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1914481149,
+                "params": {
+                  "length": 3,
+                  "quality": 1,
+                  "duration": 24,
+                  "strum": 50
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1864148292,
+                "params": {
+                  "length": 3,
+                  "quality": 1,
+                  "duration": 24,
+                  "strum": 70
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1880925911,
+                "params": {
+                  "length": 3,
+                  "quality": 2,
+                  "duration": 24,
+                  "strum": 24
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1830593054,
+                "params": {
+                  "length": 3,
+                  "quality": 1,
+                  "duration": 24,
+                  "strum": 32
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1847370673,
+                "params": {
+                  "length": 3,
+                  "quality": 1,
+                  "duration": 24,
+                  "strum": 42
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1797037816,
+                "params": {
+                  "length": 2,
+                  "quality": 1,
+                  "duration": 24,
+                  "strum": 32
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1813815435,
+                "params": {
+                  "length": 4,
+                  "quality": 1,
+                  "duration": 24,
+                  "strum": 60
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.17,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "chords-core-v2",
+              "params": {
+                "tone": 48,
+                "attack": 28,
+                "release": 62,
+                "width": 55,
+                "chorus": 24
+              },
+              "pan": -12,
+              "delaySend": 0,
+              "reverbSend": 56
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "piano-velvet-sarabande-2",
+            "type": "piano",
+            "name": "Sarabande Arch",
+            "color": "indigo",
+            "seed": 1714171382,
+            "params": {
+              "length": 0,
+              "inKey": 1
+            },
+            "slots": [
+              {
+                "seed": 1714171382,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 2,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2,
+                      "pitch": 63,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 90
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1730949001,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 2,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 10,
+                      "durationSteps": 2,
+                      "pitch": 63,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 15,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1680616144,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2.4,
+                      "pitch": 55,
+                      "velocity": 92,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2.4,
+                      "pitch": 60,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2.4,
+                      "pitch": 60,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2.4,
+                      "pitch": 55,
+                      "velocity": 70
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1697393763,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 94,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 2,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2,
+                      "pitch": 63,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2,
+                      "pitch": 75,
+                      "velocity": 64
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 72
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1781281858,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2.9,
+                      "pitch": 55,
+                      "velocity": 84,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 2,
+                      "durationSteps": 2.9,
+                      "pitch": 57,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2.9,
+                      "pitch": 60,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2.9,
+                      "pitch": 63,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2.9,
+                      "pitch": 60,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2.9,
+                      "pitch": 57,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2.9,
+                      "pitch": 55,
+                      "velocity": 62
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1798059477,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 2,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2,
+                      "pitch": 63,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 72,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 90
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1747726620,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 3,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 6,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 12,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 63,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 1764504239,
+                "params": {
+                  "length": 0,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 16,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 124,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 2.12,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 86
+                    },
+                    {
+                      "startStep": 6.12,
+                      "durationSteps": 2,
+                      "pitch": 63,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 60,
+                      "velocity": 110
+                    },
+                    {
+                      "startStep": 11.12,
+                      "durationSteps": 2,
+                      "pitch": 57,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 86
+                    }
+                  ]
+                }
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": false,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.53,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "piano-soft-v2",
+              "params": {
+                "tone": 34,
+                "bell": 18,
+                "decay": 72,
+                "tremolo": 8
+              },
+              "pan": 9,
+              "delaySend": 12,
+              "reverbSend": 54
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 1,
+          "delayFeedback": 54,
+          "delayReturn": 18,
+          "reverbReturn": 70,
+          "masterCharacter": 10
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-velvet-sarabande",
+  "scenes": [
+    {
+      "id": "scene-velvet-sarabande-prelude",
+      "name": "Prelude",
+      "assignments": {
+        "chords-velvet-sarabande-1": 4,
+        "piano-velvet-sarabande-2": 4
+      }
+    },
+    {
+      "id": "scene-velvet-sarabande-theme",
+      "name": "Theme",
+      "assignments": {
+        "chords-velvet-sarabande-1": 0,
+        "piano-velvet-sarabande-2": 0
+      }
+    },
+    {
+      "id": "scene-velvet-sarabande-variation",
+      "name": "Variation",
+      "assignments": {
+        "chords-velvet-sarabande-1": 1,
+        "piano-velvet-sarabande-2": 1
+      }
+    },
+    {
+      "id": "scene-velvet-sarabande-finale",
+      "name": "Finale",
+      "assignments": {
+        "chords-velvet-sarabande-1": 3,
+        "piano-velvet-sarabande-2": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Velvet Sarabande",
+    "demo": true
+  },
+  "createdAt": 1787911200000,
+  "updatedAt": 1787911200000
+}

@@ -1,0 +1,1151 @@
+{
+  "schemaVersion": 5,
+  "id": "demo-project-dreaming-etude",
+  "name": "Dreaming Étude",
+  "racks": [
+    {
+      "id": "rack-dreaming-etude",
+      "name": "Dreaming Étude Rack",
+      "state": {
+        "bpm": 70,
+        "key": {
+          "root": 11,
+          "scale": "minor"
+        },
+        "modules": [
+          {
+            "id": "piano-dreaming-etude-1",
+            "type": "piano",
+            "name": "Wide-Interval Étude",
+            "color": "indigo",
+            "seed": 782054714,
+            "params": {
+              "length": 2,
+              "inKey": 1
+            },
+            "slots": [
+              {
+                "seed": 782054714,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 47,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 1.5,
+                      "pitch": 66,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 7,
+                      "durationSteps": 1,
+                      "pitch": 73,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 10,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 16,
+                      "durationSteps": 2,
+                      "pitch": 69,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 1.5,
+                      "pitch": 64,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 23,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 26,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 30,
+                      "durationSteps": 1,
+                      "pitch": 61,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 32,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 36,
+                      "durationSteps": 1.5,
+                      "pitch": 62,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 39,
+                      "durationSteps": 1,
+                      "pitch": 81,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 42,
+                      "durationSteps": 2,
+                      "pitch": 64,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 46,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 48,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 52,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 55,
+                      "durationSteps": 1,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 58,
+                      "durationSteps": 1.5,
+                      "pitch": 61,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 61,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 798832333,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 1,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2,
+                      "pitch": 47,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 1.5,
+                      "pitch": 66,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 11,
+                      "durationSteps": 1,
+                      "pitch": 73,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 18,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 2,
+                      "pitch": 69,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 24,
+                      "durationSteps": 1.5,
+                      "pitch": 64,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 27,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 30,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 34,
+                      "durationSteps": 1,
+                      "pitch": 61,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 36,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 40,
+                      "durationSteps": 1.5,
+                      "pitch": 62,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 43,
+                      "durationSteps": 1,
+                      "pitch": 81,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 46,
+                      "durationSteps": 2,
+                      "pitch": 64,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 50,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 52,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 56,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 59,
+                      "durationSteps": 1,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 62,
+                      "durationSteps": 1.5,
+                      "pitch": 61,
+                      "velocity": 90
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 748499476,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2.4,
+                      "pitch": 47,
+                      "velocity": 92,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 7,
+                      "durationSteps": 1.2,
+                      "pitch": 73,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 1.2,
+                      "pitch": 62,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 1.7999999999999998,
+                      "pitch": 64,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 26,
+                      "durationSteps": 2.4,
+                      "pitch": 66,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 32,
+                      "durationSteps": 2.4,
+                      "pitch": 55,
+                      "velocity": 92,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 39,
+                      "durationSteps": 1.2,
+                      "pitch": 81,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 46,
+                      "durationSteps": 1.2,
+                      "pitch": 71,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 52,
+                      "durationSteps": 1.2,
+                      "pitch": 62,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 58,
+                      "durationSteps": 1.7999999999999998,
+                      "pitch": 61,
+                      "velocity": 70
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 765277095,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 47,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 59,
+                      "velocity": 94,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 1.5,
+                      "pitch": 66,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 7,
+                      "durationSteps": 1,
+                      "pitch": 73,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 10,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 10,
+                      "durationSteps": 2,
+                      "pitch": 79,
+                      "velocity": 64
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 16,
+                      "durationSteps": 2,
+                      "pitch": 69,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 1.5,
+                      "pitch": 64,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 1.5,
+                      "pitch": 76,
+                      "velocity": 72
+                    },
+                    {
+                      "startStep": 23,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 26,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 30,
+                      "durationSteps": 1,
+                      "pitch": 61,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 30,
+                      "durationSteps": 1,
+                      "pitch": 73,
+                      "velocity": 64
+                    },
+                    {
+                      "startStep": 32,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 36,
+                      "durationSteps": 1.5,
+                      "pitch": 62,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 39,
+                      "durationSteps": 1,
+                      "pitch": 69,
+                      "velocity": 80
+                    },
+                    {
+                      "startStep": 39,
+                      "durationSteps": 1,
+                      "pitch": 81,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 42,
+                      "durationSteps": 2,
+                      "pitch": 64,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 46,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 48,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 48,
+                      "durationSteps": 2,
+                      "pitch": 78,
+                      "velocity": 94,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 52,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 55,
+                      "durationSteps": 1,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 58,
+                      "durationSteps": 1.5,
+                      "pitch": 61,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 58,
+                      "durationSteps": 1.5,
+                      "pitch": 73,
+                      "velocity": 72
+                    },
+                    {
+                      "startStep": 61,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 714944238,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2.9,
+                      "pitch": 47,
+                      "velocity": 84,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 2.175,
+                      "pitch": 66,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 7,
+                      "durationSteps": 1.45,
+                      "pitch": 73,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 10,
+                      "durationSteps": 2.9,
+                      "pitch": 67,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 1.45,
+                      "pitch": 62,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 16,
+                      "durationSteps": 2.9,
+                      "pitch": 69,
+                      "velocity": 84,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 2.175,
+                      "pitch": 64,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 23,
+                      "durationSteps": 1.45,
+                      "pitch": 71,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 26,
+                      "durationSteps": 2.9,
+                      "pitch": 66,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 30,
+                      "durationSteps": 1.45,
+                      "pitch": 61,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 32,
+                      "durationSteps": 2.9,
+                      "pitch": 55,
+                      "velocity": 84,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 36,
+                      "durationSteps": 2.175,
+                      "pitch": 62,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 39,
+                      "durationSteps": 1.45,
+                      "pitch": 81,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 42,
+                      "durationSteps": 2.9,
+                      "pitch": 64,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 46,
+                      "durationSteps": 1.45,
+                      "pitch": 71,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 48,
+                      "durationSteps": 2.9,
+                      "pitch": 66,
+                      "velocity": 84,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 52,
+                      "durationSteps": 1.45,
+                      "pitch": 62,
+                      "velocity": 70
+                    },
+                    {
+                      "startStep": 55,
+                      "durationSteps": 1.45,
+                      "pitch": 67,
+                      "velocity": 54
+                    },
+                    {
+                      "startStep": 58,
+                      "durationSteps": 2.175,
+                      "pitch": 61,
+                      "velocity": 62
+                    },
+                    {
+                      "startStep": 61,
+                      "durationSteps": 4.35,
+                      "pitch": 59,
+                      "velocity": 54
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 731721857,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 59,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 4,
+                      "durationSteps": 1.5,
+                      "pitch": 66,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 7,
+                      "durationSteps": 1,
+                      "pitch": 73,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 10,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 1,
+                      "pitch": 74,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 16,
+                      "durationSteps": 2,
+                      "pitch": 69,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 1.5,
+                      "pitch": 64,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 23,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 26,
+                      "durationSteps": 2,
+                      "pitch": 78,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 30,
+                      "durationSteps": 1,
+                      "pitch": 61,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 32,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 36,
+                      "durationSteps": 1.5,
+                      "pitch": 62,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 39,
+                      "durationSteps": 1,
+                      "pitch": 83,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 42,
+                      "durationSteps": 2,
+                      "pitch": 64,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 46,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 48,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 52,
+                      "durationSteps": 1,
+                      "pitch": 74,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 55,
+                      "durationSteps": 1,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 58,
+                      "durationSteps": 1.5,
+                      "pitch": 61,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 61,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 681389000,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 2,
+                      "durationSteps": 1.5,
+                      "pitch": 61,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 8,
+                      "durationSteps": 2,
+                      "pitch": 47,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 15,
+                      "durationSteps": 1,
+                      "pitch": 73,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 18,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 24,
+                      "durationSteps": 2,
+                      "pitch": 69,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 28,
+                      "durationSteps": 1.5,
+                      "pitch": 64,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 34,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 38,
+                      "durationSteps": 1,
+                      "pitch": 61,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 44,
+                      "durationSteps": 1.5,
+                      "pitch": 62,
+                      "velocity": 82
+                    },
+                    {
+                      "startStep": 47,
+                      "durationSteps": 1,
+                      "pitch": 81,
+                      "velocity": 98
+                    },
+                    {
+                      "startStep": 54,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 90
+                    },
+                    {
+                      "startStep": 56,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 112,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 63,
+                      "durationSteps": 1,
+                      "pitch": 67,
+                      "velocity": 82
+                    }
+                  ]
+                }
+              },
+              {
+                "seed": 698166619,
+                "params": {
+                  "length": 2,
+                  "inKey": 1
+                },
+                "handEdited": true,
+                "pattern": {
+                  "lengthSteps": 64,
+                  "stepsPerBeat": 4,
+                  "events": [
+                    {
+                      "startStep": 0,
+                      "durationSteps": 2,
+                      "pitch": 47,
+                      "velocity": 124,
+                      "accent": true
+                    },
+                    {
+                      "startStep": 4.12,
+                      "durationSteps": 1.5,
+                      "pitch": 66,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 7,
+                      "durationSteps": 1,
+                      "pitch": 73,
+                      "velocity": 86
+                    },
+                    {
+                      "startStep": 10.12,
+                      "durationSteps": 2,
+                      "pitch": 67,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 14,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 110
+                    },
+                    {
+                      "startStep": 16.12,
+                      "durationSteps": 2,
+                      "pitch": 69,
+                      "velocity": 108,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 20,
+                      "durationSteps": 1.5,
+                      "pitch": 64,
+                      "velocity": 86
+                    },
+                    {
+                      "startStep": 23.12,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 26,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 110
+                    },
+                    {
+                      "startStep": 30.12,
+                      "durationSteps": 1,
+                      "pitch": 61,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 32,
+                      "durationSteps": 2,
+                      "pitch": 55,
+                      "velocity": 108,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 36.12,
+                      "durationSteps": 1.5,
+                      "pitch": 62,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 39,
+                      "durationSteps": 1,
+                      "pitch": 81,
+                      "velocity": 110
+                    },
+                    {
+                      "startStep": 42.12,
+                      "durationSteps": 2,
+                      "pitch": 64,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 46,
+                      "durationSteps": 1,
+                      "pitch": 71,
+                      "velocity": 86
+                    },
+                    {
+                      "startStep": 48.12,
+                      "durationSteps": 2,
+                      "pitch": 66,
+                      "velocity": 108,
+                      "accent": false
+                    },
+                    {
+                      "startStep": 52,
+                      "durationSteps": 1,
+                      "pitch": 62,
+                      "velocity": 110
+                    },
+                    {
+                      "startStep": 55.12,
+                      "durationSteps": 1,
+                      "pitch": 67,
+                      "velocity": 78
+                    },
+                    {
+                      "startStep": 58,
+                      "durationSteps": 1.5,
+                      "pitch": 61,
+                      "velocity": 86
+                    },
+                    {
+                      "startStep": 61.12,
+                      "durationSteps": 3,
+                      "pitch": 59,
+                      "velocity": 78
+                    }
+                  ]
+                }
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": false,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.57,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "piano-soft-v2",
+              "params": {
+                "tone": 34,
+                "bell": 18,
+                "decay": 72,
+                "tremolo": 8
+              },
+              "pan": 0,
+              "delaySend": 20,
+              "reverbSend": 68
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 0,
+          "delayFeedback": 70,
+          "delayReturn": 30,
+          "reverbReturn": 78,
+          "masterCharacter": 8
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-dreaming-etude",
+  "scenes": [
+    {
+      "id": "scene-dreaming-etude-prelude",
+      "name": "Prelude",
+      "assignments": {
+        "piano-dreaming-etude-1": 4
+      }
+    },
+    {
+      "id": "scene-dreaming-etude-theme",
+      "name": "Theme",
+      "assignments": {
+        "piano-dreaming-etude-1": 0
+      }
+    },
+    {
+      "id": "scene-dreaming-etude-variation",
+      "name": "Variation",
+      "assignments": {
+        "piano-dreaming-etude-1": 1
+      }
+    },
+    {
+      "id": "scene-dreaming-etude-finale",
+      "name": "Finale",
+      "assignments": {
+        "piano-dreaming-etude-1": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Dreaming Étude",
+    "demo": true
+  },
+  "createdAt": 1787911200000,
+  "updatedAt": 1787911200000
+}

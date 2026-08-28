@@ -89,6 +89,10 @@ npm run test:e2e
 
 The browser workflow explicitly checks velocity/accent editing, non-destructive 32→16→32 restoration, chord stamping, degree and octave transforms, 50/75/150% zoom selection, pitch-key/audition controls, a 4-note 16-step simple melody, and the 28-note 64-step advanced melody. Full project regressions also cover persistence, MIDI/export, audio rendering, responsive surfaces, PWA isolation, and bundle limits.
 
+## Bundled showcase follow-up
+
+The shipping demo picker now contains fifteen Piano-forward projects generated from fifteen of the key-aware melody examples. The pool spans 16-, 32-, and 64-step phrases, Piano-only studies through three-module arrangements, varied velocities, accents at the editor's 112 floor, displaced entrances, softer and thinner variants, octave voicing, denser finales, and micro-timing. Tempos stay between 56 and 126 BPM; the overall direction is ambient and minimal, while the three electronic hybrids remain restrained and sweet. Each project exposes Theme plus Prelude, Variation, and Finale scene treatments without storing a Mixer module. Structural acceptance is automated in `tests/unit/example-project.test.ts`; listening approval remains open and is tracked in `demo-projects.md` and the Phase 7 evidence.
+
 ## Remaining limitations
 
 - Multi-select, copy/paste, duplicate, quantize, and a user-defined loop range remain backlog items.

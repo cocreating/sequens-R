@@ -189,9 +189,17 @@ test.describe('Phase 5 polish', () => {
     const actionTops = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
     const actionNames = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(actionNames).toEqual(['Workspace', 'Mixer', 'Add Module', 'Random', 'Stop', 'Share', 'Turn on general help', 'Tap BPM', 'Play']);
+    expect(actionNames).toEqual(['Workspace', 'Mixer', 'Add Module', 'Random', 'Stop', 'Share', 'Turn on general help', 'Play']);
+    const desktopInitialActions = page.locator('.app-header > .header-initial-core-actions');
+    await expect(desktopInitialActions).toBeVisible();
+    expect(await desktopInitialActions.evaluate((initial) => initial.nextElementSibling?.classList.contains('app-header-actions'))).toBe(true);
 
     const tempo = page.locator('#tempo');
+    const [desktopTapBox, desktopTempoBox] = await Promise.all([
+      desktopInitialActions.getByRole('button', { name: 'Tap BPM' }).boundingBox(),
+      tempo.boundingBox(),
+    ]);
+    expect(desktopTapBox!.x + desktopTapBox!.width).toBeLessThanOrEqual(desktopTempoBox!.x);
     await expect(tempo).toHaveAttribute('step', '1');
     await expect(page.getByRole('button', { name: 'Decrease BPM' })).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Increase BPM' })).toHaveCount(0);
@@ -250,10 +258,17 @@ test.describe('Phase 5 polish', () => {
     expect(mobileEndActions!.x + mobileEndActions!.width).toBeLessThanOrEqual(375);
     expect(mobileEndActions!.y).toBeGreaterThan(mobileCoreActions!.y);
     const mobileOrder = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(mobileOrder.slice(-2)).toEqual(['Tap BPM', 'Play']);
+    expect(mobileOrder.at(-1)).toBe('Play');
+    await expect(page.locator('main > .header-initial-core-actions')).toBeVisible();
+    await expect(page.locator('.app-header > .header-initial-core-actions')).toHaveCount(0);
+    const [mobileTapBox, mobileTempoBox] = await Promise.all([
+      page.locator('main > .header-initial-core-actions').getByRole('button', { name: 'Tap BPM' }).boundingBox(),
+      tempo.boundingBox(),
+    ]);
+    expect(mobileTapBox!.x + mobileTapBox!.width).toBeLessThanOrEqual(mobileTempoBox!.x);
 
     await expect(page.locator('.app-header')).toHaveCSS('position', 'sticky');
-    await expect(page.locator('.performance-deck')).toHaveCSS('position', 'relative');
+    await expect(page.locator('.performance-deck')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Scroll to top' })).toHaveCount(0);
     await page.evaluate(() => window.scrollTo(0, 500));
     await expect(page.getByRole('button', { name: 'Scroll to top' })).toBeVisible();

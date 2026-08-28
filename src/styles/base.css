@@ -36,6 +36,8 @@
   .brand-kicker p { margin: 0; }
   .app-version { border: 1px solid var(--color-surface-raised); border-radius: 999px; padding: 0.18rem 0.42rem; color: var(--color-text-muted); letter-spacing: 0.04em; white-space: nowrap; }
   .app-header-actions { position: relative; z-index: 1; display: flex; flex: 1 1 18rem; flex-wrap: wrap; align-items: center; justify-content: end; gap: var(--space-1); min-width: 0; }
+  .header-initial-core-actions { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--space-2); align-items: end; min-width: 0; padding-block-end: var(--space-2); }
+  .header-initial-core-actions > .header-tap { align-self: end; font-family: var(--font-data); }
   .header-core-actions, .header-end-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: end; gap: var(--space-1); min-width: 0; }
   :is(.header-core-actions, .header-end-actions) > button { flex: 0 0 auto; padding-inline: var(--space-2); font-family: var(--font-data); }
   .header-random { background: transparent; }
@@ -65,7 +67,6 @@
   .app-help-active [data-app-help-key]:is(:hover, :focus-visible, :focus-within) { outline: 2px solid color-mix(in oklab, var(--color-playing) 75%, transparent); outline-offset: -2px; }
   .bar-progress { position: absolute; inset: auto 0 0; height: 2px; border-inline-end: 25vw solid var(--color-playing); pointer-events: none; }
   main { width: min(100% - 1rem, 70rem); margin-inline: auto; padding-block: var(--space-3) max(calc(var(--touch-target) + var(--space-6)), env(safe-area-inset-bottom)); }
-  .performance-deck { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-2); align-items: stretch; padding-block-end: var(--space-2); }
   .project-tools { display: grid; grid-template-columns: auto minmax(0, 1fr) repeat(2, auto); gap: var(--space-2); align-items: center; margin: 0; padding: var(--space-3); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
   .project-tools > label:first-child { color: var(--color-text-muted); font-size: 0.75rem; text-transform: uppercase; }
   .project-tools > button:nth-of-type(n + 3), .import-project { grid-row: 2; }
@@ -395,7 +396,6 @@
     .brand-kicker { display: flex; }
     .brand-title-full { display: block; }
     .brand-title-compact { display: none; }
-    .performance-deck { grid-template-columns: minmax(22rem, 1fr); align-items: stretch; }
     .transport { align-items: center; }
     .transport-fields { grid-template-columns: minmax(6.5rem, 0.9fr) minmax(4rem, 0.5fr) minmax(7rem, 1fr); }
     .project-tools { grid-template-columns: auto minmax(12rem, 1fr) repeat(6, auto); }
@@ -404,6 +404,9 @@
   }
   @media (min-width: 64rem) {
     .app-header, main { width: min(100% - 2rem, 96rem); }
+    .app-header .header-initial-core-actions { flex: 1 1 25rem; padding-block-end: 0; }
+    .app-header .app-header-actions { flex: 0 1 auto; }
+    .app-header .transport { min-width: 22rem; padding: var(--space-1); }
     main { display: block; }
     .utility-stack .project-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .utility-stack .project-tools > label:first-child { grid-column: 1; }

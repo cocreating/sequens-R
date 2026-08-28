@@ -50,7 +50,7 @@
   import { RackHistory } from './lib/state/history';
   import ModulePlate from './lib/ui/ModulePlate.svelte';
   import MixerPanel from './lib/ui/MixerPanel.svelte';
-  import Transport from './lib/ui/Transport.svelte';
+  import HeaderInitialCoreActions from './lib/ui/HeaderInitialCoreActions.svelte';
   import HardwarePanel from './lib/ui/HardwarePanel.svelte';
   import DesktopStudioPanel from './lib/ui/DesktopStudioPanel.svelte';
   import ScenePanel from './lib/ui/ScenePanel.svelte';
@@ -957,6 +957,9 @@
     <h1 aria-label="sequens-R"><span class="brand-title-full" aria-hidden="true">sequens-R</span><span class="brand-title-compact" aria-hidden="true">s-R</span></h1>
   </div>
   {#if supported && initialized}
+    {#if desktopSurface}
+      <HeaderInitialCoreActions bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} oninterest={showAppHelp} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+    {/if}
     <div class="app-header-actions" role="group" aria-label="Primary actions" onpointermove={showAppHelp} onfocusin={showAppHelp}>
       <div class="header-core-actions">
         <button
@@ -996,7 +999,6 @@
           aria-controls="app-help-readout"
           onclick={toggleAppHelp}
         ><Icon name="question-mark-circle" /></button>
-        <button type="button" class="header-action header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={tapTempo}>TAP</button>
         <button
           type="button"
           class="header-action header-play"
@@ -1057,9 +1059,9 @@
   <main class="loading" aria-busy="true"><p>Loading local project…</p></main>
 {:else}
   <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp} style={`--app-header-height: ${headerHeight}px`}>
-    <div class="performance-deck">
-      <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
-    </div>
+    {#if !desktopSurface}
+      <HeaderInitialCoreActions bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} oninterest={showAppHelp} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+    {/if}
 
     <p class="session-status" data-app-help-key="status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>
     {#if playing && audioState === 'suspended'}<button type="button" class="resume-audio" onclick={resumeAudio}>Resume audio</button>{/if}

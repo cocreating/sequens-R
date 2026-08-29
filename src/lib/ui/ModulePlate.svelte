@@ -139,7 +139,8 @@
     {#if desktopSurface}
       <button type="button" class="module-width-toggle has-icon icon-only" data-help-key="module-width" aria-label={`Full-width layout for ${module.name}`} aria-pressed={fullWidth} onclick={() => { fullWidth = !fullWidth; }}><Icon name="arrows-pointing-out" /></button>
     {/if}
-    <button type="button" class="module-collapse-toggle icon-only" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}><Icon name={module.collapsed ? 'plus' : 'minus'} /></button>
+    <button type="button" class="module-collapse-toggle icon-only" data-help-key="collapse" aria-label={`${module.collapsed ? 'Expand' : 'Collapse'} ${module.name}`} aria-expanded={!module.collapsed} onclick={() => onpatch({ collapsed: !module.collapsed })}><Icon name={module.collapsed ? 'chevron-right' : 'chevron-down'} /></button>
+    <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
     <details class="module-menu">
       <summary aria-label={`${module.name} actions`}><Icon name="ellipsis-vertical" /></summary>
       <div class="module-menu-popover">
@@ -171,7 +172,6 @@
         <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>Delete</button>
       </div>
     </details>
-    <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
     <div class="module-switches">
       <button type="button" class="icon-only" data-help-key="monitor" aria-label={`Monitor ${module.name}`} aria-pressed={module.monitor} onclick={() => onpatch({ monitor: !module.monitor })}><Icon name="speaker-wave" /></button>
       <button type="button" data-help-key="solo" aria-label={`Solo ${module.name}`} aria-pressed={module.solo} onclick={() => onpatch({ solo: !module.solo })}>S</button>

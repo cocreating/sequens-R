@@ -71,7 +71,7 @@ describe('Phase 7 physical acceptance harness', () => {
       { mixer: true, piano: true, euclid: false, finalMix: false, notes: 'Piano approved; Euclid needs another pass.' },
       140,
       16,
-      '0.0.1',
+      '0.1.0',
       'Android reference device',
     );
     expect(report).toContain('- [x] Mixer');

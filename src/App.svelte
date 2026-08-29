@@ -50,7 +50,7 @@
   import { RackHistory } from './lib/state/history';
   import ModulePlate from './lib/ui/ModulePlate.svelte';
   import MixerPanel from './lib/ui/MixerPanel.svelte';
-  import HeaderInitialCoreActions from './lib/ui/HeaderInitialCoreActions.svelte';
+  import Transport from './lib/ui/Transport.svelte';
   import HardwarePanel from './lib/ui/HardwarePanel.svelte';
   import DesktopStudioPanel from './lib/ui/DesktopStudioPanel.svelte';
   import ScenePanel from './lib/ui/ScenePanel.svelte';
@@ -957,57 +957,51 @@
     <h1 aria-label="sequens-R"><span class="brand-title-full" aria-hidden="true">sequens-R</span><span class="brand-title-compact" aria-hidden="true">s-R</span></h1>
   </div>
   {#if supported && initialized}
-    {#if desktopSurface}
-      <HeaderInitialCoreActions bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} oninterest={showAppHelp} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
-    {/if}
-    <div class="app-header-actions" role="group" aria-label="Primary actions" onpointermove={showAppHelp} onfocusin={showAppHelp}>
-      <div class="header-core-actions">
-        <button
-          type="button"
-          class="header-action workspace-toggle has-icon icon-only"
-          data-app-help-key="workspace"
-          aria-label="Workspace"
-          popovertarget="studio-workspace"
-        ><Icon name="squares" /></button>
-        <button
-          type="button"
-          class="header-action mixer-toggle has-icon icon-only"
-          data-app-help-key="mixer"
-          aria-label="Mixer"
-          popovertarget="studio-mixer"
-        ><Icon name="adjustments-horizontal" /></button>
-        <button
-          id="add-module-button"
-          type="button"
-          class="header-action has-icon"
-          data-app-help-key="add-module"
-          aria-label="Add Module"
-          aria-haspopup="dialog"
-          popovertarget="module-picker"
-          disabled={rack.modules.length >= 16}
-        ><Icon name="plus" /><span>Add Module</span></button>
-        <button type="button" class="header-action header-random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
-      </div>
-      <div class="header-end-actions">
-        <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
-        <button type="button" class="header-action has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
-        <button
-          type="button"
-          class="app-help-toggle"
-          aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
-          aria-pressed={appHelpActive}
-          aria-controls="app-help-readout"
-          onclick={toggleAppHelp}
-        ><Icon name="question-mark-circle" /></button>
-        <button
-          type="button"
-          class="header-action header-play"
-          data-app-help-key={playing ? 'pause' : 'play'}
-          data-playing={playing}
-          aria-label={playing ? 'Pause' : 'Play'}
-          onclick={playing ? pause : play}
-        ><Icon name={playing ? 'pause' : 'play'} /></button>
-      </div>
+    <div class="app-header-controls" role="group" aria-label="Application controls" onpointermove={showAppHelp} onfocusin={showAppHelp}>
+      <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+      <button
+        type="button"
+        class="header-action workspace-toggle has-icon icon-only"
+        data-app-help-key="workspace"
+        aria-label="Workspace"
+        popovertarget="studio-workspace"
+      ><Icon name="squares" /></button>
+      <button
+        type="button"
+        class="header-action mixer-toggle has-icon icon-only"
+        data-app-help-key="mixer"
+        aria-label="Mixer"
+        popovertarget="studio-mixer"
+      ><Icon name="adjustments-horizontal" /></button>
+      <button
+        id="add-module-button"
+        type="button"
+        class="header-action has-icon"
+        data-app-help-key="add-module"
+        aria-label="Add Module"
+        aria-haspopup="dialog"
+        popovertarget="module-picker"
+        disabled={rack.modules.length >= 16}
+      ><Icon name="plus" /><span>Add Module</span></button>
+      <button type="button" class="header-action header-random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
+      <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
+      <button type="button" class="header-action has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
+      <button
+        type="button"
+        class="app-help-toggle"
+        aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
+        aria-pressed={appHelpActive}
+        aria-controls="app-help-readout"
+        onclick={toggleAppHelp}
+      ><Icon name="question-mark-circle" /></button>
+      <button
+        type="button"
+        class="header-action header-play"
+        data-app-help-key={playing ? 'pause' : 'play'}
+        data-playing={playing}
+        aria-label={playing ? 'Pause' : 'Play'}
+        onclick={playing ? pause : play}
+      ><Icon name={playing ? 'pause' : 'play'} /></button>
     </div>
   {/if}
   <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
@@ -1059,10 +1053,6 @@
   <main class="loading" aria-busy="true"><p>Loading local project…</p></main>
 {:else}
   <main id="rack" tabindex="-1" class:app-help-active={appHelpActive} onpointermove={showAppHelp} onfocusin={showAppHelp} style={`--app-header-height: ${headerHeight}px`}>
-    {#if !desktopSurface}
-      <HeaderInitialCoreActions bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} oninterest={showAppHelp} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
-    {/if}
-
     <p class="session-status" data-app-help-key="status" aria-live="polite" data-scheduler-jitter-ms={schedulerJitter?.toFixed(3) ?? ''}>{status}</p>
     {#if playing && audioState === 'suspended'}<button type="button" class="resume-audio" onclick={resumeAudio}>Resume audio</button>{/if}
     {#if schedulerJitter !== null}

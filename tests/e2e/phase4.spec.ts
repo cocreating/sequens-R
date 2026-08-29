@@ -5,7 +5,7 @@ test.describe('Phase 4 desktop studio', () => {
 
   test('opens the floating workspace from its icon-only header trigger', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByLabel('Application version 0.0.1')).toHaveText('v0.0.1');
+    await expect(page.getByLabel('Application version 0.1.0')).toHaveText('v0.1.0');
     const workspaceButton = page.getByRole('button', { name: 'Workspace', exact: true });
     const workspace = page.locator('#studio-workspace');
     await expect(workspaceButton.locator('svg')).toBeVisible();
@@ -110,9 +110,17 @@ test.describe('Phase 4 desktop studio', () => {
     expect(menuBox).not.toBeNull();
     expect(nameBox).not.toBeNull();
     expect(collapseBox!.x).toBeGreaterThanOrEqual(widthBox!.x + widthBox!.width);
-    expect(menuBox!.x).toBeGreaterThanOrEqual(collapseBox!.x + collapseBox!.width);
-    expect(nameBox!.x).toBeGreaterThanOrEqual(menuBox!.x + menuBox!.width);
+    expect(nameBox!.x).toBeGreaterThanOrEqual(collapseBox!.x + collapseBox!.width);
+    expect(menuBox!.x).toBeGreaterThanOrEqual(nameBox!.x + nameBox!.width);
     expect(Math.abs(nameBox!.y - widthBox!.y)).toBeLessThan(1);
+
+    const expandedChevron = await collapseToggle.locator('path').getAttribute('d');
+    await collapseToggle.click();
+    const expandToggle = drums.getByRole('button', { name: 'Expand Drums' });
+    await expect(expandToggle).toHaveAttribute('aria-expanded', 'false');
+    expect(await expandToggle.locator('path').getAttribute('d')).not.toBe(expandedChevron);
+    await expandToggle.click();
+    await expect(collapseToggle).toHaveAttribute('aria-expanded', 'true');
 
     await widthToggle.click();
     await expect(widthToggle).toHaveAttribute('aria-pressed', 'true');

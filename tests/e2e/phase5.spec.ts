@@ -177,8 +177,8 @@ test.describe('Phase 5 polish', () => {
     await expect(page.getByRole('button', { name: 'Random' }).locator('svg')).toHaveAttribute('data-tone', 'creative');
     const addModule = page.getByRole('button', { name: 'Add Module', exact: true });
     await expect(addModule).toContainText('Add Module');
-    await expect(page.locator('.app-header-actions')).toContainText('Add Module');
-    expect(await addModule.evaluate((button) => button.closest('.app-header-actions') !== null)).toBe(true);
+    await expect(page.locator('.app-header-controls')).toContainText('Add Module');
+    expect(await addModule.evaluate((button) => button.closest('.app-header-controls') !== null)).toBe(true);
 
     await addModule.click();
     await expect(page.getByRole('dialog', { name: 'Add a module' })).toBeVisible();
@@ -186,24 +186,25 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.module-choice[data-module-type="acid"]')).toContainText('Resonant 303-style melodic sequence');
     await page.getByRole('button', { name: 'Close module library' }).click();
 
-    const actionTops = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
+    const actionTops = await page.locator('.app-header-controls > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
-    const actionNames = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
+    const actionNames = await page.locator('.app-header-controls > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
     expect(actionNames).toEqual(['Workspace', 'Mixer', 'Add Module', 'Random', 'Stop', 'Share', 'Turn on general help', 'Play']);
-    const desktopInitialActions = page.locator('.app-header > .header-initial-core-actions');
-    await expect(desktopInitialActions).toBeVisible();
-    expect(await desktopInitialActions.evaluate((initial) => initial.nextElementSibling?.classList.contains('app-header-actions'))).toBe(true);
+    const headerControls = page.locator('.app-header > .app-header-controls');
+    await expect(headerControls).toBeVisible();
+    await expect(page.locator('.app-header .transport-fields')).toHaveCount(1);
+    await expect(page.locator('main .transport-fields')).toHaveCount(0);
 
-    const tempoTrigger = desktopInitialActions.getByRole('button', { name: /^Tempo \d+ BPM$/u });
+    const tempoTrigger = headerControls.getByRole('button', { name: /^Tempo \d+ BPM$/u });
     const [desktopTapBox, desktopTempoBox] = await Promise.all([
-      desktopInitialActions.getByRole('button', { name: 'Tap BPM' }).boundingBox(),
+      headerControls.getByRole('button', { name: 'Tap BPM' }).boundingBox(),
       tempoTrigger.boundingBox(),
     ]);
     expect(desktopTapBox!.x + desktopTapBox!.width).toBeLessThanOrEqual(desktopTempoBox!.x);
-    await expect(desktopInitialActions.locator('.transport-fields > button')).toHaveCount(3);
-    await expect(desktopInitialActions.locator('.transport-fields > button svg')).toHaveCount(2);
-    expect(await desktopInitialActions.locator('.transport-fields > button').allTextContents()).toEqual(['TAB', '', '']);
-    await expect(desktopInitialActions.locator('.transport select')).toHaveCount(0);
+    await expect(headerControls.locator('.transport-fields > button')).toHaveCount(3);
+    await expect(headerControls.locator('.transport-fields > button svg')).toHaveCount(2);
+    expect(await headerControls.locator('.transport-fields > button').allTextContents()).toEqual(['TAB', '', '']);
+    await expect(headerControls.locator('.transport-fields select')).toHaveCount(0);
     await tempoTrigger.click();
     const tempo = page.locator('#tempo');
     await expect(tempo).toHaveAttribute('step', '1');
@@ -218,12 +219,12 @@ test.describe('Phase 5 polish', () => {
     const fieldTops = await page.locator('.transport-fields > button').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
     expect(new Set(fieldTops).size).toBe(1);
     await page.getByRole('button', { name: 'Close tempo controls' }).click();
-    await desktopInitialActions.getByRole('button', { name: 'Key C minor' }).click();
+    await headerControls.getByRole('button', { name: 'Key C minor' }).click();
     const keyPanel = page.getByRole('dialog', { name: 'Root & scale' });
     await keyPanel.getByRole('group', { name: 'Root note' }).getByRole('button', { name: 'D', exact: true }).click();
     await expect(keyPanel).toBeVisible();
     await keyPanel.getByRole('group', { name: 'Scale' }).getByRole('button', { name: 'dorian', exact: true }).click();
-    await expect(desktopInitialActions.getByRole('button', { name: 'Key D dorian' })).toBeVisible();
+    await expect(headerControls.getByRole('button', { name: 'Key D dorian' })).toBeVisible();
     await expect(keyPanel).toBeVisible();
     await page.getByRole('button', { name: 'Close key controls' }).click();
     await page.getByRole('button', { name: 'Tap BPM' }).click();
@@ -259,22 +260,24 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.brand-title-compact')).toBeVisible();
     await expect(page.locator('.brand-title-compact')).toHaveCSS('border-radius', '50%');
     expect(await page.getByRole('heading', { name: 'sequens-R' }).evaluate((heading) => (heading as HTMLElement).innerText)).toBe('s-R');
-    const [mobileCoreActions, mobileEndActions] = await Promise.all([
-      page.locator('.header-core-actions').boundingBox(),
-      page.locator('.header-end-actions').boundingBox(),
-    ]);
-    expect(mobileCoreActions).not.toBeNull();
-    expect(mobileEndActions).not.toBeNull();
-    expect(mobileCoreActions!.x + mobileCoreActions!.width).toBeLessThanOrEqual(375);
-    expect(mobileEndActions!.x + mobileEndActions!.width).toBeLessThanOrEqual(375);
-    expect(mobileEndActions!.y).toBeGreaterThan(mobileCoreActions!.y);
-    const mobileOrder = await page.locator('.app-header-actions button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
+    const mobileHeaderControls = await headerControls.boundingBox();
+    expect(mobileHeaderControls).not.toBeNull();
+    expect(mobileHeaderControls!.x + mobileHeaderControls!.width).toBeLessThanOrEqual(375);
+    const mobileControlSelector = '.app-header-controls > .transport-fields > button, .app-header-controls > button';
+    const mobileOrder = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
+    expect(mobileOrder[0]).toBe('Tap BPM');
+    expect(mobileOrder[1]).toMatch(/^Tempo \d+ BPM$/u);
+    expect(mobileOrder.slice(2)).toEqual(['Key D dorian', 'Workspace', 'Mixer', 'Add Module', 'Random', 'Stop', 'Share', 'Turn on general help', 'Play']);
     expect(mobileOrder.at(-1)).toBe('Play');
-    await expect(page.locator('main > .header-initial-core-actions')).toBeVisible();
-    await expect(page.locator('.app-header > .header-initial-core-actions')).toHaveCount(0);
+    const mobileControlHeights = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().height));
+    expect(new Set(mobileControlHeights).size).toBe(1);
+    const mobileControlRows = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
+    expect(new Set(mobileControlRows).size).toBeGreaterThan(1);
+    await expect(page.locator('.app-header .transport-fields')).toBeVisible();
+    await expect(page.locator('main .transport-fields')).toHaveCount(0);
     const [mobileTapBox, mobileTempoBox] = await Promise.all([
-      page.locator('main > .header-initial-core-actions').getByRole('button', { name: 'Tap BPM' }).boundingBox(),
-      page.locator('main > .header-initial-core-actions').getByRole('button', { name: /^Tempo \d+ BPM$/u }).boundingBox(),
+      headerControls.getByRole('button', { name: 'Tap BPM' }).boundingBox(),
+      headerControls.getByRole('button', { name: /^Tempo \d+ BPM$/u }).boundingBox(),
     ]);
     expect(mobileTapBox!.x + mobileTapBox!.width).toBeLessThanOrEqual(mobileTempoBox!.x);
 

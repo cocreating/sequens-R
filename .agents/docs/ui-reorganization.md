@@ -1,6 +1,6 @@
 # Studio UI reorganization evidence
 
-Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded through 2026-08-28.
+Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded through 2026-08-29.
 
 This is the UI consolidation completed before Phase 6 was defined. It changes hierarchy and control presentation without changing generator output, project persistence, share encoding, or export formats. Its later transport refinement adds exact-beat Pause/Resume scheduling and MIDI Continue behavior. The resulting vertical mobile rack, disclosures, schema-driven controls, and performance-first hierarchy became the foundation used by the implemented Phase 6 mobile editors.
 
@@ -8,11 +8,11 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Delivered
 
-- The former performance deck is renamed `header-initial-core-actions` and owns one `transport-fields` row with a visible `TAB` tap-tempo button followed by icon-only Tempo and Key buttons. TAB acts immediately; Tempo opens a native top-layer whole-number BPM editor/vertical slider, while Key opens one persistent combined panel containing direct root-note and scale option grids. Selecting either musical value leaves the panel open so both can be adjusted in one interaction. Each compact trigger retains an explicit value-aware accessible name. On desktop it is the first control group inside the sticky application header, before Workspace, Mixer, the visibly labelled Add Module action, transparent icon-only Random, Stop, Share, General Help, and Play/Pause. Below the desktop breakpoint the same component renders once in document flow beneath the header, keeping visual and keyboard order aligned without duplicate control IDs.
+- Version 0.1.0 places one `transport-fields` row with visible `TAB` and icon-only Tempo/Key permanently inside the sticky `app-header`. A single wrapping `app-header-controls` group then continues directly through Workspace, Mixer, the visibly labelled Add Module action, transparent icon-only Random, Stop, Share, General Help, and Play/Pause. It replaces the former breakpoint relocation and core/end wrappers, giving every viewport one coherent DOM/focus order and common alignment. TAB acts immediately; Tempo opens a native top-layer whole-number BPM editor/vertical slider, while Key opens one persistent combined panel containing direct root-note and scale option grids. Selecting either musical value leaves the panel open so both can be adjusted in one interaction. Each compact trigger retains an explicit value-aware accessible name.
 - Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. The Tempo panel exposes both a labelled number input and a 20–300 native vertical range control. Keyboard, pointer, and touch access do not depend on hover, and manual entry also writes whole values.
 - Pause preserves the current transport beat, freezes the header/grid/piano playheads on it, and clears scheduled internal/MIDI events; Play continues from that beat while Stop resets to zero and hides the playheads.
 - Responsive branding that shows `Local generative MIDI`, a build-derived current-version badge, and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
-- Mobile critical path with the rack directly after the performance controls and Workspace removed from document flow.
+- Mobile critical path with the rack directly after the sticky header controls and Workspace removed from document flow.
 - Desktop studio with three full-width parallel module lanes at 1440 CSS px.
 - Workspace utilities live in a top-layer floating panel opened by an icon-only toolbox button immediately after the compact TAB/Tempo/Key transport. The native popover supports light dismiss and Escape, restores focus to its trigger, and scrolls internally within the viewport.
 - The rack mixer is an always-available full-width top-layer panel opened by the header button beside Workspace. It exposes the existing shared rack mix without requiring a Mixer module in the rack; saved Mixer modules remain compatible duplicate views. Channel gain uses keyboard-accessible native vertical faders with hardware-style caps and bottom-up fill; channels and the rack master pair them with live 12-segment green/amber/red dBFS LED ladders.
@@ -20,7 +20,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - The floating mixer starts with PAN and SENDS hidden to prioritize channel levels. Two pressed-state toggles in its heading reveal or hide PAN and both send controls across every channel. Its responsive grid fits up to six channels per row: four, five, or six as desktop and mobile-landscape space permits, while narrow portrait layouts retain their compact two- or three-channel rows.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
 - An icon-only `Demos projects` action directly after project import, retaining its explicit accessible name while opening a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
-- Compact module headers whose first row follows reorder → desktop full-width → collapse → actions → top-right editable name; monitor, solo, and mute occupy a balanced second row. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
+- Compact module headers whose first row follows reorder → desktop full-width → collapse → flexible editable name → actions; monitor, solo, and mute occupy a balanced second row. Collapse uses right/down chevrons for closed/open state. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
 - Desktop-only per-module full-width toggles that span all current lanes without changing saved project or playback state.
 - Desktop modules use responsive CSS columns as a masonry-like layout (two columns from 1024 px, three from 1440 px); full-width modules span every column while mobile remains a single vertical rack.
 - Each module type receives a distinct dark default theme color. The module actions menu exposes a labelled palette selector, and the selected color is normalized, saved in project files, and restored through import/migration.
@@ -61,18 +61,20 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Final mobile comparison: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-ui-implementation/10-mobile-comparison-final.png`
 - Historical emoticon baseline, desktop: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-emoticon-review/03-desktop-after.png`
 - Historical emoticon baseline, mobile: `/Users/jasubal/.codex/visualizations/2026/08/24/01a03398-7145-7633-ba81-cc6a8803de2e/sequens-r-emoticon-review/04-mobile-after.png`
+- Version 0.1.0 desktop header: `/Users/jasubal/AllMyCoding/AllmyMusicApps/Sequens-R/output/playwright/v010-desktop.png`
+- Version 0.1.0 mobile header: `/Users/jasubal/AllMyCoding/AllmyMusicApps/Sequens-R/output/playwright/v010-mobile.png`
 
 ## Automated acceptance
 
 The full command is `npm run verify`. The current regression run covers strict Svelte/TypeScript diagnostics, deterministic unit/property tests, the production PWA build, the initial-JavaScript budget, Chrome flows, and the axe serious/critical gates. Browser coverage includes responsive masonry columns, full-width module spanning, dark per-module color selection and project round-trip persistence, alongside the existing Workspace, module action, Phase 6 mobile, Phase 7 sound, sharing, and accessibility flows.
 
-Latest complete execution on 2026-08-28 after the Phase 7 acceptance harness and SVG icon migration:
+Latest complete execution on 2026-08-29 after the version 0.1.0 header consolidation and module-header disclosure refinement:
 
 ```text
 svelte-check: 0 errors, 0 warnings
-Vitest: 117 tests passed across 17 files
-production PWA build: 110.09 KiB gzip initial JavaScript / 200 KiB; 384.27 KiB across 10 offline-shell entries
-Playwright Chrome: 55 checks passed
-scheduler-message jitter: 0.107 ms σ
-performance mix evidence: 5 modules −15.49 LUFS-I / −3.07 dBTP; 14 modules −13.81 LUFS-I / −1.06 dBTP
+Vitest: 123 tests passed across 18 files
+production PWA build: 116.82 KiB gzip initial JavaScript / 200 KiB; 413.96 KiB across 10 offline-shell entries
+Playwright Chrome: 56 checks passed
+scheduler-message jitter: 0.286 ms σ
+performance mix evidence: 5 modules −15.20 LUFS-I / −2.68 dBTP; 14 modules −13.52 LUFS-I / −1.52 dBTP
 ```

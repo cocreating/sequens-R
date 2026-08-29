@@ -21,16 +21,14 @@
   }
 </script>
 
-<div class="transport" data-app-help-key="transport" role="group" aria-label="Transport">
-  <div class="transport-fields">
-    <button type="button" class="transport-trigger header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={ontap}>TAB</button>
-    <button type="button" class="transport-trigger icon-only" data-app-help-key="tempo" aria-label={`Tempo ${Math.round(bpm)} BPM`} aria-haspopup="dialog" popovertarget="tempo-controls">
-      <Icon name="clock" />
-    </button>
-    <button type="button" class="transport-trigger icon-only" data-app-help-key="key" aria-label={`Key ${ROOT_NAMES[root] ?? ROOT_NAMES[0]} ${scale}`} aria-haspopup="dialog" popovertarget="key-controls">
-      <Icon name="musical-note" />
-    </button>
-  </div>
+<div class="transport-fields" data-app-help-key="transport" role="group" aria-label="Transport">
+  <button type="button" class="transport-trigger header-tap" data-app-help-key="tap-tempo" aria-label="Tap BPM" onclick={ontap}>TAB</button>
+  <button type="button" class="transport-trigger icon-only" data-app-help-key="tempo" aria-label={`Tempo ${Math.round(bpm)} BPM`} aria-haspopup="dialog" popovertarget="tempo-controls">
+    <Icon name="clock" />
+  </button>
+  <button type="button" class="transport-trigger icon-only" data-app-help-key="key" aria-label={`Key ${ROOT_NAMES[root] ?? ROOT_NAMES[0]} ${scale}`} aria-haspopup="dialog" popovertarget="key-controls">
+    <Icon name="musical-note" />
+  </button>
 
   <div id="tempo-controls" class="transport-popover tempo-popover" popover role="dialog" aria-labelledby="tempo-controls-heading">
     <div class="transport-popover-heading">

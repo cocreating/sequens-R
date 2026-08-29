@@ -26,7 +26,7 @@ for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }
 
     const addModuleButton = page.getByRole('button', { name: 'Add Module', exact: true });
     await expect(addModuleButton).toContainText('Add Module');
-    expect(await addModuleButton.evaluate((button) => button.closest('.app-header-actions') !== null)).toBe(true);
+    expect(await addModuleButton.evaluate((button) => button.closest('.app-header-controls') !== null)).toBe(true);
     const transportFieldTops = await page.locator('.transport-fields > button').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
     expect(new Set(transportFieldTops).size).toBe(1);
     await addModuleButton.click();

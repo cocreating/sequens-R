@@ -76,6 +76,15 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 - Step-grid cells are at least 32 CSS px wide and advertise local horizontal movement with a Swipe hint.
 - Playwright covers both reference mobile heights, compact-header visibility, full-screen library sizing, labelled Workspace actions, Piano disclosures, the Swipe cue, and minimum cell width. Screenshots and audit notes live in `mobile-optimization-audit/`.
 
+## Plan B mobile optimization follow-up · 2026-09-01
+
+- Mobile replaces the multi-action top header with a compact project/Tempo/Key context bar and moves Play/Pause, Stop, Add Module, and Mixer into a fixed safe-area-aware bottom dock.
+- Module headers add a compact activity/type/slot summary alongside monitor, solo, mute, and collapse/expand controls. Collapsed state continues through the existing rack model so drag placeholder geometry and persisted projects remain consistent.
+- Mobile step cells increase to 40 CSS px and continue to scroll inside their local grid instead of widening the document.
+- Workspace, Mixer, and the module library occupy the mobile viewport. Workspace adds sticky section links for Project, Scenes, Hardware, and Export, and owns Randomize, Share, and Help on mobile.
+- Piano remains the only full-screen module editor. The proposed extension of full-screen editing to other modules is deliberately not implemented; their Phase 6 inline editors remain unchanged.
+- Playwright covers dock access, the focused surfaces, focus restoration, non-Piano inline editing, portrait/landscape transitions, local grid sizing, and horizontal-overflow protection.
+
 ## Automated evidence · 2026-08-25
 
 `npm run verify` passes in local Chrome:

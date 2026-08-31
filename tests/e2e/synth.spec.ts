@@ -30,6 +30,7 @@ test('Synth generates, mutates, shapes sound, routes, shares, and restores on mo
 
   await page.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(page.getByText('Transport playing')).toBeVisible();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('button', { name: 'Share' }).click();
   await expect(page.getByText(/Patch link copied/u)).toBeVisible();
   const sharedUrl = page.url();

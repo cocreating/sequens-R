@@ -189,3 +189,13 @@ Status: implemented with automated and visual-browser acceptance on 2026-08-31; 
 - Mobile density is reduced through progressive disclosure rather than feature removal. Piano Melody and Transform tools use native `details`; desktop reuses the same snippets in its expanded toolbar.
 - Below 30rem the module library is a safe-area-aware `100vw × 100dvh` dialog with a sticky internal header. Workspace project actions expose visible labels on mobile.
 - Step grids retain deterministic data and local scrolling while increasing mobile cell width to 32 CSS px and exposing a Swipe cue. None of these choices change rack state, project or patch schemas, engine snapshots, MIDI, audio, or SMF output.
+
+## AD-015 · Plan B mobile app shell
+
+Status: implemented with automated and visual-browser acceptance on 2026-09-01; the existing physical Android gate remains open.
+
+- Below the desktop breakpoint, the app uses a compact project/Tempo/Key context bar and a fixed safe-area-aware dock for Play/Pause, Stop, Add Module, and Mixer. Session utilities move into Workspace so the primary rack remains focused.
+- Module plates retain one shared implementation and add a mobile summary row for activity, type, slot, monitor, solo, mute, and collapse/expand. Collapse remains part of the existing rack state, preserving drag-and-drop geometry and project restoration.
+- Workspace, Mixer, and the module library become full-viewport mobile surfaces. Workspace provides sticky section navigation without creating a second routing or state model.
+- Mobile steps are 40 CSS px wide and scroll locally. Portrait/landscape transitions must not introduce document-level horizontal overflow.
+- Full-screen editing is intentionally not generalized. Piano retains its established dialog; all non-Piano editors remain inline per the user's 2026-09-01 amendment.

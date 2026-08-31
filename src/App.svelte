@@ -139,7 +139,6 @@
   let workspaceOpen = $state(false);
   let pageScrollY = $state(0);
   let headerHeight = $state(0);
-  let mobileHeaderCompact = $derived(!desktopSurface && pageScrollY > 160);
   let appHelp = $derived(appHelpFor(appHelpKey));
   let demoProjectGroups = $derived(groupDemoProjects(demoProjects));
 
@@ -950,65 +949,48 @@
 <svelte:head><title>sequens-R · generative MIDI sequencer</title></svelte:head>
 
 <a class="skip-link" href="#rack">Skip to rack</a>
-<header bind:clientHeight={headerHeight} class:playing class:app-help-active={appHelpActive} class:mobile-header-compact={mobileHeaderCompact} class="app-header">
-  <div class="brand">
-    <div class="brand-kicker">
-      <p>Local generative MIDI</p>
-      <span class="app-version" aria-label={`Application version ${APP_VERSION}`}>v{APP_VERSION}</span>
-    </div>
-    <h1 aria-label="sequens-R"><span class="brand-title-full" aria-hidden="true">sequens-R</span><span class="brand-title-compact" aria-hidden="true">s-R</span></h1>
-  </div>
+<header bind:clientHeight={headerHeight} class:playing class:app-help-active={appHelpActive} class="app-header">
   {#if supported && initialized}
-    <div class="app-header-controls" role="group" aria-label="Application controls" onpointermove={showAppHelp} onfocusin={showAppHelp}>
-      <div class="header-playback-actions" role="group" aria-label="Playback controls">
-        <button
-          type="button"
-          class="header-action header-play"
-          data-app-help-key={playing ? 'pause' : 'play'}
-          data-playing={playing}
-          aria-label={playing ? 'Pause' : 'Play'}
-          onclick={playing ? pause : play}
-        ><Icon name={playing ? 'pause' : 'play'} /></button>
-        <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
+    {#if desktopSurface}
+      <div class="brand">
+        <div class="brand-kicker">
+          <p>Local generative MIDI</p>
+          <span class="app-version" aria-label={`Application version ${APP_VERSION}`}>v{APP_VERSION}</span>
+        </div>
+        <h1 aria-label="sequens-R"><span class="brand-title-full" aria-hidden="true">sequens-R</span><span class="brand-title-compact" aria-hidden="true">s-R</span></h1>
       </div>
-      <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
-      <div class="header-utility-actions" role="group" aria-label="Studio controls">
-        <button
-          type="button"
-          class="header-action workspace-toggle has-icon icon-only"
-          data-app-help-key="workspace"
-          aria-label="Workspace"
-          popovertarget="studio-workspace"
-        ><Icon name="squares" /></button>
-        <button
-          type="button"
-          class="header-action mixer-toggle has-icon icon-only"
-          data-app-help-key="mixer"
-          aria-label="Mixer"
-          popovertarget="studio-mixer"
-        ><Icon name="adjustments-horizontal" /></button>
-        <button
-          id="add-module-button"
-          type="button"
-          class="header-action has-icon"
-          data-app-help-key="add-module"
-          aria-label="Add Module"
-          aria-haspopup="dialog"
-          popovertarget="module-picker"
-          disabled={rack.modules.length >= 16}
-        ><Icon name="plus" /><span>Add Module</span></button>
-        <button type="button" class="header-action header-random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
-        <button type="button" class="header-action header-share has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
-        <button
-          type="button"
-          class="app-help-toggle"
-          aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
-          aria-pressed={appHelpActive}
-          aria-controls="app-help-readout"
-          onclick={toggleAppHelp}
-        ><Icon name="question-mark-circle" /></button>
+      <div class="app-header-controls" role="group" aria-label="Application controls" onpointermove={showAppHelp} onfocusin={showAppHelp}>
+        <div class="header-playback-actions" role="group" aria-label="Playback controls">
+          <button
+            type="button"
+            class="header-action header-play"
+            data-app-help-key={playing ? 'pause' : 'play'}
+            data-playing={playing}
+            aria-label={playing ? 'Pause' : 'Play'}
+            onclick={playing ? pause : play}
+          ><Icon name={playing ? 'pause' : 'play'} /></button>
+          <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
+        </div>
+        <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+        <div class="header-utility-actions" role="group" aria-label="Studio controls">
+          <button type="button" class="header-action workspace-toggle has-icon icon-only" data-app-help-key="workspace" aria-label="Workspace" popovertarget="studio-workspace"><Icon name="squares" /></button>
+          <button type="button" class="header-action mixer-toggle has-icon icon-only" data-app-help-key="mixer" aria-label="Mixer" popovertarget="studio-mixer"><Icon name="adjustments-horizontal" /></button>
+          <button id="add-module-button" type="button" class="header-action has-icon" data-app-help-key="add-module" aria-label="Add Module" aria-haspopup="dialog" popovertarget="module-picker" disabled={rack.modules.length >= 16}><Icon name="plus" /><span>Add Module</span></button>
+          <button type="button" class="header-action header-random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
+          <button type="button" class="header-action header-share has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
+          <button type="button" class="app-help-toggle" aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`} aria-pressed={appHelpActive} aria-controls="app-help-readout" onclick={toggleAppHelp}><Icon name="question-mark-circle" /></button>
+        </div>
       </div>
-    </div>
+    {:else}
+      <div class="mobile-context-bar" role="group" aria-label="Project and musical context">
+        <h1 class="mobile-brand-mark" aria-label="sequens-R">s-R</h1>
+        <button type="button" class="mobile-project-context workspace-toggle" popovertarget="studio-workspace" aria-label="Workspace">
+          <Icon name="squares" />
+          <span><small>Project</small><strong>{project.name}</strong></span>
+        </button>
+        <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
+      </div>
+    {/if}
   {/if}
   <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
 </header>
@@ -1112,7 +1094,24 @@
       </header>
       {#if workspaceOpen}<div class="workspace-utilities">
         <div class="utility-stack">
-          <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
+          {#if !desktopSurface}
+            <nav class="workspace-section-index" aria-label="Workspace sections">
+              <a href="#workspace-project">Project</a>
+              <a href="#workspace-scenes">Scenes</a>
+              <a href="#workspace-hardware">Hardware</a>
+              <a href="#workspace-export">Export</a>
+            </nav>
+            <section class="mobile-session-actions" aria-labelledby="mobile-session-actions-heading">
+              <h2 id="mobile-session-actions-heading">Session</h2>
+              <div>
+                <button type="button" class="has-icon" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" />Randomize</button>
+                <button type="button" class="has-icon" onclick={share}><Icon name="link" />Share</button>
+                <button type="button" class="has-icon" aria-pressed={appHelpActive} onclick={toggleAppHelp}><Icon name="question-mark-circle" />Help</button>
+              </div>
+              {#if appHelpActive}<div class="mobile-help-copy"><h3>{appHelp.title}</h3><p>{appHelp.body}</p></div>{/if}
+            </section>
+          {/if}
+          <section id="workspace-project" class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
             <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
             <button type="button" class="has-icon icon-only" data-app-help-key="undo" aria-label="Undo" onclick={undo} disabled={!canUndo}><Icon name="arrow-uturn-left" /><span class="project-action-label">Undo</span></button>
@@ -1181,8 +1180,8 @@
             </section>
           {/if}
 
-          <ScenePanel scenes={project.scenes} modules={rack.modules} oncapture={captureScene} onlaunch={launchScene} onrename={renameScene} ondelete={deleteScene} />
-          <HardwarePanel state={midiState} onconnect={connectMidi} onclock={(portId, enabled) => midi.setClock(portId, enabled)} />
+          <section id="workspace-scenes" class="workspace-section"><ScenePanel scenes={project.scenes} modules={rack.modules} oncapture={captureScene} onlaunch={launchScene} onrename={renameScene} ondelete={deleteScene} /></section>
+          <section id="workspace-hardware" class="workspace-section"><HardwarePanel state={midiState} onconnect={connectMidi} onclock={(portId, enabled) => midi.setClock(portId, enabled)} /></section>
 
           {#if desktopSurface}
             <DesktopStudioPanel
@@ -1194,7 +1193,7 @@
             />
           {/if}
 
-          <section class="music-export" data-app-help-key="music-export" aria-labelledby="music-export-heading" aria-busy={exportingAudio}>
+          <section id="workspace-export" class="music-export" data-app-help-key="music-export" aria-labelledby="music-export-heading" aria-busy={exportingAudio}>
             <div><h2 id="music-export-heading">Music export</h2><p>Render the current deterministic rack without connecting hardware.</p></div>
             <label for="export-bars" data-app-help-key="export-length">Length</label>
             <select id="export-bars" data-app-help-key="export-length" bind:value={exportBars}>
@@ -1268,6 +1267,15 @@
       {/each}
     </section>
   </main>
+{/if}
+
+{#if supported && initialized && !desktopSurface}
+  <div class="mobile-transport-dock" role="group" aria-label="Mobile transport controls">
+    <button type="button" class="mobile-dock-play" data-playing={playing} aria-label={playing ? 'Pause' : 'Play'} onclick={playing ? pause : play}><Icon name={playing ? 'pause' : 'play'} /><span>{playing ? 'Pause' : 'Play'}</span></button>
+    <button type="button" aria-label="Stop" onclick={stop}><Icon name="stop" /><span>Stop</span></button>
+    <button id="add-module-button" type="button" aria-label="Add Module" aria-haspopup="dialog" popovertarget="module-picker" disabled={rack.modules.length >= 16}><Icon name="plus" /><span>Add</span></button>
+    <button type="button" class="mixer-toggle" aria-label="Mixer" popovertarget="studio-mixer"><Icon name="adjustments-horizontal" /><span>Mixer</span></button>
+  </div>
 {/if}
 
 {#if pageScrollY > 240}

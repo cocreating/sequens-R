@@ -191,6 +191,7 @@ test('opening a shared link remains a draft and does not overwrite the local pro
   await donorBass.locator('.module-advanced > summary').click();
   await donorBass.getByLabel('Seed', { exact: true }).fill('222222222');
   await donorBass.getByLabel('Seed', { exact: true }).blur();
+  await donor.getByRole('button', { name: 'Workspace', exact: true }).click();
   await donor.getByRole('button', { name: 'Share' }).click();
   await expect(donor.getByText(/Patch link copied/)).toBeVisible();
   const sharedUrl = donor.url();
@@ -249,6 +250,7 @@ test('a project exports, imports identically elsewhere, and protects local-only 
     buffer: Buffer.from(JSON.stringify(localOnly)),
   });
   await recipient.getByRole('button', { name: 'Close workspace' }).click();
+  await recipient.getByRole('button', { name: 'Workspace', exact: true }).click();
   await recipient.getByRole('button', { name: 'Share' }).click();
   await expect(recipient.locator('.error')).toContainText('Drums');
   await expect(recipient.locator('.error')).toContainText('Export the project instead');

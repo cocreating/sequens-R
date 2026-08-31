@@ -257,30 +257,24 @@ test.describe('Phase 5 polish', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await expect(page.locator('.brand p')).toBeHidden();
     await expect(page.locator('.brand-title-full')).toBeHidden();
-    await expect(page.locator('.brand-title-compact')).toBeVisible();
-    await expect(page.locator('.brand-title-compact')).toHaveCSS('border-radius', '50%');
+    await expect(page.locator('.mobile-brand-mark')).toBeVisible();
+    await expect(page.locator('.mobile-brand-mark')).toHaveCSS('border-radius', '50%');
     expect(await page.getByRole('heading', { name: 'sequens-R' }).evaluate((heading) => (heading as HTMLElement).innerText)).toBe('s-R');
-    const mobileHeaderControls = await headerControls.boundingBox();
-    expect(mobileHeaderControls).not.toBeNull();
-    expect(mobileHeaderControls!.x + mobileHeaderControls!.width).toBeLessThanOrEqual(375);
-    const mobileControlSelector = '.app-header-controls > .header-playback-actions > button, .app-header-controls > .transport-fields > button, .app-header-controls > .header-utility-actions > button';
-    const mobileOrder = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(mobileOrder.slice(0, 3)).toEqual(['Play', 'Stop', 'Tap BPM']);
-    expect(mobileOrder[3]).toMatch(/^Tempo \d+ BPM$/u);
-    expect(mobileOrder.slice(4)).toEqual(['Key D dorian', 'Workspace', 'Mixer', 'Add Module', 'Random', 'Share', 'Turn on general help']);
-    const mobileControlHeights = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().height));
-    expect(new Set(mobileControlHeights).size).toBe(1);
-    const mobileControlRows = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
-    expect(new Set(mobileControlRows).size).toBeGreaterThan(1);
-    await expect(page.locator('.app-header .transport-fields')).toBeVisible();
+    await expect(headerControls).toHaveCount(0);
+    const mobileContext = page.locator('.mobile-context-bar');
+    await expect(mobileContext).toBeVisible();
+    await expect(mobileContext.getByRole('button', { name: 'Tap BPM' })).toBeHidden();
+    await expect(mobileContext.getByRole('button', { name: /^Tempo \d+ BPM$/u })).toBeVisible();
+    await expect(mobileContext.getByRole('button', { name: 'Key D dorian' })).toBeVisible();
+    await expect(mobileContext.getByRole('button', { name: 'Workspace', exact: true })).toBeVisible();
     await expect(page.locator('main .transport-fields')).toHaveCount(0);
-    const [mobileTapBox, mobileTempoBox] = await Promise.all([
-      headerControls.getByRole('button', { name: 'Tap BPM' }).boundingBox(),
-      headerControls.getByRole('button', { name: /^Tempo \d+ BPM$/u }).boundingBox(),
-    ]);
-    expect(mobileTapBox!.x + mobileTapBox!.width).toBeLessThanOrEqual(mobileTempoBox!.x);
+    const mobileDock = page.getByRole('group', { name: 'Mobile transport controls' });
+    await expect(mobileDock).toBeVisible();
+    expect(await mobileDock.getByRole('button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')))).toEqual(['Play', 'Stop', 'Add Module', 'Mixer']);
+    const dockButtons = await mobileDock.getByRole('button').all();
+    for (const button of dockButtons) expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
 
-    await addModule.click();
+    await mobileDock.getByRole('button', { name: 'Add Module' }).click();
     const mobilePicker = page.getByRole('dialog', { name: 'Add a module' });
     const pickerBox = await mobilePicker.boundingBox();
     expect(pickerBox).not.toBeNull();
@@ -291,17 +285,13 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.app-header')).toHaveCSS('position', 'sticky');
     await expect(page.locator('.performance-deck')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Scroll to top' })).toHaveCount(0);
-    const expandedHeaderHeight = (await page.locator('.app-header').boundingBox())!.height;
+    const contextHeaderHeight = (await page.locator('.app-header').boundingBox())!.height;
     await page.evaluate(() => window.scrollTo(0, 500));
     await expect(page.getByRole('button', { name: 'Scroll to top' })).toBeVisible();
-    await expect(page.locator('.app-header')).toHaveClass(/mobile-header-compact/u);
-    expect((await page.locator('.app-header').boundingBox())!.height).toBeLessThan(expandedHeaderHeight);
+    expect((await page.locator('.app-header').boundingBox())!.height).toBeCloseTo(contextHeaderHeight, 0);
     await expect(page.getByRole('button', { name: 'Tap BPM' })).toBeHidden();
-    await expect(page.getByRole('button', { name: 'Workspace', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Mixer', exact: true })).toBeHidden();
-    await expect(page.getByRole('button', { name: 'Share', exact: true })).toBeVisible();
+    await expect(mobileDock.getByRole('button', { name: 'Mixer' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Add Module', exact: true }).locator('span')).toBeHidden();
     expect((await page.locator('.app-header').boundingBox())!.y).toBeCloseTo(0, 0);
     await page.getByRole('button', { name: 'Scroll to top' }).click();
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);

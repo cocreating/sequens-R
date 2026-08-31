@@ -275,8 +275,10 @@ test('mobile reproduces, edits, and re-shares a desktop-authored module', async 
   await expect(mobile.locator('.module-choice[data-module-type="arp"]')).toHaveCount(1);
   await mobile.getByRole('button', { name: 'Close module library' }).click();
   await arp.getByLabel('Direction').selectOption({ label: 'Down' });
+  await mobile.getByRole('button', { name: 'Workspace', exact: true }).click();
   await mobile.getByRole('button', { name: 'Share' }).click();
   await expect(mobile.getByText(/Patch link copied/)).toBeVisible();
+  await mobile.getByRole('button', { name: 'Close workspace' }).click();
   await mobile.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(mobile.getByText('Transport playing')).toBeVisible();
   await desktopContext.close();

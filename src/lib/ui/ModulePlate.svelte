@@ -118,6 +118,7 @@
   function restoreMobilePianoFocus(): void {
     mobilePianoTrigger?.focus();
   }
+
 </script>
 
 <article
@@ -177,6 +178,13 @@
       <button type="button" data-help-key="solo" aria-label={`Solo ${module.name}`} aria-pressed={module.solo} onclick={() => onpatch({ solo: !module.solo })}>S</button>
       <button type="button" data-help-key="mute" aria-label={`Mute ${module.name}`} aria-pressed={module.mute} onclick={() => onpatch({ mute: !module.mute })}>M</button>
     </div>
+    {#if !desktopSurface}
+      <div class="mobile-module-meta" aria-label={`${module.type} module, ${module.type === 'mixer' ? 'rack mix' : `slot ${module.activeSlot + 1}`}, ${playing && module.monitor && !module.mute ? 'active' : 'idle'}`}>
+        <span class:active={playing && module.monitor && !module.mute} aria-hidden="true"></span>
+        <strong>{module.type}</strong>
+        {#if module.type !== 'mixer'}<span>Slot {module.activeSlot + 1}</span>{/if}
+      </div>
+    {/if}
   </header>
 
   {#if desktopSurface}

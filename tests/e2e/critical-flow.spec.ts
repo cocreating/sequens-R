@@ -20,11 +20,14 @@ test('the mobile critical path loads, plays, changes, shares, and reopens', asyn
   expect(jitter).toBeLessThan(20);
   await expect(page.locator('.scheduler-jitter')).toContainText(/Scheduler jitter \d+\.\d{3} ms σ/);
 
-  await page.getByRole('button', { name: 'Random' }).click();
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
+  await page.getByRole('button', { name: 'Randomize' }).click();
+  await page.getByRole('button', { name: 'Close workspace' }).click();
   const density = page.getByLabel('Density');
   await density.fill('72');
   await expect(density).toHaveValue('72');
 
+  await page.getByRole('button', { name: 'Workspace', exact: true }).click();
   await page.getByRole('button', { name: 'Share' }).click();
   await expect(page.getByText(/Patch link copied/)).toBeVisible();
   const sharedUrl = page.url();
@@ -34,8 +37,10 @@ test('the mobile critical path loads, plays, changes, shares, and reopens', asyn
   recipient.on('pageerror', (error) => pageErrors.push(error));
   await recipient.goto(sharedUrl);
   await expect(recipient.getByText('Shared patch loaded locally')).toBeVisible();
+  await recipient.getByRole('button', { name: 'Workspace', exact: true }).click();
   await recipient.getByRole('button', { name: 'Share' }).click();
   await expect.poll(() => new URL(recipient.url()).hash).toBe(new URL(sharedUrl).hash);
+  await recipient.getByRole('button', { name: 'Close workspace' }).click();
   await recipient.getByRole('button', { name: 'Play', exact: true }).click();
   await expect(recipient.getByRole('button', { name: 'Pause' })).toBeVisible();
 
@@ -69,9 +74,7 @@ test('modules can change while transport is running', async ({ page }) => {
 test('the dedicated drag handle reorders modules', async ({ page }) => {
   await page.goto('/');
 
-  for (const name of ['Drums', 'Bass', 'Chords']) {
-    await page.getByRole('button', { name: `Collapse ${name}` }).click();
-  }
+  for (const name of ['Drums', 'Bass', 'Chords']) await page.getByRole('button', { name: `Collapse ${name}` }).click();
 
   const drumsHandle = page.getByRole('button', { name: 'Reorder Drums' });
   const bassModule = page.getByRole('listitem', { name: 'Bass' });

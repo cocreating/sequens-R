@@ -26,9 +26,9 @@ for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }
     await page.goto('/');
 
     const addModuleButton = page.getByRole('button', { name: 'Add Module', exact: true });
-    await expect(addModuleButton).toContainText('Add Module');
-    expect(await addModuleButton.evaluate((button) => button.closest('.app-header-controls') !== null)).toBe(true);
-    const transportFieldTops = await page.locator('.transport-fields > button').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
+    await expect(addModuleButton).toContainText('Add');
+    expect(await addModuleButton.evaluate((button) => button.closest('.mobile-transport-dock') !== null)).toBe(true);
+    const transportFieldTops = await page.locator('.mobile-context-bar .transport-fields > button:visible').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
     expect(new Set(transportFieldTops).size).toBe(1);
     await addModuleButton.click();
     await expect(page.locator('.module-choice')).toHaveCount(11);
@@ -122,7 +122,7 @@ test.describe('Phase 6 mobile editors', () => {
     expect(await viewport.evaluate((element) => element.scrollHeight > element.clientHeight)).toBe(true);
     expect(await dialog.evaluate((element) => Math.abs(element.getBoundingClientRect().width - innerWidth) < 1)).toBe(true);
     await expect(page.locator('.step-grid-scroll-hint').first()).toHaveText('Swipe');
-    expect((await page.locator('.step-lane button').first().boundingBox())!.width).toBeGreaterThanOrEqual(32);
+    expect((await page.locator('.step-lane button').first().boundingBox())!.width).toBeGreaterThanOrEqual(40);
 
     await dialog.getByRole('button', { name: 'Close Piano roll editor' }).click();
     await expect(dialog).toBeHidden();
@@ -169,6 +169,40 @@ test.describe('Phase 6 mobile editors', () => {
   });
 });
 
+test('uses the focused mobile shell without moving non-Piano editors into dialogs', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto('/');
+
+  const contextBar = page.getByRole('group', { name: 'Project and musical context' });
+  const dock = page.getByRole('group', { name: 'Mobile transport controls' });
+  await expect(contextBar).toBeVisible();
+  await expect(contextBar).toContainText('New Project');
+  await expect(dock).toBeVisible();
+  await expect(dock).toHaveCSS('position', 'fixed');
+  await expect(page.locator('.mobile-module-meta')).toHaveCount(3);
+  await expect(page.locator('.mobile-module-meta').first()).toContainText('Slot 1');
+
+  const workspaceTrigger = contextBar.getByRole('button', { name: 'Workspace', exact: true });
+  await workspaceTrigger.click();
+  const workspace = page.locator('#studio-workspace');
+  const workspaceBox = await workspace.boundingBox();
+  expect(workspaceBox!.width).toBeCloseTo(375, 0);
+  expect(workspaceBox!.height).toBeCloseTo(812, 0);
+  for (const section of ['Project', 'Scenes', 'Hardware', 'Export']) await expect(workspace.getByRole('link', { name: section, exact: true })).toBeVisible();
+  await workspace.getByRole('button', { name: 'Close workspace' }).click();
+  await expect(workspaceTrigger).toBeFocused();
+
+  await addModule(page, 'arp');
+  const arp = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'arp module name' }) });
+  await expect(arp.getByLabel('Direction')).toBeVisible();
+  await expect(page.locator('dialog.mobile-module-editor-dialog')).toHaveCount(0);
+
+  await page.setViewportSize({ width: 812, height: 375 });
+  await expect(contextBar).toBeVisible();
+  await expect(dock).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
 test('round-trips shared Arp, Euclid, and Mod edits from desktop through mobile', async ({ browser }) => {
   const desktopContext = await browser.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
   const desktop = await desktopContext.newPage();
@@ -195,6 +229,7 @@ test('round-trips shared Arp, Euclid, and Mod edits from desktop through mobile'
   await mobileEuclid.getByRole('button', { name: 'Decrease Ring 1 hits' }).click();
   await mobileMod.getByRole('button', { name: 'Expand Mod' }).click();
   await mobileMod.getByLabel('LFO 1 shape').selectOption({ label: 'Saw' });
+  await mobile.getByRole('button', { name: 'Workspace', exact: true }).click();
   await mobile.getByRole('button', { name: 'Share' }).click();
   await expect(mobile.getByText(/Patch link copied/)).toBeVisible();
   const mobileHash = new URL(mobile.url()).hash;

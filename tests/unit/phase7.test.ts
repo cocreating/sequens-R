@@ -78,7 +78,7 @@ function randomRack(random: () => number): ShareableRack {
         const steps = Math.floor((definition.max - definition.min) / definition.step);
         return [definition.key, definition.min + randomInt(random, 0, steps) * definition.step];
       }));
-      if (type !== 'mixer' && type !== 'cc' && type !== 'mod') {
+      if (type !== 'cc' && type !== 'mod') {
         sound.pan = randomInt(random, -100, 100);
         sound.delaySend = randomInt(random, 0, 100);
         sound.reverbSend = randomInt(random, 0, 100);

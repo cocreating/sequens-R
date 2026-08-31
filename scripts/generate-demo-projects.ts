@@ -5,7 +5,7 @@ import { soundForPreset, type RackMixState } from '../src/lib/audio/sound';
 import { createProject, projectToJson, type ProjectDocument } from '../src/lib/project/model';
 import { createModule, type PatternSlot, type RackModule, type RackState } from '../src/lib/state/rack';
 
-type SoundModuleType = Exclude<ModuleType, 'mixer' | 'cc' | 'mod'>;
+type SoundModuleType = Exclude<ModuleType, 'cc' | 'mod'>;
 const DEMO_GENRES = ['Minimal Techno', 'Minimal House Techno', 'Ambient Techno & Breakbeats'] as const;
 type DemoGenre = (typeof DEMO_GENRES)[number];
 
@@ -56,7 +56,6 @@ const DEFAULT_COLORS: Readonly<Record<ModuleType, RackModule['color']>> = {
   bass: 'forest',
   acid: 'olive',
   chords: 'plum',
-  mixer: 'graphite',
   arp: 'navy',
   euclid: 'teal',
   piano: 'indigo',

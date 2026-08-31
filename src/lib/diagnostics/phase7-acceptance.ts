@@ -11,7 +11,7 @@ const C10_MODULE_TYPES = [
 ] as const satisfies readonly ModuleType[];
 
 const MODULE_LABELS: Readonly<Record<ModuleType, string>> = {
-  drums: 'Drums', bass: 'Bass', acid: 'Acid', chords: 'Chords', mixer: 'Mixer',
+  drums: 'Drums', bass: 'Bass', acid: 'Acid', chords: 'Chords',
   arp: 'Arp', euclid: 'Euclid', piano: 'Piano', cc: 'CC', mod: 'Mod', synth: 'Synth',
 };
 

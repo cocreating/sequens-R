@@ -91,7 +91,6 @@ export const SOUND_PARAM_SCHEMAS: Readonly<Record<ModuleType, ParamSchema>> = Ob
     { key: 'width', label: 'Width', min: 0, max: 100, step: 1, defaultValue: 55, unit: '%', control: 'knob' },
     { key: 'chorus', label: 'Chorus', min: 0, max: 100, step: 1, defaultValue: 24, unit: '%', control: 'knob' },
   ]),
-  mixer: silentSchema,
   arp: defineSchema([
     { key: 'tone', label: 'Tone', min: 0, max: 100, step: 1, defaultValue: 52, unit: '%', control: 'knob' },
     { key: 'brightness', label: 'Brightness', min: 0, max: 100, step: 1, defaultValue: 58, unit: '%', control: 'knob' },
@@ -134,7 +133,6 @@ const PRESET_ROWS = [
   { id: 'bass-core-v2', moduleType: 'bass', label: 'Roundhouse', params: { wave: 1, cutoff: 55, resonance: 18, envelope: 42, drive: 10, glide: 8, sub: 38 }, outputTrimDb: 7 },
   { id: 'acid-core-v2', moduleType: 'acid', label: 'Pulsewire', params: { wave: 0, cutoff: 55, resonance: 64, envAmount: 60, decay: 45, accent: 65, slide: 35, drive: 12 }, outputTrimDb: 14.2 },
   { id: 'chords-core-v2', moduleType: 'chords', label: 'Velvetframe', params: { tone: 48, attack: 28, release: 62, width: 55, chorus: 24 }, outputTrimDb: 10.6 },
-  { id: 'silent-mixer-v2', moduleType: 'mixer', label: 'Silent control', params: defaultsFor('mixer') },
   { id: 'arp-core-v2', moduleType: 'arp', label: 'Threadlight', params: { tone: 52, brightness: 58, decay: 42, character: 22 }, outputTrimDb: 19.7 },
   { id: 'euclid-core-v2', moduleType: 'euclid', label: 'Orbit', params: defaultsFor('euclid'), outputTrimDb: 13.25 },
   { id: 'piano-core-v2', moduleType: 'piano', label: 'Amberkey', params: { tone: 52, bell: 34, decay: 58, tremolo: 12 }, outputTrimDb: 15.7 },
@@ -210,7 +208,7 @@ export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.m
 export const SOUND_PRESET_IDS: readonly string[] = Object.freeze(SOUND_PRESETS.map(({ id }) => id));
 
 const DEFAULT_PRESET_IDS: Readonly<Record<ModuleType, string>> = Object.freeze({
-  drums: 'drums-core-v2', bass: 'bass-core-v2', acid: 'acid-core-v2', chords: 'chords-core-v2', mixer: 'silent-mixer-v2',
+  drums: 'drums-core-v2', bass: 'bass-core-v2', acid: 'acid-core-v2', chords: 'chords-core-v2',
   arp: 'arp-core-v2', euclid: 'euclid-core-v2', piano: 'piano-core-v2', cc: 'silent-cc-v2', mod: 'silent-mod-v2',
   synth: 'synth-core-v2',
 });
@@ -265,7 +263,7 @@ export function validateSoundState(type: ModuleType, sound: SoundState): void {
   assertQuantized(sound.pan, COMMON_OUTPUT_SCHEMA.pan, `${type}.pan`);
   assertQuantized(sound.delaySend, COMMON_OUTPUT_SCHEMA.delaySend, `${type}.delaySend`);
   assertQuantized(sound.reverbSend, COMMON_OUTPUT_SCHEMA.reverbSend, `${type}.reverbSend`);
-  if ((type === 'mixer' || type === 'cc' || type === 'mod') && (sound.pan !== 0 || sound.delaySend !== 0 || sound.reverbSend !== 0)) {
+  if ((type === 'cc' || type === 'mod') && (sound.pan !== 0 || sound.delaySend !== 0 || sound.reverbSend !== 0)) {
     throw new RangeError(`${type} is silent and cannot use audio sends or pan.`);
   }
 }
@@ -277,7 +275,7 @@ export function validateRackMixState(mix: RackMixState): void {
 export function soundForPreset(type: ModuleType, presetId: string, output?: Pick<SoundState, 'pan' | 'delaySend' | 'reverbSend'>): SoundState {
   const preset = presetById(presetId);
   if (preset.moduleType !== type) throw new RangeError(`${presetId} cannot be used by ${type}.`);
-  const silent = type === 'mixer' || type === 'cc' || type === 'mod';
+  const silent = type === 'cc' || type === 'mod';
   return {
     engineVersion: SOUND_ENGINE_VERSION,
     presetId,

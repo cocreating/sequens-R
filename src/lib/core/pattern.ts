@@ -12,7 +12,7 @@ export const SCALE_NAMES = [
 ] as const;
 
 export type ScaleName = (typeof SCALE_NAMES)[number];
-export const CORE_MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'mixer', 'synth'] as const;
+export const CORE_MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'synth'] as const;
 export const DESKTOP_MODULE_TYPES = ['arp', 'euclid', 'piano', 'cc', 'mod'] as const;
 export type CoreModuleType = (typeof CORE_MODULE_TYPES)[number];
 export type DesktopModuleType = (typeof DESKTOP_MODULE_TYPES)[number];
@@ -65,7 +65,7 @@ export function isDesktopModule(type: ModuleType): type is DesktopModuleType {
 }
 
 export function isControlModule(type: ModuleType): boolean {
-  return type === 'mixer' || type === 'cc' || type === 'mod';
+  return type === 'cc' || type === 'mod';
 }
 
 export interface ParamDefinition {

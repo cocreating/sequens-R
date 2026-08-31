@@ -73,8 +73,6 @@
   import { DEFAULT_RACK_MIX, presetById, type RackMixState } from './lib/audio/sound';
 
   const APP_VERSION = __APP_VERSION__;
-  const EMPTY_MODULE_METERS: AudioDiagnostics['moduleMeters'] = Object.freeze({});
-  const SILENT_METER: AudioDiagnostics['masterMeter'] = Object.freeze({ peakDbfs: -120, rmsDbfs: -120 });
 
   let midiState = $state<MidiManagerState>({ permission: 'unknown', connected: false, outputs: [], clockPortIds: [] });
   const midi = new MidiManager(createBrowserMidiEnvironment(), (next) => { midiState = next; });
@@ -89,7 +87,6 @@
     bass: { label: 'Bass', description: 'Monophonic low-end pattern generator', icon: 'musical-note' },
     acid: { label: 'Acid', description: 'Resonant 303-style melodic sequence', icon: 'adjustments-horizontal' },
     chords: { label: 'Chords', description: 'Polyphonic harmonic progressions', icon: 'squares' },
-    mixer: { label: 'Mixer', description: 'Rack levels, panorama, and effects', icon: 'adjustments-horizontal' },
     arp: { label: 'Arp', description: 'Chord-driven melodic arpeggiator', icon: 'arrow-path' },
     euclid: { label: 'Euclid', description: 'Polymetric Euclidean percussion', icon: 'sparkles' },
     piano: { label: 'Piano roll', description: 'Editable notes, velocity, and accents', icon: 'musical-note' },
@@ -276,7 +273,7 @@
   }
 
   function meteringRequested(): boolean {
-    return mixerOpen || workspaceOpen || rack.modules.some((module) => module.type === 'mixer' && !module.collapsed);
+    return mixerOpen || workspaceOpen;
   }
 
   function syncMetering(): void {
@@ -1255,12 +1252,6 @@
           onmove={(offset) => moveModule(module.id, offset)}
           ondelete={() => deleteModule(module.id)}
           rackModules={rack.modules}
-          ontargetpatch={patchModule}
-          rackMix={rack.mix}
-          meters={module.type === 'mixer' ? audioDiagnostics.moduleMeters : EMPTY_MODULE_METERS}
-          masterMeter={module.type === 'mixer' ? audioDiagnostics.masterMeter : SILENT_METER}
-          ontargetsound={setSoundParam}
-          onmixparam={setRackMixParam}
           midiOutputs={midiState.outputs}
           onexportmidi={() => { void exportMidi(module); }}
         />

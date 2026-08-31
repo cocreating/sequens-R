@@ -1,14 +1,13 @@
 import type { ModuleType, ParamSchema } from '../core/pattern';
 import { GENERATORS } from '../generators';
 
-export const MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'mixer', 'arp', 'euclid', 'piano', 'cc', 'mod', 'synth'] as const satisfies readonly ModuleType[];
+export const MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'arp', 'euclid', 'piano', 'cc', 'mod', 'synth'] as const satisfies readonly ModuleType[];
 
 export const PARAM_SCHEMAS: Readonly<Record<ModuleType, ParamSchema>> = {
   drums: GENERATORS.drums.paramSchema,
   bass: GENERATORS.bass.paramSchema,
   acid: GENERATORS.acid.paramSchema,
   chords: GENERATORS.chords.paramSchema,
-  mixer: GENERATORS.mixer.paramSchema,
   arp: GENERATORS.arp.paramSchema,
   euclid: GENERATORS.euclid.paramSchema,
   piano: GENERATORS.piano.paramSchema,

@@ -69,7 +69,6 @@ const DEFAULT_NAMES: Readonly<Record<ModuleType, string>> = {
   bass: 'Bass',
   acid: 'Acid',
   chords: 'Chords',
-  mixer: 'Mixer',
   arp: 'Arp',
   euclid: 'Euclid',
   piano: 'Piano roll',
@@ -169,7 +168,6 @@ export function setMutationSchedule(module: RackModule, on: boolean, everyNLoops
 }
 
 export function mutateModule(module: RackModule): RackModule {
-  if (module.type === 'mixer') return module;
   const revert = cloneSlot(module.slots[module.activeSlot]!);
   const mutated = setModuleSeed(module, mutationSeed(module.seed, module.mutation.intensity));
   return { ...mutated, mutation: { ...module.mutation, revert } };
@@ -341,7 +339,7 @@ export function toShareableRack(rack: RackState): ShareableRack {
 export function randomizeRack(rack: RackState): RackState {
   return {
     ...rack,
-    modules: rack.modules.map((module) => module.type === 'mixer' || module.type === 'piano' ? module : setModuleSeed(module, randomSeed())),
+    modules: rack.modules.map((module) => module.type === 'piano' ? module : setModuleSeed(module, randomSeed())),
   };
 }
 

@@ -24,7 +24,7 @@
     ariaLabel?: string;
   }
 
-  let { id, modules, mix, meters, masterMeter, onpatch, onsound, onmix, oncommit, showPan = true, showSends = true, ariaLabel = 'Module mixer' }: Props = $props();
+  let { id, modules, mix, meters, masterMeter, onpatch, onsound, onmix, oncommit, showPan = true, showSends = true, ariaLabel = 'Rack mixer' }: Props = $props();
 
   function valueOf(event: Event): number {
     return Number((event.currentTarget as HTMLInputElement).value);
@@ -45,7 +45,7 @@
 
 <div class="mixer-panel" data-help-key="mixer" role="group" aria-label={ariaLabel}>
   <div class="mixer-channels">
-    {#each modules.filter((module) => module.type !== 'mixer') as target (target.id)}
+    {#each modules as target (target.id)}
       <section class="mixer-channel" aria-label={`${target.name} channel`}>
         <div class="mixer-channel-heading">
           <strong>{target.name}</strong>

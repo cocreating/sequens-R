@@ -15,16 +15,13 @@ describe('legacy project fixtures', () => {
     expect(modules?.map(({ type }) => type)).toEqual(['drums', 'arp']);
   });
 
-  it('imports Basic Electro 2 through the production project boundary', () => {
-    const source = readFileSync(new URL('../../public/projects/basic-electro2.sequens-r.json', import.meta.url), 'utf8');
-    const project = projectFromJson(source);
-    const modules = project.racks[0]?.state.modules;
+  it('rejects projects containing the retired Mixer module type', () => {
+    const source = JSON.parse(readFileSync(new URL('../../public/projects/basic-electro.sequens-r.json', import.meta.url), 'utf8')) as {
+      racks: Array<{ state: { modules: Array<{ type: string }> } }>;
+    };
+    source.racks[0]!.state.modules[0]!.type = 'mixer';
 
-    expect(project.name).toBe('Basic Electro 2');
-    expect(project.schemaVersion).toBe(6);
-    expect(project.racks[0]?.state.bpm).toBe(110);
-    expect(modules?.map(({ type }) => type)).toEqual(['mixer', 'bass', 'drums', 'arp']);
-    expect(modules?.every(({ sound }) => sound.engineVersion === 2)).toBe(true);
+    expect(() => projectFromJson(JSON.stringify(source))).toThrow(/Unknown module type/u);
   });
 
 });
@@ -72,7 +69,6 @@ describe('bundled Synth electronic projects', () => {
       expect(rack.modules.length).toBeLessThanOrEqual(3);
       expect(rack.modules.every(({ slots }) => slots.length === 8)).toBe(true);
       expect(rack.modules.every(({ sound }) => sound.engineVersion === 2)).toBe(true);
-      expect(rack.modules.some(({ type }) => type === 'mixer')).toBe(false);
       expect(synths).toHaveLength(1);
       expect(synth?.sound.presetId.startsWith('synth-')).toBe(true);
       expect(synth?.slots.every(({ handEdited, pattern }) => !handEdited && pattern === null)).toBe(true);

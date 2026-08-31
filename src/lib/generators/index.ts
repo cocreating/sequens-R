@@ -3,7 +3,6 @@ import { acidGenerator } from './acid';
 import { bassGenerator } from './bass';
 import { chordsGenerator } from './chords';
 import { drumsGenerator } from './drums';
-import { mixerGenerator } from './mixer';
 import { arpGenerator } from './arp';
 import { euclidGenerator } from './euclid';
 import { pianoGenerator } from './piano';
@@ -36,7 +35,6 @@ export const GENERATORS: Readonly<Record<ModuleType, RegisteredGenerator>> = {
   bass: register(bassGenerator),
   acid: register(acidGenerator),
   chords: register(chordsGenerator),
-  mixer: register(mixerGenerator),
   arp: register(arpGenerator),
   euclid: register(euclidGenerator),
   piano: register(pianoGenerator),
@@ -45,4 +43,4 @@ export const GENERATORS: Readonly<Record<ModuleType, RegisteredGenerator>> = {
   synth: register(synthGenerator),
 };
 
-export { acidGenerator, arpGenerator, bassGenerator, ccGenerator, chordsGenerator, drumsGenerator, euclidGenerator, mixerGenerator, modGenerator, pianoGenerator, synthGenerator };
+export { acidGenerator, arpGenerator, bassGenerator, ccGenerator, chordsGenerator, drumsGenerator, euclidGenerator, modGenerator, pianoGenerator, synthGenerator };

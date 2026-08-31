@@ -59,7 +59,7 @@ interface RackMixState {
 ```
 
 - `RackModule.level` stays at its current top-level location to reduce migration risk. Every module receives `sound`; silent modules use a validated silent preset and zero sends.
-- `RackState.mix` owns the single rack-level effects/master configuration. Any Mixer module edits that same state; adding a second Mixer does not create a second master or second set of returns.
+- `RackState.mix` owns the single rack-level effects/master configuration. The permanent header Mixer is its only editing surface; there is no Mixer module or second mixer instance.
 - Project schema advances from 3 to 4. Patch schema advances from 2 to 3.
 - Project v1–v3 and patch v1–v2 migrate to `legacy-<module-type>-v1`, preserving the pre-Phase-7 monitor topology. Newly created modules use engine version 2 defaults.
 - A visible, explicit “Upgrade sound” command may map legacy presets to new defaults. It participates in Undo and never runs automatically.
@@ -233,13 +233,13 @@ Deliver:
 - per-module pan and shared delay/reverb sends;
 - one tempo-synced stereo delay and one shared stereo reverb;
 - explicit master headroom, DC blocker, gentle corrective EQ, bounded soft clip, final limiter, peak/RMS meters;
-- `RackMixState` controls in every Mixer module without duplicating DSP;
+- `RackMixState` controls in the permanent Mixer panel without duplicating DSP;
 - identical live/bounce graph and documented two-second maximum export tail.
 
 DoD:
 
 - unity dry path nulls within tolerance when pan/sends/character are neutral;
-- two Mixer modules display/control one rack graph and create no voices;
+- the permanent Mixer controls one rack graph and creates no module voice;
 - mute/solo/delete/preset switching has no click or orphaned effect tail;
 - 16 hot modules produce no digital clipping, NaN, or persistent DC;
 - delay remains musical across supported BPM changes;
@@ -463,10 +463,10 @@ Phase 7.0 is accepted automatically. It does not claim improved timbre: the curr
 
 Implemented on 2026-08-25:
 
-- `RackAudioGraph` is the single rack-level topology used by `AudioEngine` and `renderRackAudio`. Each audible module owns one strip with preset trim, smoothed level, stereo pan, squared delay/reverb sends, and a peak/RMS tap. Mixer, CC, and Mod modules allocate neither a voice nor a strip.
+- `RackAudioGraph` is the single rack-level topology used by `AudioEngine` and `renderRackAudio`. Each audible module owns one strip with preset trim, smoothed level, stereo pan, squared delay/reverb sends, and a peak/RMS tap. CC and Mod modules allocate neither a voice nor a strip; Mixer is an application panel, not a module.
 - One shared cross-feedback stereo delay follows the six supported beat divisions and ramps BPM/division/feedback changes over 20–30 ms. One deterministic 1.35-second procedural stereo convolution impulse is shared by the rack. Returns are linear and remain part of mix and isolated-stem bounces.
 - The common master provides −6 dB input headroom, an 18 Hz DC blocker, a gentle 280 Hz corrective bell, a compensated bounded soft-character curve, a final limiter, and a fixed −1.5 dB output ceiling. Live channel/master meters update through existing bounded diagnostics polling.
-- Every Mixer module displays the same per-channel level/pan/sends and the same five `RackMixState` controls; adding Mixer modules does not create another delay, reverb, master, or internal voice.
+- The permanent Mixer displays per-channel level/pan/sends and the five `RackMixState` controls. No additional mixer can be created without a future buses/submix routing design.
 - Continuous sound macros, panorama, sends, feedback, returns, and master character use the shared accessible rotary knob. Channel level remains a fader, while wave and delay-division choices retain discrete segmented/select controls.
 - Preset replacement still uses a 12 ms crossfade. Mute, solo, panic, deletion, and continuous mixer changes ramp `AudioParam` values; shared effect energy decays in the common return after a source strip is removed.
 - Offline renders schedule only the requested musical bars, retain a deterministic maximum two-second effect tail, and fade the final 20 ms. The one-bar 118 BPM evidence files are 4.0339 seconds long.
@@ -765,9 +765,9 @@ Automated verification:
 
 Implemented on 2026-08-26:
 
-- The catalog now contains only the released engine-version-2 library: six Drum kits, eight Bass presets, twelve Acid presets, ten Chords presets, eight Arp presets, eight Piano presets, six Euclid palettes, and the three explicit silent Mixer/CC/Mod records. The ten temporary preset records and the visible per-module upgrade action were removed.
+- At that release, the catalog contained six Drum kits, eight Bass presets, twelve Acid presets, ten Chords presets, eight Arp presets, eight Piano presets, six Euclid palettes, and silent Mixer/CC/Mod records. The later permanent-mixer cleanup removed the Mixer type and its silent preset; CC and Mod remain explicit silent controls.
 - The pre-release Drum, square/triangle poly, and Acid compatibility DSP were deleted. `VoiceFactory` now has one direct implementation per audible family and explicit null results for control modules; live monitoring and offline bounce continue to use that same factory.
-- Project schema 5 accepts schemas 0–4. Documents without released sound state, and schema-4 modules containing a retired preset ID, receive the current v2 default for their own module family. The unlisted `Basic Electro 2` compatibility fixture is stored as schema 5 with `silent-mixer-v2`; the older `Basic Electro` fixture proves import migration to released defaults.
+- Project schema 5 accepted schemas 0–4 and migrated missing sound state to released defaults. The later permanent-mixer cleanup removed the `Basic Electro 2` Mixer fixture; the original `Basic Electro` fixture continues to prove import migration to released defaults.
 - Patch schema 4 deliberately rejects compact-link schemas 1–3 because removing ten registry entries changes every subsequent compact index. New links deeply round-trip exact sound and mix state; no tombstone preset or retired DSP remains in the runtime.
 - Starter rack version 2 starts exclusively on current defaults. Before the app mounts, a one-time release marker clears the former IndexedDB project database and all origin Cache Storage entries. Workbox then registers with the new `sequens-r-phase-7-v2` cache namespace and `cleanupOutdatedCaches`, so subsequent starts retain new schema-5 projects without repeating the reset.
 
@@ -782,7 +782,7 @@ Phase 7.11 implementation is complete, but Phase 7 acceptance remains open. Requ
 
 ## Synth-led demo library follow-up
 
-On 2026-08-31, the fifteen-project catalog was regenerated as schema-version-6 Synth-led arrangements through `npm run demos:generate`. The accessible grouped picker now contains five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats projects. Every project contains exactly one Synth, uses two or three modules with eight slots each, stays at or below 130 BPM, and exposes Intro, Groove, Variation, and Peak scenes. The shared rack mix remains exposed by the permanent Mixer view and no catalog demo contains a Mixer module. The Basic Electro documents remain unlisted migration fixtures. Production import/build checks and deterministic regeneration pass. Human listening approval for the fifteen complete mixes and their scene transitions remains open and is not implied by automated acceptance. See `demo-projects.md` for the complete matrix and maintenance contract.
+On 2026-08-31, the fifteen-project catalog was regenerated as schema-version-6 Synth-led arrangements through `npm run demos:generate`. The accessible grouped picker now contains five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats projects. Every project contains exactly one Synth, uses two or three modules with eight slots each, stays at or below 130 BPM, and exposes Intro, Groove, Variation, and Peak scenes. The shared rack mix remains exposed by the permanent Mixer view. Mixer is no longer a module type, and the original Basic Electro document remains the sole unlisted migration fixture. Production import/build checks and deterministic regeneration pass. Human listening approval for the fifteen complete mixes and their scene transitions remains open and is not implied by automated acceptance. See `demo-projects.md` for the complete matrix and maintenance contract.
 
 Post-classification verification passed with 0 Svelte/TypeScript errors or warnings, 130 unit tests across 19 files, byte-identical demo regeneration, a 119.73 KiB gzip initial-JavaScript build against the 200 KiB limit, and all 58 Playwright tests. Scheduler-message jitter measured 0.127 ms σ; the five- and fourteen-module browser mixes measured −15.17 LUFS-I / −2.88 dBTP and −13.75 LUFS-I / −1.26 dBTP. These results preserve the automated Phase 7 gates but do not close Synth, complete-mix, transition, or physical-device listening evidence.
 

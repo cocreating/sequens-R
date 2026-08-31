@@ -203,7 +203,7 @@ Observe how Synth is actually used before expanding it. The strongest candidate 
 - Svelte/TypeScript check: zero errors and warnings.
 - Unit/property suite: 130 tests pass, including Synth phrase goldens, six-style distinction, boundary density/range/length, mutation cadence, eight presets, DSP mappings, factory identity, schema migration, and randomized compact-link coverage.
 - Production build: passes with 119.46 KiB initial JavaScript gzip against the 200 KiB budget.
-- Targeted Chrome coverage: Synth add/edit/mutate/sound/route/share/restore and axe serious/critical checks pass at 375 × 667; all eleven module types also add and play at 375 × 667 and 375 × 812.
+- Targeted Chrome coverage: Synth add/edit/mutate/sound/route/share/restore and axe serious/critical checks pass at 375 × 667; all ten current module types also add and play at 375 × 667 and 375 × 812.
 - All eight Synth presets render as distinct references at -18 LUFS-I within 0.04 LU, below -9 dBTP, and below -120 dBFS DC in the deterministic one-bar browser bench.
 - Offline browser bounce: the five-module rack containing Synth and the 14-module regression both render audibly below the -1 dBTP ceiling.
 - The 16-module/140-BPM acceptance rack now contains Synth and remains preparable through Workspace → Diagnostics.
@@ -212,4 +212,4 @@ These automated results do not approve the eight preset balances individually an
 
 ## 10. Synth-first bundled demos
 
-On 2026-08-31 the fifteen-project shipping catalog was rebuilt around Synth. It now contains five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats demos at 86–130 BPM. Every demo has exactly one Synth, two or three modules total, eight deterministic slots per module, and Intro/Groove/Variation/Peak scenes. No catalog project stores a Mixer module; the default Mixer view continues to expose the shared rack mix. The unlisted Basic Electro documents remain unchanged migration fixtures. Strict checks, 130 unit tests, byte-identical regeneration, the production bundle gate, and all 58 Playwright tests pass. Structural automation covers the catalog contract, while human approval of the changed musical balances remains open.
+On 2026-08-31 the fifteen-project shipping catalog was rebuilt around Synth. It now contains five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats demos at 86–130 BPM. Every demo has exactly one Synth, two or three modules total, eight deterministic slots per module, and Intro/Groove/Variation/Peak scenes. The permanent Mixer view exposes the shared rack mix; Mixer is no longer a module type. The original Basic Electro document remains an unlisted migration fixture. Strict checks, 130 unit tests, byte-identical regeneration, the production bundle gate, and all 58 Playwright tests pass. Structural automation covers the catalog contract, while human approval of the changed musical balances remains open.

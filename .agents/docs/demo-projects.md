@@ -12,9 +12,9 @@ Status: fifteen Synth-first minimal electronic demos implemented with automated 
 - Each project has four scenes: Intro uses slot 4, Groove uses slot 0, Variation uses slot 1, and Peak uses slot 3.
 - Tempos range from 86 to 130 BPM. No shipping demo exceeds 130 BPM.
 - The material is intentionally restrained and electronic: minimal techno, minimal house/techno, ambient techno, and electro breakbeats. Classical-form titles provide structural flavor, not quotations or transcriptions.
-- Demos never persist a Mixer module. Channel levels, pan, sends, shared delay/reverb returns, and master character use the ordinary rack mix state exposed by the permanent Mixer view.
+- Mixer is not a module type. Channel levels, pan, sends, shared delay/reverb returns, and master character use the ordinary rack mix state exposed by the permanent header panel.
 - Demo files are copied into the production `dist/projects/` output by Vite and fetched on demand. They are not part of the initial PWA shell precache.
-- `basic-electro.sequens-r.json` and `basic-electro2.sequens-r.json` remain unlisted compatibility fixtures for schema migration tests. Unlisted local Basic Electro experiments are also outside the shipping catalog.
+- `basic-electro.sequens-r.json` remains an unlisted schema-migration fixture. The former Mixer-module fixture was removed with the retired module type. Unlisted local Basic Electro experiments are also outside the shipping catalog.
 
 ## Contemporary genre classification
 
@@ -59,6 +59,6 @@ When editing a demo:
 3. Run `npm run check`, `npm test`, `npm run build`, `npm run check:bundle`, and the demo-picker Playwright flow.
 4. Audition Groove and all three alternate scenes at matched playback level before release approval. Automated import, schema, and build checks do not replace musical or mix approval.
 
-`tests/unit/example-project.test.ts` imports all fifteen catalog files through `projectFromJson` and verifies the exact classified index, three groups of five, schema 6, the 130 BPM and three-module ceilings, one Synth per demo, engine-v2 sound state, eight slots, four scenes, valid scene/module references, generated Synth slot state, and the absence of Mixer modules. `tests/unit/demos.test.ts` covers genre validation and stable grouping. The unlisted Basic Electro fixtures retain separate migration coverage.
+`tests/unit/example-project.test.ts` imports all fifteen catalog files through `projectFromJson` and verifies the exact classified index, three groups of five, schema 6, the 130 BPM and three-module ceilings, one Synth per demo, engine-v2 sound state, eight slots, four scenes, valid scene/module references, and generated Synth slot state. `tests/unit/demos.test.ts` covers genre validation and stable grouping. The unlisted Basic Electro fixture retains separate migration coverage.
 
 The 2026-08-31 full regression passes 0 Svelte/TypeScript errors or warnings, 130 unit tests across 19 files, byte-identical demo regeneration, the production PWA build at 119.73 KiB initial JavaScript gzip against the 200 KiB limit, and all 58 Playwright checks. The browser mix regression measured −15.17 LUFS-I / −2.88 dBTP for five modules and −13.75 LUFS-I / −1.26 dBTP for fourteen modules; scheduler-message jitter measured 0.127 ms σ. These checks validate classification, structure, integration, and engine safety; human listening approval for the fifteen complete mixes and their scene transitions remains open.

@@ -52,8 +52,10 @@ test('mixer exposes channel sends, pan, rack returns, character, and live meters
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto('/');
   await page.getByRole('button', { name: 'Add Module', exact: true }).click();
-  await page.locator('.module-choice[data-module-type="mixer"]').click();
-  const mixer = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'mixer module name' }) });
+  await expect(page.locator('.module-choice[data-module-type="mixer"]')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Close module library' }).click();
+  await page.getByRole('button', { name: 'Mixer', exact: true }).click();
+  const mixer = page.getByRole('group', { name: 'Rack mixer controls' });
   await expect(mixer.getByRole('region', { name: 'Drums channel' })).toBeVisible();
   await expect(mixer.getByLabel('Rack master')).toBeVisible();
   await expect(mixer.getByLabel('Delay division')).toBeVisible();
@@ -61,6 +63,8 @@ test('mixer exposes channel sends, pan, rack returns, character, and live meters
   await expect(mixer.getByLabel('Delay return')).toBeVisible();
   await expect(mixer.getByLabel('Reverb return')).toBeVisible();
   await expect(mixer.getByLabel('Master character')).toBeVisible();
+  await page.getByRole('button', { name: 'Show PAN controls' }).click();
+  await page.getByRole('button', { name: 'Show SENDS controls' }).click();
 
   const drums = mixer.getByRole('region', { name: 'Drums channel' });
   await expect(drums.getByLabel('Pan')).toBeVisible();
@@ -73,10 +77,6 @@ test('mixer exposes channel sends, pan, rack returns, character, and live meters
   await expect(drums.locator('.mix-meter')).toHaveAttribute('aria-label', /Drums peak/);
   expect(await mixer.getByLabel('Delay return').evaluate((element) => element.closest('.rotary-knob') !== null)).toBe(true);
 
-  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
-  await page.locator('.module-choice[data-module-type="mixer"]').click();
-  const mixers = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'mixer module name' }) });
-  await expect(mixers).toHaveCount(2);
-  await mixers.nth(0).getByLabel('Delay return').fill('41');
-  await expect(mixers.nth(1).getByLabel('Delay return')).toHaveValue('41');
+  await mixer.getByLabel('Delay return').fill('41');
+  await expect(mixer.getByLabel('Delay return')).toHaveValue('41');
 });

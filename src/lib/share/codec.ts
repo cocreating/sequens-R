@@ -17,6 +17,28 @@ import {
 export const PATCH_SCHEMA_VERSION = 5;
 const COMPATIBLE_PATCH_SCHEMA_VERSIONS = [4, PATCH_SCHEMA_VERSION] as const;
 const FORMAT = 'deflate-raw' as ConstructorParameters<typeof CompressionStream>[0];
+const RETIRED_MIXER_MODULE_CODE = 4;
+const RETIRED_MIXER_PRESET_CODE = 4;
+
+function moduleTypeCode(type: ModuleType): number {
+  const index = MODULE_TYPES.indexOf(type);
+  return index < RETIRED_MIXER_MODULE_CODE ? index : index + 1;
+}
+
+function moduleTypeForCode(code: number): ModuleType | undefined {
+  if (code === RETIRED_MIXER_MODULE_CODE) return undefined;
+  return MODULE_TYPES[code < RETIRED_MIXER_MODULE_CODE ? code : code - 1];
+}
+
+function soundPresetCode(presetId: string): number {
+  const index = SOUND_PRESET_IDS.indexOf(presetId);
+  return index < RETIRED_MIXER_PRESET_CODE ? index : index + 1;
+}
+
+function soundPresetIdForCode(code: number): string | undefined {
+  if (code === RETIRED_MIXER_PRESET_CODE) return undefined;
+  return SOUND_PRESET_IDS[code < RETIRED_MIXER_PRESET_CODE ? code : code - 1];
+}
 
 function expectArray(value: CborValue, label: string): readonly CborValue[] {
   if (!Array.isArray(value)) throw new TypeError(`${label} must be an array.`);
@@ -75,7 +97,7 @@ function compactSound(type: ModuleType, sound: SoundState): readonly CborValue[]
     return value === preset.params[definition.key] ? null : value;
   });
   while (values.at(-1) === null) values.pop();
-  const tuple: CborValue[] = [SOUND_PRESET_IDS.indexOf(sound.presetId), values];
+  const tuple: CborValue[] = [soundPresetCode(sound.presetId), values];
   const output = [sound.pan + 100, sound.delaySend, sound.reverbSend];
   if (sound.pan !== 0 || sound.delaySend !== 0 || sound.reverbSend !== 0) tuple.push(...output);
   return tuple;
@@ -97,7 +119,7 @@ function toTuple(rack: ShareableRack): CborValue {
     normalized.key.root,
     SCALE_NAMES.indexOf(normalized.key.scale),
     normalized.modules.map((module) => [
-      MODULE_TYPES.indexOf(module.type),
+      moduleTypeCode(module.type),
       module.seed,
       compactParams(module),
       ...(module.sound === undefined ? [] : [compactSound(module.type, module.sound)]),
@@ -108,7 +130,7 @@ function toTuple(rack: ShareableRack): CborValue {
 
 function decodeSound(type: ModuleType, value: CborValue): SoundState {
   const tuple = expectArray(value, 'Module sound');
-  const presetId = SOUND_PRESET_IDS[expectInteger(tuple[0], 'Sound preset')];
+  const presetId = soundPresetIdForCode(expectInteger(tuple[0], 'Sound preset'));
   if (presetId === undefined) throw new RangeError('Unknown sound preset index.');
   const preset = presetById(presetId);
   if (preset.moduleType !== type) throw new RangeError(`${presetId} cannot be used by ${type}.`);
@@ -135,7 +157,7 @@ function decodeSound(type: ModuleType, value: CborValue): SoundState {
 
 function decodeModule(value: CborValue): ShareableModule {
   const tuple = expectArray(value, 'Module');
-  const type = MODULE_TYPES[expectInteger(tuple[0], 'Module type')];
+  const type = moduleTypeForCode(expectInteger(tuple[0], 'Module type'));
   if (type === undefined) throw new RangeError('Unknown module type.');
   const seed = expectInteger(tuple[1], 'Module seed');
   const encodedParams = expectArray(tuple[2] ?? [], 'Module params');

@@ -178,19 +178,21 @@ Cross-module work should generally happen in this order:
 - Eight-slot allocation, stealing, release, panic, and mono-retention tests.
 - Arp follow-context and SMF regressions whenever the chord data contract changes.
 
-## 7. Mixer
+## 7. Permanent mixer
 
 ### Released contract
 
-- Control-only module with `silent-mixer-v2`; it generates no pattern events and creates no voice.
-- Provides one UI surface over the rack's shared audio graph, regardless of how many Mixer modules appear.
+- Permanent full-width panel opened from the header beside Workspace; it is not available from New module.
+- Provides the only UI surface over the rack's shared audio graph and never creates a pattern or voice.
 - Channel controls: internal level, solo, mute, panorama, delay send, reverb send, and meters for audible modules.
+- Responsive presentation: three compact channels per narrow portrait row where width permits, expanding to four, five, or six columns in landscape and desktop; each channel places its LED meter directly beside its vertical fader before the optional PAN and send controls.
+- PAN and SENDS start hidden across all channels and are revealed independently by accessible pressed-state heading toggles. On desktop, PAN occupies the first knob row and Delay/Reverb share the second.
 - Rack controls: Delay division, Delay feedback, Delay return, Reverb return, Master character, and master meter.
 - Shared graph: cross-feedback stereo delay, one procedural convolution reverb, headroom stage, soft clipper, and live meter taps.
 
 ### Known limitations
 
-- Mixer modules are duplicate views of one rack mix, not independent submixes.
+- There are no buses, submixes, or additional mixer instances; introduce those routing concepts before considering another mixer surface.
 - No channel EQ, insert effects, groups, sends beyond delay/reverb, automation, or scene morphing.
 - Metering is diagnostic rather than a calibrated mastering display.
 - Delay and reverb character choices are fixed; bundled demos are fetched on demand and are not part of the offline shell.

@@ -182,7 +182,7 @@ test.describe('Phase 5 polish', () => {
 
     await addModule.click();
     await expect(page.getByRole('dialog', { name: 'Add a module' })).toBeVisible();
-    await expect(page.locator('.module-choice')).toHaveCount(11);
+    await expect(page.locator('.module-choice')).toHaveCount(10);
     await expect(page.locator('.module-choice[data-module-type="acid"]')).toContainText('Resonant 303-style melodic sequence');
     await page.getByRole('button', { name: 'Close module library' }).click();
 

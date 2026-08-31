@@ -88,7 +88,7 @@ function moduleTrack(module: RackModule, rack: RackState, bars: number): number[
 
 export function createSmfType1(rack: RackState, bars: number, moduleId: string | null = null): Uint8Array {
   if (![1, 2, 4, 8].includes(bars)) throw new RangeError('MIDI export length must be 1, 2, 4, or 8 bars.');
-  const modules = rack.modules.filter((module) => module.type !== 'mixer' && (moduleId === null || module.id === moduleId));
+  const modules = rack.modules.filter((module) => moduleId === null || module.id === moduleId);
   if (moduleId !== null && modules.length === 0) throw new RangeError('The requested MIDI module does not exist.');
   const endTick = bars * BEATS_PER_BAR * PPQ;
   const header = chunk('MThd', [...uint16(1), ...uint16(modules.length + 1), ...uint16(PPQ)]);

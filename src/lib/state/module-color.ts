@@ -21,7 +21,6 @@ const DEFAULT_MODULE_COLORS: Readonly<Record<ModuleType, ModuleColor>> = {
   bass: 'forest',
   acid: 'olive',
   chords: 'plum',
-  mixer: 'graphite',
   arp: 'navy',
   euclid: 'teal',
   piano: 'indigo',

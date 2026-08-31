@@ -20,7 +20,7 @@
   let { moduleId, moduleType, sound, onparam, oncommit, onpreset }: Props = $props();
   let schema = $derived(SOUND_PARAM_SCHEMAS[moduleType]);
   let presets = $derived(presetsFor(moduleType));
-  let silent = $derived(moduleType === 'mixer' || moduleType === 'cc' || moduleType === 'mod');
+  let silent = $derived(moduleType === 'cc' || moduleType === 'mod');
   let presetLabel = $derived(moduleType === 'drums' ? 'Kit' : moduleType === 'euclid' ? 'Palette' : 'Preset');
   let silentNote = $derived(
     moduleType === 'cc'

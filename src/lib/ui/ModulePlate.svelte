@@ -5,13 +5,10 @@
   import { isControlModule, type MusicalKey, type NoteEvent, type Pattern } from '../core/pattern';
   import Knob from './Knob.svelte';
   import StepGrid from './StepGrid.svelte';
-  import MixerPanel from './MixerPanel.svelte';
   import type { MidiPortInfo } from '../midi/types';
   import PianoRoll from './PianoRoll.svelte';
   import { moduleHelpFor } from './module-help';
   import SoundPanel from './SoundPanel.svelte';
-  import type { RackMixState } from '../audio/sound';
-  import type { MeterReading } from '../audio/rack-graph';
   import { MODULE_COLOR_OPTIONS, moduleColorValue, type ModuleColor } from '../state/module-color';
   import Icon from './Icon.svelte';
 
@@ -39,12 +36,6 @@
     onmove: (offset: -1 | 1) => void;
     ondelete: () => void;
     rackModules?: readonly RackModule[];
-    ontargetpatch?: (id: string, patch: Partial<RackModule>) => void;
-    rackMix?: RackMixState;
-    meters?: Readonly<Record<string, MeterReading>>;
-    masterMeter?: MeterReading;
-    ontargetsound?: (id: string, key: string, value: number) => void;
-    onmixparam?: (key: keyof RackMixState, value: number) => void;
     midiOutputs?: readonly MidiPortInfo[];
     onexportmidi: () => void;
     onpattern: (pattern: Pattern) => void;
@@ -53,7 +44,7 @@
     onclearautomation: () => void;
   }
 
-  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], ontargetpatch, rackMix, meters = {}, masterMeter = { peakDbfs: -120, rmsDbfs: -120 }, ontargetsound, onmixparam, midiOutputs = [], onexportmidi, onpattern, onpianoaudition, onautomation, onclearautomation }: Props = $props();
+  let { module, musicalKey, bpm, playheadBeat, playing, desktopSurface, onpatch, onparam, onparamcommit, onsoundparam, onsoundpreset, onseed, oncopyseed, onslot, onmutate, onrevert, onintensity, onschedule, onstep, onduplicate, onmove, ondelete, rackModules = [], midiOutputs = [], onexportmidi, onpattern, onpianoaudition, onautomation, onclearautomation }: Props = $props();
   let pattern = $derived(module.type === 'piano' ? pianoEditorPattern(module) : modulePattern(module, musicalKey, rackModules));
   let pianoHarmonySources = $derived(rackModules
     .filter((candidate) => candidate.type === 'chords')
@@ -169,7 +160,7 @@
           <button type="button" aria-label={`Move ${module.name} earlier`} onclick={() => onmove(-1)}>Move earlier</button>
           <button type="button" aria-label={`Move ${module.name} later`} onclick={() => onmove(1)}>Move later</button>
         {/if}
-        {#if module.type !== 'mixer'}<button type="button" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>{/if}
+        <button type="button" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>
         <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>Delete</button>
       </div>
     </details>
@@ -179,10 +170,10 @@
       <button type="button" data-help-key="mute" aria-label={`Mute ${module.name}`} aria-pressed={module.mute} onclick={() => onpatch({ mute: !module.mute })}>M</button>
     </div>
     {#if !desktopSurface}
-      <div class="mobile-module-meta" aria-label={`${module.type} module, ${module.type === 'mixer' ? 'rack mix' : `slot ${module.activeSlot + 1}`}, ${playing && module.monitor && !module.mute ? 'active' : 'idle'}`}>
+      <div class="mobile-module-meta" aria-label={`${module.type} module, slot ${module.activeSlot + 1}, ${playing && module.monitor && !module.mute ? 'active' : 'idle'}`}>
         <span class:active={playing && module.monitor && !module.mute} aria-hidden="true"></span>
         <strong>{module.type}</strong>
-        {#if module.type !== 'mixer'}<span>Slot {module.activeSlot + 1}</span>{/if}
+        <span>Slot {module.activeSlot + 1}</span>
       </div>
     {/if}
   </header>
@@ -200,19 +191,14 @@
 
   {#if !module.collapsed}
     <div class="module-body">
-      {#if module.type === 'mixer'}
-        {#if rackMix !== undefined}
-          <MixerPanel id={module.id} modules={rackModules} mix={rackMix} {meters} {masterMeter} onpatch={(id, patch) => ontargetpatch?.(id, patch)} onsound={(id, key, value) => ontargetsound?.(id, key, value)} onmix={(key, value) => onmixparam?.(key, value)} oncommit={onparamcommit} />
-        {/if}
-      {:else}
-        {#if module.type === 'cc'}
+      {#if module.type === 'cc'}
           <div class="automation-tools">
             <button type="button" data-help-key="record-movement" aria-pressed={recordingCc} onclick={toggleCcRecording}>{recordingCc ? 'Recording movement' : 'Record movement'}</button>
             <button type="button" data-help-key="clear-automation" onclick={onclearautomation} disabled={module.automation.length === 0}>Clear automation</button>
             <span data-help-key="automation-count">{module.automation.length} recorded {module.automation.length === 1 ? 'point' : 'points'}</span>
           </div>
-        {/if}
-        {#if module.type !== 'piano' && !isControlModule(module.type)}
+      {/if}
+      {#if module.type !== 'piano' && !isControlModule(module.type)}
         <div class="pattern-tools">
           <div class="slot-picker" data-help-key="pattern-slots" role="group" aria-label={`${module.name} pattern slots`}>
             {#each module.slots as _, index (`${module.id}-slot-${index}`)}
@@ -226,8 +212,8 @@
           <button type="button" data-help-key="mutate" onclick={onmutate}>Mutate</button>
           <button type="button" data-help-key="revert" onclick={onrevert} disabled={module.mutation.revert === null}>Revert</button>
         </div>
-        {/if}
-        {#if module.type === 'piano'}
+      {/if}
+      {#if module.type === 'piano'}
           {#if desktopSurface}
             <PianoRoll editorId={`${module.id}-desktop-piano`} {pattern} {musicalKey} harmonySources={pianoHarmonySources} syncBeat={playheadBeat} {playing} {bpm} inKey={module.params.inKey === 1} onchange={onpattern} onaudition={onpianoaudition} />
           {:else}
@@ -256,9 +242,8 @@
               </div>
             </dialog>
           {/if}
-        {:else if !isControlModule(module.type)}
+      {:else if !isControlModule(module.type)}
           <StepGrid {pattern} syncBeat={playheadBeat} {playing} {bpm} editable={module.type === 'drums'} laneLabels={module.type === 'drums' ? ['Kick', 'Snare', 'Closed hat', 'Open hat', 'Clap', 'Tom', 'Rim', 'Perc'] : []} ontoggle={onstep} />
-        {/if}
       {/if}
       {#if schema.length > 0 && (module.type !== 'piano' || desktopSurface)}
         {#if !desktopSurface && module.type === 'cc'}

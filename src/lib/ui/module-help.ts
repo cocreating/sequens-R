@@ -122,10 +122,6 @@ const CONTROL_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
     title: 'Recorded automation',
     body: 'Shows how many CC movement points are stored in this module’s loop.',
   },
-  mixer: {
-    title: 'Module mixer',
-    body: 'Controls the internal sound level, solo state, and mute state of every sound module in this rack.',
-  },
   'mixer-solo': {
     title: 'Mixer solo',
     body: 'Auditions this channel while silencing other non-soloed sound modules.',

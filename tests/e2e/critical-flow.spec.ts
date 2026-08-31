@@ -58,10 +58,10 @@ test('modules can change while transport is running', async ({ page }) => {
   await acid.getByRole('button', { name: 'Delete Acid' }).click();
   await expect(page.locator('article')).toHaveCount(3);
 
-  await page.getByRole('button', { name: 'Add Module', exact: true }).click();
-  await page.locator('.module-choice[data-module-type="mixer"]').click();
+  await page.getByRole('button', { name: 'Mixer', exact: true }).click();
   await page.getByRole('button', { name: 'Mute Bass from mixer' }).click();
   await expect(page.getByRole('button', { name: 'Mute Bass', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Close mixer' }).click();
 
   const firstStep = page.getByRole('listitem', { name: 'Drums' }).getByRole('button', { name: 'Kick, step 1', exact: true });
   const before = await firstStep.getAttribute('aria-pressed');

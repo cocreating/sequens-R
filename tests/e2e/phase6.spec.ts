@@ -6,7 +6,6 @@ const labels = {
   arp: 'Arp',
   cc: 'CC Control',
   euclid: 'Euclid',
-  mixer: 'Mixer',
   mod: 'Mod',
   piano: 'Piano roll',
   synth: 'Synth',
@@ -19,7 +18,7 @@ async function addModule(page: Page, type: keyof typeof labels): Promise<void> {
 }
 
 for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }]) {
-  test(`adds and plays all eleven module types at ${viewport.width} × ${viewport.height}`, async ({ page }) => {
+  test(`adds and plays all ten module types at ${viewport.width} × ${viewport.height}`, async ({ page }) => {
     await page.setViewportSize(viewport);
     const pageErrors: Error[] = [];
     page.on('pageerror', (error) => pageErrors.push(error));
@@ -31,10 +30,10 @@ for (const viewport of [{ width: 375, height: 667 }, { width: 375, height: 812 }
     const transportFieldTops = await page.locator('.mobile-context-bar .transport-fields > button:visible').evaluateAll((fields) => fields.map((field) => field.getBoundingClientRect().top));
     expect(new Set(transportFieldTops).size).toBe(1);
     await addModuleButton.click();
-    await expect(page.locator('.module-choice')).toHaveCount(11);
+    await expect(page.locator('.module-choice')).toHaveCount(10);
     await page.getByRole('button', { name: 'Close module library' }).click();
-    for (const type of ['acid', 'mixer', 'arp', 'euclid', 'piano', 'cc', 'mod', 'synth'] as const) await addModule(page, type);
-    await expect(page.locator('.module-list > article')).toHaveCount(11);
+    for (const type of ['acid', 'arp', 'euclid', 'piano', 'cc', 'mod', 'synth'] as const) await addModule(page, type);
+    await expect(page.locator('.module-list > article')).toHaveCount(10);
 
     await page.getByRole('button', { name: 'Play', exact: true }).click();
     await expect(page.getByText('Transport playing')).toBeVisible();

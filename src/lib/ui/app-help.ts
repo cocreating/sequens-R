@@ -182,7 +182,7 @@ const APP_HELP: Readonly<Record<string, AppHelpInfo>> = {
   },
   'add-module': {
     title: 'Add module',
-    body: 'Opens the visual module library. Choose a named generator, editor, mixer, or MIDI control module to append it to the active rack. A rack can contain up to 16 modules.',
+    body: 'Opens the visual module library. Choose a named generator, editor, or MIDI control module to append it to the active rack. The permanent Mixer is opened from the header instead. A rack can contain up to 16 modules.',
   },
   status: {
     title: 'Session status',

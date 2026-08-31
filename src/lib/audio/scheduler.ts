@@ -22,7 +22,7 @@ export function collectWindowEvents(
   const scheduled: ScheduledNote[] = [];
 
   for (const module of snapshot.modules) {
-    if (module.type === 'mixer' || module.mute || (anySolo && !module.solo)) continue;
+    if (module.mute || (anySolo && !module.solo)) continue;
     for (const event of module.pattern.events) {
       const laneLength = event.lane === undefined ? undefined : module.pattern.laneLengths?.[event.lane];
       const cycleBeats = (laneLength ?? module.pattern.lengthSteps) / module.pattern.stepsPerBeat;

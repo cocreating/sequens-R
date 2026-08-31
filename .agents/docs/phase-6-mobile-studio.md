@@ -4,7 +4,7 @@ Status: implementation and automated acceptance complete on 2026-08-25. Physical
 
 ## Outcome
 
-Chrome on Android can add and edit all eleven existing module types without requesting a desktop site. Mobile remains a vertical, one-hand-oriented surface; it does not reproduce the desktop parallel-lane layout.
+Chrome on Android can add and edit all ten module types without requesting a desktop site. The permanent Mixer remains available from the header. Mobile remains a vertical, one-hand-oriented surface; it does not reproduce the desktop parallel-lane layout.
 
 ## Scope
 
@@ -34,7 +34,7 @@ Chrome on Android can add and edit all eleven existing module types without requ
 
 ## Automated acceptance
 
-- Playwright at 375 × 667 and 375 × 812 covers all eleven module types after the additive Synth follow-up.
+- Playwright at 375 × 667 and 375 × 812 covers all ten module types after the additive Synth follow-up and Mixer-module retirement.
 - A desktop-authored Arp/Euclid/Mod link opens, edits, re-shares, and regenerates identically on mobile.
 - Desktop-authored Piano and recorded-CC projects import, edit, persist, export, and re-import identically on mobile.
 - Editing, collapsing, reordering, duplicating, and deleting while playing produces no application errors or stuck UI state; audio discontinuity remains a physical listening check.
@@ -59,7 +59,7 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 
 ## Implemented surface
 
-- All eleven module types, including the additive Synth module, are available from the same mobile creation control used by desktop; no generator, project, patch, engine, routing, or export fork was introduced.
+- All ten module types, including Synth, are available from the same mobile creation control used by desktop; Mixer remains a permanent header panel rather than a creatable module.
 - Arp and Euclid reuse the schema-driven controls and locally scrolling pattern grids below 1024 CSS px.
 - CC Control groups its four controllers into native disclosures while keeping loop length, recording, clearing, routing, mute, solo, and monitor controls available. Mod groups its three LFOs the same way.
 - Only one Arp, Euclid, Piano roll, CC Control, or Mod body remains expanded on mobile. Creation, expansion, duplication, shared-link restoration, local restoration, and project import all enforce this presentation rule without changing engine snapshot membership.
@@ -95,7 +95,7 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 - initial JavaScript: 78.68 KiB gzip / 200 KiB budget;
 - Playwright: 36 passed, including Phase 6 coverage at 375 × 667 and 375 × 812;
 - axe: no serious or critical violations with the mobile Piano dialog open, while the existing desktop accessibility gate remains green;
-- all eleven module types can be added and played at both mobile sizes without page errors or document-level horizontal overflow;
+- all ten module types can be added and played at both mobile sizes without page errors or document-level horizontal overflow;
 - Arp, Euclid, CC Control, and Mod mobile editor flows pass, including one-dense-body coordination;
 - Piano touch/keyboard authoring, selection, movement, resizing, local overflow, close, and focus restoration pass;
 - mobile reorder, duplicate, delete, save, reload, and edit-during-playback flows pass;

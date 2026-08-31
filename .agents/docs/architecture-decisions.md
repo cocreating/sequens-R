@@ -40,7 +40,7 @@ Decision: persist a versioned project document in native IndexedDB through a sma
 - Project import runs through the same migration and validation path as IndexedDB restoration.
 - `navigator.storage.persist()` is requested from the explicit Save gesture; ordinary edits still autosave without prompting.
 - New documents use `New Project` as their default name. Migration rewrites only the former exact default `Untitled Project`, preserving every user-authored project name.
-- Versioned example documents may ship under `public/projects/` and enter the app only through the ordinary import/migration boundary. A validated `public/projects/index.json` catalog drives the Workspace demo picker. Each entry carries a required genre, and the current fifteen Piano-forward schema-version-5 demos are grouped as five Neoclassical Ambient, five Post-Classical Minimalism, and five Melodic Electronica projects at 56–126 BPM. Each has one to three musical modules, eight slots per module, expressive Piano patterns, and Prelude/Theme/Variation/Finale scenes. Demos persist rack mix state and use the permanent Mixer view without adding a Mixer module. The two Basic Electro documents remain unlisted migration fixtures rather than catalog entries. All catalog files are regenerated with `npm run demos:generate`.
+- Versioned example documents may ship under `public/projects/` and enter the app only through the ordinary import/migration boundary. A validated `public/projects/index.json` catalog drives the Workspace demo picker. Each entry carries a required genre, and the current fifteen schema-version-6 demos are grouped as five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats projects at 86–130 BPM. Every demo contains Synth, uses one to three musical modules with eight slots each, and exposes Intro/Groove/Variation/Peak scenes. Demos persist rack mix state and use the permanent Mixer view without adding a Mixer module. The two Basic Electro documents remain unlisted migration fixtures rather than catalog entries. All catalog files are regenerated with `npm run demos:generate`.
 
 ## AD-004 · Phase 3 export contract
 
@@ -118,7 +118,7 @@ Status: implemented with automated acceptance on 2026-08-25; physical Android ac
 - Dense mobile editors use progressive disclosure. The rack remains vertical and collapsible, only one dense body is expanded at a time, and Piano roll opens in a dedicated full-screen editing surface with explicit close and focus restoration.
 - Horizontal scrolling is local to musical grids and editors, never the document. All critical actions retain native semantics or an accessible equivalent, visible focus, reduced-motion behavior, and 44 CSS px touch targets.
 - UI visibility never controls audio or MIDI lifetime. Collapsed, off-screen, or temporarily hidden modules remain in the immutable engine snapshot and continue playing.
-- The phase is accepted only with real Android evidence at 375 CSS px, including all ten module types and the C10 16-module/140-BPM load scenario. Desktop behavior and deterministic outputs must remain unchanged.
+- The phase is accepted only with real Android evidence at 375 CSS px, now including all eleven module types after Synth, and the C10 16-module/140-BPM load scenario. Desktop behavior and deterministic outputs must remain unchanged.
 - The user's explicit 2026-08-25 amendment authorizes Phase 6 implementation while the already documented physical Phase 3 and Phase 5 acceptance evidence remains pending. It does not waive or mark those earlier gates complete.
 
 ## AD-010 · Phase 7 sound identity and mix
@@ -143,7 +143,7 @@ Status: specified and accepted on 2026-08-25; Phase 7.0 accepted, Phase 7.1–7.
 - Native Web Audio remains the engine. Tone.js, a second transport, cloud assets, user sampling, per-module convolution, and internal CC/Mod destinations are outside Phase 7.
 - Phase 7 cannot be accepted without the existing C10 Android scenario at 16 active modules/140 BPM, all bundle/offline gates, live/bounce parity, migration/share evidence, and explicit listening approval for every audible family.
 - Amendment, 2026-08-25, executed on 2026-08-26: the final library pass removes the temporary DSP/presets and performs a one-time local project/PWA cache invalidation. A release marker prevents repeat deletion, and Workbox uses a new Phase-7-v2 namespace. This supersedes permanent compatibility playback but does not waive listening, export, bundle, scheduler, or Android checks.
-- Future changes for all ten modules are centralized in `module-improvement-roadmap.md`. That roadmap may propose work but cannot silently override accepted generator, MIDI, persistence, audio, performance, or accessibility contracts.
+- Future changes for all eleven modules are centralized in `module-improvement-roadmap.md`. That roadmap may propose work but cannot silently override accepted generator, MIDI, persistence, audio, performance, or accessibility contracts.
 - The final Phase 7 gates use an in-app acceptance harness that prepares the fixed 16-module/140-BPM rack, aggregates ten minutes of worst observed browser diagnostics, accepts explicit physical measurements/listening decisions, and copies a Markdown report. The harness is evidence collection only: it cannot self-approve listening, infer physical MIDI jitter/xruns/UI profiling, persist acceptance, or replace the reference Android run.
 
 ## AD-011 · Adaptive Android audio budget and idle-work reduction
@@ -180,3 +180,12 @@ Status: implemented with automated acceptance on 2026-08-31; human preset listen
 - Project schema 6 accepts schemas 0–5. Patch schema 5 appends Synth after Mod and appends Synth presets after the Phase 7 catalog, preserving every earlier compact index. Patch schema 4 remains readable because this change is strictly additive; patch schemas 1–3 remain rejected.
 - Compact links retain the existing safety boundary and omit hardware MIDI port/channel routes. Projects preserve full routing.
 - The native schema-driven module plate provides keyboard/touch controls and contextual help on desktop and mobile. No custom editor, dependency, runtime network request, second transport, or CSS framework is introduced.
+
+## AD-014 · Plan A mobile information hierarchy
+
+Status: implemented with automated and visual-browser acceptance on 2026-08-31; the existing physical Android gate remains open.
+
+- The shared header keeps one DOM/focus order but groups actions by intent. Playback leads, transport follows, and utilities come last. On narrow surfaces, scrolling beyond 160 CSS px applies a presentation-only compact state that retains Play/Stop, Tempo/Key, Workspace, Add, and Share.
+- Mobile density is reduced through progressive disclosure rather than feature removal. Piano Melody and Transform tools use native `details`; desktop reuses the same snippets in its expanded toolbar.
+- Below 30rem the module library is a safe-area-aware `100vw × 100dvh` dialog with a sticky internal header. Workspace project actions expose visible labels on mobile.
+- Step grids retain deterministic data and local scrolling while increasing mobile cell width to 32 CSS px and exposing a Swipe cue. None of these choices change rack state, project or patch schemas, engine snapshots, MIDI, audio, or SMF output.

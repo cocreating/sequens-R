@@ -139,6 +139,7 @@
   let workspaceOpen = $state(false);
   let pageScrollY = $state(0);
   let headerHeight = $state(0);
+  let mobileHeaderCompact = $derived(!desktopSurface && pageScrollY > 160);
   let appHelp = $derived(appHelpFor(appHelpKey));
   let demoProjectGroups = $derived(groupDemoProjects(demoProjects));
 
@@ -949,7 +950,7 @@
 <svelte:head><title>sequens-R · generative MIDI sequencer</title></svelte:head>
 
 <a class="skip-link" href="#rack">Skip to rack</a>
-<header bind:clientHeight={headerHeight} class:playing class:app-help-active={appHelpActive} class="app-header">
+<header bind:clientHeight={headerHeight} class:playing class:app-help-active={appHelpActive} class:mobile-header-compact={mobileHeaderCompact} class="app-header">
   <div class="brand">
     <div class="brand-kicker">
       <p>Local generative MIDI</p>
@@ -959,50 +960,54 @@
   </div>
   {#if supported && initialized}
     <div class="app-header-controls" role="group" aria-label="Application controls" onpointermove={showAppHelp} onfocusin={showAppHelp}>
+      <div class="header-playback-actions" role="group" aria-label="Playback controls">
+        <button
+          type="button"
+          class="header-action header-play"
+          data-app-help-key={playing ? 'pause' : 'play'}
+          data-playing={playing}
+          aria-label={playing ? 'Pause' : 'Play'}
+          onclick={playing ? pause : play}
+        ><Icon name={playing ? 'pause' : 'play'} /></button>
+        <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
+      </div>
       <Transport bpm={rack.bpm} root={rack.key.root} scale={rack.key.scale} ontap={tapTempo} onbpm={setTempo} onbpmcommit={endCoalescing} onkey={setKey} />
-      <button
-        type="button"
-        class="header-action workspace-toggle has-icon icon-only"
-        data-app-help-key="workspace"
-        aria-label="Workspace"
-        popovertarget="studio-workspace"
-      ><Icon name="squares" /></button>
-      <button
-        type="button"
-        class="header-action mixer-toggle has-icon icon-only"
-        data-app-help-key="mixer"
-        aria-label="Mixer"
-        popovertarget="studio-mixer"
-      ><Icon name="adjustments-horizontal" /></button>
-      <button
-        id="add-module-button"
-        type="button"
-        class="header-action has-icon"
-        data-app-help-key="add-module"
-        aria-label="Add Module"
-        aria-haspopup="dialog"
-        popovertarget="module-picker"
-        disabled={rack.modules.length >= 16}
-      ><Icon name="plus" /><span>Add Module</span></button>
-      <button type="button" class="header-action header-random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
-      <button type="button" class="header-action icon-only" data-app-help-key="stop" aria-label="Stop" onclick={stop}><Icon name="stop" /></button>
-      <button type="button" class="header-action has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
-      <button
-        type="button"
-        class="app-help-toggle"
-        aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
-        aria-pressed={appHelpActive}
-        aria-controls="app-help-readout"
-        onclick={toggleAppHelp}
-      ><Icon name="question-mark-circle" /></button>
-      <button
-        type="button"
-        class="header-action header-play"
-        data-app-help-key={playing ? 'pause' : 'play'}
-        data-playing={playing}
-        aria-label={playing ? 'Pause' : 'Play'}
-        onclick={playing ? pause : play}
-      ><Icon name={playing ? 'pause' : 'play'} /></button>
+      <div class="header-utility-actions" role="group" aria-label="Studio controls">
+        <button
+          type="button"
+          class="header-action workspace-toggle has-icon icon-only"
+          data-app-help-key="workspace"
+          aria-label="Workspace"
+          popovertarget="studio-workspace"
+        ><Icon name="squares" /></button>
+        <button
+          type="button"
+          class="header-action mixer-toggle has-icon icon-only"
+          data-app-help-key="mixer"
+          aria-label="Mixer"
+          popovertarget="studio-mixer"
+        ><Icon name="adjustments-horizontal" /></button>
+        <button
+          id="add-module-button"
+          type="button"
+          class="header-action has-icon"
+          data-app-help-key="add-module"
+          aria-label="Add Module"
+          aria-haspopup="dialog"
+          popovertarget="module-picker"
+          disabled={rack.modules.length >= 16}
+        ><Icon name="plus" /><span>Add Module</span></button>
+        <button type="button" class="header-action header-random has-icon icon-only" data-app-help-key="random" aria-label="Random" onclick={() => { replaceRack(randomizeRack(rack)); status = 'New deterministic seeds generated'; }}><Icon name="sparkles" /></button>
+        <button type="button" class="header-action header-share has-icon icon-only" data-app-help-key="share" aria-label="Share" onclick={share}><Icon name="link" /></button>
+        <button
+          type="button"
+          class="app-help-toggle"
+          aria-label={`${appHelpActive ? 'Turn off' : 'Turn on'} general help`}
+          aria-pressed={appHelpActive}
+          aria-controls="app-help-readout"
+          onclick={toggleAppHelp}
+        ><Icon name="question-mark-circle" /></button>
+      </div>
     </div>
   {/if}
   <CompositorPlayhead {playing} bpm={rack.bpm} beats={4} syncBeat={playheadBeat} className="bar-progress" />
@@ -1110,13 +1115,13 @@
           <section class="project-tools" data-app-help-key="project-actions" aria-label="Project actions">
             <label for="project-name" data-app-help-key="project-name">Project</label>
             <input id="project-name" data-app-help-key="project-name" value={project.name} oninput={(event) => setProjectName(event.currentTarget.value)} />
-            <button type="button" class="has-icon icon-only" data-app-help-key="undo" aria-label="Undo" onclick={undo} disabled={!canUndo}><Icon name="arrow-uturn-left" /></button>
-            <button type="button" class="has-icon icon-only" data-app-help-key="redo" aria-label="Redo" onclick={redo} disabled={!canRedo}><Icon name="arrow-uturn-right" /></button>
-            <button type="button" class="has-icon icon-only" data-app-help-key="save" aria-label={sharedDraft ? 'Save draft' : 'Save'} onclick={saveProject}><Icon name="document-check" /></button>
-            <button type="button" class="has-icon icon-only" data-app-help-key="export-project" aria-label="Export" onclick={() => void exportProject()}><Icon name="document-arrow-up" /></button>
-            <label class="import-project has-icon icon-only" data-app-help-key="import-project" for="project-import"><Icon name="document-arrow-down" /><span class="visually-hidden">Import</span></label>
+            <button type="button" class="has-icon icon-only" data-app-help-key="undo" aria-label="Undo" onclick={undo} disabled={!canUndo}><Icon name="arrow-uturn-left" /><span class="project-action-label">Undo</span></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="redo" aria-label="Redo" onclick={redo} disabled={!canRedo}><Icon name="arrow-uturn-right" /><span class="project-action-label">Redo</span></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="save" aria-label={sharedDraft ? 'Save draft' : 'Save'} onclick={saveProject}><Icon name="document-check" /><span class="project-action-label">{sharedDraft ? 'Save draft' : 'Save'}</span></button>
+            <button type="button" class="has-icon icon-only" data-app-help-key="export-project" aria-label="Export" onclick={() => void exportProject()}><Icon name="document-arrow-up" /><span class="project-action-label">Export</span></button>
+            <label class="import-project has-icon icon-only" data-app-help-key="import-project" for="project-import"><Icon name="document-arrow-down" /><span class="project-action-label">Import</span></label>
             <input id="project-import" class="visually-hidden" data-app-help-key="import-project" type="file" accept="application/json,.json" onchange={importProject} />
-            <button type="button" class="demo-projects-trigger has-icon icon-only" data-app-help-key="demo-projects" popovertarget="demo-projects-popover" aria-label="Demos projects" onclick={() => void loadDemoProjectIndex()}><Icon name="folder-open" /></button>
+            <button type="button" class="demo-projects-trigger has-icon icon-only" data-app-help-key="demo-projects" popovertarget="demo-projects-popover" aria-label="Demos projects" onclick={() => void loadDemoProjectIndex()}><Icon name="folder-open" /><span class="project-action-label">Demos</span></button>
           </section>
 
           <div bind:this={demoProjectsPopover} class="demo-projects-popover" id="demo-projects-popover" popover aria-labelledby="demo-projects-heading">

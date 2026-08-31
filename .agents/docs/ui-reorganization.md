@@ -1,6 +1,6 @@
 # Studio UI reorganization evidence
 
-Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded through 2026-08-29.
+Status: implementation complete on 2026-08-24; follow-up refinements and current regression acceptance recorded through 2026-08-31.
 
 This is the UI consolidation completed before Phase 6 was defined. It changes hierarchy and control presentation without changing generator output, project persistence, share encoding, or export formats. Its later transport refinement adds exact-beat Pause/Resume scheduling and MIDI Continue behavior. The resulting vertical mobile rack, disclosures, schema-driven controls, and performance-first hierarchy became the foundation used by the implemented Phase 6 mobile editors.
 
@@ -8,7 +8,7 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 
 ## Delivered
 
-- Version 0.1.0 places one `transport-fields` row with visible `TAB` and icon-only Tempo/Key permanently inside the sticky `app-header`. A single wrapping `app-header-controls` group then continues directly through Workspace, Mixer, the visibly labelled Add Module action, transparent icon-only Random, Stop, Share, General Help, and Play/Pause. It replaces the former breakpoint relocation and core/end wrappers, giving every viewport one coherent DOM/focus order and common alignment. TAB acts immediately; Tempo opens a native top-layer whole-number BPM editor/vertical slider, while Key opens one persistent combined panel containing direct root-note and scale option grids. Selecting either musical value leaves the panel open so both can be adjusted in one interaction. Each compact trigger retains an explicit value-aware accessible name.
+- Version 0.1.0 keeps one coherent header DOM/focus order but now groups it by intent: Play/Pause and Stop lead the playback actions, TAB/Tempo/Key form transport, and Workspace/Mixer/Add Module/Random/Share/Help form utilities. TAB acts immediately; Tempo opens a native top-layer whole-number BPM editor/vertical slider, while Key opens one persistent combined panel containing direct root-note and scale option grids. Selecting either musical value leaves the panel open so both can be adjusted in one interaction. Each compact trigger retains an explicit value-aware accessible name.
 - Tap BPM averages up to six valid taps, resets after intervals outside the supported 20–300 BPM range, and writes a whole-number tempo. The Tempo panel exposes both a labelled number input and a 20–300 native vertical range control. Keyboard, pointer, and touch access do not depend on hover, and manual entry also writes whole values.
 - Pause preserves the current transport beat, freezes the header/grid/piano playheads on it, and clears scheduled internal/MIDI events; Play continues from that beat while Stop resets to zero and hides the playheads.
 - Responsive branding that shows `Local generative MIDI`, a build-derived current-version badge, and `sequens-R` on desktop, then reduces to `s-R` without the subtext on mobile.
@@ -16,10 +16,10 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Desktop studio with three full-width parallel module lanes at 1440 CSS px.
 - Workspace utilities live in a top-layer floating panel opened by an icon-only toolbox button immediately after the compact TAB/Tempo/Key transport. The native popover supports light dismiss and Escape, restores focus to its trigger, and scrolls internally within the viewport.
 - The rack mixer is an always-available full-width top-layer panel opened by the header button beside Workspace. It exposes the existing shared rack mix without requiring a Mixer module in the rack; saved Mixer modules remain compatible duplicate views. Channel gain uses keyboard-accessible native vertical faders with hardware-style caps and bottom-up fill; channels and the rack master pair them with live 12-segment green/amber/red dBFS LED ladders.
-- The mobile `s-R` title is presented as a padded circular mark. Once the document has scrolled 240 CSS px, a fixed icon-only up-arrow appears near the safe-area bottom edge; it returns to the top smoothly unless reduced motion is requested.
+- The mobile `s-R` title is presented as a padded circular mark. After 160 CSS px of document scroll, the sticky header enters a compact single-row state: branding, Tap, Mixer, Random, and Help yield to Play/Stop, Tempo/Key, Workspace, Add, and Share. Once the document has scrolled 240 CSS px, a fixed icon-only up-arrow appears near the safe-area bottom edge; it returns to the top smoothly unless reduced motion is requested.
 - The floating mixer starts with PAN and SENDS hidden to prioritize channel levels. Two pressed-state toggles in its heading reveal or hide PAN and both send controls across every channel. Its responsive grid fits up to six channels per row: four, five, or six as desktop and mobile-landscape space permits, while narrow portrait layouts retain their compact two- or three-channel rows.
 - Workspace grouping for project, racks, scenes, hardware MIDI, audio output, shortcuts, music export, and diagnostics.
-- An icon-only `Demos projects` action directly after project import, retaining its explicit accessible name while opening a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
+- Workspace project actions show visible Undo, Redo, Save, Export, Import, and Demos labels on mobile while retaining their icons and accessible names. The Demos action opens a native popover that lists the validated `public/projects/index.json` catalog and activates a selected project through the standard import boundary.
 - Compact module headers whose first row follows reorder → desktop full-width → collapse → flexible editable name → actions; monitor, solo, and mute occupy a balanced second row. Collapse uses right/down chevrons for closed/open state. The actions disclosure contains Help, duplicate, module MIDI export, and delete.
 - Desktop-only per-module full-width toggles that span all current lanes without changing saved project or playback state.
 - Desktop modules use responsive CSS columns as a masonry-like layout (two columns from 1024 px, three from 1440 px); full-width modules span every column while mobile remains a single vertical rack.
@@ -48,7 +48,8 @@ Phase 6 implementation and evidence are recorded separately in `phase-6-mobile-s
 - Selecting module Help closes the actions disclosure and restores focus to its summary, preventing the relocated panel from obscuring the second-row switches.
 - Mobile and desktop keep semantic landmarks, heading order, live status/error regions, touch targets, reduced motion, and the existing contextual-help data model.
 - Decorative SVG icons are marked `aria-hidden="true"` and cannot receive focus; text-labelled controls keep their visible name while icon-only controls use explicit accessible names.
-- The former module-type select has been removed. The visibly and programmatically named `Add Module` header action opens a native top-layer dialog containing ten keyboard-focusable module choices, each with an icon, name, and concise purpose statement. Choosing one adds it immediately, closes the library, and preserves the 16-module limit.
+- The former module-type select has been removed. The visibly and programmatically named `Add Module` header action opens a native top-layer dialog containing eleven keyboard-focusable module choices, each with an icon, name, and concise purpose statement. Below 30rem the catalog occupies the full `100vw × 100dvh`, respects safe-area insets, and keeps its heading/Close row sticky. Choosing one adds it immediately, closes the library, and preserves the 16-module limit.
+- Piano's dense Melody and Transform control groups use closed native disclosures on mobile and remain expanded in the desktop toolbar. Step grids use 32 CSS px mobile cells, local horizontal scrolling, and a visible Swipe affordance without introducing document-level overflow.
 - Icon-only controls retain explicit accessible names, pressed state where applicable, and 44 px touch targets.
 - Mixer PAN and SENDS visibility toggles expose dynamic Show/Hide accessible names and pressed state; hiding either group removes its controls from the keyboard and accessibility trees.
 
@@ -78,3 +79,5 @@ Playwright Chrome: 56 checks passed
 scheduler-message jitter: 0.286 ms σ
 performance mix evidence: 5 modules −15.20 LUFS-I / −2.68 dBTP; 14 modules −13.52 LUFS-I / −1.52 dBTP
 ```
+
+Plan A mobile regression on 2026-08-31 passes 130 unit tests across 19 files, the production PWA build at 119.73 KiB initial JavaScript gzip against the 200 KiB budget, and all 58 Playwright checks. Before/after evidence and the implemented mobile contract are indexed in `mobile-optimization-audit/README.md`.

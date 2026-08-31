@@ -101,6 +101,12 @@ test.describe('Phase 6 mobile editors', () => {
 
     const dialog = page.getByRole('dialog', { name: 'Piano roll' });
     await expect(dialog).toBeVisible();
+    await expect(dialog.getByText('Melody tools', { exact: true })).toBeVisible();
+    await expect(dialog.getByText('Transform', { exact: true })).toBeVisible();
+    await expect(dialog.getByLabel('Load melody example')).toBeHidden();
+    await dialog.getByText('Melody tools', { exact: true }).click();
+    await expect(dialog.getByLabel('Load melody example')).toBeVisible();
+    await dialog.getByText('Melody tools', { exact: true }).click();
     await expect(dialog.getByRole('group', { name: 'Length' })).toBeVisible();
     await dialog.getByRole('button', { name: '32 steps' }).click();
     await dialog.getByRole('button', { name: 'Add note' }).click();
@@ -115,6 +121,8 @@ test.describe('Phase 6 mobile editors', () => {
     expect(await viewport.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
     expect(await viewport.evaluate((element) => element.scrollHeight > element.clientHeight)).toBe(true);
     expect(await dialog.evaluate((element) => Math.abs(element.getBoundingClientRect().width - innerWidth) < 1)).toBe(true);
+    await expect(page.locator('.step-grid-scroll-hint').first()).toHaveText('Swipe');
+    expect((await page.locator('.step-lane button').first().boundingBox())!.width).toBeGreaterThanOrEqual(32);
 
     await dialog.getByRole('button', { name: 'Close Piano roll editor' }).click();
     await expect(dialog).toBeHidden();

@@ -321,32 +321,44 @@
   }
 </script>
 
+{#snippet melodyTools()}
+  <label>Load melody
+    <select aria-label="Load melody example" value={melodyId} onchange={loadMelody}>
+      <option value="">Choose an example…</option>
+      {#each MELODY_LEVELS as level (level)}
+        <optgroup label={level}>{#each PIANO_MELODY_EXAMPLES.filter((example) => example.level === level) as example (example.id)}<option value={example.id}>{example.label}</option>{/each}</optgroup>
+      {/each}
+    </select>
+  </label>
+  <label>Zoom <select aria-label="Piano roll zoom" value={zoom} onchange={(event) => { zoom = Number(event.currentTarget.value); }}><option value={0}>Fit</option><option value={0.5}>50%</option><option value={0.75}>75%</option><option value={1}>100%</option><option value={1.5}>150%</option><option value={2}>200%</option></select></label>
+  <label class="piano-audition-toggle"><input type="checkbox" checked={auditionEdits} onchange={(event) => { auditionEdits = event.currentTarget.checked; }} /> Audition edits</label>
+  {#if hiddenNotes > 0}<span class="piano-overflow-status" role="status">{hiddenNotes} {hiddenNotes === 1 ? 'note' : 'notes'} preserved beyond loop</span>{/if}
+{/snippet}
+
+{#snippet transformTools()}
+  <button type="button" aria-label="Transpose active notes down one scale degree" onclick={() => transposePhrase(-1)}>Degree −</button>
+  <button type="button" aria-label="Transpose active notes up one scale degree" onclick={() => transposePhrase(1)}>Degree +</button>
+  <button type="button" aria-label="Transpose active notes down one octave" onclick={() => transposeOctave(-1)}>Octave −</button>
+  <button type="button" aria-label="Transpose active notes up one octave" onclick={() => transposeOctave(1)}>Octave +</button>
+  {#if harmonySources.length > 0}
+    <label>Harmony <select aria-label="Harmony source" value={activeHarmonySource?.id ?? ''} onchange={(event) => { harmonySourceId = event.currentTarget.value; }}>{#each harmonySources as source (source.id)}<option value={source.id}>{source.name}</option>{/each}</select></label>
+    <button type="button" onclick={stampActiveChord} disabled={activeChord === null}>Stamp chord</button>
+  {/if}
+{/snippet}
+
 <section class:mobile-piano-roll={mobile} class="piano-roll-editor" data-help-key="piano-roll" aria-labelledby={`${editorId}-heading`}>
   <div class="piano-roll-heading">
     <div><h3 id={`${editorId}-heading`}>Piano roll</h3><button type="button" class="has-icon icon-only" data-help-key="add-note" aria-label="Add note" onclick={addKeyboardNote}><Icon name="plus" /></button></div>
     <p>{mobile ? 'Tap to add · select notes for precise edits.' : 'Click to add · drag to move · drag the right edge to resize.'}</p>
   </div>
-  <div class="piano-pro-tools">
-    <label>Load melody
-      <select aria-label="Load melody example" value={melodyId} onchange={loadMelody}>
-        <option value="">Choose an example…</option>
-        {#each MELODY_LEVELS as level (level)}
-          <optgroup label={level}>{#each PIANO_MELODY_EXAMPLES.filter((example) => example.level === level) as example (example.id)}<option value={example.id}>{example.label}</option>{/each}</optgroup>
-        {/each}
-      </select>
-    </label>
-    <label>Zoom <select aria-label="Piano roll zoom" value={zoom} onchange={(event) => { zoom = Number(event.currentTarget.value); }}><option value={0}>Fit</option><option value={0.5}>50%</option><option value={0.75}>75%</option><option value={1}>100%</option><option value={1.5}>150%</option><option value={2}>200%</option></select></label>
-    <label class="piano-audition-toggle"><input type="checkbox" checked={auditionEdits} onchange={(event) => { auditionEdits = event.currentTarget.checked; }} /> Audition edits</label>
-    <button type="button" aria-label="Transpose active notes down one scale degree" onclick={() => transposePhrase(-1)}>Degree −</button>
-    <button type="button" aria-label="Transpose active notes up one scale degree" onclick={() => transposePhrase(1)}>Degree +</button>
-    <button type="button" aria-label="Transpose active notes down one octave" onclick={() => transposeOctave(-1)}>Octave −</button>
-    <button type="button" aria-label="Transpose active notes up one octave" onclick={() => transposeOctave(1)}>Octave +</button>
-    {#if harmonySources.length > 0}
-      <label>Harmony <select aria-label="Harmony source" value={activeHarmonySource?.id ?? ''} onchange={(event) => { harmonySourceId = event.currentTarget.value; }}>{#each harmonySources as source (source.id)}<option value={source.id}>{source.name}</option>{/each}</select></label>
-      <button type="button" onclick={stampActiveChord} disabled={activeChord === null}>Stamp chord</button>
-    {/if}
-    {#if hiddenNotes > 0}<span class="piano-overflow-status" role="status">{hiddenNotes} {hiddenNotes === 1 ? 'note' : 'notes'} preserved beyond loop</span>{/if}
-  </div>
+  {#if mobile}
+    <div class="piano-mobile-tool-groups">
+      <details><summary>Melody tools</summary><div class="piano-pro-tools">{@render melodyTools()}</div></details>
+      <details><summary>Transform</summary><div class="piano-pro-tools">{@render transformTools()}</div></details>
+    </div>
+  {:else}
+    <div class="piano-pro-tools">{@render melodyTools()}{@render transformTools()}</div>
+  {/if}
   <details class="piano-selection-tools" open={selectedNote !== null}>
     <summary>Edit selected{selectedNote === null ? ' · select a note first' : ` · ${pitchName(selectedNote.pitch)}, step ${Math.floor(selectedNote.startStep) + 1}`}</summary>
     <div role="group" aria-label="Selected note controls">

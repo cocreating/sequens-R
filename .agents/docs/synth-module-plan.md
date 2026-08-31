@@ -209,3 +209,7 @@ Observe how Synth is actually used before expanding it. The strongest candidate 
 - The 16-module/140-BPM acceptance rack now contains Synth and remains preparable through Workspace → Diagnostics.
 
 These automated results do not approve the eight preset balances individually and do not replace the ten-minute physical Android C10 run.
+
+## 10. Synth-first bundled demos
+
+On 2026-08-31 the fifteen-project shipping catalog was rebuilt around Synth. It now contains five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats demos at 86–130 BPM. Every demo has exactly one Synth, two or three modules total, eight deterministic slots per module, and Intro/Groove/Variation/Peak scenes. No catalog project stores a Mixer module; the default Mixer view continues to expose the shared rack mix. The unlisted Basic Electro documents remain unchanged migration fixtures. Structural automation covers the catalog contract, while human approval of the changed musical balances remains open.

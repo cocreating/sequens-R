@@ -186,10 +186,10 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.module-choice[data-module-type="acid"]')).toContainText('Resonant 303-style melodic sequence');
     await page.getByRole('button', { name: 'Close module library' }).click();
 
-    const actionTops = await page.locator('.app-header-controls > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
+    const actionTops = await page.locator('.header-playback-actions > button, .header-utility-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
     expect(new Set(actionTops).size).toBe(1);
-    const actionNames = await page.locator('.app-header-controls > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(actionNames).toEqual(['Workspace', 'Mixer', 'Add Module', 'Random', 'Stop', 'Share', 'Turn on general help', 'Play']);
+    const actionNames = await page.locator('.header-playback-actions > button, .header-utility-actions > button').evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
+    expect(actionNames).toEqual(['Play', 'Stop', 'Workspace', 'Mixer', 'Add Module', 'Random', 'Share', 'Turn on general help']);
     const headerControls = page.locator('.app-header > .app-header-controls');
     await expect(headerControls).toBeVisible();
     await expect(page.locator('.app-header .transport-fields')).toHaveCount(1);
@@ -263,12 +263,11 @@ test.describe('Phase 5 polish', () => {
     const mobileHeaderControls = await headerControls.boundingBox();
     expect(mobileHeaderControls).not.toBeNull();
     expect(mobileHeaderControls!.x + mobileHeaderControls!.width).toBeLessThanOrEqual(375);
-    const mobileControlSelector = '.app-header-controls > .transport-fields > button, .app-header-controls > button';
+    const mobileControlSelector = '.app-header-controls > .header-playback-actions > button, .app-header-controls > .transport-fields > button, .app-header-controls > .header-utility-actions > button';
     const mobileOrder = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label')));
-    expect(mobileOrder[0]).toBe('Tap BPM');
-    expect(mobileOrder[1]).toMatch(/^Tempo \d+ BPM$/u);
-    expect(mobileOrder.slice(2)).toEqual(['Key D dorian', 'Workspace', 'Mixer', 'Add Module', 'Random', 'Stop', 'Share', 'Turn on general help', 'Play']);
-    expect(mobileOrder.at(-1)).toBe('Play');
+    expect(mobileOrder.slice(0, 3)).toEqual(['Play', 'Stop', 'Tap BPM']);
+    expect(mobileOrder[3]).toMatch(/^Tempo \d+ BPM$/u);
+    expect(mobileOrder.slice(4)).toEqual(['Key D dorian', 'Workspace', 'Mixer', 'Add Module', 'Random', 'Share', 'Turn on general help']);
     const mobileControlHeights = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().height));
     expect(new Set(mobileControlHeights).size).toBe(1);
     const mobileControlRows = await page.locator(mobileControlSelector).evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().top));
@@ -281,11 +280,28 @@ test.describe('Phase 5 polish', () => {
     ]);
     expect(mobileTapBox!.x + mobileTapBox!.width).toBeLessThanOrEqual(mobileTempoBox!.x);
 
+    await addModule.click();
+    const mobilePicker = page.getByRole('dialog', { name: 'Add a module' });
+    const pickerBox = await mobilePicker.boundingBox();
+    expect(pickerBox).not.toBeNull();
+    expect(pickerBox!.width).toBeCloseTo(375, 0);
+    expect(pickerBox!.height).toBeCloseTo(667, 0);
+    await page.getByRole('button', { name: 'Close module library' }).click();
+
     await expect(page.locator('.app-header')).toHaveCSS('position', 'sticky');
     await expect(page.locator('.performance-deck')).toHaveCount(0);
     await expect(page.getByRole('button', { name: 'Scroll to top' })).toHaveCount(0);
+    const expandedHeaderHeight = (await page.locator('.app-header').boundingBox())!.height;
     await page.evaluate(() => window.scrollTo(0, 500));
     await expect(page.getByRole('button', { name: 'Scroll to top' })).toBeVisible();
+    await expect(page.locator('.app-header')).toHaveClass(/mobile-header-compact/u);
+    expect((await page.locator('.app-header').boundingBox())!.height).toBeLessThan(expandedHeaderHeight);
+    await expect(page.getByRole('button', { name: 'Tap BPM' })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Workspace', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Mixer', exact: true })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Share', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add Module', exact: true })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Add Module', exact: true }).locator('span')).toBeHidden();
     expect((await page.locator('.app-header').boundingBox())!.y).toBeCloseTo(0, 0);
     await page.getByRole('button', { name: 'Scroll to top' }).click();
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
@@ -304,6 +320,11 @@ test.describe('Phase 5 polish', () => {
     await expect(page.locator('.import-project svg')).toBeVisible();
     await expect(page.locator('.module-menu > summary').first().locator('svg')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Delete rack' })).toHaveText('Delete rack');
+
+    await page.setViewportSize({ width: 375, height: 667 });
+    await expect(page.getByRole('button', { name: 'Save', exact: true })).toContainText('Save');
+    await expect(page.getByRole('button', { name: 'Export', exact: true })).toContainText('Export');
+    await expect(page.locator('.import-project')).toContainText('Import');
   });
 
   test('has no serious accessibility violations and exposes an installable offline PWA', async ({ page, request, context }) => {

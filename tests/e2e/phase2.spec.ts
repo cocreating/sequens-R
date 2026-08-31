@@ -36,7 +36,7 @@ test('lists and loads a bundled demo project', async ({ page }) => {
   await page.getByRole('button', { name: 'Demos projects' }).click();
   await expect(page.getByRole('heading', { name: 'Demos projects' })).toBeVisible();
   await expect(page.locator('.demo-projects-list button')).toHaveCount(15);
-  for (const genre of ['Neoclassical Ambient', 'Post-Classical Minimalism', 'Melodic Electronica']) {
+  for (const genre of ['Minimal Techno', 'Minimal House Techno', 'Ambient Techno & Breakbeats']) {
     const group = page.locator('.demo-projects-group').filter({ has: page.getByRole('heading', { name: genre, exact: true }) });
     await expect(group).toBeVisible();
     await expect(group.locator('.demo-projects-list button')).toHaveCount(5);
@@ -45,8 +45,9 @@ test('lists and loads a bundled demo project', async ({ page }) => {
   await page.locator('.demo-projects-list button').filter({ has: page.getByText('Glass Invention', { exact: true }) }).click();
   await expect(page.getByText('Glass Invention demo loaded and saved locally')).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Glass Invention');
-  await expect(page.getByRole('listitem', { name: 'Answering Thread' })).toBeVisible();
-  await expect(page.getByRole('listitem', { name: 'Invention Voice' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Glass Grid' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Dry Etch' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Glass Orbit' })).toBeVisible();
 });
 
 test('slots, editable seeds, mutate, and revert stay deterministic', async ({ page }) => {

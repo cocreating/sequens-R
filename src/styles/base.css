@@ -36,7 +36,8 @@
   .brand-kicker p { margin: 0; }
   .app-version { border: 1px solid var(--color-surface-raised); border-radius: 999px; padding: 0.18rem 0.42rem; color: var(--color-text-muted); letter-spacing: 0.04em; white-space: nowrap; }
   .app-header-controls { position: relative; z-index: 1; display: flex; flex: 1 1 38rem; flex-wrap: wrap; align-items: center; justify-content: end; gap: var(--space-1); min-width: 0; }
-  .app-header-controls > button { flex: 0 0 auto; padding-inline: var(--space-2); font-family: var(--font-data); }
+  .header-playback-actions, .header-utility-actions { display: flex; flex: 0 0 auto; flex-wrap: wrap; align-items: center; gap: var(--space-1); }
+  :is(.header-playback-actions, .header-utility-actions) > button { flex: 0 0 auto; padding-inline: var(--space-2); font-family: var(--font-data); }
   .header-random { background: transparent; }
   body:has(.studio-workspace:popover-open) .workspace-toggle { border-color: var(--color-playing); background: var(--color-surface-raised); }
   body:has(.studio-mixer:popover-open) .mixer-toggle { border-color: var(--color-playing); background: var(--color-surface-raised); }
@@ -67,6 +68,7 @@
   .project-tools { display: grid; grid-template-columns: auto minmax(0, 1fr) repeat(2, auto); gap: var(--space-2); align-items: center; margin: 0; padding: var(--space-3); border: 1px solid var(--color-surface-raised); background: var(--color-surface); }
   .project-tools > label:first-child { color: var(--color-text-muted); font-size: 0.75rem; text-transform: uppercase; }
   .project-tools > button:nth-of-type(n + 3), .import-project { grid-row: 2; }
+  .project-action-label { display: none; }
   .import-project { display: grid; place-items: center; min-height: var(--touch-target); border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding-inline: var(--space-3); background: var(--color-surface); cursor: pointer; font-weight: 750; }
   .demo-projects-popover { width: min(28rem, calc(100% - 2rem)); max-height: min(70dvh, 32rem); margin: auto; border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding: var(--space-4); background: var(--color-canvas); color: var(--color-text); box-shadow: 0 1rem 3rem rgb(0 0 0 / 55%); overflow-y: auto; }
   .demo-projects-popover::backdrop { background: rgb(0 0 0 / 50%); }
@@ -265,7 +267,8 @@
   .module-advanced-content { padding-block-start: var(--space-2); }
   .advanced-pattern-tools { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--space-2); align-items: center; }
   .advanced-pattern-tools > label:not(.auto-mutate) { color: var(--color-text-muted); font-size: 0.72rem; text-transform: uppercase; }
-  .step-grid { --step-size: 1.625rem; max-width: 100%; overflow-x: auto; padding-block: var(--space-2); overscroll-behavior-inline: contain; }
+  .step-grid { --step-size: 1.625rem; position: relative; max-width: 100%; overflow-x: auto; padding-block: var(--space-2); overscroll-behavior-inline: contain; scrollbar-gutter: stable; }
+  .step-grid-scroll-hint { position: sticky; z-index: 5; left: calc(100% - 3.75rem); display: none; float: inline-end; width: max-content; margin-block-end: calc(-1 * var(--touch-target)); border: 1px solid var(--color-structure); border-radius: 999px; padding: var(--space-1) var(--space-2); background: color-mix(in oklab, var(--color-canvas) 92%, transparent); color: var(--color-text-muted); font: 700 0.62rem/1 var(--font-data); letter-spacing: 0.04em; text-transform: uppercase; pointer-events: none; }
   .step-grid-content { display: flex; gap: var(--space-2); width: max-content; }
   .step-grid-sequence { position: relative; width: max-content; overflow: clip; }
   .step-lane-labels { display: grid; grid-auto-rows: var(--step-size); gap: 0.1875rem; position: sticky; z-index: 3; left: 0; background: var(--color-surface); }
@@ -304,6 +307,10 @@
   .piano-pro-tools > label { display: grid; gap: 0.18rem; color: var(--color-text-muted); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
   .piano-pro-tools > label select { min-width: 7rem; }
   .piano-pro-tools .piano-audition-toggle { display: flex; align-items: center; min-height: var(--touch-target); border: 1px solid var(--color-structure); border-radius: var(--radius-control); padding-inline: var(--space-2); color: var(--color-text); letter-spacing: normal; text-transform: none; }
+  .piano-mobile-tool-groups { display: grid; gap: var(--space-1); }
+  .piano-mobile-tool-groups > details { border-block-start: 1px solid var(--color-surface-raised); }
+  .piano-mobile-tool-groups > details > summary { display: flex; align-items: center; min-height: var(--touch-target); cursor: pointer; color: var(--color-text-muted); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+  .piano-mobile-tool-groups .piano-pro-tools { padding-block-end: var(--space-2); }
   .piano-overflow-status { align-self: center; color: var(--color-playing); font: 0.7rem var(--font-data); }
   .piano-selection-tools { min-width: 0; border-block: 1px solid var(--color-surface-raised); }
   .piano-selection-tools > div { display: grid; grid-template-columns: repeat(6, minmax(0, auto)); gap: var(--space-1); align-items: center; padding-block-end: var(--space-2); }
@@ -390,11 +397,29 @@
     .app-help-readout { position: relative; inset: auto; width: min(100% - 1rem, 70rem); margin: var(--space-2) auto 0; }
     .app-header { align-items: start; }
     .app-header-controls { flex: 1 1 100%; justify-content: start; }
+    .header-utility-actions { flex: 1 1 100%; }
+    .app-header.mobile-header-compact { align-items: center; gap: 0; padding-block: max(var(--space-1), env(safe-area-inset-top)) var(--space-1); }
+    .mobile-header-compact .brand { display: none; }
+    .mobile-header-compact .app-header-controls { flex-wrap: nowrap; justify-content: start; }
+    .mobile-header-compact .transport-fields .header-tap { display: none; }
+    .mobile-header-compact .header-utility-actions { flex: 0 0 auto; }
+    .mobile-header-compact .header-utility-actions > :not(.workspace-toggle, #add-module-button, .header-share) { display: none; }
+    .mobile-header-compact #add-module-button span { display: none; }
+    .mobile-header-compact #add-module-button { min-width: var(--touch-target); }
+    .project-tools { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .project-tools > label:first-child, .project-tools > input:first-of-type { grid-column: 1 / -1; }
+    .project-tools > button, .project-tools > button:nth-of-type(n + 3), .project-tools .import-project { grid-row: auto; width: 100%; min-width: 0; justify-content: start; padding-inline: var(--space-3); }
+    .project-action-label { display: inline; }
+    .step-grid { --step-size: 2rem; }
+    .step-grid-scroll-hint { display: block; }
   }
   @media (max-width: 29.999rem) {
     .app-header { gap: var(--space-1); }
     .app-header-controls { gap: 0.125rem; }
+    .header-playback-actions, .header-utility-actions { gap: 0.125rem; }
     .brand-title-compact { font-size: 1rem; }
+    .module-picker { inset: 0; width: 100%; max-width: none; height: 100dvh; max-height: none; margin: 0; border: 0; border-radius: 0; padding: max(var(--space-3), env(safe-area-inset-top)) max(var(--space-3), env(safe-area-inset-right)) max(var(--space-3), env(safe-area-inset-bottom)) max(var(--space-3), env(safe-area-inset-left)); }
+    .module-picker > header { position: sticky; z-index: 1; top: calc(-1 * max(var(--space-3), env(safe-area-inset-top))); margin: calc(-1 * max(var(--space-3), env(safe-area-inset-top))) calc(-1 * max(var(--space-3), env(safe-area-inset-right))) var(--space-3); padding: max(var(--space-3), env(safe-area-inset-top)) max(var(--space-3), env(safe-area-inset-right)) var(--space-3); border-block-end: 1px solid var(--color-surface-raised); background: var(--color-canvas); }
   }
   @media (min-width: 48rem) {
     .app-header { width: min(100% - 2rem, 70rem); }

@@ -1,94 +1,94 @@
 {
   "projects": [
     {
-      "name": "Moonlit Nocturne",
-      "file": "moonlit-nocturne.sequens-r.json",
-      "genre": "Neoclassical Ambient",
-      "description": "66 BPM C♯ minor: a Romantic-style two-bar question with felt Piano dynamics over one slow dark harmony bed."
-    },
-    {
-      "name": "Pastoral Morning",
-      "file": "pastoral-morning.sequens-r.json",
-      "genre": "Neoclassical Ambient",
-      "description": "82 BPM F major: a gentle Classical answer phrase, slow-bloom harmony, and only the lightest pastoral pulse."
-    },
-    {
-      "name": "Water Garden",
-      "file": "water-garden.sequens-r.json",
-      "genre": "Neoclassical Ambient",
-      "description": "74 BPM D♭ lydian: an Impressionist color weave for shimmering Piano with one slow, irregular tide underneath."
-    },
-    {
-      "name": "Winter Largo",
-      "file": "winter-largo.sequens-r.json",
-      "genre": "Neoclassical Ambient",
-      "description": "56 BPM E minor: a Piano-only slow movement that leaves velocity, accents, note length, and space fully exposed."
-    },
-    {
-      "name": "Dreaming Étude",
-      "file": "dreaming-etude.sequens-r.json",
-      "genre": "Neoclassical Ambient",
-      "description": "70 BPM B minor: a Piano-only wide-interval étude designed to reveal the new 64-step phrasing and dynamic lane."
-    },
-    {
       "name": "Glass Invention",
       "file": "glass-invention.sequens-r.json",
-      "genre": "Post-Classical Minimalism",
-      "description": "96 BPM D dorian: an original Baroque-style broken-triad study for expressive Piano and a quiet answering arpeggio."
+      "genre": "Minimal Techno",
+      "description": "124 BPM D dorian: a locked minimal-techno grid, dry acid punctuation, and a glassy Orbit Synth motif."
     },
     {
       "name": "Quiet Canon",
       "file": "quiet-canon.sequens-r.json",
-      "genre": "Post-Classical Minimalism",
-      "description": "88 BPM C major: an original sequential canon idea shared between a warm Piano theme and a restrained dew-pluck echo."
+      "genre": "Minimal Techno",
+      "description": "120 BPM C minor: a low-density techno pulse with a round bass anchor and repeating Motif Synth cadence."
     },
     {
-      "name": "Velvet Sarabande",
-      "file": "velvet-sarabande.sequens-r.json",
-      "genre": "Post-Classical Minimalism",
-      "description": "62 BPM G minor: a stately Baroque-style arch with soft Piano accents and a single velvet chordal shadow."
+      "name": "Winter Largo",
+      "file": "winter-largo.sequens-r.json",
+      "genre": "Minimal Techno",
+      "description": "116 BPM E minor: a cold two-module techno study with an exposed kick grid and long dark Synth drift."
     },
     {
       "name": "Clockwork Minuet",
       "file": "clockwork-minuet.sequens-r.json",
-      "genre": "Post-Classical Minimalism",
-      "description": "104 BPM A minor: an offbeat Classical ladder with tiny clockwork percussion and a muted Euclidean counter-rhythm."
+      "genre": "Minimal Techno",
+      "description": "126 BPM A minor: hyper-precise minimal techno with tiny Euclidean ticks and a hollow repeating Synth mechanism."
     },
     {
       "name": "Gentle Fugue Pulse",
       "file": "gentle-fugue-pulse.sequens-r.json",
-      "genre": "Post-Classical Minimalism",
-      "description": "100 BPM D minor: a developing contrapuntal motif, a low answering arpeggio, and a sparse modern pulse."
+      "genre": "Minimal Techno",
+      "description": "128 BPM D minor: a direct minimal-techno drive, clipped acid reply, and a fast falling Synth phrase with restrained motion."
+    },
+    {
+      "name": "Pastoral Morning",
+      "file": "pastoral-morning.sequens-r.json",
+      "genre": "Minimal House Techno",
+      "description": "122 BPM F minor: soft swung house drums, muted chord air, and a restrained Synth answer for an early-morning floor."
+    },
+    {
+      "name": "Velvet Sarabande",
+      "file": "velvet-sarabande.sequens-r.json",
+      "genre": "Minimal House Techno",
+      "description": "124 BPM G minor: a velvet minimal-house pocket with plucked bass and a wide repeating Synth phrase."
     },
     {
       "name": "Classical Allegretto",
       "file": "classical-allegretto.sequens-r.json",
-      "genre": "Melodic Electronica",
-      "description": "112 BPM B♭ major: a bright Classical turnaround carried by articulate Piano, light bass, and a courteous chamber pulse."
+      "genre": "Minimal House Techno",
+      "description": "126 BPM B♭ minor: a bright minimal-house cadence with clipped keys and a clean climbing Synth lead."
     },
     {
       "name": "Romantic Waltz Glow",
       "file": "romantic-waltz-glow.sequens-r.json",
-      "genre": "Melodic Electronica",
-      "description": "78 BPM E♭ major: a long three-part Romantic arc, glowing Piano dynamics, and one wide halo of harmony."
-    },
-    {
-      "name": "Sweet Electro Invention",
-      "file": "sweet-electro-invention.sequens-r.json",
-      "genre": "Melodic Electronica",
-      "description": "118 BPM E minor: a friendly electronic chamber piece with syncopated Piano sparkle, soft pixels, and a featherweight beat."
-    },
-    {
-      "name": "Ambient Pulse Canon",
-      "file": "ambient-pulse-canon.sequens-r.json",
-      "genre": "Melodic Electronica",
-      "description": "108 BPM A dorian: a sweet octave dialogue for Piano, clear low strings, and an understated electronic heartbeat."
+      "genre": "Minimal House Techno",
+      "description": "120 BPM E♭ minor: an after-hours house glide with wide chord haze and a soft Synth answer moving through the pocket."
     },
     {
       "name": "Luminous Rondo",
       "file": "luminous-rondo.sequens-r.json",
-      "genre": "Melodic Electronica",
-      "description": "126 BPM C mixolydian: a graceful electronic rondo with a long Piano journey, soft keys, and a warm dance-floor pulse."
+      "genre": "Minimal House Techno",
+      "description": "128 BPM C mixolydian: luminous tech-house drums, a short bass groove, and a glass Synth rondo above the floor."
+    },
+    {
+      "name": "Moonlit Nocturne",
+      "file": "moonlit-nocturne.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "92 BPM C♯ minor: beatless ambient techno with a dark drifting Synth phrase suspended over one slow chord veil."
+    },
+    {
+      "name": "Water Garden",
+      "file": "water-garden.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "98 BPM D♭ lydian: washed broken drums, irregular tuned droplets, and a sparse glass Synth current."
+    },
+    {
+      "name": "Dreaming Étude",
+      "file": "dreaming-etude.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "86 BPM B minor: a beatless ambient-techno study with slow Euclidean lights and a soft 64-step Synth drift."
+    },
+    {
+      "name": "Sweet Electro Invention",
+      "file": "sweet-electro-invention.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "130 BPM E minor: a compact electro breakbeat with round sub movement and a bright syncopated Synth spark."
+    },
+    {
+      "name": "Ambient Pulse Canon",
+      "file": "ambient-pulse-canon.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "108 BPM A dorian: an ambient broken pulse with clear low motion and a wide Orbit Synth dialogue."
     }
   ]
 }

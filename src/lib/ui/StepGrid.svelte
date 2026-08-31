@@ -24,17 +24,18 @@
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex (keyboard access to the horizontal scroll region) -->
 <div class="step-grid" data-help-key="step-grid" style:--step-count={pattern.lengthSteps} role="group" tabindex="0" aria-label="Pattern steps">
+  <span class="step-grid-scroll-hint" aria-hidden="true">Swipe</span>
   <div class="step-grid-content">
     {#if laneLabels.length > 0}
       <div class="step-lane-labels" aria-hidden="true">
-        {#each Array(lanes) as _, lane}<span>{laneLabels[lane] ?? `Lane ${lane + 1}`}</span>{/each}
+        {#each Array(lanes) as _, lane (lane)}<span>{laneLabels[lane] ?? `Lane ${lane + 1}`}</span>{/each}
       </div>
     {/if}
     <div class="step-grid-sequence">
       <CompositorPlayhead {playing} {bpm} beats={pattern.lengthSteps / pattern.stepsPerBeat} {syncBeat} />
-      {#each Array(lanes) as _, lane}
+      {#each Array(lanes) as _, lane (lane)}
         <div class="step-lane" role="group" aria-label={laneLabels[lane] ?? `Lane ${lane + 1}`}>
-          {#each Array(pattern.lengthSteps) as _, step}
+          {#each Array(pattern.lengthSteps) as _, step (step)}
             {@const active = isActive(lane, step)}
             <button
               type="button"

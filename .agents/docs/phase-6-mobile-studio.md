@@ -4,7 +4,7 @@ Status: implementation and automated acceptance complete on 2026-08-25. Physical
 
 ## Outcome
 
-Chrome on Android can add and edit all ten existing module types without requesting a desktop site. Mobile remains a vertical, one-hand-oriented surface; it does not reproduce the desktop parallel-lane layout.
+Chrome on Android can add and edit all eleven existing module types without requesting a desktop site. Mobile remains a vertical, one-hand-oriented surface; it does not reproduce the desktop parallel-lane layout.
 
 ## Scope
 
@@ -34,7 +34,7 @@ Chrome on Android can add and edit all ten existing module types without request
 
 ## Automated acceptance
 
-- Playwright at 375 × 667 and 375 × 812 covers all ten module types.
+- Playwright at 375 × 667 and 375 × 812 covers all eleven module types after the additive Synth follow-up.
 - A desktop-authored Arp/Euclid/Mod link opens, edits, re-shares, and regenerates identically on mobile.
 - Desktop-authored Piano and recorded-CC projects import, edit, persist, export, and re-import identically on mobile.
 - Editing, collapsing, reordering, duplicating, and deleting while playing produces no application errors or stuck UI state; audio discontinuity remains a physical listening check.
@@ -59,13 +59,22 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 
 ## Implemented surface
 
-- All ten module types are available from the same mobile creation control used by desktop; no generator, project, patch, engine, routing, or export fork was introduced.
+- All eleven module types, including the additive Synth module, are available from the same mobile creation control used by desktop; no generator, project, patch, engine, routing, or export fork was introduced.
 - Arp and Euclid reuse the schema-driven controls and locally scrolling pattern grids below 1024 CSS px.
 - CC Control groups its four controllers into native disclosures while keeping loop length, recording, clearing, routing, mute, solo, and monitor controls available. Mod groups its three LFOs the same way.
 - Only one Arp, Euclid, Piano roll, CC Control, or Mod body remains expanded on mobile. Creation, expansion, duplication, shared-link restoration, local restoration, and project import all enforce this presentation rule without changing engine snapshot membership.
 - Mobile module menus provide explicit Move earlier and Move later commands in addition to the existing touch drag handle. Reorder, duplicate, and delete remain available while transport runs.
 - Piano roll opens through a native full-screen `dialog`. It includes explicit Close, 16/32/64-step length, chromatic/in-key mode, touch/grid and keyboard note entry, selected-note movement, resizing, deletion, local two-axis grid scrolling, Escape dismissal, and focus restoration to its opener. The shared post-phase editor also exposes velocity/accent editing, Fit/50/75/100/150/200% zoom, pitch-key audition, scale-degree/octave transforms, chord guidance/stamping, preserved overflow notes, and the 20-example key-aware melody library on mobile without forking its state or engine path.
 - Module plates use `content-visibility: auto` with an intrinsic-size placeholder. Collapsed and off-screen modules remain in rack state and immutable audio/MIDI snapshots.
+
+## Plan A mobile optimization follow-up · 2026-08-31
+
+- The sticky header prioritizes Play/Pause and Stop before transport and utility groups. After 160 CSS px of scroll it becomes one compact row containing the essential session actions.
+- The module library becomes a safe-area-aware full-screen dialog below 30rem, with a sticky heading and Close action.
+- Workspace project commands gain visible mobile labels instead of relying on icon recognition.
+- Piano Melody and Transform tools use native closed disclosures on mobile while the shared desktop controls remain expanded.
+- Step-grid cells are at least 32 CSS px wide and advertise local horizontal movement with a Swipe hint.
+- Playwright covers both reference mobile heights, compact-header visibility, full-screen library sizing, labelled Workspace actions, Piano disclosures, the Swipe cue, and minimum cell width. Screenshots and audit notes live in `mobile-optimization-audit/`.
 
 ## Automated evidence · 2026-08-25
 
@@ -77,7 +86,7 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 - initial JavaScript: 78.68 KiB gzip / 200 KiB budget;
 - Playwright: 36 passed, including Phase 6 coverage at 375 × 667 and 375 × 812;
 - axe: no serious or critical violations with the mobile Piano dialog open, while the existing desktop accessibility gate remains green;
-- all ten module types can be added and played at both mobile sizes without page errors or document-level horizontal overflow;
+- all eleven module types can be added and played at both mobile sizes without page errors or document-level horizontal overflow;
 - Arp, Euclid, CC Control, and Mod mobile editor flows pass, including one-dense-body coordination;
 - Piano touch/keyboard authoring, selection, movement, resizing, local overflow, close, and focus restoration pass;
 - mobile reorder, duplicate, delete, save, reload, and edit-during-playback flows pass;

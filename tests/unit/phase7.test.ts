@@ -104,7 +104,7 @@ describe('Phase 7.0 sound domain and migrations', () => {
     expect(() => validatePresetCatalog([{ ...SOUND_PRESETS[0]!, moduleType: 'bass' }])).toThrow();
   });
 
-  it('migrates project schemas 1 through 4 to released v2 sounds and round-trips v5 deeply', () => {
+  it('migrates project schemas 1 through 5 to released sounds and round-trips v6 deeply', () => {
     const current = createProject(createRackState(STARTER_RACK), 'Phase 7');
     expect(projectFromJson(projectToJson(current))).toEqual(current);
     for (const schemaVersion of [1, 2, 3]) {
@@ -115,7 +115,7 @@ describe('Phase 7.0 sound domain and migrations', () => {
         for (const module of rack.state.modules) delete module.sound;
       }
       const migrated = migrateProject(retired);
-      expect(migrated.schemaVersion).toBe(5);
+      expect(migrated.schemaVersion).toBe(6);
       expect(migrated.racks[0]?.state.mix).toEqual(DEFAULT_RACK_MIX);
       expect(migrated.racks[0]?.state.modules.every(({ sound }) => sound.presetId.endsWith('-v2'))).toBe(true);
     }
@@ -126,18 +126,21 @@ describe('Phase 7.0 sound domain and migrations', () => {
     expect(migrateProject(version4).racks[0]?.state.modules[0]?.sound.presetId).toBe('drums-core-v2');
   });
 
-  it('invalidates retired links and deeply round-trips v4 sound state', async () => {
+  it('reads additive v4 links, invalidates retired links, and deeply round-trips v5 sound state', async () => {
     const rack = toShareableRack(createRackState(STARTER_RACK));
     const encoded = await serializeRack(rack);
-    expect(PATCH_SCHEMA_VERSION).toBe(4);
+    expect(PATCH_SCHEMA_VERSION).toBe(5);
     expect(await deserializeRack(encoded)).toEqual(normalizeRack(rack));
     const decompressed = new Uint8Array(await new Response(new Blob([encoded]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+    decompressed[0] = 4;
+    const compatible = new Uint8Array(await new Response(new Blob([decompressed]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());
+    expect(await deserializeRack(compatible)).toEqual(normalizeRack(rack));
     decompressed[0] = 3;
     const retired = new Uint8Array(await new Response(new Blob([decompressed]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());
     await expect(deserializeRack(retired)).rejects.toThrow(/Unsupported patch schema version 3/u);
   });
 
-  it('keeps 200 randomized v4 links at or below 400 bytes', async () => {
+  it('keeps 200 randomized v5 links at or below 400 bytes', async () => {
     const random = sfc32(0x70070070);
     let largest = 0;
     for (let index = 0; index < 200; index += 1) {

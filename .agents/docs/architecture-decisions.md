@@ -168,3 +168,15 @@ Status: implemented with automated acceptance on 2026-08-28.
 - Routed audition uses the existing `AudioEngine`, voice factory, module strip, MIDI manager, mute/solo/monitor truth table, and voice budgets. It creates no second preview voice or transport. Direct pitch-key audition is explicit; automatic audition during edits is opt-in editor state.
 - The built-in melody library contains 20 original scale-degree phrases ordered from simple to advanced. Loading produces ordinary Piano events in the current project key, atomically replaces the active phrase, and synchronizes the slot's normal Length parameter to 16, 32, or 64 steps. The selection itself is not persisted and the loaded result remains project-only like every Piano pattern.
 - Fit/50/75/100/150/200% zoom and harmony-source selection are presentation state. They do not enter projects, patches, engine snapshots, MIDI, or SMF output.
+
+## AD-013 · Synth generative-lead module and additive schema boundary
+
+Status: implemented with automated acceptance on 2026-08-31; human preset listening and physical Android C10 remain open.
+
+- Synth owns the missing seed-driven lead role. It does not replace Bass, Acid, Arp, Chords, or the manually authored Piano roll.
+- Its pure generator consumes only seed, quantized numeric parameters, and project key. Six phrase contours produce bounded monophonic events with a stable final tonic cadence; sound state cannot alter pattern, MIDI, or SMF output.
+- One persistent monophonic Web Audio graph owns three selectable main oscillators, a blended/detuned secondary oscillator, one resonant low-pass filter, velocity-sensitive filter and amplitude envelopes, bounded saturation, and DC blocking. Continuous edits ramp existing nodes and scheduler callbacks allocate no reusable nodes.
+- The same explicit `procedural-synth-v1` factory identity is used for live monitoring, mix bounce, and stems. Eight append-only procedural presets remain subject to listening acceptance.
+- Project schema 6 accepts schemas 0–5. Patch schema 5 appends Synth after Mod and appends Synth presets after the Phase 7 catalog, preserving every earlier compact index. Patch schema 4 remains readable because this change is strictly additive; patch schemas 1–3 remain rejected.
+- Compact links retain the existing safety boundary and omit hardware MIDI port/channel routes. Projects preserve full routing.
+- The native schema-driven module plate provides keyboard/touch controls and contextual help on desktop and mobile. No custom editor, dependency, runtime network request, second transport, or CSS framework is introduced.

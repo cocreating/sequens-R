@@ -75,6 +75,7 @@ const DEFAULT_COLORS: Readonly<Record<ModuleType, RackModule['color']>> = {
   piano: 'indigo',
   cc: 'steel',
   mod: 'burgundy',
+  synth: 'cobalt',
 };
 
 function clamp(value: number, minimum: number, maximum: number): number {

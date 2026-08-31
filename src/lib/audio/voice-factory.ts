@@ -8,6 +8,7 @@ import { ChordVoice } from './voices/chords';
 import { ArpVoice } from './voices/arp';
 import { PianoVoice } from './voices/piano';
 import { EuclidVoice } from './voices/euclid';
+import { SynthVoice } from './voices/synth';
 
 export interface VoiceModuleSnapshot {
   type: ModuleType;
@@ -37,7 +38,7 @@ export const MOBILE_VOICE_LIMITS: Readonly<VoiceLimits> = Object.freeze({ chordV
 export interface VoiceIdentity {
   moduleType: ModuleType;
   presetId: string;
-  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'procedural-chords-v2' | 'procedural-arp-v2' | 'procedural-euclid-v2' | 'procedural-piano-v2' | 'silent-cc-v2' | 'silent-mod-v2' | 'silent-control-v2';
+  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'procedural-chords-v2' | 'procedural-arp-v2' | 'procedural-euclid-v2' | 'procedural-piano-v2' | 'procedural-synth-v1' | 'silent-cc-v2' | 'silent-mod-v2' | 'silent-control-v2';
 }
 
 export class VoiceFactory {
@@ -56,32 +57,24 @@ export class VoiceFactory {
     if (module.type === 'chords') return new ChordVoice(context, destination, module.sound, limits.chordVoices);
     if (module.type === 'arp') return new ArpVoice(context, destination, module.sound, limits.arpVoices);
     if (module.type === 'euclid') return new EuclidVoice(context, destination, module.sound);
+    if (module.type === 'synth') return new SynthVoice(context, destination, module.sound);
     return new PianoVoice(context, destination, module.sound, limits.pianoVoices);
   }
 
   identify(module: VoiceModuleSnapshot): VoiceIdentity {
     validateSoundState(module.type, module.sound as SoundState);
-    const implementationId = module.type === 'cc'
-      ? 'silent-cc-v2'
-      : module.type === 'mod'
-        ? 'silent-mod-v2'
-      : isControlModule(module.type)
-        ? 'silent-control-v2'
-      : module.type === 'drums'
-        ? 'procedural-drums-v2'
-        : module.type === 'acid'
-          ? 'procedural-acid-v2'
-          : module.type === 'chords'
-            ? 'procedural-chords-v2'
-            : module.type === 'arp'
-              ? 'procedural-arp-v2'
-            : module.type === 'piano'
-              ? 'procedural-piano-v2'
-            : module.type === 'euclid'
-              ? 'procedural-euclid-v2'
-          : module.type === 'bass'
-            ? 'procedural-bass-v2'
-            : 'silent-control-v2';
+    let implementationId: VoiceIdentity['implementationId'];
+    if (module.type === 'cc') implementationId = 'silent-cc-v2';
+    else if (module.type === 'mod') implementationId = 'silent-mod-v2';
+    else if (isControlModule(module.type)) implementationId = 'silent-control-v2';
+    else if (module.type === 'drums') implementationId = 'procedural-drums-v2';
+    else if (module.type === 'bass') implementationId = 'procedural-bass-v2';
+    else if (module.type === 'acid') implementationId = 'procedural-acid-v2';
+    else if (module.type === 'chords') implementationId = 'procedural-chords-v2';
+    else if (module.type === 'arp') implementationId = 'procedural-arp-v2';
+    else if (module.type === 'euclid') implementationId = 'procedural-euclid-v2';
+    else if (module.type === 'synth') implementationId = 'procedural-synth-v1';
+    else implementationId = 'procedural-piano-v2';
     return { moduleType: module.type, presetId: module.sound.presetId, implementationId };
   }
 }

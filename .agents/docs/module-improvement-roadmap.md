@@ -2,6 +2,8 @@
 
 Status: living technical and product roadmap created after the Phase 7 v2-only library cut on 2026-08-26.
 
+The generative lead [Synth module plan](synth-module-plan.md) is implemented with automated acceptance. Human preset listening and physical Android C10 evidence remain open.
+
 This is the single forward-looking reference for every sequens-R module. It records the shipped contract, known limitations, safe extension points, candidate improvements, and the evidence required before any change is accepted. The SDD and phase documents remain authoritative for released requirements and historical evidence; when this roadmap conflicts with an accepted phase contract, the accepted contract wins until an explicit architecture decision changes it.
 
 ## 1. Shared module contract
@@ -13,7 +15,7 @@ Every rack module owns:
 - mutation state with four intensities, scheduled mutation, and one-step revert;
 - a generated or manually authored `Pattern` expressed in sixteenth-note steps;
 - a versioned `SoundState` containing a released preset ID, quantized sound macros, panorama, and shared delay/reverb sends;
-- project persistence through schema 5. Compact links use patch schema 4 and deliberately exclude Piano and recorded CC automation.
+- project persistence through schema 6. Compact links use patch schema 5, retain additive patch-schema-4 decoding, and deliberately exclude Piano, recorded CC automation, and device-specific MIDI routes.
 
 The following invariants apply to every future module improvement:
 
@@ -385,7 +387,7 @@ Potential interactions must use stable IDs and explicit source selection. Deleti
 - **Chords → Bass:** optional scale-degree/chord-tone guidance; generator output changes, sound does not.
 - **Scenes → Mixer:** capture rack mix and channel state only after interpolation and launch-boundary semantics are specified.
 - **CC/Mod → internal targets:** deferred to a dedicated routing design. It must prevent cycles, bound update rates, smooth targets, distinguish project/link support, and preserve external-only defaults.
-- **Piano/Drums manual data → compact links:** requires a new bounded encoding rather than silently inserting large payloads into patch schema 4.
+- **Piano/Drums manual data → compact links:** requires a new bounded encoding rather than silently inserting large payloads into patch schema 5.
 
 ## 14. Data and migration rules for future modules
 
@@ -419,3 +421,23 @@ An improvement is not complete until all applicable items are recorded:
 3. Prefer workflow depth first: Piano editing, explicit Chords context sources, CC automation editing, and Drum per-step expression.
 4. Add synthesis breadth only when listening feedback identifies a concrete missing role.
 5. Design internal modulation, sample import, or additional modules as separate phases rather than incremental hidden scope.
+
+## 17. Synth
+
+### Implemented contract
+
+- Generator: deterministic key-aware monophonic lead phrases with Motif, Climb, Fall, Answer, Orbit, and Drift contours.
+- Generator controls: Phrase, Steps, Density, Range, Octave, Gate, and Repeat. A zero-density phrase retains one final tonic cadence.
+- Mutation: levels 1–2 preserve cadence while changing bounded phrase details, level 3 changes phrase structure while retaining cadence, and level 4 creates a new deterministic phrase.
+- Sound engine: one persistent monophonic graph with three selectable main oscillators, one blended/detuned secondary oscillator, resonant low-pass filter, velocity-sensitive filter envelope, amplitude envelope, mild saturation, and DC blocking.
+- Sound controls: Wave, Shape, Cutoff, Resonance, Filter env, Attack, Release, Glide, Pan, and shared sends.
+- Presets: Signal, Soft arc, Dayline, Hollow point, Quick pulse, Twin path, Night signal, and Glass current.
+- Persistence: project schema 6 and patch schema 5 append Synth without changing any earlier compact index. Patch schema 4 remains readable because the new rows are additive.
+
+### Open acceptance and backlog
+
+- **P0:** loudness-matched human approval of all eight presets and physical Android C10 evidence with Synth in the 16-module rack.
+- **P1:** observe real phrase use before changing defaults or adding controls.
+- **P2:** explicit Chords source selection by stable module ID with visible deletion fallback.
+- **P2:** deterministic rotate, invert-contour, and scale-degree transpose transforms.
+- **Deferred:** manual note editing, polyphony, user wavetables/samples, and internal modulation routing.

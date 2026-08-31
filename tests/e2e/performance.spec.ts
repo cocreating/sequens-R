@@ -52,7 +52,7 @@ test('five- and fourteen-module racks retain true-peak headroom', async ({ page 
   });
   await page.goto('/');
 
-  await addModules(page, ['acid', 'arp']);
+  await addModules(page, ['acid', 'synth']);
   await expect(page.locator('article')).toHaveCount(5);
   const fiveModules = await bounceOneBar(page, testInfo, 'five-modules');
   expect(fiveModules.integratedLufs).not.toBeNull();

@@ -14,7 +14,8 @@ import {
   type SoundState,
 } from '../audio/sound';
 
-export const PATCH_SCHEMA_VERSION = 4;
+export const PATCH_SCHEMA_VERSION = 5;
+const COMPATIBLE_PATCH_SCHEMA_VERSIONS = [4, PATCH_SCHEMA_VERSION] as const;
 const FORMAT = 'deflate-raw' as ConstructorParameters<typeof CompressionStream>[0];
 
 function expectArray(value: CborValue, label: string): readonly CborValue[] {
@@ -189,7 +190,9 @@ export async function serializeRack(rack: ShareableRack): Promise<Uint8Array> {
 export async function deserializeRack(compressed: Uint8Array): Promise<ShareableRack> {
   const versioned = await transform(compressed, new DecompressionStream(FORMAT));
   const version = versioned[0];
-  if (version !== PATCH_SCHEMA_VERSION) throw new RangeError(`Unsupported patch schema version ${String(version)}.`);
+  if (!COMPATIBLE_PATCH_SCHEMA_VERSIONS.includes(version as (typeof COMPATIBLE_PATCH_SCHEMA_VERSIONS)[number])) {
+    throw new RangeError(`Unsupported patch schema version ${String(version)}.`);
+  }
   return fromTuple(decodeCbor(versioned.subarray(1)));
 }
 

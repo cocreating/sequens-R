@@ -75,6 +75,7 @@ const DEFAULT_NAMES: Readonly<Record<ModuleType, string>> = {
   piano: 'Piano roll',
   cc: 'CC Control',
   mod: 'Mod',
+  synth: 'Synth',
 };
 
 function createId(type: ModuleType): string {

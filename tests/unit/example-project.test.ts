@@ -10,7 +10,7 @@ describe('legacy project fixtures', () => {
     const modules = project.racks[0]?.state.modules;
 
     expect(project.name).toBe('Basic Electro');
-    expect(project.schemaVersion).toBe(5);
+    expect(project.schemaVersion).toBe(6);
     expect(project.racks[0]?.state.bpm).toBe(110);
     expect(modules?.map(({ type }) => type)).toEqual(['drums', 'arp']);
   });
@@ -21,7 +21,7 @@ describe('legacy project fixtures', () => {
     const modules = project.racks[0]?.state.modules;
 
     expect(project.name).toBe('Basic Electro 2');
-    expect(project.schemaVersion).toBe(5);
+    expect(project.schemaVersion).toBe(6);
     expect(project.racks[0]?.state.bpm).toBe(110);
     expect(modules?.map(({ type }) => type)).toEqual(['mixer', 'bass', 'drums', 'arp']);
     expect(modules?.every(({ sound }) => sound.engineVersion === 2)).toBe(true);
@@ -64,7 +64,7 @@ describe('bundled Piano showcase projects', () => {
       const piano = rack.modules.find(({ type }) => type === 'piano');
       const moduleIds = new Set(rack.modules.map(({ id }) => id));
 
-      expect(project.schemaVersion).toBe(5);
+      expect(project.schemaVersion).toBe(6);
       const pianoEvents = piano?.slots[0]?.pattern?.events ?? [];
 
       expect(project.scenes.map(({ name }) => name)).toEqual(['Prelude', 'Theme', 'Variation', 'Finale']);

@@ -111,6 +111,16 @@ export const SOUND_PARAM_SCHEMAS: Readonly<Record<ModuleType, ParamSchema>> = Ob
   ]),
   cc: silentSchema,
   mod: silentSchema,
+  synth: defineSchema([
+    { key: 'wave', label: 'Wave', min: 0, max: 2, step: 1, defaultValue: 1, options: ['Triangle', 'Saw', 'Square'], control: 'segmented' },
+    { key: 'shape', label: 'Shape', min: 0, max: 100, step: 1, defaultValue: 35, unit: '%', control: 'knob' },
+    { key: 'cutoff', label: 'Cutoff', min: 0, max: 100, step: 1, defaultValue: 62, unit: '%', control: 'knob' },
+    { key: 'resonance', label: 'Resonance', min: 0, max: 100, step: 1, defaultValue: 24, unit: '%', control: 'knob' },
+    { key: 'envelope', label: 'Filter env', min: 0, max: 100, step: 1, defaultValue: 52, unit: '%', control: 'knob' },
+    { key: 'attack', label: 'Attack', min: 0, max: 100, step: 1, defaultValue: 8, unit: '%', control: 'knob' },
+    { key: 'release', label: 'Release', min: 0, max: 100, step: 1, defaultValue: 38, unit: '%', control: 'knob' },
+    { key: 'glide', label: 'Glide', min: 0, max: 100, step: 1, defaultValue: 12, unit: '%', control: 'knob' },
+  ]),
 });
 
 function defaultsFor(type: ModuleType): Readonly<Record<string, number>> {
@@ -181,6 +191,14 @@ const PRESET_ROWS = [
   { id: 'euclid-circuit-v2', moduleType: 'euclid', label: 'Circuit', params: { tone: 68, decay: 42, spread: 92 }, outputTrimDb: 13.5 },
   { id: 'euclid-tide-v2', moduleType: 'euclid', label: 'Tide', params: { tone: 26, decay: 92, spread: 58 }, outputTrimDb: 12.7 },
   { id: 'euclid-skein-v2', moduleType: 'euclid', label: 'Skein', params: { tone: 54, decay: 52, spread: 100 }, outputTrimDb: 13 },
+  { id: 'synth-core-v2', moduleType: 'synth', label: 'Signal', params: { wave: 1, shape: 35, cutoff: 62, resonance: 24, envelope: 52, attack: 8, release: 38, glide: 12 }, outputTrimDb: 9 },
+  { id: 'synth-soft-v2', moduleType: 'synth', label: 'Soft arc', params: { wave: 0, shape: 18, cutoff: 48, resonance: 12, envelope: 38, attack: 22, release: 58, glide: 18 }, outputTrimDb: 8.5 },
+  { id: 'synth-bright-v2', moduleType: 'synth', label: 'Dayline', params: { wave: 1, shape: 42, cutoff: 84, resonance: 18, envelope: 64, attack: 3, release: 28, glide: 5 }, outputTrimDb: 9.3 },
+  { id: 'synth-hollow-v2', moduleType: 'synth', label: 'Hollow point', params: { wave: 2, shape: 24, cutoff: 54, resonance: 56, envelope: 45, attack: 5, release: 44, glide: 26 }, outputTrimDb: 4.7 },
+  { id: 'synth-pluck-v2', moduleType: 'synth', label: 'Quick pulse', params: { wave: 1, shape: 12, cutoff: 72, resonance: 32, envelope: 88, attack: 0, release: 10, glide: 0 }, outputTrimDb: 9.5 },
+  { id: 'synth-wide-v2', moduleType: 'synth', label: 'Twin path', params: { wave: 1, shape: 92, cutoff: 68, resonance: 20, envelope: 58, attack: 7, release: 48, glide: 15 }, outputTrimDb: 8.3 },
+  { id: 'synth-dark-v2', moduleType: 'synth', label: 'Night signal', params: { wave: 0, shape: 48, cutoff: 24, resonance: 42, envelope: 72, attack: 16, release: 76, glide: 64 }, outputTrimDb: 5.8 },
+  { id: 'synth-glass-v2', moduleType: 'synth', label: 'Glass current', params: { wave: 0, shape: 72, cutoff: 94, resonance: 68, envelope: 36, attack: 2, release: 64, glide: 8 }, outputTrimDb: 8.2 },
 ] satisfies readonly PresetRow[];
 
 export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({
@@ -194,6 +212,7 @@ export const SOUND_PRESET_IDS: readonly string[] = Object.freeze(SOUND_PRESETS.m
 const DEFAULT_PRESET_IDS: Readonly<Record<ModuleType, string>> = Object.freeze({
   drums: 'drums-core-v2', bass: 'bass-core-v2', acid: 'acid-core-v2', chords: 'chords-core-v2', mixer: 'silent-mixer-v2',
   arp: 'arp-core-v2', euclid: 'euclid-core-v2', piano: 'piano-core-v2', cc: 'silent-cc-v2', mod: 'silent-mod-v2',
+  synth: 'synth-core-v2',
 });
 
 function assertQuantized(value: number, definition: ParamDefinition, label: string): void {

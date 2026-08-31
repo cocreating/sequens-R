@@ -1,7 +1,7 @@
 import type { ModuleType, ParamSchema } from '../core/pattern';
 import { GENERATORS } from '../generators';
 
-export const MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'mixer', 'arp', 'euclid', 'piano', 'cc', 'mod'] as const satisfies readonly ModuleType[];
+export const MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'mixer', 'arp', 'euclid', 'piano', 'cc', 'mod', 'synth'] as const satisfies readonly ModuleType[];
 
 export const PARAM_SCHEMAS: Readonly<Record<ModuleType, ParamSchema>> = {
   drums: GENERATORS.drums.paramSchema,
@@ -14,6 +14,7 @@ export const PARAM_SCHEMAS: Readonly<Record<ModuleType, ParamSchema>> = {
   piano: GENERATORS.piano.paramSchema,
   cc: GENERATORS.cc.paramSchema,
   mod: GENERATORS.mod.paramSchema,
+  synth: GENERATORS.synth.paramSchema,
 };
 
 export function validateParams(type: ModuleType, params: Readonly<Record<string, number>>): void {

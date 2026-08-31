@@ -13,7 +13,7 @@ import {
 } from '../state/rack';
 import { normalizeModuleColor } from '../state/module-color';
 
-export const PROJECT_SCHEMA_VERSION = 5;
+export const PROJECT_SCHEMA_VERSION = 6;
 export const DEFAULT_PROJECT_NAME = 'New Project';
 const LEGACY_DEFAULT_PROJECT_NAME = 'Untitled Project';
 
@@ -233,8 +233,8 @@ function migrateSingleRackProject(value: Record<string, unknown>): ProjectDocume
 export function migrateProject(value: unknown): ProjectDocument {
   if (!isRecord(value)) throw new TypeError('Project file must contain an object.');
   if (value.schemaVersion === 0) return migrateSingleRackProject(value);
-  if (value.schemaVersion !== 1 && value.schemaVersion !== 2 && value.schemaVersion !== 3 && value.schemaVersion !== 4 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
-  const hasReleasedSound = value.schemaVersion === 4 || value.schemaVersion === PROJECT_SCHEMA_VERSION;
+  if (value.schemaVersion !== 1 && value.schemaVersion !== 2 && value.schemaVersion !== 3 && value.schemaVersion !== 4 && value.schemaVersion !== 5 && value.schemaVersion !== PROJECT_SCHEMA_VERSION) throw new RangeError(`Unsupported project schema version ${String(value.schemaVersion)}.`);
+  const hasReleasedSound = value.schemaVersion === 4 || value.schemaVersion === 5 || value.schemaVersion === PROJECT_SCHEMA_VERSION;
   if (!Array.isArray(value.racks) || value.racks.length < 1) throw new RangeError('A project must contain at least one rack.');
   const racks = value.racks.map((entry): ProjectRack => {
     if (!isRecord(entry)) throw new TypeError('Project rack must be an object.');

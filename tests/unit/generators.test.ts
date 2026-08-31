@@ -21,6 +21,7 @@ describe('core generator goldens', () => {
     ['acid', '1e19c17f'],
     ['chords', '8873a364'],
     ['mixer', 'b5479a42'],
+    ['synth', 'a821cf0c'],
   ] as const)('%s keeps seed 42 stable', (type, golden) => {
     const generator = GENERATORS[type];
     const params = Object.freeze({ ...generator.defaults });

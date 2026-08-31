@@ -171,6 +171,13 @@ const PARAMETER_HELP: Readonly<Record<string, string>> = {
   'piano.inKey': 'Chromatic allows all semitones. In key snaps added and moved notes to the current project scale.',
   'cc.bars': 'Sets the length of the recorded CC automation loop in bars.',
   'mod.bars': 'Sets the length before all three tempo-synchronised LFOs repeat.',
+  'synth.style': 'Chooses the melodic contour used to build the seeded lead phrase.',
+  'synth.steps': 'Sets the Synth loop length in sixteenth-note steps.',
+  'synth.density': 'Controls how many two-step phrase positions receive notes while retaining the final tonic cadence.',
+  'synth.range': 'Bounds how many octaves the generated lead phrase may travel.',
+  'synth.octave': 'Sets the base register for the generated lead phrase.',
+  'synth.gate': 'Sets generated note length and outgoing MIDI gate. Sound Release changes only the internal voice tail.',
+  'synth.repeat': 'Controls how often the phrase repeats its previous scale degree instead of moving along the selected contour.',
 };
 
 const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
@@ -233,6 +240,38 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
   'acid.drive': {
     title: 'Acid audio drive',
     body: 'Adds bounded saturation before and after the internal resonant filter. It changes harmonics without changing MIDI velocity.',
+  },
+  'synth.wave': {
+    title: 'Synth waveform',
+    body: 'Selects the persistent triangle, saw, or square oscillator without changing the generated melody or outgoing MIDI.',
+  },
+  'synth.shape': {
+    title: 'Oscillator shape',
+    body: 'Blends and detunes the secondary oscillator for a wider internal tone while leaving the generated notes unchanged.',
+  },
+  'synth.cutoff': {
+    title: 'Synth cutoff',
+    body: 'Sets the smoothed base frequency of the internal resonant low-pass filter.',
+  },
+  'synth.resonance': {
+    title: 'Synth resonance',
+    body: 'Raises bounded emphasis around the internal filter cutoff without affecting MIDI.',
+  },
+  'synth.envelope': {
+    title: 'Synth filter envelope',
+    body: 'Sets how far note velocity opens the internal filter during each attack.',
+  },
+  'synth.attack': {
+    title: 'Synth attack',
+    body: 'Sets the internal amplitude fade-in from a quick lead attack to a softer onset.',
+  },
+  'synth.release': {
+    title: 'Synth release',
+    body: 'Sets the internal voice tail after the gate closes. Generated and outgoing MIDI note length remain unchanged.',
+  },
+  'synth.glide': {
+    title: 'Synth glide',
+    body: 'Sets pitch transition time between contiguous full-gate notes. Notes separated by a rest retrigger normally.',
   },
   'euclid.tone': {
     title: 'Ring tone',

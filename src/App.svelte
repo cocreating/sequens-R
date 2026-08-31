@@ -95,6 +95,7 @@
     piano: { label: 'Piano roll', description: 'Editable notes, velocity, and accents', icon: 'musical-note' },
     cc: { label: 'CC Control', description: 'Record external MIDI automation', icon: 'cpu-chip' },
     mod: { label: 'Mod', description: 'Tempo-synced external MIDI LFOs', icon: 'arrow-path' },
+    synth: { label: 'Synth', description: 'Seeded lead melodies with contour and cadence', icon: 'sparkles' },
   };
   const initialRack = createRackState(STARTER_RACK);
   const tempoTapper = new TapTempo();

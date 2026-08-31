@@ -11,6 +11,7 @@ export const MODULE_COLOR_OPTIONS = [
   { id: 'forest', label: 'Forest', value: '#173027' },
   { id: 'teal', label: 'Teal', value: '#123135' },
   { id: 'steel', label: 'Steel', value: '#1c2932' },
+  { id: 'cobalt', label: 'Cobalt', value: '#19274d' },
 ] as const;
 
 export type ModuleColor = typeof MODULE_COLOR_OPTIONS[number]['id'];
@@ -26,6 +27,7 @@ const DEFAULT_MODULE_COLORS: Readonly<Record<ModuleType, ModuleColor>> = {
   piano: 'indigo',
   cc: 'steel',
   mod: 'burgundy',
+  synth: 'cobalt',
 };
 
 export function defaultModuleColor(type: ModuleType): ModuleColor {

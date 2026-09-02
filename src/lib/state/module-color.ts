@@ -27,6 +27,7 @@ const DEFAULT_MODULE_COLORS: Readonly<Record<ModuleType, ModuleColor>> = {
   cc: 'steel',
   mod: 'burgundy',
   synth: 'cobalt',
+  drone: 'graphite',
 };
 
 export function defaultModuleColor(type: ModuleType): ModuleColor {

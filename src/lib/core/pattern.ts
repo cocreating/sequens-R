@@ -12,7 +12,7 @@ export const SCALE_NAMES = [
 ] as const;
 
 export type ScaleName = (typeof SCALE_NAMES)[number];
-export const CORE_MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'synth'] as const;
+export const CORE_MODULE_TYPES = ['drums', 'bass', 'acid', 'chords', 'synth', 'drone'] as const;
 export const DESKTOP_MODULE_TYPES = ['arp', 'euclid', 'piano', 'cc', 'mod'] as const;
 export type CoreModuleType = (typeof CORE_MODULE_TYPES)[number];
 export type DesktopModuleType = (typeof DESKTOP_MODULE_TYPES)[number];

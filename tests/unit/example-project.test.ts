@@ -10,7 +10,7 @@ describe('legacy project fixtures', () => {
     const modules = project.racks[0]?.state.modules;
 
     expect(project.name).toBe('Basic Electro');
-    expect(project.schemaVersion).toBe(6);
+    expect(project.schemaVersion).toBe(7);
     expect(project.racks[0]?.state.bpm).toBe(110);
     expect(modules?.map(({ type }) => type)).toEqual(['drums', 'arp']);
   });
@@ -62,7 +62,7 @@ describe('bundled Synth electronic projects', () => {
       const synth = synths[0];
       const moduleIds = new Set(rack.modules.map(({ id }) => id));
 
-      expect(project.schemaVersion).toBe(6);
+      expect(project.schemaVersion).toBe(7);
       expect(project.settings.genre).toBe(entry.genre);
       expect(project.scenes.map(({ name }) => name)).toEqual(['Intro', 'Groove', 'Variation', 'Peak']);
       expect(rack.bpm).toBeLessThanOrEqual(130);

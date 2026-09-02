@@ -7,12 +7,12 @@ export const C10_DURATION_SECONDS = 600;
 
 const C10_MODULE_TYPES = [
   'drums', 'bass', 'acid', 'chords', 'arp', 'euclid', 'piano',
-  'drums', 'bass', 'acid', 'chords', 'arp', 'euclid', 'piano', 'drums', 'synth',
+  'drums', 'bass', 'acid', 'chords', 'arp', 'euclid', 'piano', 'drone', 'synth',
 ] as const satisfies readonly ModuleType[];
 
 const MODULE_LABELS: Readonly<Record<ModuleType, string>> = {
   drums: 'Drums', bass: 'Bass', acid: 'Acid', chords: 'Chords',
-  arp: 'Arp', euclid: 'Euclid', piano: 'Piano', cc: 'CC', mod: 'Mod', synth: 'Synth',
+  arp: 'Arp', euclid: 'Euclid', piano: 'Piano', cc: 'CC', mod: 'Mod', synth: 'Synth', drone: 'Drone',
 };
 
 export interface C10RunSummary {

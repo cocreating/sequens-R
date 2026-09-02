@@ -123,7 +123,7 @@ describe('Phase 4 persistence and links', () => {
   it('migrates Phase 2/3 project documents into the Phase 4 schema', () => {
     const legacy = createProject(createRackState(STARTER_RACK));
     const migrated = migrateProject({ ...legacy, schemaVersion: 1 });
-    expect(migrated.schemaVersion).toBe(6);
+    expect(migrated.schemaVersion).toBe(7);
     expect(migrated.racks[0]?.state.modules[0]?.automation).toEqual([]);
   });
 

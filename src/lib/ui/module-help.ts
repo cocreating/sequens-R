@@ -102,6 +102,10 @@ const CONTROL_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
     title: 'Pattern steps',
     body: 'Shows generated events across time. In a Drums module, click a step to toggle it; other generators display their resulting pattern here.',
   },
+  'drone-field': {
+    title: 'Continuous drone field',
+    body: 'Shows each sustained voice across the loop. The anchor never drops; upper lanes can glide to new scale tones at bar boundaries.',
+  },
   'piano-roll': {
     title: 'Piano roll',
     body: 'Author or load key-aware melodies, edit velocity and accents, transpose by degree or octave, zoom or scroll with the piano keyboard, and audition through the current monitor and MIDI route.',
@@ -174,6 +178,13 @@ const PARAMETER_HELP: Readonly<Record<string, string>> = {
   'synth.octave': 'Sets the base register for the generated lead phrase.',
   'synth.gate': 'Sets generated note length and outgoing MIDI gate. Sound Release changes only the internal voice tail.',
   'synth.repeat': 'Controls how often the phrase repeats its previous scale degree instead of moving along the selected contour.',
+  'drone.field': 'Chooses the deterministic harmonic layout, from stable roots and open fifths to clusters, undertones, and wandering scale tones.',
+  'drone.bars': 'Sets the Drone cycle to 1, 2, 4, or 8 bars. Every voice remains continuously covered across the full loop.',
+  'drone.voices': 'Sets two to four sustained MIDI voices. The first voice is always the continuous tonal anchor.',
+  'drone.octave': 'Sets the base register of the harmonic field before voice spread is applied.',
+  'drone.spread': 'Distributes upper voices across as much as two additional octaves while keeping the anchor in place.',
+  'drone.change': 'Controls how often upper voices move at bar boundaries. This changes generated notes and outgoing MIDI.',
+  'drone.tension': 'Introduces neighboring scale degrees into upper-voice changes without leaving the project key.',
 };
 
 const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
@@ -268,6 +279,38 @@ const SOUND_HELP: Readonly<Record<string, ModuleHelpInfo>> = {
   'synth.glide': {
     title: 'Synth glide',
     body: 'Sets pitch transition time between contiguous full-gate notes. Notes separated by a rest retrigger normally.',
+  },
+  'drone.body': {
+    title: 'Drone body',
+    body: 'Shapes the relationship between each persistent triangle fundamental and its sine partial, from pure to warm, reed-like, or glassy.',
+  },
+  'drone.tone': {
+    title: 'Drone tone',
+    body: 'Sets the base low-pass range of the internal field while leaving its sustained MIDI pitches unchanged.',
+  },
+  'drone.motion': {
+    title: 'Drone motion',
+    body: 'Sets slow filter and panorama movement plus the glide time between adjacent sustained pitches. It affects internal monitoring only.',
+  },
+  'drone.air': {
+    title: 'Drone air',
+    body: 'Blends a quiet deterministic, band-limited noise layer through the same envelopes as the sustained voices.',
+  },
+  'drone.shimmer': {
+    title: 'Drone shimmer',
+    body: 'Raises the upper sine partial and gentle filter emphasis without adding a private reverb or changing MIDI.',
+  },
+  'drone.width': {
+    title: 'Drone width',
+    body: 'Spreads the four bounded voice lanes across stereo and scales their slow panorama movement. Zero remains centered.',
+  },
+  'drone.attack': {
+    title: 'Drone attack',
+    body: 'Sets the internal fade-in time from 80 milliseconds to six seconds. Generated MIDI starts at the unchanged pattern boundary.',
+  },
+  'drone.release': {
+    title: 'Drone release',
+    body: 'Sets the internal fade after a sustained gate ends. Adjacent lane events cancel that fade and remain continuous.',
   },
   'euclid.tone': {
     title: 'Ring tone',

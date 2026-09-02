@@ -93,6 +93,7 @@
     cc: { label: 'CC Control', description: 'Record external MIDI automation', icon: 'cpu-chip' },
     mod: { label: 'Mod', description: 'Tempo-synced external MIDI LFOs', icon: 'arrow-path' },
     synth: { label: 'Synth', description: 'Seeded lead melodies with contour and cadence', icon: 'sparkles' },
+    drone: { label: 'Drone', description: 'Continuous harmonic atmosphere with slow seeded motion', icon: 'waveform' },
   };
   const initialRack = createRackState(STARTER_RACK);
   const tempoTapper = new TapTempo();

@@ -120,6 +120,16 @@ export const SOUND_PARAM_SCHEMAS: Readonly<Record<ModuleType, ParamSchema>> = Ob
     { key: 'release', label: 'Release', min: 0, max: 100, step: 1, defaultValue: 38, unit: '%', control: 'knob' },
     { key: 'glide', label: 'Glide', min: 0, max: 100, step: 1, defaultValue: 12, unit: '%', control: 'knob' },
   ]),
+  drone: defineSchema([
+    { key: 'body', label: 'Body', min: 0, max: 3, step: 1, defaultValue: 1, options: ['Pure', 'Warm', 'Reed', 'Glass'], control: 'segmented' },
+    { key: 'tone', label: 'Tone', min: 0, max: 100, step: 1, defaultValue: 38, unit: '%', control: 'knob' },
+    { key: 'motion', label: 'Motion', min: 0, max: 100, step: 1, defaultValue: 35, unit: '%', control: 'knob' },
+    { key: 'air', label: 'Air', min: 0, max: 100, step: 1, defaultValue: 12, unit: '%', control: 'knob' },
+    { key: 'shimmer', label: 'Shimmer', min: 0, max: 100, step: 1, defaultValue: 28, unit: '%', control: 'knob' },
+    { key: 'width', label: 'Width', min: 0, max: 100, step: 1, defaultValue: 70, unit: '%', control: 'knob' },
+    { key: 'attack', label: 'Attack', min: 0, max: 100, step: 1, defaultValue: 45, unit: '%', control: 'knob' },
+    { key: 'release', label: 'Release', min: 0, max: 100, step: 1, defaultValue: 70, unit: '%', control: 'knob' },
+  ]),
 });
 
 function defaultsFor(type: ModuleType): Readonly<Record<string, number>> {
@@ -197,6 +207,14 @@ const PRESET_ROWS = [
   { id: 'synth-wide-v2', moduleType: 'synth', label: 'Twin path', params: { wave: 1, shape: 92, cutoff: 68, resonance: 20, envelope: 58, attack: 7, release: 48, glide: 15 }, outputTrimDb: 8.3 },
   { id: 'synth-dark-v2', moduleType: 'synth', label: 'Night signal', params: { wave: 0, shape: 48, cutoff: 24, resonance: 42, envelope: 72, attack: 16, release: 76, glide: 64 }, outputTrimDb: 5.8 },
   { id: 'synth-glass-v2', moduleType: 'synth', label: 'Glass current', params: { wave: 0, shape: 72, cutoff: 94, resonance: 68, envelope: 36, attack: 2, release: 64, glide: 8 }, outputTrimDb: 8.2 },
+  { id: 'drone-core-v1', moduleType: 'drone', label: 'Warm Halo', params: { body: 1, tone: 38, motion: 35, air: 12, shimmer: 28, width: 70, attack: 45, release: 70 }, outputTrimDb: 15.8 },
+  { id: 'drone-deep-v1', moduleType: 'drone', label: 'Deep Current', params: { body: 0, tone: 18, motion: 22, air: 5, shimmer: 8, width: 54, attack: 62, release: 88 }, outputTrimDb: 19.7 },
+  { id: 'drone-choir-v1', moduleType: 'drone', label: 'Quiet Choir', params: { body: 2, tone: 46, motion: 48, air: 18, shimmer: 32, width: 76, attack: 58, release: 82 }, outputTrimDb: 16.4 },
+  { id: 'drone-air-v1', moduleType: 'drone', label: 'Silver Air', params: { body: 0, tone: 72, motion: 58, air: 72, shimmer: 42, width: 88, attack: 72, release: 90 }, outputTrimDb: 17.2 },
+  { id: 'drone-glass-v1', moduleType: 'drone', label: 'Tidal Glass', params: { body: 3, tone: 66, motion: 72, air: 20, shimmer: 82, width: 94, attack: 52, release: 84 }, outputTrimDb: 16.2 },
+  { id: 'drone-night-v1', moduleType: 'drone', label: 'Night Bloom', params: { body: 1, tone: 24, motion: 66, air: 14, shimmer: 24, width: 82, attack: 76, release: 96 }, outputTrimDb: 17.25 },
+  { id: 'drone-frozen-v1', moduleType: 'drone', label: 'Frozen Light', params: { body: 3, tone: 54, motion: 16, air: 8, shimmer: 58, width: 64, attack: 82, release: 92 }, outputTrimDb: 16.1 },
+  { id: 'drone-sky-v1', moduleType: 'drone', label: 'Open Sky', params: { body: 1, tone: 58, motion: 44, air: 32, shimmer: 46, width: 100, attack: 66, release: 86 }, outputTrimDb: 16.8 },
 ] satisfies readonly PresetRow[];
 
 export const SOUND_PRESETS: readonly SoundPreset[] = Object.freeze(PRESET_ROWS.map((preset) => Object.freeze({
@@ -211,6 +229,7 @@ const DEFAULT_PRESET_IDS: Readonly<Record<ModuleType, string>> = Object.freeze({
   drums: 'drums-core-v2', bass: 'bass-core-v2', acid: 'acid-core-v2', chords: 'chords-core-v2',
   arp: 'arp-core-v2', euclid: 'euclid-core-v2', piano: 'piano-core-v2', cc: 'silent-cc-v2', mod: 'silent-mod-v2',
   synth: 'synth-core-v2',
+  drone: 'drone-core-v1',
 });
 
 function assertQuantized(value: number, definition: ParamDefinition, label: string): void {

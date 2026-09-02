@@ -9,6 +9,7 @@ import { pianoGenerator } from './piano';
 import { ccGenerator } from './cc';
 import { modGenerator } from './mod';
 import { synthGenerator } from './synth';
+import { droneGenerator } from './drone';
 
 export type NumericParams = Record<string, number>;
 
@@ -41,6 +42,7 @@ export const GENERATORS: Readonly<Record<ModuleType, RegisteredGenerator>> = {
   cc: register(ccGenerator),
   mod: register(modGenerator),
   synth: register(synthGenerator),
+  drone: register(droneGenerator),
 };
 
-export { acidGenerator, arpGenerator, bassGenerator, ccGenerator, chordsGenerator, drumsGenerator, euclidGenerator, modGenerator, pianoGenerator, synthGenerator };
+export { acidGenerator, arpGenerator, bassGenerator, ccGenerator, chordsGenerator, droneGenerator, drumsGenerator, euclidGenerator, modGenerator, pianoGenerator, synthGenerator };

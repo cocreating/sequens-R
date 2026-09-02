@@ -11,6 +11,7 @@
   import SoundPanel from './SoundPanel.svelte';
   import { MODULE_COLOR_OPTIONS, moduleColorValue, type ModuleColor } from '../state/module-color';
   import Icon from './Icon.svelte';
+  import DroneField from './DroneField.svelte';
 
   interface Props {
     module: RackModule;
@@ -242,6 +243,8 @@
               </div>
             </dialog>
           {/if}
+      {:else if module.type === 'drone'}
+          <DroneField {pattern} syncBeat={playheadBeat} {playing} {bpm} />
       {:else if !isControlModule(module.type)}
           <StepGrid {pattern} syncBeat={playheadBeat} {playing} {bpm} editable={module.type === 'drums'} laneLabels={module.type === 'drums' ? ['Kick', 'Snare', 'Closed hat', 'Open hat', 'Clap', 'Tom', 'Rim', 'Perc'] : []} ontoggle={onstep} />
       {/if}

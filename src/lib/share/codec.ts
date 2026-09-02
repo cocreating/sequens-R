@@ -14,8 +14,8 @@ import {
   type SoundState,
 } from '../audio/sound';
 
-export const PATCH_SCHEMA_VERSION = 5;
-const COMPATIBLE_PATCH_SCHEMA_VERSIONS = [4, PATCH_SCHEMA_VERSION] as const;
+export const PATCH_SCHEMA_VERSION = 6;
+const COMPATIBLE_PATCH_SCHEMA_VERSIONS = [4, 5, PATCH_SCHEMA_VERSION] as const;
 const FORMAT = 'deflate-raw' as ConstructorParameters<typeof CompressionStream>[0];
 const RETIRED_MIXER_MODULE_CODE = 4;
 const RETIRED_MIXER_PRESET_CODE = 4;

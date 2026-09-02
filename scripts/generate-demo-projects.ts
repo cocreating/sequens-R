@@ -62,6 +62,7 @@ const DEFAULT_COLORS: Readonly<Record<ModuleType, RackModule['color']>> = {
   cc: 'steel',
   mod: 'burgundy',
   synth: 'cobalt',
+  drone: 'graphite',
 };
 
 function clamp(value: number, minimum: number, maximum: number): number {

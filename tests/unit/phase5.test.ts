@@ -29,7 +29,7 @@ describe('Phase 5 scenes', () => {
   it('migrates version 2 documents with no scenes and validates version 3 assignments', () => {
     const current = createProject(createRackState(STARTER_RACK));
     const migrated = migrateProject({ ...current, schemaVersion: 2, scenes: undefined });
-    expect(migrated.schemaVersion).toBe(6);
+    expect(migrated.schemaVersion).toBe(7);
     expect(migrated.scenes).toEqual([]);
     expect(() => migrateProject({
       ...current,

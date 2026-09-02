@@ -30,7 +30,7 @@ function generatedPatterns(rack: ShareableRack) {
 }
 
 describe('link patch codec', () => {
-  it('round-trips 200 five-module racks and stays below 400 bytes', async () => {
+  it('round-trips 200 six-module racks and stays below 400 bytes', async () => {
     const random = sfc32(0x5e9e05);
     let largest = 0;
     for (let index = 0; index < 200; index += 1) {

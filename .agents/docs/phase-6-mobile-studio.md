@@ -4,7 +4,7 @@ Status: implementation and automated acceptance complete on 2026-08-25. Physical
 
 ## Outcome
 
-Chrome on Android can add and edit all ten module types without requesting a desktop site. The permanent Mixer remains available from the header. Mobile remains a vertical, one-hand-oriented surface; it does not reproduce the desktop parallel-lane layout.
+Chrome on Android can add and edit all eleven module types without requesting a desktop site. The permanent Mixer remains available from the header. Mobile remains a vertical, one-hand-oriented surface; it does not reproduce the desktop parallel-lane layout.
 
 ## Scope
 
@@ -34,7 +34,7 @@ Chrome on Android can add and edit all ten module types without requesting a des
 
 ## Automated acceptance
 
-- Playwright at 375 × 667 and 375 × 812 covers all ten module types after the additive Synth follow-up and Mixer-module retirement.
+- Playwright at 375 × 667 and 375 × 812 covers all eleven module types after the additive Synth and Drone follow-ups and Mixer-module retirement.
 - A desktop-authored Arp/Euclid/Mod link opens, edits, re-shares, and regenerates identically on mobile.
 - Desktop-authored Piano and recorded-CC projects import, edit, persist, export, and re-import identically on mobile.
 - Editing, collapsing, reordering, duplicating, and deleting while playing produces no application errors or stuck UI state; audio discontinuity remains a physical listening check.
@@ -95,7 +95,7 @@ The next product phase is Phase 7, specified in `phase-7-sound-quality.md`. Its 
 - initial JavaScript: 78.68 KiB gzip / 200 KiB budget;
 - Playwright: 36 passed, including Phase 6 coverage at 375 × 667 and 375 × 812;
 - axe: no serious or critical violations with the mobile Piano dialog open, while the existing desktop accessibility gate remains green;
-- all ten module types can be added and played at both mobile sizes without page errors or document-level horizontal overflow;
+- all eleven module types can be added and played at both mobile sizes without page errors or document-level horizontal overflow;
 - Arp, Euclid, CC Control, and Mod mobile editor flows pass, including one-dense-body coordination;
 - Piano touch/keyboard authoring, selection, movement, resizing, local overflow, close, and focus restoration pass;
 - mobile reorder, duplicate, delete, save, reload, and edit-during-playback flows pass;

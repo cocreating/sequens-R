@@ -9,6 +9,7 @@ import { ArpVoice } from './voices/arp';
 import { PianoVoice } from './voices/piano';
 import { EuclidVoice } from './voices/euclid';
 import { SynthVoice } from './voices/synth';
+import { DroneVoice } from './voices/drone';
 
 export interface VoiceModuleSnapshot {
   type: ModuleType;
@@ -38,7 +39,7 @@ export const MOBILE_VOICE_LIMITS: Readonly<VoiceLimits> = Object.freeze({ chordV
 export interface VoiceIdentity {
   moduleType: ModuleType;
   presetId: string;
-  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'procedural-chords-v2' | 'procedural-arp-v2' | 'procedural-euclid-v2' | 'procedural-piano-v2' | 'procedural-synth-v1' | 'silent-cc-v2' | 'silent-mod-v2' | 'silent-control-v2';
+  implementationId: 'procedural-drums-v2' | 'procedural-bass-v2' | 'procedural-acid-v2' | 'procedural-chords-v2' | 'procedural-arp-v2' | 'procedural-euclid-v2' | 'procedural-piano-v2' | 'procedural-synth-v1' | 'procedural-drone-v1' | 'silent-cc-v2' | 'silent-mod-v2' | 'silent-control-v2';
 }
 
 export class VoiceFactory {
@@ -58,6 +59,7 @@ export class VoiceFactory {
     if (module.type === 'arp') return new ArpVoice(context, destination, module.sound, limits.arpVoices);
     if (module.type === 'euclid') return new EuclidVoice(context, destination, module.sound);
     if (module.type === 'synth') return new SynthVoice(context, destination, module.sound);
+    if (module.type === 'drone') return new DroneVoice(context, destination, module.sound);
     return new PianoVoice(context, destination, module.sound, limits.pianoVoices);
   }
 
@@ -74,6 +76,7 @@ export class VoiceFactory {
     else if (module.type === 'arp') implementationId = 'procedural-arp-v2';
     else if (module.type === 'euclid') implementationId = 'procedural-euclid-v2';
     else if (module.type === 'synth') implementationId = 'procedural-synth-v1';
+    else if (module.type === 'drone') implementationId = 'procedural-drone-v1';
     else implementationId = 'procedural-piano-v2';
     return { moduleType: module.type, presetId: module.sound.presetId, implementationId };
   }

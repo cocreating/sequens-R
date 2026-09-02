@@ -203,7 +203,7 @@ Observe how Synth is actually used before expanding it. The strongest candidate 
 - Svelte/TypeScript check: zero errors and warnings.
 - Unit/property suite: 130 tests pass, including Synth phrase goldens, six-style distinction, boundary density/range/length, mutation cadence, eight presets, DSP mappings, factory identity, schema migration, and randomized compact-link coverage.
 - Production build: passes with 119.46 KiB initial JavaScript gzip against the 200 KiB budget.
-- Targeted Chrome coverage: Synth add/edit/mutate/sound/route/share/restore and axe serious/critical checks pass at 375 × 667; all ten current module types also add and play at 375 × 667 and 375 × 812.
+- Targeted Chrome coverage: Synth add/edit/mutate/sound/route/share/restore and axe serious/critical checks pass at 375 × 667; all ten module types present at that release also add and play at 375 × 667 and 375 × 812.
 - All eight Synth presets render as distinct references at -18 LUFS-I within 0.04 LU, below -9 dBTP, and below -120 dBFS DC in the deterministic one-bar browser bench.
 - Offline browser bounce: the five-module rack containing Synth and the 14-module regression both render audibly below the -1 dBTP ceiling.
 - The 16-module/140-BPM acceptance rack now contains Synth and remains preparable through Workspace → Diagnostics.

@@ -15,7 +15,7 @@ Every rack module owns:
 - mutation state with four intensities, scheduled mutation, and one-step revert;
 - a generated or manually authored `Pattern` expressed in sixteenth-note steps;
 - a versioned `SoundState` containing a released preset ID, quantized sound macros, panorama, and shared delay/reverb sends;
-- project persistence through schema 6. Compact links use patch schema 5, retain additive patch-schema-4 decoding, and deliberately exclude Piano, recorded CC automation, and device-specific MIDI routes.
+- project persistence through schema 7. Compact links use patch schema 6, retain additive patch-schema-4/5 decoding, and deliberately exclude Piano, recorded CC automation, and device-specific MIDI routes.
 
 The following invariants apply to every future module improvement:
 
@@ -443,3 +443,24 @@ An improvement is not complete until all applicable items are recorded:
 - **P2:** explicit Chords source selection by stable module ID with visible deletion fallback.
 - **P2:** deterministic rotate, invert-contour, and scale-degree transpose transforms.
 - **Deferred:** manual note editing, polyphony, user wavetables/samples, and internal modulation routing.
+
+## 18. Drone
+
+### Implemented contract
+
+- Generator: deterministic key-aware continuous fields with Rooted, Open fifths, Suspended, Cluster, Undertones, and Wandering layouts.
+- Generator controls: Field, 1/2/4/8-bar Cycle, two-to-four Voices, Register, Spread, Changes, and Tension. Lane zero is one uninterrupted tonic anchor; every upper lane covers the complete cycle with adjacent sustained events.
+- Mutation: level 1 changes one upper-lane velocity, level 2 replaces one upper lane, level 3 regenerates all upper lanes, and level 4 regenerates the complete deterministic field. Levels 1–3 preserve the exact anchor.
+- Sound engine: four persistent lanes with triangle fundamentals, sine partials, low-pass filters, envelopes, panorama, one shared slow filter LFO, one shared panorama LFO, and one deterministic band-limited air source. Adjacent events on one lane glide without retriggering or dropping the envelope.
+- Sound controls: Body, Tone, Motion, Air, Shimmer, Width, Attack, Release, Pan, and shared sends.
+- Presets: Warm Halo, Deep Current, Quiet Choir, Silver Air, Tidal Glass, Night Bloom, Frozen Light, and Open Sky.
+- Presentation: a compact sustained-field timeline replaces the sixteenth-note button grid while retaining a semantic, screen-reader-readable summary.
+- Persistence: project schema 7 and patch schema 6 append Drone after Synth without changing earlier compact indexes. Patch schemas 4 and 5 remain readable.
+
+### Open acceptance and backlog
+
+- **P0:** human listening approval for all eight presets and physical Android C10 evidence with Drone in the 16-module rack.
+- **P1:** observe real ambient arrangements before changing the default field, motion, or envelope balance.
+- **P2:** explicit Chords source selection by stable module ID with visible fallback semantics.
+- **P2:** optional Freeze performance workflow only after its project, scene, MIDI-note-off, and transport semantics are specified.
+- **Deferred:** samples, granular processing, per-module convolution, arbitrary modulation routing, and unlimited voice counts.

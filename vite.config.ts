@@ -38,7 +38,7 @@ export default defineConfig({
         cacheId: 'sequens-r-phase-7-v2',
         navigateFallback: 'index.html',
         cleanupOutdatedCaches: true,
-        globPatterns: ['**/*.{js,css,html,svg,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,svg,webmanifest,woff2}'],
       },
     }),
   ],

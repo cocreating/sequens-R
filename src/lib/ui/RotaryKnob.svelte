@@ -18,6 +18,9 @@ properties; continuous updates use `oninput` and gesture boundaries use
     name?: string;
     disabled?: boolean;
     helpKey?: string;
+    /** Drops the outer hairline circle. For the 54px channel-strip and 62px
+        master knobs; the 66px in-plate knob keeps it. */
+    compact?: boolean;
     pixelsPerStep?: number;
     finePixelsPerStep?: number;
     formatValue?: (value: number) => string;
@@ -36,6 +39,7 @@ properties; continuous updates use `oninput` and gesture boundaries use
     name,
     disabled = false,
     helpKey,
+    compact = false,
     pixelsPerStep = 2,
     finePixelsPerStep = 10,
     formatValue = (next) => String(next),
@@ -130,16 +134,19 @@ properties; continuous updates use `oninput` and gesture boundaries use
   <output for={id}>{displayValue}</output>
   <div class="rotary-knob__face">
     <svg viewBox="0 0 64 64" aria-hidden="true">
-      <circle class="rotary-knob__body" cx="32" cy="32" r="24"></circle>
-      <path class="rotary-knob__track" pathLength="100" d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97"></path>
+      {#if !compact}
+        <circle class="rotary-knob__rim" cx="32" cy="32" r="28"></circle>
+      {/if}
+      <path class="rotary-knob__track" pathLength="100" d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8"></path>
       <path
         class={['rotary-knob__value', { empty: percentage <= 0 }]}
         pathLength="100"
-        d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97"
+        d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8"
         stroke-dasharray={`${percentage} 100`}
       ></path>
-      <line class="rotary-knob__indicator" x1="32" y1="32" x2="32" y2="13" transform={`rotate(${angle} 32 32)`}></line>
-      <circle class="rotary-knob__cap" cx="32" cy="32" r="2.25"></circle>
+      <circle class="rotary-knob__cap" cx="32" cy="30.5" r="19"></circle>
+      <circle class="rotary-knob__ring" cx="32" cy="32" r="19"></circle>
+      <line class="rotary-knob__indicator" x1="32" y1="16.5" x2="32" y2="24.5" transform={`rotate(${angle} 32 32)`}></line>
     </svg>
     <input
       {id}
@@ -171,23 +178,28 @@ properties; continuous updates use `oninput` and gesture boundaries use
     gap: var(--rotary-knob-gap, 0.25rem);
     align-items: center;
     min-width: 0;
-    border-block-start: 1px solid var(--rotary-knob-divider, var(--color-surface-raised, #283034));
     padding: var(--rotary-knob-padding, 0.5rem);
+    box-shadow: inset 0 1px 0 var(--rotary-knob-divider, var(--n-520));
   }
 
   label {
     min-width: 0;
     overflow: hidden;
-    color: var(--rotary-knob-label, var(--color-text-muted, #9aa4a8));
-    font-size: var(--rotary-knob-label-size, 0.72rem);
+    /* Held at --color-text-muted (currently --text-1) rather than --text-2:
+       these labels still sit on the legacy --module-background tints, where
+       --text-2 measures 3.7:1 and fails the axe check in phase5. Move to
+       --text-2 once ModulePlate replaces the tint with a spine. */
+    color: var(--rotary-knob-label, var(--color-text-muted));
+    font: 500 var(--rotary-knob-label-size, 0.57rem) / 1 var(--font-data);
+    letter-spacing: 0.13em;
     text-overflow: ellipsis;
     text-transform: uppercase;
     white-space: nowrap;
   }
 
   output {
-    color: var(--rotary-knob-text, var(--color-text, #f4f7f8));
-    font: var(--rotary-knob-value-font, 0.75rem var(--font-data, ui-monospace, monospace));
+    color: var(--rotary-knob-text, var(--text-hi));
+    font: var(--rotary-knob-value-font, 500 0.78rem/1 var(--font-data));
     font-variant-numeric: tabular-nums;
   }
 
@@ -195,7 +207,7 @@ properties; continuous updates use `oninput` and gesture boundaries use
     position: relative;
     grid-column: 1 / -1;
     justify-self: center;
-    width: var(--rotary-knob-size, 4.25rem);
+    width: var(--rotary-knob-size, 4.125rem);
     min-width: var(--rotary-knob-min-target, 2.75rem);
     aspect-ratio: 1;
     border-radius: 50%;
@@ -206,33 +218,29 @@ properties; continuous updates use `oninput` and gesture boundaries use
     width: 100%;
     height: 100%;
     overflow: visible;
-    filter: drop-shadow(0 0.3rem 0.5rem rgb(0 0 0 / 28%));
+    filter: drop-shadow(0 2px 3px oklch(0% 0 0 / 55%));
   }
 
+  /* 1 · outer hairline, completing the ring behind the track gap */
+  .rotary-knob__rim {
+    fill: none;
+    stroke: var(--n-560);
+    stroke-width: 1;
+  }
+
+  /* 2 · track arc, and 3 · value arc */
   :is(.rotary-knob__track, .rotary-knob__value) {
     fill: none;
     stroke-linecap: round;
-    stroke-width: 3.5;
-  }
-
-  .rotary-knob__body {
-    fill: var(--rotary-knob-surface, var(--color-canvas, #101315));
-    stroke: var(--rotary-knob-border, var(--color-surface-raised, #283034));
-    stroke-width: 6;
+    stroke-width: 4.25;
   }
 
   .rotary-knob__track {
-    stroke: var(--rotary-knob-track, var(--color-structure, #617077));
-    opacity: 0.55;
-  }
-
-  .rotary-knob__value,
-  .rotary-knob__indicator,
-  .rotary-knob__cap {
-    stroke: var(--rotary-knob-accent, var(--color-playing, #c8ff00));
+    stroke: var(--n-560);
   }
 
   .rotary-knob__value {
+    stroke: var(--rotary-knob-accent, var(--signal));
     transition: stroke 100ms ease;
   }
 
@@ -240,19 +248,27 @@ properties; continuous updates use `oninput` and gesture boundaries use
     opacity: 0;
   }
 
+  /* 4 · cap, sitting 1.5px high — this offset is what reads as machined */
+  .rotary-knob__cap {
+    fill: var(--rotary-knob-surface, var(--n-460));
+  }
+
+  /* 5 · body ring */
+  .rotary-knob__ring {
+    fill: none;
+    stroke: var(--n-750);
+    stroke-width: 1;
+  }
+
+  /* 6 · pointer */
   .rotary-knob__indicator {
+    stroke: var(--text-hi);
     stroke-width: 2.5;
     stroke-linecap: round;
   }
 
-  .rotary-knob__cap {
-    fill: var(--rotary-knob-surface, var(--color-canvas, #101315));
-    stroke-width: 1.5;
-  }
-
   .dragging .rotary-knob__value {
-    stroke: var(--rotary-knob-active, var(--rotary-knob-accent, var(--color-playing, #c8ff00)));
-    filter: drop-shadow(0 0 0.15rem var(--rotary-knob-active, var(--rotary-knob-accent, var(--color-playing, #c8ff00))));
+    filter: drop-shadow(0 0 0.15rem var(--rotary-knob-accent, var(--signal)));
   }
 
   input {
@@ -268,8 +284,8 @@ properties; continuous updates use `oninput` and gesture boundaries use
   }
 
   .rotary-knob__face:has(input:focus-visible) {
-    outline: 0.1875rem solid var(--rotary-knob-focus, var(--color-playing, #c8ff00));
-    outline-offset: 0.1875rem;
+    outline: 2px solid var(--rotary-knob-focus, var(--signal));
+    outline-offset: 2px;
   }
 
   .rotary-knob:has(input:disabled) {
@@ -291,11 +307,15 @@ properties; continuous updates use `oninput` and gesture boundaries use
       filter: none;
     }
 
-    :is(.rotary-knob__body, .rotary-knob__track) {
+    :is(.rotary-knob__rim, .rotary-knob__track, .rotary-knob__ring) {
       stroke: CanvasText;
     }
 
-    :is(.rotary-knob__value, .rotary-knob__indicator, .rotary-knob__cap) {
+    .rotary-knob__cap {
+      fill: Canvas;
+    }
+
+    :is(.rotary-knob__value, .rotary-knob__indicator) {
       stroke: Highlight;
     }
   }

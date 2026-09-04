@@ -1,22 +1,119 @@
 @layer tokens {
   :root {
     color-scheme: dark;
-    --color-canvas: oklch(17% 0.008 240);
-    --color-surface: oklch(22% 0.01 240);
-    --color-surface-raised: oklch(27% 0.012 240);
-    --color-structure: oklch(68% 0.025 235);
-    --color-text: oklch(93% 0.008 240);
-    --color-text-muted: oklch(72% 0.012 240);
-    --color-playing: oklch(91% 0.22 117);
-    --color-danger: oklch(70% 0.18 28);
-    --color-icon-positive: oklch(86% 0.18 145);
-    --color-icon-warning: oklch(87% 0.16 85);
-    --color-icon-danger: oklch(74% 0.19 28);
-    --color-icon-navigation: oklch(82% 0.13 245);
-    --color-icon-creative: oklch(82% 0.16 315);
-    --color-icon-file: oklch(87% 0.14 75);
-    --color-icon-audio: oklch(83% 0.13 195);
-    --color-icon-help: oklch(91% 0.17 105);
+
+    /* Neutral ramp — hue 250, near-zero chroma */
+    --n-900: oklch(9% 0.004 250);
+    --n-850: oklch(10% 0.005 250);
+    --n-825: oklch(11% 0.005 250);
+    --n-800: oklch(12% 0.005 250);
+    --n-780: oklch(13% 0.006 250);
+    --n-750: oklch(14% 0.006 250);
+    --n-720: oklch(15% 0.006 250);
+    --n-700: oklch(16% 0.006 250);
+    --n-680: oklch(17% 0.007 250);
+    --n-660: oklch(18% 0.007 250);
+    --n-640: oklch(20% 0.008 250);
+    --n-620: oklch(21% 0.008 250);
+    --n-600: oklch(22% 0.008 250);
+    --n-560: oklch(24% 0.008 250);
+    --n-540: oklch(25% 0.008 250);
+    --n-520: oklch(26% 0.008 250);
+    --n-500: oklch(28% 0.008 250);
+    --n-460: oklch(30% 0.008 250);
+    --n-300: oklch(42% 0.006 250);
+
+    /* Text ramp */
+    --text-dim: oklch(52% 0.01 250);
+    --text-quiet: oklch(56% 0.01 250);
+    --text-muted: oklch(58% 0.01 250);
+    --text-2: oklch(60% 0.01 250);
+    --text-1: oklch(72% 0.01 250);
+    --text-body: oklch(88% 0.006 250);
+    --text: oklch(95% 0.004 250);
+    --text-hi: oklch(96% 0.004 250);
+
+    /* Signal and status */
+    --signal: oklch(88% 0.21 118);
+    --signal-glow: oklch(88% 0.21 118 / 28%);
+    --signal-wash: oklch(88% 0.21 118 / 12%);
+    --signal-wash-strong: oklch(88% 0.21 118 / 16%);
+    --signal-2: oklch(70% 0.16 130);
+    --danger: oklch(72% 0.16 30);
+    --meter-hot: oklch(70% 0.19 30);
+    --meter-warm: oklch(84% 0.16 85);
+    --meter-ok: oklch(80% 0.17 145);
+
+    /* Module hues — spine, chip, and library icon only */
+    --hue-drums: oklch(72% 0.16 45);
+    --hue-bass: oklch(74% 0.14 160);
+    --hue-acid: oklch(78% 0.15 100);
+    --hue-chords: oklch(74% 0.15 320);
+    --hue-arp: oklch(74% 0.13 250);
+    --hue-euclid: oklch(76% 0.13 195);
+    --hue-piano: oklch(74% 0.14 280);
+    --hue-cc: oklch(70% 0.03 250);
+    --hue-mod: oklch(72% 0.12 15);
+    --hue-synth: oklch(74% 0.14 265);
+    --hue-drone: oklch(72% 0.02 250);
+
+    /* Surface gradients */
+    --grad-plate: linear-gradient(180deg, oklch(21% 0.008 250), oklch(18% 0.007 250));
+    --grad-chrome: linear-gradient(180deg, oklch(17% 0.007 250), oklch(14% 0.006 250));
+    --grad-strip: linear-gradient(180deg, oklch(20% 0.008 250), oklch(17% 0.007 250));
+
+    /* Elevation and depth */
+    --elev-plate:
+      inset 0 1px 0 oklch(100% 0 0 / 7%),
+      0 0 0 1px oklch(26% 0.008 250),
+      0 18px 34px -22px oklch(0% 0 0 / 90%);
+    --elev-panel:
+      0 0 0 1px oklch(26% 0.008 250),
+      0 30px 60px -30px oklch(0% 0 0 / 90%);
+    --elev-strip:
+      inset 0 1px 0 oklch(100% 0 0 / 6%),
+      0 0 0 1px oklch(25% 0.008 250);
+    --elev-chrome:
+      inset 0 1px 0 oklch(100% 0 0 / 6%),
+      0 1px 0 oklch(28% 0.008 250);
+
+    --well-sm: inset 0 1px 3px oklch(0% 0 0 / 55%);
+    --well-md: inset 0 1px 4px oklch(0% 0 0 / 60%);
+    --well-lg: inset 0 1px 4px oklch(0% 0 0 / 65%);
+    --well-meter: inset 0 1px 3px oklch(0% 0 0 / 70%);
+
+    --raise-btn: inset 0 1px 0 oklch(100% 0 0 / 7%);
+
+    --glow-signal: 0 0 18px oklch(88% 0.21 118 / 28%);
+    --glow-pad:
+      0 0 10px oklch(88% 0.21 118 / 45%),
+      inset 0 0 0 1px oklch(96% 0.1 118);
+    --glow-playhead: 0 0 14px 2px oklch(88% 0.21 118 / 45%);
+    --glow-led: 0 0 8px oklch(88% 0.21 118 / 70%);
+
+    /* Legacy aliases — same names, new values, so existing usages resolve
+       until each component is migrated in later steps. */
+    --color-canvas: var(--n-780);
+    --color-surface: var(--n-720);
+    --color-surface-raised: var(--n-640);
+    /* Both of these carry small label text on the legacy --module-background
+       tints, which are lighter than the new plate. At --text-2 they fall to
+       3.7:1 and fail the axe check in phase5. Held at --text-1 until
+       ModulePlate replaces the tint with a spine. */
+    --color-structure: var(--text-1);
+    --color-text: var(--text);
+    --color-text-muted: var(--text-1);
+    --color-playing: var(--signal);
+    --color-danger: var(--danger);
+    --color-icon-positive: var(--meter-ok);
+    --color-icon-warning: var(--meter-warm);
+    --color-icon-danger: var(--danger);
+    --color-icon-navigation: var(--hue-arp);
+    --color-icon-creative: var(--hue-chords);
+    --color-icon-file: var(--meter-warm);
+    --color-icon-audio: var(--hue-euclid);
+    --color-icon-help: var(--hue-acid);
+
     --space-1: 0.25rem;
     --space-2: 0.5rem;
     --space-3: 0.75rem;
@@ -24,10 +121,21 @@
     --space-6: 1.5rem;
     --space-8: 2rem;
     --space-12: 3rem;
-    --radius-sm: 0.25rem;
-    --radius-md: 0.5rem;
-    --font-label: "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
-    --font-data: ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+    --radius-pad: 4px;
+    --radius-chip: 5px;
+    --radius-control: 6px;
+    --radius-well: 7px;
+    --radius-btn: 8px;
+    --radius-card: 9px;
+    --radius-plate: 10px;
+    --radius-float: 12px;
+    --radius-dock: 14px;
+    --radius-sm: var(--radius-control);
+    --radius-md: var(--radius-btn);
+
+    --font-label: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif;
+    --font-data: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
     --touch-target: 2.75rem;
   }
 }

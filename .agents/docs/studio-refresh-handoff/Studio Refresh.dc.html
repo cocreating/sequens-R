@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: oklch(9% 0.004 250); color: oklch(95% 0.004 250); font-family: "Barlow Condensed", "Arial Narrow", system-ui, sans-serif; line-height: 1.35; }
+  a { color: oklch(88% 0.21 118); }
+  a:hover { color: oklch(94% 0.16 118); }
+</style>
+</helmet>
+
+<section style="display:flex;flex-direction:column;gap:56px;padding:48px;min-width:max-content">
+
+  <header style="display:flex;flex-direction:column;gap:8px;max-width:1408px">
+    <p style="margin:0;color:oklch(88% 0.21 118);font:500 0.72rem/1 'JetBrains Mono',ui-monospace,monospace;letter-spacing:0.16em;text-transform:uppercase">Visual refresh &middot; same information architecture</p>
+    <h1 style="margin:0;font:700 3rem/0.95 'Barlow Condensed',sans-serif;letter-spacing:-0.01em">Panel — machined instrument surface</h1>
+    <p style="margin:0;max-width:78ch;color:oklch(68% 0.01 250);font-size:1.05rem">Every control keeps its place. What changes: plates read as milled panels instead of nested boxes, borders give way to elevation and hairlines, module identity moves from muddy background tints to a coloured spine and type chip, lime is reserved strictly for signal — playing, armed, selected. Labels are condensed silkscreen; every number is mono and tabular.</p>
+  </header>
+
+  <!-- ============ 01 DESKTOP STUDIO ============ -->
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <p style="margin:0;color:oklch(62% 0.01 250);font:500 0.7rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">01 &middot; Desktop studio &middot; 1440 &times; 900</p>
+    <div style="width:1440px;height:900px;overflow:hidden;background:oklch(13% 0.006 250);box-shadow:0 0 0 1px oklch(24% 0.008 250)">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;height:76px;padding:0 24px;background:linear-gradient(180deg,oklch(17% 0.007 250),oklch(14% 0.006 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%),0 1px 0 oklch(28% 0.008 250)">
+        <div style="display:flex;align-items:center;gap:14px;flex:0 0 auto">
+          <span style="display:grid;place-items:center;width:34px;height:34px;border-radius:8px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250);font:700 1rem/1 'JetBrains Mono',monospace;letter-spacing:-0.06em">sR</span>
+          <span style="display:grid;gap:2px">
+            <strong style="font:600 1.5rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.01em">sequens-R</strong>
+            <small style="color:oklch(58% 0.01 250);font:400 0.62rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;text-transform:uppercase">Local generative MIDI &middot; v0.1.0</small>
+          </span>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="display:flex;align-items:center;gap:2px;padding:3px;border-radius:9px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 60%)">
+            <button type="button" style="min-height:38px;padding:0 14px;border:0;border-radius:7px;background:transparent;color:oklch(70% 0.01 250);font:500 0.72rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em">TAP</button>
+            <button type="button" style="display:grid;grid-template-columns:auto auto;align-items:baseline;gap:6px;min-height:38px;padding:0 14px;border:0;border-radius:7px;background:oklch(20% 0.008 250);color:oklch(95% 0.004 250)">
+              <strong style="font:700 1.05rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">124</strong>
+              <small style="color:oklch(60% 0.01 250);font:400 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em">BPM</small>
+            </button>
+            <button type="button" style="display:grid;grid-template-columns:auto auto;align-items:baseline;gap:6px;min-height:38px;padding:0 14px;border:0;border-radius:7px;background:oklch(20% 0.008 250);color:oklch(95% 0.004 250)">
+              <strong style="font:700 1.05rem/1 'JetBrains Mono',monospace">A min</strong>
+              <small style="color:oklch(60% 0.01 250);font:400 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em">KEY</small>
+            </button>
+          </div>
+
+          <span style="width:1px;height:32px;background:oklch(26% 0.008 250)"></span>
+
+          <div style="display:flex;align-items:center;gap:4px">
+            <sc-for list="{{ headerIcons }}" as="i" hint-placeholder-count="5">
+              <button type="button" style="display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:8px;background:{{ i.bg }};color:oklch(76% 0.01 250)" aria-label="{{ i.label }}">
+                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ i.d }}"></path></svg>
+              </button>
+            </sc-for>
+          </div>
+
+          <span style="width:1px;height:32px;background:oklch(26% 0.008 250)"></span>
+
+          <button type="button" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:0;border-radius:8px;background:oklch(22% 0.008 250);color:oklch(95% 0.004 250);font:600 0.92rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.06em;text-transform:uppercase;box-shadow:inset 0 1px 0 oklch(100% 0 0 / 7%)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+            Add module
+          </button>
+          <button type="button" style="display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:8px;background:oklch(20% 0.008 250);color:oklch(72% 0.16 30)" aria-label="Stop">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border:0;border-radius:8px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250);font:700 0.92rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.08em;text-transform:uppercase;box-shadow:0 0 18px oklch(88% 0.21 118 / 28%)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5.4c0-.8.86-1.3 1.54-.9l10.1 5.9c.66.4.66 1.4 0 1.8l-10.1 5.9c-.68.4-1.54-.1-1.54-.9V5.4Z"></path></svg>
+            Play
+          </button>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 24px;background:oklch(11% 0.005 250);box-shadow:0 1px 0 oklch(24% 0.008 250)">
+        <span style="width:7px;height:7px;border-radius:50%;background:oklch(88% 0.21 118);box-shadow:0 0 8px oklch(88% 0.21 118 / 70%)"></span>
+        <span style="color:oklch(72% 0.01 250);font:500 0.66rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Starter rack ready</span>
+        <span style="margin-inline-start:auto;color:oklch(52% 0.01 250);font:400 0.66rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em">RACK 1 &middot; 3 MODULES &middot; JITTER 0.184 ms &sigma;</span>
+      </div>
+
+      <div style="padding:20px 24px">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start">
+          <sc-for list="{{ plates }}" as="plate" hint-placeholder-count="3">
+            <article style="position:relative;min-width:0;border-radius:10px;background:linear-gradient(180deg,oklch(21% 0.008 250),oklch(18% 0.007 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 7%),0 0 0 1px oklch(26% 0.008 250),0 18px 34px -22px oklch(0% 0 0 / 90%);overflow:hidden">
+              <span style="position:absolute;inset:0 auto 0 0;width:4px;background:{{ plate.hue }}"></span>
+
+              <header style="display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:14px 14px 14px 18px">
+                <span style="display:grid;place-items:center;width:26px;height:34px;border-radius:5px;background:oklch(14% 0.006 250);color:oklch(52% 0.01 250);cursor:grab">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7.5h16M4 12h16M4 16.5h16"></path></svg>
+                </span>
+                <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 9px;border-radius:5px;background:{{ plate.chipBg }};color:{{ plate.hue }};font:500 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">
+                  <span style="width:6px;height:6px;border-radius:50%;background:{{ plate.ledBg }};box-shadow:{{ plate.ledGlow }}"></span>{{ plate.type }}
+                </span>
+                <input value="{{ plate.name }}" style="min-width:0;width:100%;padding:2px 0;border:0;background:transparent;color:oklch(96% 0.004 250);font:600 1.35rem/1.1 'Barlow Condensed',sans-serif;letter-spacing:0.01em">
+                <div style="display:flex;align-items:center;gap:2px">
+                  <button type="button" style="width:30px;height:34px;border:0;border-radius:6px;background:transparent;color:oklch(60% 0.01 250);font:500 0.72rem/1 'JetBrains Mono',monospace">S</button>
+                  <button type="button" style="width:30px;height:34px;border:0;border-radius:6px;background:transparent;color:oklch(60% 0.01 250);font:500 0.72rem/1 'JetBrains Mono',monospace">M</button>
+                  <sc-for list="{{ plateActions }}" as="a" hint-placeholder-count="4">
+                    <button type="button" style="display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:6px;background:{{ a.bg }};color:{{ a.fg }}" aria-label="{{ a.label }}">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.d }}"></path></svg>
+                    </button>
+                  </sc-for>
+                </div>
+              </header>
+
+              <div style="display:grid;gap:16px;padding:0 14px 16px 18px">
+
+                <div style="display:grid;gap:8px">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="color:oklch(58% 0.01 250);font:500 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Pattern</span>
+                    <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+                    <span style="color:oklch(88% 0.21 118);font:500 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em">SLOT 1</span>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px;padding:3px;border-radius:7px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+                    <sc-for list="{{ slots }}" as="s" hint-placeholder-count="8">
+                      <button type="button" style="min-width:0;height:32px;border:0;border-radius:5px;background:{{ s.bg }};color:{{ s.fg }};font:500 0.78rem/1 'JetBrains Mono',monospace;box-shadow:{{ s.sh }}">{{ s.n }}</button>
+                    </sc-for>
+                  </div>
+                  <div style="display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center">
+                    <div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border-radius:6px;background:oklch(15% 0.006 250)">
+                      <span style="color:oklch(58% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Mutation</span>
+                      <strong style="margin-inline-start:auto;font:500 0.78rem/1 'JetBrains Mono',monospace">Level 2</strong>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="oklch(58% 0.01 250)" stroke-width="2" stroke-linecap="round"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
+                    </div>
+                    <button type="button" style="height:34px;padding:0 14px;border:0;border-radius:6px;background:oklch(24% 0.008 250);color:oklch(95% 0.004 250);font:600 0.78rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase;box-shadow:inset 0 1px 0 oklch(100% 0 0 / 7%)">Mutate</button>
+                    <button type="button" style="height:34px;padding:0 14px;border:0;border-radius:6px;background:oklch(17% 0.007 250);color:oklch(52% 0.01 250);font:600 0.78rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase">Revert</button>
+                  </div>
+                </div>
+
+                <div style="display:grid;gap:8px">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="color:oklch(58% 0.01 250);font:500 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">{{ plate.gridLabel }}</span>
+                    <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+                    <span style="color:oklch(52% 0.01 250);font:400 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em">16 STEPS</span>
+                  </div>
+                  <div style="position:relative;display:flex;gap:10px;padding:8px;border-radius:8px;background:oklch(10% 0.005 250);box-shadow:inset 0 1px 4px oklch(0% 0 0 / 60%);overflow:hidden">
+                    <div style="display:{{ plate.laneLabelDisplay }};grid-auto-rows:26px;gap:3px">
+                      <sc-for list="{{ plate.laneLabels }}" as="label" hint-placeholder-count="8">
+                        <span style="display:flex;align-items:center;width:62px;color:oklch(60% 0.01 250);font:400 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ label }}</span>
+                      </sc-for>
+                    </div>
+                    <div style="position:relative;flex:1 1 auto;min-width:0;overflow:hidden">
+                      <sc-for list="{{ plate.lanes }}" as="lane" hint-placeholder-count="8">
+                        <div style="display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-block-end:3px">
+                          <sc-for list="{{ lane }}" as="pad" hint-placeholder-count="16">
+                            <span style="height:26px;border-radius:4px;background:{{ pad.bg }};box-shadow:{{ pad.sh }}"></span>
+                          </sc-for>
+                        </div>
+                      </sc-for>
+                      <span style="position:absolute;inset:0 auto 0 {{ playheadLeft }};width:2px;background:oklch(88% 0.21 118);box-shadow:0 0 14px 2px oklch(88% 0.21 118 / 45%);pointer-events:none"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:grid;gap:10px">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <span style="color:oklch(58% 0.01 250);font:500 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Voice</span>
+                    <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px">
+                    <sc-for list="{{ plate.params }}" as="p" hint-placeholder-count="4">
+                      <div style="display:grid;gap:6px;min-width:0">
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:6px;min-width:0">
+                          <span style="min-width:0;overflow:hidden;color:oklch(60% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase;white-space:nowrap;text-overflow:ellipsis">{{ p.label }}</span>
+                          <span style="color:oklch(93% 0.004 250);font:500 0.78rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;white-space:nowrap">{{ p.display }}</span>
+                        </div>
+
+                        <sc-if value="{{ p.isKnob }}" hint-placeholder-val="{{ true }}">
+                          <div style="justify-self:center;width:66px;height:66px">
+                            <svg viewBox="0 0 64 64" style="display:block;width:100%;height:100%;overflow:visible">
+                              <circle cx="32" cy="32" r="28" fill="none" stroke="oklch(24% 0.008 250)" stroke-width="1"></circle>
+                              <path pathLength="100" d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8" fill="none" stroke="oklch(24% 0.008 250)" stroke-width="4" stroke-linecap="round"></path>
+                              <path pathLength="100" d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8" fill="none" stroke="oklch(88% 0.21 118)" stroke-width="4" stroke-linecap="round" stroke-dasharray="{{ p.dash }}" opacity="{{ p.op }}"></path>
+                              <circle cx="32" cy="32" r="20" fill="oklch(26% 0.008 250)"></circle>
+                              <circle cx="32" cy="30.5" r="19" fill="oklch(30% 0.008 250)"></circle>
+                              <circle cx="32" cy="32" r="19" fill="none" stroke="oklch(14% 0.006 250)" stroke-width="1"></circle>
+                              <line x1="32" y1="16" x2="32" y2="24" stroke="oklch(96% 0.004 250)" stroke-width="2.5" stroke-linecap="round" transform="{{ p.rotate }}"></line>
+                            </svg>
+                          </div>
+                        </sc-if>
+
+                        <sc-if value="{{ p.isStepper }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-columns:34px minmax(0,1fr) 34px;gap:3px;padding:3px;border-radius:7px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+                            <button type="button" style="display:grid;place-items:center;height:34px;border:0;border-radius:5px;background:oklch(20% 0.008 250);color:oklch(76% 0.01 250)" aria-label="Decrease">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path></svg>
+                            </button>
+                            <span style="display:grid;place-items:center;height:34px;color:oklch(96% 0.004 250);font:500 0.92rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ p.value }}</span>
+                            <button type="button" style="display:grid;place-items:center;height:34px;border:0;border-radius:5px;background:oklch(20% 0.008 250);color:oklch(76% 0.01 250)" aria-label="Increase">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+                            </button>
+                          </div>
+                        </sc-if>
+
+                        <sc-if value="{{ p.isSelect }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:7px;background:oklch(15% 0.006 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 45%)">
+                            <strong style="font:500 0.88rem/1 'JetBrains Mono',monospace">{{ p.value }}</strong>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="oklch(58% 0.01 250)" stroke-width="2" stroke-linecap="round" style="margin-inline-start:auto"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
+                          </div>
+                        </sc-if>
+
+                        <sc-if value="{{ p.isSegmented }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:3px;padding:3px;border-radius:7px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+                            <button type="button" style="height:34px;border:0;border-radius:5px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250);font:500 0.82rem/1 'JetBrains Mono',monospace">16</button>
+                            <button type="button" style="height:34px;border:0;border-radius:5px;background:transparent;color:oklch(64% 0.01 250);font:500 0.82rem/1 'JetBrains Mono',monospace">32</button>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div style="display:grid;gap:1px;border-radius:7px;background:oklch(24% 0.008 250);overflow:hidden">
+                  <button type="button" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:0;background:oklch(16% 0.006 250);color:oklch(72% 0.01 250);font:600 0.68rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.16em;text-transform:uppercase;text-align:start">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+                    Sound
+                    <span style="margin-inline-start:auto;color:oklch(52% 0.01 250);font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.06em">{{ plate.preset }}</span>
+                  </button>
+                  <button type="button" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:0;background:oklch(16% 0.006 250);color:oklch(72% 0.01 250);font:600 0.68rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.16em;text-transform:uppercase;text-align:start">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+                    Output &amp; advanced
+                    <span style="margin-inline-start:auto;color:oklch(52% 0.01 250);font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.06em">INTERNAL</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 02 MIXER ============ -->
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <p style="margin:0;color:oklch(62% 0.01 250);font:500 0.7rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">02 &middot; Mixer &middot; permanent rack-mix panel</p>
+    <div style="width:1200px;border-radius:12px;background:oklch(13% 0.006 250);box-shadow:0 0 0 1px oklch(26% 0.008 250),0 30px 60px -30px oklch(0% 0 0 / 90%);overflow:hidden">
+      <header style="display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px;padding:0 18px;background:linear-gradient(180deg,oklch(17% 0.007 250),oklch(14% 0.006 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%),0 1px 0 oklch(26% 0.008 250)">
+        <div style="display:flex;align-items:baseline;gap:12px">
+          <h2 style="margin:0;font:600 1.5rem/1 'Barlow Condensed',sans-serif">Mixer</h2>
+          <span style="color:oklch(58% 0.01 250);font:400 0.62rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Always-on rack mix &middot; Rack 1</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="display:flex;gap:2px;padding:3px;border-radius:8px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+            <button type="button" style="height:34px;padding:0 14px;border:0;border-radius:5px;background:transparent;color:oklch(60% 0.01 250);font:500 0.66rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em">PAN</button>
+            <button type="button" style="height:34px;padding:0 14px;border:0;border-radius:5px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250);font:500 0.66rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em">SENDS</button>
+          </div>
+          <button type="button" style="display:grid;place-items:center;width:38px;height:38px;border:0;border-radius:8px;background:oklch(19% 0.008 250);color:oklch(72% 0.01 250)" aria-label="Close mixer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 18 18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      </header>
+      <div style="display:grid;gap:14px;padding:18px;background:oklch(15% 0.006 250)">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+          <sc-for list="{{ channels }}" as="ch" hint-placeholder-count="3">
+            <section style="display:grid;gap:14px;padding:14px;border-radius:10px;background:linear-gradient(180deg,oklch(20% 0.008 250),oklch(17% 0.007 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%),0 0 0 1px oklch(25% 0.008 250)">
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="width:4px;height:22px;border-radius:2px;background:{{ ch.hue }}"></span>
+                <strong style="flex:1 1 auto;min-width:0;overflow:hidden;font:600 1.15rem/1 'Barlow Condensed',sans-serif;text-overflow:ellipsis;white-space:nowrap">{{ ch.name }}</strong>
+                <div style="display:flex;gap:2px;padding:3px;border-radius:7px;background:oklch(11% 0.005 250)">
+                  <button type="button" style="width:32px;height:30px;border:0;border-radius:4px;background:transparent;color:oklch(64% 0.01 250);font:500 0.72rem/1 'JetBrains Mono',monospace">S</button>
+                  <button type="button" style="width:32px;height:30px;border:0;border-radius:4px;background:transparent;color:oklch(64% 0.01 250);font:500 0.72rem/1 'JetBrains Mono',monospace">M</button>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:auto auto;justify-content:center;gap:18px;padding:10px 0 4px">
+                <div style="display:grid;grid-template-rows:auto 1fr auto;justify-items:center;gap:8px">
+                  <span style="color:oklch(52% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em">PK</span>
+                  <div style="display:flex;flex-direction:column;gap:2px;width:14px;padding:3px;border-radius:4px;background:oklch(10% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 70%)">
+                    <sc-for list="{{ ch.leds }}" as="led" hint-placeholder-count="12">
+                      <span style="flex:1 1 0;min-height:6px;border-radius:1px;background:{{ led.bg }};box-shadow:{{ led.sh }}"></span>
+                    </sc-for>
+                  </div>
+                  <span style="color:oklch(52% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ ch.peak }}</span>
+                </div>
+                <div style="display:grid;grid-template-rows:auto 1fr auto;justify-items:center;gap:8px">
+                  <span style="color:oklch(52% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em">LVL</span>
+                  <div style="position:relative;width:40px;height:168px">
+                    <span style="position:absolute;inset:0;left:50%;translate:-50% 0;width:8px;border-radius:4px;background:oklch(10% 0.005 250);box-shadow:inset 0 1px 4px oklch(0% 0 0 / 75%)"></span>
+                    <span style="position:absolute;left:50%;translate:-50% 0;bottom:0;width:8px;height:{{ ch.fill }};border-radius:4px;background:linear-gradient(180deg,oklch(88% 0.21 118),oklch(70% 0.16 130));box-shadow:0 0 10px oklch(88% 0.21 118 / 35%)"></span>
+                    <span style="position:absolute;left:50%;translate:-50% 0;bottom:{{ ch.thumb }};width:38px;height:20px;border-radius:4px;background:linear-gradient(180deg,oklch(42% 0.006 250),oklch(26% 0.006 250));box-shadow:0 3px 6px oklch(0% 0 0 / 60%),inset 0 1px 0 oklch(100% 0 0 / 18%)"></span>
+                    <span style="position:absolute;left:50%;translate:-50% 0;bottom:calc({{ ch.thumb }} + 9px);width:26px;height:2px;border-radius:1px;background:oklch(88% 0.21 118 / 80%)"></span>
+                  </div>
+                  <span style="color:oklch(93% 0.004 250);font:500 0.78rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ ch.level }}</span>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-block-start:12px;box-shadow:inset 0 1px 0 oklch(26% 0.008 250)">
+                <sc-for list="{{ ch.knobs }}" as="k" hint-placeholder-count="3">
+                  <div style="display:grid;justify-items:center;gap:5px;min-width:0">
+                    <span style="color:oklch(58% 0.01 250);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap">{{ k.label }}</span>
+                    <div style="width:54px;height:54px">
+                      <svg viewBox="0 0 64 64" style="display:block;width:100%;height:100%;overflow:visible">
+                        <path pathLength="100" d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8" fill="none" stroke="oklch(24% 0.008 250)" stroke-width="4.5" stroke-linecap="round"></path>
+                        <path pathLength="100" d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8" fill="none" stroke="oklch(88% 0.21 118)" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="{{ k.dash }}" opacity="{{ k.op }}"></path>
+                        <circle cx="32" cy="30.5" r="19" fill="oklch(30% 0.008 250)"></circle>
+                        <circle cx="32" cy="32" r="19" fill="none" stroke="oklch(14% 0.006 250)" stroke-width="1"></circle>
+                        <line x1="32" y1="17" x2="32" y2="25" stroke="oklch(96% 0.004 250)" stroke-width="2.5" stroke-linecap="round" transform="{{ k.rotate }}"></line>
+                      </svg>
+                    </div>
+                    <span style="color:oklch(88% 0.004 250);font:500 0.68rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ k.display }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+          </sc-for>
+        </div>
+
+        <section style="display:grid;gap:14px;padding:14px;border-radius:10px;background:linear-gradient(180deg,oklch(20% 0.008 250),oklch(17% 0.007 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%),0 0 0 1px oklch(25% 0.008 250)">
+          <div style="display:flex;align-items:center;gap:12px">
+            <strong style="font:600 1.15rem/1 'Barlow Condensed',sans-serif">Rack master</strong>
+            <span style="flex:1 1 auto;height:1px;background:oklch(25% 0.008 250)"></span>
+            <span style="color:oklch(60% 0.01 250);font:500 0.72rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">-120.0 dBFS</span>
+          </div>
+          <div style="display:grid;grid-template-columns:auto 200px repeat(4,minmax(0,1fr));gap:18px;align-items:center">
+            <div style="display:grid;grid-template-rows:auto 1fr;justify-items:center;gap:8px">
+              <span style="color:oklch(52% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em">OUT</span>
+              <div style="display:flex;flex-direction:column;gap:2px;width:14px;height:110px;padding:3px;border-radius:4px;background:oklch(10% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 70%)">
+                <sc-for list="{{ masterLeds }}" as="led" hint-placeholder-count="12">
+                  <span style="flex:1 1 0;border-radius:1px;background:{{ led.bg }}"></span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:grid;gap:6px">
+              <span style="color:oklch(58% 0.01 250);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Delay division</span>
+              <div style="display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:7px;background:oklch(14% 0.006 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 50%)">
+                <strong style="font:500 0.88rem/1 'JetBrains Mono',monospace">1/8 dotted</strong>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="oklch(58% 0.01 250)" stroke-width="2" stroke-linecap="round" style="margin-inline-start:auto"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
+              </div>
+            </div>
+            <sc-for list="{{ masterKnobs }}" as="k" hint-placeholder-count="4">
+              <div style="display:grid;justify-items:center;gap:6px;min-width:0">
+                <span style="color:oklch(58% 0.01 250);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;white-space:nowrap">{{ k.label }}</span>
+                <div style="width:62px;height:62px">
+                  <svg viewBox="0 0 64 64" style="display:block;width:100%;height:100%;overflow:visible">
+                    <path pathLength="100" d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8" fill="none" stroke="oklch(24% 0.008 250)" stroke-width="4" stroke-linecap="round"></path>
+                    <path pathLength="100" d="M 12.2 51.8 A 28 28 0 1 1 51.8 51.8" fill="none" stroke="oklch(88% 0.21 118)" stroke-width="4" stroke-linecap="round" stroke-dasharray="{{ k.dash }}" opacity="{{ k.op }}"></path>
+                    <circle cx="32" cy="30.5" r="19" fill="oklch(30% 0.008 250)"></circle>
+                    <circle cx="32" cy="32" r="19" fill="none" stroke="oklch(14% 0.006 250)" stroke-width="1"></circle>
+                    <line x1="32" y1="17" x2="32" y2="25" stroke="oklch(96% 0.004 250)" stroke-width="2.5" stroke-linecap="round" transform="{{ k.rotate }}"></line>
+                  </svg>
+                </div>
+                <span style="color:oklch(88% 0.004 250);font:500 0.7rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ k.display }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 03 WORKSPACE + 04 LIBRARY ============ -->
+  <div style="display:flex;gap:32px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p style="margin:0;color:oklch(62% 0.01 250);font:500 0.7rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">03 &middot; Workspace</p>
+      <div style="width:448px;height:860px;border-radius:12px;background:oklch(13% 0.006 250);box-shadow:0 0 0 1px oklch(26% 0.008 250),0 30px 60px -30px oklch(0% 0 0 / 90%);overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)">
+        <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;height:68px;padding:0 18px;background:linear-gradient(180deg,oklch(17% 0.007 250),oklch(14% 0.006 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%),0 1px 0 oklch(26% 0.008 250)">
+          <div style="display:grid;gap:3px">
+            <h2 style="margin:0;font:600 1.5rem/1 'Barlow Condensed',sans-serif">Workspace</h2>
+            <small style="color:oklch(58% 0.01 250);font:400 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Studio utilities &middot; New Project</small>
+          </div>
+          <button type="button" style="display:grid;place-items:center;width:38px;height:38px;border:0;border-radius:8px;background:oklch(19% 0.008 250);color:oklch(72% 0.01 250)" aria-label="Close workspace">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 18 18 6M6 6l12 12"></path></svg>
+          </button>
+        </header>
+        <div style="display:grid;gap:14px;padding:16px;background:oklch(15% 0.006 250);overflow:hidden;align-content:start">
+
+          <section style="display:grid;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="color:oklch(58% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Project</span>
+              <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+            </div>
+            <input value="New Project" style="height:44px;padding:0 12px;border:0;border-radius:8px;background:oklch(11% 0.005 250);color:oklch(96% 0.004 250);font:600 1.05rem/1 'Barlow Condensed',sans-serif;box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+              <sc-for list="{{ projectActions }}" as="a" hint-placeholder-count="6">
+                <button type="button" style="display:grid;place-items:center;gap:5px;min-width:0;height:58px;border:0;border-radius:8px;background:oklch(20% 0.008 250);color:oklch(88% 0.006 250);box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.d }}"></path></svg>
+                  <span style="font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase">{{ a.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </section>
+
+          <section style="display:grid;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="color:oklch(58% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Studio lanes</span>
+              <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+              <span style="color:oklch(52% 0.01 250);font:400 0.58rem/1 'JetBrains Mono',monospace">1 RACK</span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <button type="button" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border:0;border-radius:8px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250);font:600 0.82rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.08em;text-transform:uppercase">Rack 1</button>
+              <button type="button" style="display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:8px;background:oklch(20% 0.008 250);color:oklch(80% 0.01 250)" aria-label="New rack">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+              </button>
+              <button type="button" style="display:grid;place-items:center;width:40px;height:40px;border:0;border-radius:8px;background:oklch(20% 0.008 250);color:oklch(80% 0.01 250)" aria-label="Duplicate rack">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2M4 10a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8Z"></path></svg>
+              </button>
+              <button type="button" style="margin-inline-start:auto;height:40px;padding:0 12px;border:0;border-radius:8px;background:oklch(17% 0.007 250);color:oklch(72% 0.16 30);font:600 0.72rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase">Delete rack</button>
+            </div>
+          </section>
+
+          <section style="display:grid;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="color:oklch(58% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Scenes</span>
+              <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+              <button type="button" style="height:32px;padding:0 12px;border:0;border-radius:6px;background:oklch(20% 0.008 250);color:oklch(92% 0.006 250);font:600 0.68rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase">Capture</button>
+            </div>
+            <div style="display:grid;gap:6px">
+              <sc-for list="{{ scenes }}" as="s" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;height:46px;padding:0 12px;border-radius:8px;background:oklch(18% 0.007 250)">
+                  <span style="color:oklch(52% 0.01 250);font:400 0.62rem/1 'JetBrains Mono',monospace">{{ s.n }}</span>
+                  <strong style="font:600 1rem/1 'Barlow Condensed',sans-serif">{{ s.name }}</strong>
+                  <button type="button" style="height:30px;padding:0 12px;border:0;border-radius:5px;background:{{ s.bg }};color:{{ s.fg }};font:600 0.66rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase">Launch</button>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+
+          <section style="display:grid;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="color:oklch(58% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Hardware MIDI</span>
+              <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+              <span style="color:oklch(52% 0.01 250);font:400 0.58rem/1 'JetBrains Mono',monospace">OPT-IN</span>
+            </div>
+            <p style="margin:0;color:oklch(64% 0.01 250);font-size:0.92rem">MIDI access is optional. Internal sound and exports work without it.</p>
+            <button type="button" style="justify-self:start;height:40px;padding:0 16px;border:0;border-radius:8px;background:oklch(20% 0.008 250);color:oklch(92% 0.006 250);font:600 0.8rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase;box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%)">Enable MIDI</button>
+          </section>
+
+          <section style="display:grid;gap:10px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="color:oklch(58% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Music export</span>
+              <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+              <span style="color:oklch(52% 0.01 250);font:400 0.58rem/1 'JetBrains Mono',monospace">4 BARS</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px">
+              <sc-for list="{{ exportActions }}" as="a" hint-placeholder-count="3">
+                <button type="button" style="display:grid;place-items:center;gap:5px;min-width:0;height:58px;border:0;border-radius:8px;background:oklch(20% 0.008 250);color:oklch(88% 0.006 250);box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%)">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.d }}"></path></svg>
+                  <span style="font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase">{{ a.label }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </section>
+
+          <section style="display:grid;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="color:oklch(58% 0.01 250);font:500 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.16em;text-transform:uppercase">Diagnostics</span>
+              <span style="flex:1 1 auto;height:1px;background:oklch(24% 0.008 250)"></span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;border-radius:8px;background:oklch(24% 0.008 250);overflow:hidden">
+              <sc-for list="{{ diagnostics }}" as="d" hint-placeholder-count="4">
+                <div style="display:grid;gap:4px;padding:10px 12px;background:oklch(17% 0.007 250)">
+                  <span style="color:oklch(56% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase">{{ d.label }}</span>
+                  <strong style="color:{{ d.fg }};font:500 0.88rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ d.value }}</strong>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p style="margin:0;color:oklch(62% 0.01 250);font:500 0.7rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">04 &middot; Module library</p>
+      <div style="width:704px;border-radius:12px;padding:20px;background:oklch(13% 0.006 250);box-shadow:0 0 0 1px oklch(26% 0.008 250),0 30px 60px -30px oklch(0% 0 0 / 90%)">
+        <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-block-end:18px">
+          <div style="display:grid;gap:3px">
+            <h2 style="margin:0;font:600 1.6rem/1 'Barlow Condensed',sans-serif">Add a module</h2>
+            <small style="color:oklch(58% 0.01 250);font:400 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Module library &middot; 11 types</small>
+          </div>
+          <button type="button" style="display:grid;place-items:center;width:38px;height:38px;border:0;border-radius:8px;background:oklch(19% 0.008 250);color:oklch(72% 0.01 250)" aria-label="Close module library">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 18 18 6M6 6l12 12"></path></svg>
+          </button>
+        </header>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+          <sc-for list="{{ modules }}" as="m" hint-placeholder-count="11">
+            <button type="button" style="position:relative;display:grid;gap:8px;min-width:0;padding:14px 14px 14px 16px;border:0;border-radius:9px;background:linear-gradient(180deg,oklch(20% 0.008 250),oklch(17% 0.007 250));color:oklch(94% 0.004 250);text-align:start;box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%),0 0 0 1px oklch(24% 0.008 250);overflow:hidden">
+              <span style="position:absolute;inset:0 auto 0 0;width:3px;background:{{ m.hue }}"></span>
+              <span style="display:flex;align-items:center;gap:9px">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="{{ m.hue }}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="{{ m.d }}"></path></svg>
+                <strong style="font:600 1.15rem/1 'Barlow Condensed',sans-serif">{{ m.label }}</strong>
+              </span>
+              <span style="color:oklch(64% 0.01 250);font-size:0.86rem;line-height:1.25;text-wrap:pretty">{{ m.description }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 05 PIANO ROLL + 06 MOBILE ============ -->
+  <div style="display:flex;gap:32px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p style="margin:0;color:oklch(62% 0.01 250);font:500 0.7rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">05 &middot; Piano roll</p>
+      <div style="width:940px;border-radius:10px;background:linear-gradient(180deg,oklch(21% 0.008 250),oklch(18% 0.007 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 7%),0 0 0 1px oklch(26% 0.008 250);overflow:hidden;position:relative">
+        <span style="position:absolute;inset:0 auto 0 0;width:4px;background:oklch(74% 0.14 280)"></span>
+        <header style="display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:14px 14px 14px 18px">
+          <span style="display:grid;place-items:center;width:26px;height:34px;border-radius:5px;background:oklch(14% 0.006 250);color:oklch(52% 0.01 250)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7.5h16M4 12h16M4 16.5h16"></path></svg>
+          </span>
+          <span style="display:inline-flex;align-items:center;gap:7px;padding:4px 9px;border-radius:5px;background:oklch(74% 0.14 280 / 14%);color:oklch(74% 0.14 280);font:500 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">
+            <span style="width:6px;height:6px;border-radius:50%;background:oklch(88% 0.21 118);box-shadow:0 0 8px oklch(88% 0.21 118 / 70%)"></span>piano
+          </span>
+          <input value="Piano roll" style="min-width:0;width:100%;border:0;background:transparent;color:oklch(96% 0.004 250);font:600 1.35rem/1.1 'Barlow Condensed',sans-serif">
+          <div style="display:flex;gap:2px">
+            <sc-for list="{{ plateActions }}" as="a" hint-placeholder-count="5">
+              <button type="button" style="display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:6px;background:{{ a.bg }};color:{{ a.fg }}" aria-label="{{ a.label }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.d }}"></path></svg>
+              </button>
+            </sc-for>
+          </div>
+        </header>
+
+        <div style="display:grid;gap:12px;padding:0 14px 16px 18px">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:7px;background:oklch(14% 0.006 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 45%)">
+              <span style="color:oklch(56% 0.01 250);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Melody</span>
+              <strong style="font:500 0.8rem/1 'JetBrains Mono',monospace">Choose an example…</strong>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="oklch(58% 0.01 250)" stroke-width="2" stroke-linecap="round"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:7px;background:oklch(14% 0.006 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 45%)">
+              <span style="color:oklch(56% 0.01 250);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Zoom</span>
+              <strong style="font:500 0.8rem/1 'JetBrains Mono',monospace">100%</strong>
+            </div>
+            <div style="display:flex;gap:2px;padding:3px;border-radius:8px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+              <sc-for list="{{ transforms }}" as="t" hint-placeholder-count="4">
+                <button type="button" style="height:32px;padding:0 12px;border:0;border-radius:5px;background:transparent;color:oklch(80% 0.01 250);font:500 0.72rem/1 'JetBrains Mono',monospace">{{ t }}</button>
+              </sc-for>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:7px;background:oklch(88% 0.21 118 / 12%);color:oklch(88% 0.21 118);font:500 0.72rem/1 'JetBrains Mono',monospace;letter-spacing:0.04em">
+              <span style="display:grid;place-items:center;width:14px;height:14px;border-radius:3px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250)">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><path d="m4.5 12.75 6 6 9-13.5"></path></svg>
+              </span>
+              Audition edits
+            </label>
+            <span style="margin-inline-start:auto;color:oklch(56% 0.01 250);font-size:0.88rem">Click to add &middot; drag to move &middot; drag the right edge to resize</span>
+          </div>
+
+          <div style="position:relative;height:430px;border-radius:8px;background:oklch(10% 0.005 250);box-shadow:inset 0 1px 4px oklch(0% 0 0 / 65%);overflow:hidden">
+            <div style="display:grid;grid-template-columns:52px 1fr;height:672px">
+              <div style="display:grid;grid-template-rows:repeat(48,minmax(0,1fr));width:52px;box-shadow:1px 0 0 oklch(26% 0.008 250)">
+                <sc-for list="{{ pianoKeys }}" as="key" hint-placeholder-count="48">
+                  <span style="display:flex;align-items:center;justify-content:end;padding-inline-end:5px;font:400 0.55rem/1 'JetBrains Mono',monospace;background:{{ key.bg }};color:{{ key.fg }};width:{{ key.w }};justify-self:{{ key.js }};box-shadow:{{ key.sh }}">{{ key.name }}</span>
+                </sc-for>
+              </div>
+              <div style="position:relative;background-image:linear-gradient(to right,oklch(22% 0.008 250) 1px,transparent 1px);background-size:calc(100% / 16) 100%">
+                <sc-for list="{{ pianoRows }}" as="row" hint-placeholder-count="48">
+                  <span style="position:absolute;inset-inline:0;height:14px;top:{{ row.top }};background:{{ row.bg }};box-shadow:inset 0 -1px 0 oklch(18% 0.007 250)"></span>
+                </sc-for>
+                <span style="position:absolute;inset:0 auto 0 {{ playheadLeft }};width:2px;background:oklch(88% 0.21 118);box-shadow:0 0 14px 2px oklch(88% 0.21 118 / 40%)"></span>
+                <sc-for list="{{ pianoNotes }}" as="n" hint-placeholder-count="9">
+                  <span style="position:absolute;height:12px;margin-block-start:1px;border-radius:2px;left:{{ n.left }};top:{{ n.top }};width:{{ n.width }};background:{{ n.bg }};box-shadow:{{ n.sh }}"></span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="position:absolute;inset:auto 0 0;display:grid;grid-template-columns:52px 1fr;height:92px;background:oklch(12% 0.005 250);box-shadow:0 -1px 0 oklch(26% 0.008 250)">
+              <span style="display:grid;place-items:center;color:oklch(56% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;box-shadow:1px 0 0 oklch(26% 0.008 250)">VEL</span>
+              <div style="position:relative">
+                <sc-for list="{{ pianoNotes }}" as="n" hint-placeholder-count="9">
+                  <span style="position:absolute;bottom:0;border-radius:2px 2px 0 0;left:{{ n.left }};width:{{ n.width }};height:{{ n.velH }};background:{{ n.velBg }}"></span>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <p style="margin:0;color:oklch(62% 0.01 250);font:500 0.7rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">06 &middot; Mobile rack &middot; 375 &times; 812</p>
+      <div style="position:relative;width:375px;height:812px;overflow:hidden;background:oklch(13% 0.006 250);box-shadow:0 0 0 1px oklch(26% 0.008 250)">
+        <div style="display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;height:64px;padding:0 12px;background:linear-gradient(180deg,oklch(17% 0.007 250),oklch(14% 0.006 250));box-shadow:0 1px 0 oklch(26% 0.008 250)">
+          <span style="display:grid;place-items:center;width:34px;height:34px;border-radius:9px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250);font:700 0.82rem/1 'JetBrains Mono',monospace;letter-spacing:-0.06em">sR</span>
+          <button type="button" style="display:grid;gap:2px;min-width:0;padding:0;border:0;background:transparent;color:inherit;text-align:start">
+            <small style="color:oklch(56% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.14em;text-transform:uppercase">Project</small>
+            <strong style="min-width:0;overflow:hidden;font:600 1.05rem/1 'Barlow Condensed',sans-serif;text-overflow:ellipsis;white-space:nowrap">New Project</strong>
+          </button>
+          <div style="display:flex;gap:2px;padding:3px;border-radius:9px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+            <button type="button" style="display:grid;place-items:center;height:38px;padding:0 10px;border:0;border-radius:6px;background:oklch(20% 0.008 250);color:oklch(95% 0.004 250);font:700 0.82rem/1 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">124</button>
+            <button type="button" style="display:grid;place-items:center;height:38px;padding:0 10px;border:0;border-radius:6px;background:oklch(20% 0.008 250);color:oklch(95% 0.004 250);font:700 0.82rem/1 'JetBrains Mono',monospace">Am</button>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;height:30px;padding:0 12px;background:oklch(11% 0.005 250);box-shadow:0 1px 0 oklch(24% 0.008 250)">
+          <span style="width:6px;height:6px;border-radius:50%;background:oklch(88% 0.21 118);box-shadow:0 0 8px oklch(88% 0.21 118 / 70%)"></span>
+          <span style="color:oklch(70% 0.01 250);font:500 0.6rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;text-transform:uppercase">Starter rack ready</span>
+        </div>
+
+        <div style="display:grid;gap:10px;padding:12px">
+          <article style="position:relative;border-radius:10px;background:linear-gradient(180deg,oklch(21% 0.008 250),oklch(18% 0.007 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 7%),0 0 0 1px oklch(26% 0.008 250);overflow:hidden">
+            <span style="position:absolute;inset:0 auto 0 0;width:4px;background:oklch(72% 0.16 45)"></span>
+            <header style="display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:12px 12px 12px 16px">
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:5px;background:oklch(72% 0.16 45 / 14%);color:oklch(72% 0.16 45);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;text-transform:uppercase">
+                <span style="width:6px;height:6px;border-radius:50%;background:oklch(88% 0.21 118);box-shadow:0 0 8px oklch(88% 0.21 118 / 70%)"></span>drums
+              </span>
+              <strong style="min-width:0;overflow:hidden;font:600 1.25rem/1 'Barlow Condensed',sans-serif;text-overflow:ellipsis;white-space:nowrap">Drums</strong>
+              <div style="display:flex;gap:2px;padding:3px;border-radius:8px;background:oklch(11% 0.005 250)">
+                <button type="button" style="width:34px;height:34px;border:0;border-radius:5px;background:oklch(88% 0.21 118 / 16%);color:oklch(88% 0.21 118);font:500 0.7rem/1 'JetBrains Mono',monospace">S</button>
+                <button type="button" style="width:34px;height:34px;border:0;border-radius:5px;background:transparent;color:oklch(64% 0.01 250);font:500 0.7rem/1 'JetBrains Mono',monospace">M</button>
+                <button type="button" style="display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:5px;background:transparent;color:oklch(64% 0.01 250)" aria-label="Module actions">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 6h.01M12 12h.01M12 18h.01"></path></svg>
+                </button>
+              </div>
+            </header>
+            <div style="display:grid;gap:12px;padding:0 12px 14px 16px">
+              <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px;padding:3px;border-radius:8px;background:oklch(11% 0.005 250);box-shadow:inset 0 1px 3px oklch(0% 0 0 / 55%)">
+                <sc-for list="{{ slots }}" as="s" hint-placeholder-count="8">
+                  <button type="button" style="min-width:0;height:38px;border:0;border-radius:5px;background:{{ s.bg }};color:{{ s.fg }};font:500 0.82rem/1 'JetBrains Mono',monospace;box-shadow:{{ s.sh }}">{{ s.n }}</button>
+                </sc-for>
+              </div>
+              <div style="position:relative;display:flex;gap:8px;padding:8px;border-radius:8px;background:oklch(10% 0.005 250);box-shadow:inset 0 1px 4px oklch(0% 0 0 / 60%);overflow:hidden">
+                <div style="display:grid;grid-auto-rows:30px;gap:3px">
+                  <sc-for list="{{ drumLabels }}" as="label" hint-placeholder-count="8">
+                    <span style="display:flex;align-items:center;width:52px;color:oklch(60% 0.01 250);font:400 0.55rem/1 'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ label }}</span>
+                  </sc-for>
+                </div>
+                <div style="position:relative;min-width:0;flex:1 1 auto">
+                  <sc-for list="{{ drumLanes }}" as="lane" hint-placeholder-count="8">
+                    <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-block-end:3px">
+                      <sc-for list="{{ lane }}" as="pad" hint-placeholder-count="8">
+                        <span style="height:30px;border-radius:4px;background:{{ pad.bg }};box-shadow:{{ pad.sh }}"></span>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                  <span style="position:absolute;inset:0 auto 0 50%;width:2px;background:oklch(88% 0.21 118);box-shadow:0 0 14px 2px oklch(88% 0.21 118 / 45%)"></span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center">
+                <div style="display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:7px;background:oklch(15% 0.006 250)">
+                  <span style="color:oklch(56% 0.01 250);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;text-transform:uppercase">Mutation</span>
+                  <strong style="margin-inline-start:auto;font:500 0.78rem/1 'JetBrains Mono',monospace">Level 2</strong>
+                </div>
+                <button type="button" style="height:38px;padding:0 16px;border:0;border-radius:7px;background:oklch(24% 0.008 250);color:oklch(95% 0.004 250);font:600 0.78rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.1em;text-transform:uppercase;box-shadow:inset 0 1px 0 oklch(100% 0 0 / 7%)">Mutate</button>
+              </div>
+              <button type="button" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:0;border-radius:7px;background:oklch(16% 0.006 250);color:oklch(72% 0.01 250);font:600 0.66rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.16em;text-transform:uppercase;text-align:start">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+                Voice &amp; output
+                <span style="margin-inline-start:auto;color:oklch(52% 0.01 250);font-family:'JetBrains Mono',monospace;font-size:0.6rem">909 CORE</span>
+              </button>
+            </div>
+          </article>
+
+          <article style="position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-radius:10px;background:linear-gradient(180deg,oklch(20% 0.008 250),oklch(17% 0.007 250));box-shadow:inset 0 1px 0 oklch(100% 0 0 / 6%),0 0 0 1px oklch(25% 0.008 250);overflow:hidden">
+            <span style="position:absolute;inset:0 auto 0 0;width:4px;background:oklch(74% 0.14 160)"></span>
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 8px;border-radius:5px;background:oklch(74% 0.14 160 / 14%);color:oklch(74% 0.14 160);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.12em;text-transform:uppercase">
+              <span style="width:6px;height:6px;border-radius:50%;background:oklch(88% 0.21 118);box-shadow:0 0 8px oklch(88% 0.21 118 / 70%)"></span>bass
+            </span>
+            <strong style="min-width:0;overflow:hidden;font:600 1.25rem/1 'Barlow Condensed',sans-serif;text-overflow:ellipsis;white-space:nowrap">Bass</strong>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="color:oklch(52% 0.01 250);font:400 0.58rem/1 'JetBrains Mono',monospace;letter-spacing:0.06em">SLOT 1</span>
+              <span style="display:grid;place-items:center;width:34px;height:34px;border-radius:6px;background:oklch(14% 0.006 250);color:oklch(64% 0.01 250)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+              </span>
+            </div>
+          </article>
+        </div>
+
+        <div style="position:absolute;inset:auto 12px 12px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:4px;padding:5px;border-radius:14px;background:oklch(11% 0.005 250 / 92%);box-shadow:0 -1px 0 oklch(28% 0.008 250) inset,0 18px 40px oklch(0% 0 0 / 65%);backdrop-filter:blur(12px)">
+          <button type="button" style="display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;height:52px;border:0;border-radius:10px;background:oklch(88% 0.21 118);color:oklch(13% 0.006 250);font:700 0.78rem/1 'Barlow Condensed',sans-serif;letter-spacing:0.12em;text-transform:uppercase">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5.4c0-.8.86-1.3 1.54-.9l10.1 5.9c.66.4.66 1.4 0 1.8l-10.1 5.9c-.68.4-1.54-.1-1.54-.9V5.4Z"></path></svg>
+            Play
+          </button>
+          <sc-for list="{{ dockActions }}" as="a" hint-placeholder-count="3">
+            <button type="button" style="display:grid;place-items:center;gap:4px;min-width:0;height:52px;border:0;border-radius:10px;background:oklch(18% 0.007 250);color:{{ a.fg }}">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.d }}"></path></svg>
+              <span style="color:oklch(70% 0.01 250);font:500 0.55rem/1 'JetBrains Mono',monospace;letter-spacing:0.1em;text-transform:uppercase">{{ a.label }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;showLaneLabels&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Rack density&quot;},&quot;playheadStep&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:4,&quot;min&quot;:0,&quot;max&quot;:15,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Rack density&quot;}}">
+const LIME = 'oklch(88% 0.21 118)';
+const PAD_OFF = 'oklch(20% 0.008 250)';
+const PAD_BEAT = 'oklch(24% 0.009 250)';
+const MUTED = 'oklch(60% 0.01 250)';
+
+const ICONS = {
+  bars: 'M4 7.5h16M4 12h16M4 16.5h16',
+  expand: 'M4 9V4h5M4 4l5.5 5.5M4 15v5h5M4 20l5.5-5.5M20 9V4h-5M20 4l-5.5 5.5M20 15v5h-5M20 20l-5.5-5.5',
+  chevronDown: 'm19.5 8.25-7.5 7.5-7.5-7.5',
+  chevronRight: 'm8.25 4.5 7.5 7.5-7.5 7.5',
+  dots: 'M12 6h.01M12 12h.01M12 18h.01',
+  speaker: 'M19.11 5.64a9 9 0 0 1 0 12.73M16.46 8.29a5.25 5.25 0 0 1 0 7.42M6.75 8.25l4.72-4.72c.47-.47 1.28-.14 1.28.53v15.88c0 .67-.81 1-1.28.53l-4.72-4.72H4.51a2.25 2.25 0 0 1-2.17-1.35 8.97 8.97 0 0 1 0-4.79 2.25 2.25 0 0 1 2.17-1.35h2.24Z',
+  squares: 'M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z',
+  sliders: 'M10.5 6H20.25M10.5 6A1.5 1.5 0 1 1 7.5 6M3.75 6H7.5M10.5 18H20.25M10.5 18A1.5 1.5 0 1 1 7.5 18M3.75 18H7.5M16.5 12H20.25M16.5 12A1.5 1.5 0 1 1 13.5 12M3.75 12H13.5',
+  sparkles: 'm9 5.25.81 2.85A6.75 6.75 0 0 0 14.9 12l-2.85.81A6.75 6.75 0 0 0 9 17.9L8.19 15.1A6.75 6.75 0 0 0 3.1 12L6 11.19A6.75 6.75 0 0 0 8.19 8.1L9 5.25ZM18 2.25l.26 1.04A3.75 3.75 0 0 0 20.71 5.74L21.75 6l-1.04.26a3.75 3.75 0 0 0-2.45 2.45L18 9.75l-.26-1.04a3.75 3.75 0 0 0-2.45-2.45L14.25 6l1.04-.26a3.75 3.75 0 0 0 2.45-2.45L18 2.25Z',
+  link: 'M13.19 8.69a4.5 4.5 0 0 1 1.24.88 4.5 4.5 0 0 1 0 6.36l-4.5 4.5a4.5 4.5 0 0 1-6.36-6.36l1.76-1.76M18.68 11.69l1.76-1.76a4.5 4.5 0 0 0-6.36-6.36l-4.5 4.5a4.5 4.5 0 0 0 1.24 7.24',
+  help: 'M9.88 7.52a3 3 0 0 1 4.24 4.24c-.2.18-.43.33-.67.45-.75.36-1.45 1-1.45 1.83v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM12 17.25h.01',
+  note: 'm9 9 10.5-3v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66a2.25 2.25 0 0 0 1.63-2.17V2.25L9 5.25v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66A2.25 2.25 0 0 0 9 11.8V9Z',
+  rect: 'M2.25 7.13A1.13 1.13 0 0 1 3.38 6h6A1.13 1.13 0 0 1 10.5 7.13v3.75A1.13 1.13 0 0 1 9.38 12h-6a1.13 1.13 0 0 1-1.13-1.13V7.13ZM14.25 8.63a1.13 1.13 0 0 1 1.13-1.13h5.25a1.13 1.13 0 0 1 1.12 1.13v8.25A1.13 1.13 0 0 1 20.63 18h-5.25a1.13 1.13 0 0 1-1.13-1.13V8.63ZM3.75 16.13A1.13 1.13 0 0 1 4.88 15h5.25a1.13 1.13 0 0 1 1.12 1.13v2.25a1.13 1.13 0 0 1-1.12 1.12H4.88a1.13 1.13 0 0 1-1.13-1.12v-2.25Z',
+  arrowPath: 'M16.02 9.35h4.99M2.98 19.64v-4.99h4.99M2.98 14.65l3.18 3.18a8.25 8.25 0 0 0 13.8-3.7M4.03 9.86a8.25 8.25 0 0 1 13.8-3.7l3.18 3.18M21.02 4.36v4.99',
+  cpu: 'M8.25 3v1.5M4.5 8.25H3M21 8.25h-1.5M4.5 12H3m18 0h-1.5M4.5 15.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21M6.75 19.5h10.5a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6.75v10.5a2.25 2.25 0 0 0 2.25 2.25ZM7.5 7.5h9v9h-9v-9Z',
+  waveform: 'M2.25 12h2.1l1.8-5.25L9 17.25l2.6-9 2.2 6.75 1.8-4.5 1.45 1.5h4.7',
+  undo: 'M9 15 3 9l6-6M3 9h12a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6h-3',
+  redo: 'm15 15 6-6-6-6m6 6H9a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3',
+  save: 'M10.13 2.25H5.63A1.13 1.13 0 0 0 4.5 3.38v17.25a1.12 1.12 0 0 0 1.13 1.12h12.75a1.12 1.12 0 0 0 1.12-1.12v-9M9 15l2.25 2.25L15 12',
+  up: 'M19.5 14.25v-2.63a3.38 3.38 0 0 0-3.38-3.37h-1.5a1.12 1.12 0 0 1-1.12-1.12v-1.5a3.38 3.38 0 0 0-3.38-3.38H5.63A1.13 1.13 0 0 0 4.5 3.38v17.25a1.12 1.12 0 0 0 1.13 1.12h12.75a1.12 1.12 0 0 0 1.12-1.12v-9.38M15 14.25l-3-3-3 3M12 11.25v6',
+  down: 'M19.5 14.25v-2.63a3.38 3.38 0 0 0-3.38-3.37h-1.5a1.12 1.12 0 0 1-1.12-1.12v-1.5a3.38 3.38 0 0 0-3.38-3.38H5.63A1.13 1.13 0 0 0 4.5 3.38v17.25a1.12 1.12 0 0 0 1.13 1.12h12.75a1.12 1.12 0 0 0 1.12-1.12v-9.38M9 14.25l3 3 3-3M12 17.25v-6',
+  folder: 'M3.75 9.78V6A2.25 2.25 0 0 1 6 3.75h3.88c.4 0 .78.16 1.06.44l2.12 2.12c.28.28.66.44 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.78M3.75 9.78h16.5a2.25 2.25 0 0 1 2.22 2.54l-.86 6A2.25 2.25 0 0 1 19.05 20.25H4.95a2.25 2.25 0 0 1-2.23-1.93l-.86-6a2.25 2.25 0 0 1 1.89-2.54Z',
+  plus: 'M12 4.5v15M19.5 12h-15'
+};
+
+const PITCH_NAMES = ['C', 'C\u266F', 'D', 'D\u266F', 'E', 'F', 'F\u266F', 'G', 'G\u266F', 'A', 'A\u266F', 'B'];
+const DRUM_LABELS = ['Kick', 'Snare', 'Cl hat', 'Op hat', 'Clap', 'Tom', 'Rim', 'Perc'];
+const DRUM_PATTERN = [[0, 4, 8, 12], [4, 12], [0, 2, 4, 6, 8, 10, 12, 14], [2, 6, 10, 14], [12], [4], [], [3, 11]];
+
+function pads(active, count) {
+  const n = count || 16;
+  const set = new Set(active);
+  return Array.from({ length: n }, (_, i) => {
+    const on = set.has(i);
+    return {
+      bg: on ? LIME : (i % 4 === 0 ? PAD_BEAT : PAD_OFF),
+      sh: on
+        ? '0 0 10px oklch(88% 0.21 118 / 45%), inset 0 0 0 1px oklch(96% 0.1 118)'
+        : 'inset 0 1px 0 oklch(100% 0 0 / 5%)'
+    };
+  });
+}
+
+function knob(label, pct, display) {
+  return {
+    label, display,
+    isKnob: true, isStepper: false, isSelect: false, isSegmented: false,
+    value: display,
+    dash: pct + ' 100',
+    op: pct <= 0 ? '0' : '1',
+    rotate: 'rotate(' + (-135 + pct * 2.7).toFixed(2) + ' 32 32)'
+  };
+}
+function ctl(kind, label, value, display) {
+  return {
+    label, value, display: display === undefined ? value : display,
+    isKnob: false,
+    isStepper: kind === 'stepper',
+    isSelect: kind === 'select',
+    isSegmented: kind === 'segmented',
+    dash: '0 100', op: '0', rotate: 'rotate(-135 32 32)'
+  };
+}
+
+class Component extends DCLogic {
+  renderVals() {
+    const showLabels = this.props.showLaneLabels ?? true;
+    const step = Math.max(0, Math.min(15, this.props.playheadStep ?? 4));
+    const playheadLeft = (step / 16 * 100) + '%';
+    const slots = Array.from({ length: 8 }, (_, i) => ({
+      n: i + 1,
+      bg: i === 0 ? LIME : 'transparent',
+      fg: i === 0 ? 'oklch(13% 0.006 250)' : 'oklch(58% 0.01 250)',
+      sh: i === 0 ? '0 0 12px oklch(88% 0.21 118 / 40%)' : 'none'
+    }));
+
+    const headerIcons = [
+      { label: 'Workspace', d: ICONS.squares, bg: 'oklch(20% 0.008 250)' },
+      { label: 'Mixer', d: ICONS.sliders, bg: 'oklch(20% 0.008 250)' },
+      { label: 'Random', d: ICONS.sparkles, bg: 'transparent' },
+      { label: 'Share', d: ICONS.link, bg: 'transparent' },
+      { label: 'General help', d: ICONS.help, bg: 'transparent' }
+    ];
+
+    const plateActions = [
+      { label: 'Monitor', d: ICONS.speaker, bg: 'oklch(88% 0.21 118 / 16%)', fg: LIME },
+      { label: 'Full width', d: ICONS.expand, bg: 'transparent', fg: 'oklch(66% 0.01 250)' },
+      { label: 'Collapse', d: ICONS.chevronDown, bg: 'transparent', fg: 'oklch(66% 0.01 250)' },
+      { label: 'Module actions', d: ICONS.dots, bg: 'transparent', fg: 'oklch(66% 0.01 250)' }
+    ];
+
+    const plates = [
+      {
+        name: 'Drums', type: 'drums', hue: 'oklch(72% 0.16 45)', chipBg: 'oklch(72% 0.16 45 / 14%)',
+        ledBg: LIME, ledGlow: '0 0 8px oklch(88% 0.21 118 / 70%)',
+        preset: '909 CORE', gridLabel: 'Lanes',
+        laneLabels: DRUM_LABELS, laneLabelDisplay: showLabels ? 'grid' : 'none',
+        lanes: DRUM_PATTERN.map((a) => pads(a)),
+        params: [ctl('segmented', 'Steps', '16'), ctl('select', 'Style', 'Four'), knob('Swing', 12, '12 %'), knob('Humanize', 8, '8 %')]
+      },
+      {
+        name: 'Bass', type: 'bass', hue: 'oklch(74% 0.14 160)', chipBg: 'oklch(74% 0.14 160 / 14%)',
+        ledBg: LIME, ledGlow: '0 0 8px oklch(88% 0.21 118 / 70%)',
+        preset: 'SUB PLUCK', gridLabel: 'Sequence',
+        laneLabels: [], laneLabelDisplay: 'none',
+        lanes: [pads([0, 1, 2, 3, 4, 5, 7, 8, 9, 12])],
+        params: [ctl('select', 'Style', 'Anchor'), ctl('stepper', 'Steps', '16'), knob('Density', 55, '55 %'), knob('Drive', 20, '20 %'), ctl('stepper', 'Octave', '2'), knob('Gate', 70, '70 %')]
+      },
+      {
+        name: 'Chords', type: 'chords', hue: 'oklch(74% 0.15 320)', chipBg: 'oklch(74% 0.15 320 / 14%)',
+        ledBg: 'oklch(30% 0.008 250)', ledGlow: 'none',
+        preset: 'GLASS PAD', gridLabel: 'Sequence',
+        laneLabels: [], laneLabelDisplay: 'none',
+        lanes: [pads([0, 4, 8, 12])],
+        params: [ctl('stepper', 'Chords', '4'), ctl('select', 'Quality', 'Triad'), ctl('stepper', 'Duration', '16'), knob('Strum', 18, '18 %')]
+      }
+    ];
+
+    const leds = (activeCount) => Array.from({ length: 12 }, (_, i) => {
+      const seg = 11 - i;
+      const zone = seg >= 10 ? 'oklch(70% 0.19 30)' : seg >= 8 ? 'oklch(84% 0.16 85)' : 'oklch(80% 0.17 145)';
+      const on = seg < activeCount;
+      return {
+        bg: on ? zone : 'oklch(18% 0.007 250)',
+        sh: on ? '0 0 6px ' + zone : 'none'
+      };
+    });
+
+    const chKnobs = (pan, delay, reverb) => [
+      knob('Pan', pan, pan === 50 ? 'C' : String(pan)),
+      knob('Delay', delay, delay + '%'),
+      knob('Verb', reverb, reverb + '%')
+    ];
+
+    const channels = [
+      { name: 'Drums', hue: 'oklch(72% 0.16 45)', level: '-4.2', peak: '-6.1', fill: '78%', thumb: 'calc(78% - 10px)', leds: leds(7), knobs: chKnobs(50, 10, 4) },
+      { name: 'Bass', hue: 'oklch(74% 0.14 160)', level: '-5.0', peak: '-8.4', fill: '72%', thumb: 'calc(72% - 10px)', leds: leds(5), knobs: chKnobs(50, 0, 12) },
+      { name: 'Chords', hue: 'oklch(74% 0.15 320)', level: '-7.5', peak: '-12.0', fill: '62%', thumb: 'calc(62% - 10px)', leds: leds(4), knobs: chKnobs(58, 28, 42) }
+    ];
+
+    const masterKnobs = [
+      knob('Delay fb', 35, '35 %'),
+      knob('Delay rtn', 18, '18 %'),
+      knob('Verb rtn', 24, '24 %'),
+      knob('Character', 12, '12 %')
+    ];
+
+    const projectActions = [
+      { label: 'Undo', d: ICONS.undo }, { label: 'Redo', d: ICONS.redo }, { label: 'Save', d: ICONS.save },
+      { label: 'Export', d: ICONS.up }, { label: 'Import', d: ICONS.down }, { label: 'Demos', d: ICONS.folder }
+    ];
+    const exportActions = [
+      { label: 'Rack MIDI', d: ICONS.note }, { label: 'Mix WAV', d: ICONS.speaker }, { label: 'Stems', d: ICONS.rect }
+    ];
+
+    const scenes = ['Intro', 'Groove', 'Variation', 'Peak'].map((name, i) => ({
+      n: String(i + 1).padStart(2, '0'),
+      name,
+      bg: i === 1 ? LIME : 'oklch(24% 0.008 250)',
+      fg: i === 1 ? 'oklch(13% 0.006 250)' : 'oklch(90% 0.006 250)'
+    }));
+
+    const diagnostics = [
+      { label: 'Scheduler jitter', value: '0.184 ms', fg: 'oklch(93% 0.004 250)' },
+      { label: 'Audio latency', value: '11.6 ms', fg: 'oklch(93% 0.004 250)' },
+      { label: 'Dropped frames', value: '0', fg: LIME },
+      { label: 'Active voices', value: '14 / 64', fg: 'oklch(93% 0.004 250)' }
+    ];
+
+    const modules = [
+      { label: 'Drums', description: 'Eight-lane rhythmic step sequencer', d: ICONS.rect, hue: 'oklch(72% 0.16 45)' },
+      { label: 'Bass', description: 'Monophonic low-end pattern generator', d: ICONS.note, hue: 'oklch(74% 0.14 160)' },
+      { label: 'Acid', description: 'Resonant 303-style melodic sequence', d: ICONS.sliders, hue: 'oklch(78% 0.15 100)' },
+      { label: 'Chords', description: 'Polyphonic harmonic progressions', d: ICONS.squares, hue: 'oklch(74% 0.15 320)' },
+      { label: 'Arp', description: 'Chord-driven melodic arpeggiator', d: ICONS.arrowPath, hue: 'oklch(74% 0.13 250)' },
+      { label: 'Euclid', description: 'Polymetric Euclidean percussion', d: ICONS.sparkles, hue: 'oklch(76% 0.13 195)' },
+      { label: 'Piano roll', description: 'Editable notes, velocity, and accents', d: ICONS.note, hue: 'oklch(74% 0.14 280)' },
+      { label: 'CC Control', description: 'Record external MIDI automation', d: ICONS.cpu, hue: 'oklch(70% 0.03 250)' },
+      { label: 'Mod', description: 'Tempo-synced external MIDI LFOs', d: ICONS.arrowPath, hue: 'oklch(72% 0.12 15)' },
+      { label: 'Synth', description: 'Seeded lead melodies with contour and cadence', d: ICONS.sparkles, hue: 'oklch(74% 0.14 265)' },
+      { label: 'Drone', description: 'Continuous harmonic atmosphere with slow seeded motion', d: ICONS.waveform, hue: 'oklch(72% 0.02 250)' }
+    ];
+
+    const scaleSet = new Set([0, 2, 3, 5, 7, 8, 10]);
+    const pianoKeys = [];
+    const pianoRows = [];
+    for (let row = 0; row < 48; row += 1) {
+      const pitch = 84 - row;
+      const pc = ((pitch % 12) + 12) % 12;
+      const black = PITCH_NAMES[pc].includes('\u266F');
+      const inScale = scaleSet.has(pc);
+      pianoKeys.push({
+        name: pc === 0 ? 'C' + (Math.floor(pitch / 12) - 1) : PITCH_NAMES[pc],
+        bg: black ? 'oklch(16% 0.006 250)' : 'oklch(88% 0.004 250)',
+        fg: black ? 'oklch(58% 0.01 250)' : 'oklch(16% 0.006 250)',
+        w: black ? '72%' : '100%',
+        js: black ? 'end' : 'stretch',
+        sh: inScale ? 'inset 3px 0 0 oklch(74% 0.14 280)' : 'none'
+      });
+      pianoRows.push({
+        top: (row * 14) + 'px',
+        bg: inScale ? 'oklch(74% 0.14 280 / 6%)' : 'transparent'
+      });
+    }
+
+    const phrase = [
+      [0, 2, 69, 104, true], [2, 1, 72, 88, false], [3, 1, 74, 80, false], [4, 2, 76, 100, true],
+      [6, 2, 72, 84, false], [8, 3, 69, 96, false], [11, 1, 67, 76, false], [12, 2, 65, 92, true], [14, 2, 69, 88, false]
+    ];
+    const pianoNotes = phrase.map((n) => {
+      const start = n[0], len = n[1], pitch = n[2], vel = n[3], accent = n[4];
+      return {
+        left: (start / 16 * 100) + '%',
+        width: 'calc(' + (len / 16 * 100) + '% - 2px)',
+        top: ((84 - pitch) * 14) + 'px',
+        bg: accent ? LIME : 'oklch(' + (44 + vel / 127 * 26).toFixed(0) + '% 0.09 280)',
+        sh: accent ? '0 0 12px oklch(88% 0.21 118 / 40%)' : 'inset 0 1px 0 oklch(100% 0 0 / 12%)',
+        velH: (vel / 127 * 76) + '%',
+        velBg: accent ? LIME : 'oklch(56% 0.09 280)'
+      };
+    });
+
+    const dockActions = [
+      { label: 'Stop', d: 'M6 6h12v12H6z', fg: 'oklch(72% 0.16 30)' },
+      { label: 'Add', d: ICONS.plus, fg: 'oklch(84% 0.01 250)' },
+      { label: 'Mixer', d: ICONS.sliders, fg: 'oklch(84% 0.01 250)' }
+    ];
+
+    return {
+      slots, headerIcons, plateActions, plates, channels, masterKnobs, masterLeds: leds(9), playheadLeft,
+      projectActions, exportActions, scenes, diagnostics, modules,
+      pianoKeys, pianoRows, pianoNotes,
+      transforms: ['Deg \u2212', 'Deg +', 'Oct \u2212', 'Oct +'],
+      drumLabels: DRUM_LABELS,
+      drumLanes: DRUM_PATTERN.map((a) => pads(a.filter((i) => i < 8), 8)),
+      dockActions
+    };
+  }
+}
+
+</script>
+</body>
+</html>

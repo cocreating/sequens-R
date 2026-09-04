@@ -146,11 +146,15 @@ test.describe('Phase 4 desktop studio', () => {
     await page.goto('/');
     const drums = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'drums module name' }) });
     const bass = page.locator('article').filter({ has: page.getByRole('textbox', { name: 'bass module name' }) });
-    const [drumsBackground, bassBackground] = await Promise.all([
-      drums.evaluate((element) => getComputedStyle(element).backgroundColor),
-      bass.evaluate((element) => getComputedStyle(element).backgroundColor),
+    // AD-017 moved module identity from the plate background to a 4px spine, so
+    // distinctness is asserted on the spine. The plate itself must still read as
+    // dark, which is what the channel ceiling below checks.
+    const [drumsSpine, bassSpine] = await Promise.all([
+      drums.evaluate((element) => getComputedStyle(element, '::before').backgroundColor),
+      bass.evaluate((element) => getComputedStyle(element, '::before').backgroundColor),
     ]);
-    expect(drumsBackground).not.toBe(bassBackground);
+    expect(drumsSpine).not.toBe(bassSpine);
+    const drumsBackground = await drums.evaluate((element) => getComputedStyle(element).backgroundColor);
     const channels = drumsBackground.match(/\d+/gu)?.slice(0, 3).map(Number) ?? [];
     expect(Math.max(...channels)).toBeLessThan(80);
 
@@ -158,7 +162,7 @@ test.describe('Phase 4 desktop studio', () => {
     const color = drums.getByLabel('Drums color');
     await expect(color).toHaveValue('ember');
     await color.selectOption('teal');
-    await expect.poll(() => drums.evaluate((element) => getComputedStyle(element).backgroundColor)).not.toBe(drumsBackground);
+    await expect.poll(() => drums.evaluate((element) => getComputedStyle(element, '::before').backgroundColor)).not.toBe(drumsSpine);
 
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();
     await page.getByRole('button', { name: 'Save' }).click();

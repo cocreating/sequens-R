@@ -1,17 +1,27 @@
 import type { ModuleType } from '../core/pattern';
 
+/**
+ * Module identity colours. Only the `id` is persisted and validated, so these
+ * values are presentation and can change without touching the project schema.
+ *
+ * The studio refresh (AD-017) moved module identity from a whole-plate
+ * background tint to a 4px spine, so these are now the full-strength hues from
+ * the handoff rather than the former near-black tints. The names still describe
+ * them: ember is the Drums orange, forest the Bass green, plum the Chords
+ * magenta, steel the CC grey.
+ */
 export const MODULE_COLOR_OPTIONS = [
-  { id: 'graphite', label: 'Graphite', value: '#1a2028' },
-  { id: 'navy', label: 'Navy', value: '#14233a' },
-  { id: 'indigo', label: 'Indigo', value: '#221b3a' },
-  { id: 'plum', label: 'Plum', value: '#321c31' },
-  { id: 'burgundy', label: 'Burgundy', value: '#381d27' },
-  { id: 'ember', label: 'Ember', value: '#382319' },
-  { id: 'olive', label: 'Olive', value: '#2c2d18' },
-  { id: 'forest', label: 'Forest', value: '#173027' },
-  { id: 'teal', label: 'Teal', value: '#123135' },
-  { id: 'steel', label: 'Steel', value: '#1c2932' },
-  { id: 'cobalt', label: 'Cobalt', value: '#19274d' },
+  { id: 'graphite', label: 'Graphite', value: 'oklch(72% 0.02 250)' },
+  { id: 'navy', label: 'Navy', value: 'oklch(74% 0.13 250)' },
+  { id: 'indigo', label: 'Indigo', value: 'oklch(74% 0.14 280)' },
+  { id: 'plum', label: 'Plum', value: 'oklch(74% 0.15 320)' },
+  { id: 'burgundy', label: 'Burgundy', value: 'oklch(72% 0.12 15)' },
+  { id: 'ember', label: 'Ember', value: 'oklch(72% 0.16 45)' },
+  { id: 'olive', label: 'Olive', value: 'oklch(78% 0.15 100)' },
+  { id: 'forest', label: 'Forest', value: 'oklch(74% 0.14 160)' },
+  { id: 'teal', label: 'Teal', value: 'oklch(76% 0.13 195)' },
+  { id: 'steel', label: 'Steel', value: 'oklch(70% 0.03 250)' },
+  { id: 'cobalt', label: 'Cobalt', value: 'oklch(74% 0.14 265)' },
 ] as const;
 
 export type ModuleColor = typeof MODULE_COLOR_OPTIONS[number]['id'];

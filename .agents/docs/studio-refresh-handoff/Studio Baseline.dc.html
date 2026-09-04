@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body { margin: 0; background: oklch(11% 0.005 250); color: oklch(93% 0.008 240); font-family: "Arial Narrow", "Roboto Condensed", system-ui, sans-serif; line-height: 1.4; }
+  a { color: oklch(91% 0.22 117); }
+  a:hover { color: oklch(96% 0.16 117); }
+</style>
+</helmet>
+
+<section style="display:flex;flex-direction:column;gap:56px;padding:48px;min-width:max-content">
+
+  <header style="display:flex;flex-direction:column;gap:6px;max-width:1408px">
+    <p style="margin:0;color:oklch(68% 0.025 235);font:700 0.72rem/1 ui-monospace,monospace;letter-spacing:0.1em;text-transform:uppercase">Recreation · v0.1.0 · from src/App.svelte, ModulePlate, MixerPanel, PianoRoll, base.css</p>
+    <h1 style="margin:0;font-size:2.4rem;letter-spacing:-0.05em;line-height:0.95">sequens-R — current UI baseline</h1>
+    <p style="margin:0;max-width:70ch;color:oklch(72% 0.012 240);font-size:0.92rem">Seven surfaces as they render today: desktop studio at 1440, mixer, workspace, module library, piano roll, mobile rack. Tokens, spacing and control language taken verbatim from the source.</p>
+  </header>
+
+  <!-- ============ DESKTOP STUDIO 1440 ============ -->
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <p style="margin:0;color:oklch(72% 0.012 240);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">01 · Desktop studio · 1440 × 900</p>
+    <div style="width:1440px;height:900px;overflow:hidden;background:oklch(17% 0.008 240);border:1px solid oklch(27% 0.012 240)">
+
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;width:1408px;margin-inline:auto;padding-block:12px 8px;border-block-end:1px solid oklch(27% 0.012 240);position:relative">
+        <div style="flex:0 0 auto">
+          <div style="display:flex;align-items:center;gap:8px">
+            <p style="margin:0;color:oklch(68% 0.025 235);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Local generative MIDI</p>
+            <span style="border:1px solid oklch(27% 0.012 240);border-radius:999px;padding:0.18rem 0.42rem;color:oklch(72% 0.012 240);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.04em;white-space:nowrap">v0.1.0</span>
+          </div>
+          <h1 style="margin:0;font-size:3rem;font-weight:700;letter-spacing:-0.065em;line-height:0.9">sequens-R</h1>
+        </div>
+
+        <div style="display:flex;flex:1 1 38rem;flex-wrap:wrap;align-items:center;justify-content:end;gap:4px;min-width:0">
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:transparent;color:inherit;font:750 1rem/1 ui-monospace,monospace">TAB</button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:transparent;color:inherit" aria-label="Tempo">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6h4.5"></path><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:transparent;color:inherit" aria-label="Key">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 10.5-3v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66a2.25 2.25 0 0 0 1.63-2.17V2.25L9 5.25v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66A2.25 2.25 0 0 0 9 11.8V9Z"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Workspace">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.16 315)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Mixer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 6H20.25M10.5 6A1.5 1.5 0 1 1 7.5 6M3.75 6H7.5M10.5 18H20.25M10.5 18A1.5 1.5 0 1 1 7.5 18M3.75 18H7.5M16.5 12H20.25M16.5 12A1.5 1.5 0 1 1 13.5 12M3.75 12H13.5"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:0.45em;min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font:750 1rem/1 ui-monospace,monospace">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(86% 0.18 145)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+            <span>Add Module</span>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:transparent;color:inherit" aria-label="Random">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.16 315)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 5.25.81 2.85A6.75 6.75 0 0 0 14.9 12l-2.85.81A6.75 6.75 0 0 0 9 17.9L8.19 15.1A6.75 6.75 0 0 0 3.1 12L6 11.19A6.75 6.75 0 0 0 8.19 8.1L9 5.25ZM18 2.25l.26 1.04A3.75 3.75 0 0 0 20.71 5.74L21.75 6l-1.04.26a3.75 3.75 0 0 0-2.45 2.45L18 9.75l-.26-1.04a3.75 3.75 0 0 0-2.45-2.45L14.25 6l1.04-.26a3.75 3.75 0 0 0 2.45-2.45L18 2.25Z"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Stop">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(74% 0.19 28)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Share">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.13 245)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13.19 8.69a4.5 4.5 0 0 1 1.24.88 4.5 4.5 0 0 1 0 6.36l-4.5 4.5a4.5 4.5 0 0 1-6.36-6.36l1.76-1.76M18.68 11.69l1.76-1.76a4.5 4.5 0 0 0-6.36-6.36l-4.5 4.5a4.5 4.5 0 0 0 1.24 7.24"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="General help">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="oklch(91% 0.17 105)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 7.52a3 3 0 0 1 4.24 4.24c-.2.18-.43.33-.67.45-.75.36-1.45 1-1.45 1.83v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM12 17.25h.01"></path></svg>
+          </button>
+          <button type="button" style="display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Play">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(86% 0.18 145)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.25 5.65c0-.86.92-1.4 1.67-.99l11.54 6.35a1.13 1.13 0 0 1 0 1.97L6.92 19.33a1.13 1.13 0 0 1-1.67-.99V5.65Z"></path></svg>
+          </button>
+        </div>
+      </div>
+
+      <div style="width:1408px;margin-inline:auto;padding-block:12px 0">
+        <p style="margin:0 0 12px;min-height:1rem;color:oklch(68% 0.025 235);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Starter rack ready</p>
+
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start">
+
+          <sc-for list="{{ plates }}" as="plate" hint-placeholder-count="3">
+            <article style="position:relative;min-width:0;border:1px solid oklch(27% 0.012 240);border-radius:4px;overflow:clip;background:{{ plate.bg }}">
+              <div style="position:absolute;inset:0 0 auto;height:2px;background:oklch(68% 0.025 235)"></div>
+
+              <header style="display:grid;grid-template-columns:auto auto auto minmax(5rem,1fr) auto;gap:8px;align-items:center;padding:8px">
+                <span style="display:grid;place-items:center;width:44px;height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:oklch(68% 0.025 235)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"></path></svg>
+                </span>
+                <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Full-width layout">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.13 245)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 8.25v-4.5h4.5M3.75 3.75 9 9M3.75 15.75v4.5h4.5M3.75 20.25 9 15M20.25 8.25v-4.5h-4.5M20.25 3.75 15 9M20.25 15.75v4.5h-4.5M20.25 20.25 15 15"></path></svg>
+                </button>
+                <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Collapse">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.13 245)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
+                </button>
+                <input value="{{ plate.name }}" style="width:100%;min-height:44px;padding-inline:8px;border:1px solid transparent;border-radius:4px;background:transparent;color:inherit;font-family:inherit;font-size:1rem;font-weight:800">
+                <span style="display:grid;place-items:center;min-width:44px;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(72% 0.012 240)" stroke-width="1.5" stroke-linecap="round"><path d="M12 6h.01M12 12h.01M12 18h.01"></path></svg>
+                </span>
+                <div style="grid-column:1 / -1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px">
+                  <button type="button" style="display:grid;place-items:center;min-height:44px;padding:8px;border:2px solid oklch(91% 0.22 117);border-radius:4px;background:oklch(27% 0.012 240);color:inherit" aria-label="Monitor">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.11 5.64a9 9 0 0 1 0 12.73M16.46 8.29a5.25 5.25 0 0 1 0 7.42M6.75 8.25l4.72-4.72c.47-.47 1.28-.14 1.28.53v15.88c0 .67-.81 1-1.28.53l-4.72-4.72H4.51a2.25 2.25 0 0 1-2.17-1.35 8.97 8.97 0 0 1 0-4.79 2.25 2.25 0 0 1 2.17-1.35h2.24Z"></path></svg>
+                  </button>
+                  <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">S</button>
+                  <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">M</button>
+                </div>
+              </header>
+
+              <div style="border-block-start:1px solid oklch(27% 0.012 240);padding:8px">
+                <div style="display:grid;grid-template-columns:auto minmax(0,1fr) repeat(2,auto);gap:8px;align-items:center;padding-block-end:8px">
+                  <div style="grid-column:1 / -1;display:grid;grid-template-columns:repeat(8,1fr);gap:4px">
+                    <sc-for list="{{ slots }}" as="slot" hint-placeholder-count="8">
+                      <button type="button" style="min-width:0;min-height:44px;padding:0;border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font:750 1rem/1 ui-monospace,monospace;border:{{ slot.border }}">{{ slot.n }}</button>
+                    </sc-for>
+                  </div>
+                  <label style="color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase">Mutation</label>
+                  <select style="min-width:0;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem">
+                    <option>Level 2</option>
+                  </select>
+                  <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">Mutate</button>
+                  <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750;opacity:0.72">Revert</button>
+                </div>
+
+                <div style="position:relative;max-width:100%;overflow:hidden;padding-block:8px">
+                  <div style="display:flex;gap:8px;width:max-content">
+                    <div style="display:grid;grid-auto-rows:26px;gap:3px;display:{{ plate.laneLabelDisplay }}">
+                      <sc-for list="{{ plate.laneLabels }}" as="label" hint-placeholder-count="8">
+                        <span style="display:flex;align-items:center;width:73.6px;overflow:hidden;color:oklch(72% 0.012 240);font:0.62rem/1 ui-monospace,monospace;white-space:nowrap">{{ label }}</span>
+                      </sc-for>
+                    </div>
+                    <div style="position:relative;width:max-content">
+                      <sc-for list="{{ plate.lanes }}" as="lane" hint-placeholder-count="8">
+                        <div style="display:grid;grid-template-columns:repeat(16,26px);gap:3px;width:max-content;margin-block-end:3px">
+                          <sc-for list="{{ lane }}" as="pad" hint-placeholder-count="16">
+                            <button type="button" style="width:26px;height:26px;min-width:26px;min-height:26px;padding:0;border-radius:4px;border:1px solid;border-color:{{ pad.bd }};background:{{ pad.bg }};box-shadow:{{ pad.sh }};border-inline-start:{{ pad.bl }}"></button>
+                          </sc-for>
+                        </div>
+                      </sc-for>
+                      <div style="position:absolute;z-index:2;inset:0;border-inline-end:2px solid oklch(80% 0.12 160);left:-1px;width:27px;pointer-events:none"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding-block-start:12px">
+                  <sc-for list="{{ plate.params }}" as="p" hint-placeholder-count="4">
+                    <div style="position:relative;display:grid;grid-template-columns:1fr auto;gap:4px;align-items:center;min-width:0;padding:8px;border-block-start:1px solid oklch(27% 0.012 240)">
+                      <span style="min-width:0;overflow:hidden;color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase;white-space:nowrap;text-overflow:ellipsis">{{ p.label }}</span>
+                      <span style="font:0.75rem ui-monospace,monospace;font-variant-numeric:tabular-nums;color:oklch(72% 0.012 240)">{{ p.unit }}</span>
+                      <sc-if value="{{ p.isKnob }}" hint-placeholder-val="{{ true }}">
+                        <div style="position:relative;grid-column:1 / -1;justify-self:center;width:68px;aspect-ratio:1">
+                          <svg viewBox="0 0 64 64" style="display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0.3rem 0.5rem rgb(0 0 0 / 28%))">
+                            <circle cx="32" cy="32" r="24" fill="oklch(17% 0.008 240)" stroke="oklch(27% 0.012 240)" stroke-width="6"></circle>
+                            <path pathLength="100" d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97" fill="none" stroke="oklch(68% 0.025 235)" stroke-opacity="0.55" stroke-width="3.5" stroke-linecap="round"></path>
+                            <path pathLength="100" d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97" fill="none" stroke="oklch(91% 0.22 117)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="{{ p.dash }}" opacity="{{ p.op }}"></path>
+                            <line x1="32" y1="32" x2="32" y2="13" stroke="oklch(91% 0.22 117)" stroke-width="2.5" stroke-linecap="round" transform="{{ p.rotate }}"></line>
+                            <circle cx="32" cy="32" r="2.25" fill="oklch(17% 0.008 240)" stroke="oklch(91% 0.22 117)" stroke-width="1.5"></circle>
+                          </svg>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ p.isStepper }}" hint-placeholder-val="{{ false }}">
+                        <div style="grid-column:1 / -1;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px">
+                          <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(72% 0.012 240)" stroke-width="1.5" stroke-linecap="round"><path d="M5 12h14"></path></svg>
+                          </button>
+                          <input value="{{ p.value }}" style="width:100%;min-width:0;min-height:44px;padding-inline:0;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;text-align:center;font:1rem ui-monospace,monospace">
+                          <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(86% 0.18 145)" stroke-width="1.5" stroke-linecap="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+                          </button>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ p.isSelect }}" hint-placeholder-val="{{ false }}">
+                        <select style="grid-column:1 / -1;width:100%;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem">
+                          <option>{{ p.value }}</option>
+                        </select>
+                      </sc-if>
+                      <sc-if value="{{ p.isSegmented }}" hint-placeholder-val="{{ false }}">
+                        <div style="grid-column:1 / -1;display:grid;grid-template-columns:repeat(2,minmax(3rem,1fr));gap:1px">
+                          <button type="button" style="min-width:0;min-height:44px;border:1px solid oklch(91% 0.22 117);border-radius:0;padding-inline:4px;background:oklch(91% 0.22 117);color:oklch(17% 0.008 240);font-family:inherit;font-size:0.78rem;font-weight:750">16</button>
+                          <button type="button" style="min-width:0;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:0;padding-inline:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:0.78rem;font-weight:750">32</button>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+
+                <div style="margin-block-start:12px;border-block-start:1px solid oklch(27% 0.012 240);display:flex;align-items:center;gap:6px;min-height:44px;color:oklch(72% 0.012 240);font-size:0.78rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase">
+                  <span style="font-size:0.7rem">&#9656;</span> Sound
+                </div>
+                <div style="border-block-start:1px solid oklch(27% 0.012 240);display:flex;align-items:center;gap:6px;min-height:44px;color:oklch(72% 0.012 240);font-size:0.78rem;font-weight:800;letter-spacing:0.04em;text-transform:uppercase">
+                  <span style="font-size:0.7rem">&#9656;</span> Output &amp; advanced
+                </div>
+              </div>
+            </article>
+          </sc-for>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MIXER ============ -->
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <p style="margin:0;color:oklch(72% 0.012 240);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">02 · Mixer · permanent rack-mix panel</p>
+    <div style="width:1200px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(17% 0.008 240);box-shadow:0 1rem 3rem rgb(0 0 0 / 55%);overflow:hidden">
+      <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-block-end:1px solid oklch(27% 0.012 240);background:oklch(17% 0.008 240)">
+        <div>
+          <p style="margin:0 0 4px;color:oklch(68% 0.025 235);font:700 0.68rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Always-on rack mix</p>
+          <h2 style="display:inline;margin:0;font-size:1.05rem">Mixer</h2>
+          <small style="margin-inline-start:8px;color:oklch(72% 0.012 240);font:0.7rem ui-monospace,monospace">Rack 1</small>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font:750 0.68rem/1 ui-monospace,monospace;letter-spacing:0.04em">PAN</button>
+          <button type="button" style="min-height:44px;padding:8px 12px;border:2px solid oklch(91% 0.22 117);border-radius:4px;background:oklch(27% 0.012 240);color:inherit;font:750 0.68rem/1 ui-monospace,monospace;letter-spacing:0.04em">SENDS</button>
+          <button type="button" style="min-width:44px;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-size:1.35rem;line-height:1" aria-label="Close mixer">&times;</button>
+        </div>
+      </header>
+      <div style="padding:12px;background:oklch(22% 0.01 240)">
+        <div style="display:grid;gap:16px">
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:start">
+            <sc-for list="{{ channels }}" as="ch" hint-placeholder-count="3">
+              <section style="display:grid;gap:8px;padding:8px;border:1px solid oklch(27% 0.012 240);border-radius:4px">
+                <div style="display:grid;grid-template-columns:minmax(5rem,1fr) auto auto;gap:8px;align-items:center">
+                  <strong style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ ch.name }}</strong>
+                  <button type="button" style="min-width:44px;min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">S</button>
+                  <button type="button" style="min-width:44px;min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">M</button>
+                </div>
+                <div style="display:grid;grid-template-columns:auto auto;gap:4px;justify-content:center;min-height:192px;border-block-start:1px solid oklch(27% 0.012 240);padding:12px 4px 4px">
+                  <div style="display:flex;flex-direction:column;gap:0.16rem;align-self:center;width:17.6px;height:144px;border:1px solid oklch(68% 0.025 235);border-radius:0.18rem;padding:0.18rem;background:oklch(17% 0.008 240)">
+                    <sc-for list="{{ ch.leds }}" as="led" hint-placeholder-count="12">
+                      <span style="flex:1 1 0;min-height:0.2rem;border-radius:0.08rem;background:{{ led.bg }};box-shadow:{{ led.sh }}"></span>
+                    </sc-for>
+                  </div>
+                  <div style="display:grid;grid-template-rows:auto minmax(128px,1fr) auto;justify-items:center;gap:4px;min-height:176px">
+                    <label style="color:oklch(72% 0.012 240);font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase">Level</label>
+                    <div style="position:relative;width:44px;height:144px;display:grid;place-items:center">
+                      <div style="position:absolute;inset:0;width:5.4px;margin-inline:auto;border:1px solid oklch(68% 0.025 235);border-radius:999px;background:oklch(27% 0.012 240);overflow:hidden">
+                        <div style="position:absolute;inset:auto 0 0;background:oklch(91% 0.22 117);height:{{ ch.fill }}"></div>
+                      </div>
+                      <div style="position:absolute;left:50%;translate:-50% 0;width:34.4px;height:13.1px;border:1px solid oklch(93% 0.008 240);border-radius:0.12rem;background:linear-gradient(to bottom,oklch(72% 0.012 240) 0 38%,oklch(17% 0.008 240) 38% 55%,oklch(72% 0.012 240) 55% 100%);box-shadow:0 0.18rem 0.3rem rgb(0 0 0 / 55%);bottom:{{ ch.thumb }}"></div>
+                    </div>
+                    <output style="color:oklch(93% 0.008 240);font:0.72rem ui-monospace,monospace;font-variant-numeric:tabular-nums">{{ ch.level }}</output>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;align-items:start">
+                  <sc-for list="{{ ch.knobs }}" as="k" hint-placeholder-count="3">
+                    <div style="display:grid;grid-template-columns:1fr auto;gap:4px;align-items:center;min-width:0;padding:8px;border-block-start:1px solid oklch(27% 0.012 240);grid-column:{{ k.span }}">
+                      <label style="min-width:0;overflow:hidden;color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase;white-space:nowrap;text-overflow:ellipsis">{{ k.label }}</label>
+                      <output style="font:0.75rem ui-monospace,monospace;font-variant-numeric:tabular-nums">{{ k.display }}</output>
+                      <div style="position:relative;grid-column:1 / -1;justify-self:center;width:68px;aspect-ratio:1">
+                        <svg viewBox="0 0 64 64" style="display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0.3rem 0.5rem rgb(0 0 0 / 28%))">
+                          <circle cx="32" cy="32" r="24" fill="oklch(17% 0.008 240)" stroke="oklch(27% 0.012 240)" stroke-width="6"></circle>
+                          <path pathLength="100" d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97" fill="none" stroke="oklch(68% 0.025 235)" stroke-opacity="0.55" stroke-width="3.5" stroke-linecap="round"></path>
+                          <path pathLength="100" d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97" fill="none" stroke="oklch(91% 0.22 117)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="{{ k.dash }}" opacity="{{ k.op }}"></path>
+                          <line x1="32" y1="32" x2="32" y2="13" stroke="oklch(91% 0.22 117)" stroke-width="2.5" stroke-linecap="round" transform="{{ k.rotate }}"></line>
+                          <circle cx="32" cy="32" r="2.25" fill="oklch(17% 0.008 240)" stroke="oklch(91% 0.22 117)" stroke-width="1.5"></circle>
+                        </svg>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+            </sc-for>
+          </div>
+
+          <section style="display:grid;gap:8px;padding:8px;border:1px solid oklch(27% 0.012 240);border-radius:4px">
+            <div style="display:grid;grid-template-columns:minmax(5rem,1fr) auto;gap:8px;align-items:center">
+              <strong>Rack master</strong>
+              <output style="color:oklch(72% 0.012 240);font-variant-numeric:tabular-nums">-120 dBFS</output>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:8px;align-items:stretch">
+              <div style="display:grid;grid-template-rows:auto 1fr;justify-items:center;gap:8px;min-height:136px;border-block-start:1px solid oklch(27% 0.012 240);padding:8px">
+                <span style="color:oklch(72% 0.012 240);font-size:0.68rem;letter-spacing:0.04em;text-transform:uppercase">Output</span>
+                <div style="display:flex;flex-direction:column;gap:0.16rem;width:17.6px;height:112px;border:1px solid oklch(68% 0.025 235);border-radius:0.18rem;padding:0.18rem;background:oklch(17% 0.008 240)">
+                  <sc-for list="{{ masterLeds }}" as="led" hint-placeholder-count="12">
+                    <span style="flex:1 1 0;min-height:0.2rem;border-radius:0.08rem;background:{{ led.bg }}"></span>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr;gap:4px;align-items:center;min-width:0;padding:8px;border-block-start:1px solid oklch(27% 0.012 240)">
+                <label style="color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase">Delay division</label>
+                <select style="width:100%;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem"><option>1/8 dotted</option></select>
+              </div>
+              <sc-for list="{{ masterKnobs }}" as="k" hint-placeholder-count="4">
+                <div style="display:grid;grid-template-columns:1fr auto;gap:4px;align-items:center;min-width:0;padding:8px;border-block-start:1px solid oklch(27% 0.012 240)">
+                  <label style="min-width:0;overflow:hidden;color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase;white-space:nowrap;text-overflow:ellipsis">{{ k.label }}</label>
+                  <output style="font:0.75rem ui-monospace,monospace;font-variant-numeric:tabular-nums">{{ k.display }}</output>
+                  <div style="position:relative;grid-column:1 / -1;justify-self:center;width:68px;aspect-ratio:1">
+                    <svg viewBox="0 0 64 64" style="display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0.3rem 0.5rem rgb(0 0 0 / 28%))">
+                      <circle cx="32" cy="32" r="24" fill="oklch(17% 0.008 240)" stroke="oklch(27% 0.012 240)" stroke-width="6"></circle>
+                      <path pathLength="100" d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97" fill="none" stroke="oklch(68% 0.025 235)" stroke-opacity="0.55" stroke-width="3.5" stroke-linecap="round"></path>
+                      <path pathLength="100" d="M 15.03 48.97 A 24 24 0 1 1 48.97 48.97" fill="none" stroke="oklch(91% 0.22 117)" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="{{ k.dash }}" opacity="{{ k.op }}"></path>
+                      <line x1="32" y1="32" x2="32" y2="13" stroke="oklch(91% 0.22 117)" stroke-width="2.5" stroke-linecap="round" transform="{{ k.rotate }}"></line>
+                      <circle cx="32" cy="32" r="2.25" fill="oklch(17% 0.008 240)" stroke="oklch(91% 0.22 117)" stroke-width="1.5"></circle>
+                    </svg>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ WORKSPACE + PICKER ============ -->
+  <div style="display:flex;gap:32px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <p style="margin:0;color:oklch(72% 0.012 240);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">03 · Workspace · 448 × 860</p>
+      <div style="width:448px;height:860px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(17% 0.008 240);box-shadow:0 1rem 3rem rgb(0 0 0 / 55%);overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr)">
+        <header style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-block-end:1px solid oklch(27% 0.012 240)">
+          <div>
+            <p style="margin:0 0 4px;color:oklch(68% 0.025 235);font:700 0.68rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Studio utilities</p>
+            <h2 style="display:inline;margin:0;font-size:1.05rem">Workspace</h2>
+            <small style="margin-inline-start:8px;color:oklch(72% 0.012 240);font:0.7rem ui-monospace,monospace">New Project</small>
+          </div>
+          <button type="button" style="min-width:44px;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-size:1.35rem;line-height:1" aria-label="Close workspace">&times;</button>
+        </header>
+        <div style="background:oklch(22% 0.01 240);overflow:hidden">
+          <div style="display:grid;gap:8px;padding:8px">
+
+            <section style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;align-items:center;padding:12px;border:1px solid oklch(27% 0.012 240);background:oklch(22% 0.01 240)">
+              <label style="grid-column:1;color:oklch(72% 0.012 240);font-size:0.75rem;text-transform:uppercase">Project</label>
+              <input value="New Project" style="grid-column:2 / -1;min-width:0;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem">
+              <sc-for list="{{ projectActions }}" as="a" hint-placeholder-count="6">
+                <button type="button" style="display:inline-flex;align-items:center;justify-content:center;gap:0.45em;min-width:0;min-height:44px;padding-inline:4px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:0.82rem;font-weight:750">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="{{ a.tone }}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.d }}"></path></svg>
+                  <span>{{ a.label }}</span>
+                </button>
+              </sc-for>
+            </section>
+
+            <section style="display:grid;gap:12px;padding:12px;border:1px solid oklch(27% 0.012 240);background:oklch(22% 0.01 240)">
+              <div style="display:grid;gap:8px">
+                <div>
+                  <p style="margin:0 0 4px;color:oklch(68% 0.025 235);font:700 0.68rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Project racks</p>
+                  <h2 style="margin:0;font-size:1rem">Studio lanes</h2>
+                </div>
+                <div style="display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:8px">
+                  <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="New rack">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(86% 0.18 145)" stroke-width="1.5" stroke-linecap="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+                  </button>
+                  <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Duplicate rack">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.16 315)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"></path></svg>
+                  </button>
+                  <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750;opacity:0.72">Delete rack</button>
+                </div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;padding-block-start:8px;border-block-start:1px solid oklch(27% 0.012 240)">
+                <button type="button" style="min-height:44px;padding:8px 12px;border:2px solid oklch(91% 0.22 117);border-radius:4px;background:oklch(27% 0.012 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">1 &middot; Rack 1</button>
+              </div>
+              <label style="color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase">Active rack name</label>
+              <input value="Rack 1" style="min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem">
+            </section>
+
+            <section style="display:grid;gap:12px;padding:12px;border:1px solid oklch(27% 0.012 240);background:oklch(22% 0.01 240)">
+              <div style="display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px">
+                <div>
+                  <p style="margin:0 0 4px;color:oklch(68% 0.025 235);font:700 0.68rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Pattern snapshots</p>
+                  <h2 style="margin:0;font-size:1rem">Scenes</h2>
+                </div>
+                <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">Capture scene</button>
+              </div>
+              <p style="margin:0;color:oklch(72% 0.012 240);font-size:0.8rem">Scenes recall slots, mutation state and mix for this rack, quantized to the next bar.</p>
+            </section>
+
+            <section style="display:grid;gap:12px;padding:12px;border:1px solid oklch(27% 0.012 240);background:oklch(22% 0.01 240)">
+              <h2 style="margin:0 0 4px;font-size:1rem">Hardware MIDI</h2>
+              <p style="margin:0;color:oklch(72% 0.012 240);font-size:0.8rem">MIDI access is optional. Internal sound and exports work without it.</p>
+              <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750;justify-self:start">Enable MIDI</button>
+            </section>
+
+            <section style="display:grid;gap:12px;padding:12px;border:1px solid oklch(27% 0.012 240);background:oklch(22% 0.01 240)">
+              <h2 style="margin:0;font-size:1rem">Output &amp; shortcuts</h2>
+              <div style="display:grid;grid-template-columns:1fr;gap:8px;align-items:center">
+                <label style="color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase">Audio output</label>
+                <select style="min-width:0;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem"><option>System default</option></select>
+              </div>
+              <div style="display:flex;align-items:center;min-height:44px;color:oklch(93% 0.008 240);font-weight:750;font-size:0.92rem">&#9656; Keyboard shortcuts</div>
+            </section>
+
+            <section style="display:grid;grid-template-columns:auto minmax(0,1fr) repeat(3,auto);gap:8px;align-items:center;padding:12px;border:1px solid oklch(27% 0.012 240);background:oklch(22% 0.01 240)">
+              <div style="grid-column:1 / -1">
+                <h2 style="margin:0 0 4px;font-size:1rem">Music export</h2>
+                <p style="margin:0;color:oklch(72% 0.012 240);font-size:0.8rem">Render the current deterministic rack without connecting hardware.</p>
+              </div>
+              <label style="color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase">Length</label>
+              <select style="min-width:0;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem"><option>4 bars</option></select>
+              <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Rack MIDI">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 10.5-3v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66a2.25 2.25 0 0 0 1.63-2.17V2.25L9 5.25v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66A2.25 2.25 0 0 0 9 11.8V9Z"></path></svg>
+              </button>
+              <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Mix WAV">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.11 5.64a9 9 0 0 1 0 12.73M16.46 8.29a5.25 5.25 0 0 1 0 7.42M6.75 8.25l4.72-4.72c.47-.47 1.28-.14 1.28.53v15.88c0 .67-.81 1-1.28.53l-4.72-4.72H4.51a2.25 2.25 0 0 1-2.17-1.35 8.97 8.97 0 0 1 0-4.79 2.25 2.25 0 0 1 2.17-1.35h2.24Z"></path></svg>
+              </button>
+              <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="WAV stems">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.25 7.13A1.13 1.13 0 0 1 3.38 6h6A1.13 1.13 0 0 1 10.5 7.13v3.75A1.13 1.13 0 0 1 9.38 12h-6a1.13 1.13 0 0 1-1.13-1.13V7.13ZM14.25 8.63a1.13 1.13 0 0 1 1.13-1.13h5.25a1.13 1.13 0 0 1 1.12 1.13v8.25A1.13 1.13 0 0 1 20.63 18h-5.25a1.13 1.13 0 0 1-1.13-1.13V8.63ZM3.75 16.13A1.13 1.13 0 0 1 4.88 15h5.25a1.13 1.13 0 0 1 1.12 1.13v2.25a1.13 1.13 0 0 1-1.12 1.12H4.88a1.13 1.13 0 0 1-1.13-1.12v-2.25Z"></path></svg>
+              </button>
+            </section>
+
+            <section style="padding:12px;border:1px solid oklch(27% 0.012 240);background:oklch(22% 0.01 240)">
+              <div style="display:flex;align-items:center;min-height:44px;font-weight:750">&#9656; Audio diagnostics</div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <p style="margin:0;color:oklch(72% 0.012 240);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">04 · Module library</p>
+      <div style="width:704px;border:1px solid oklch(68% 0.025 235);border-radius:4px;padding:16px;background:oklch(17% 0.008 240);box-shadow:0 1rem 3rem rgb(0 0 0 / 60%)">
+        <header style="display:flex;align-items:end;justify-content:space-between;gap:12px;margin-block-end:16px">
+          <div>
+            <p style="margin:0 0 4px;color:oklch(68% 0.025 235);font:700 0.68rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Module library</p>
+            <h2 style="margin:0;font-size:1.15rem">Add a module</h2>
+          </div>
+          <button type="button" style="min-width:44px;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Close module library">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(72% 0.012 240)" stroke-width="1.5" stroke-linecap="round"><path d="M6 18 18 6M6 6l12 12"></path></svg>
+          </button>
+        </header>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(13rem,100%),1fr));gap:8px">
+          <sc-for list="{{ modules }}" as="m" hint-placeholder-count="11">
+            <button type="button" style="display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;gap:4px 12px;align-items:center;min-width:0;min-height:44px;padding:12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;text-align:start;font-family:inherit">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="oklch(68% 0.025 235)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="grid-row:1 / 3"><path d="{{ m.d }}"></path></svg>
+              <strong style="min-width:0;font-size:1rem">{{ m.label }}</strong>
+              <span style="min-width:0;color:oklch(72% 0.012 240);font-size:0.74rem;font-weight:500">{{ m.description }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PIANO ROLL + MOBILE ============ -->
+  <div style="display:flex;gap:32px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <p style="margin:0;color:oklch(72% 0.012 240);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">05 · Piano roll · desktop editor inside a plate</p>
+      <div style="width:940px;border:1px solid oklch(27% 0.012 240);border-radius:4px;background:#221b3a;overflow:clip">
+        <header style="display:grid;grid-template-columns:auto auto auto minmax(5rem,1fr) auto;gap:8px;align-items:center;padding:8px">
+          <span style="display:grid;place-items:center;width:44px;height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:oklch(68% 0.025 235)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"></path></svg>
+          </span>
+          <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Full-width layout">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.13 245)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 8.25v-4.5h4.5M3.75 3.75 9 9M3.75 15.75v4.5h4.5M3.75 20.25 9 15M20.25 8.25v-4.5h-4.5M20.25 3.75 15 9M20.25 15.75v4.5h-4.5M20.25 20.25 15 15"></path></svg>
+          </button>
+          <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Collapse">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.13 245)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
+          </button>
+          <input value="Piano roll" style="width:100%;min-height:44px;padding-inline:8px;border:1px solid transparent;background:transparent;color:inherit;font-family:inherit;font-size:1rem;font-weight:800">
+          <span style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(72% 0.012 240)" stroke-width="1.5" stroke-linecap="round"><path d="M12 6h.01M12 12h.01M12 18h.01"></path></svg>
+          </span>
+        </header>
+        <div style="border-block-start:1px solid oklch(27% 0.012 240);padding:8px;display:grid;gap:8px">
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <h3 style="margin:0;font-size:0.9rem">Piano roll</h3>
+              <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Add note">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="oklch(86% 0.18 145)" stroke-width="1.5" stroke-linecap="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+              </button>
+            </div>
+            <p style="margin:0;color:oklch(72% 0.012 240);font-size:0.72rem">Click to add &middot; drag to move &middot; drag the right edge to resize.</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:end;gap:4px">
+            <label style="display:grid;gap:0.18rem;color:oklch(72% 0.012 240);font-size:0.68rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Load melody
+              <select style="min-width:7rem;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:oklch(93% 0.008 240);font-family:inherit;font-size:1rem;letter-spacing:normal;text-transform:none"><option>Choose an example…</option></select>
+            </label>
+            <label style="display:grid;gap:0.18rem;color:oklch(72% 0.012 240);font-size:0.68rem;font-weight:700;letter-spacing:0.04em;text-transform:uppercase">Zoom
+              <select style="min-width:7rem;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:oklch(93% 0.008 240);font-family:inherit;font-size:1rem;letter-spacing:normal;text-transform:none"><option>100%</option></select>
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;padding-inline:8px;color:oklch(93% 0.008 240);font-size:0.92rem"><input type="checkbox" style="width:1rem;height:1rem;min-height:0"> Audition edits</label>
+            <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">Degree &minus;</button>
+            <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">Degree +</button>
+            <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">Octave &minus;</button>
+            <button type="button" style="min-height:44px;padding:8px 12px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">Octave +</button>
+          </div>
+          <div style="border-block:1px solid oklch(27% 0.012 240);display:flex;align-items:center;min-height:44px;color:oklch(93% 0.008 240);font-weight:750;font-size:0.92rem">&#9656; Edit selected &middot; select a note first</div>
+          <div style="min-width:0;height:420px;border:1px solid oklch(68% 0.025 235);overflow:hidden;position:relative">
+            <div style="display:grid;grid-template-columns:52px 1fr;height:672px">
+              <div style="display:grid;grid-template-rows:repeat(48,minmax(0,1fr));width:52px;border-inline-end:1px solid oklch(68% 0.025 235);background:oklch(17% 0.008 240)">
+                <sc-for list="{{ pianoKeys }}" as="key" hint-placeholder-count="48">
+                  <button type="button" style="min-width:0;min-height:0;border:0;border-block-end:1px solid oklch(27% 0.012 240);border-radius:0;padding:0 0.18rem;font:0.52rem/1 ui-monospace,monospace;text-align:end;background:{{ key.bg }};color:{{ key.fg }};width:{{ key.w }};justify-self:{{ key.js }};box-shadow:{{ key.sh }}">{{ key.name }}</button>
+                </sc-for>
+              </div>
+              <div style="position:relative;background-color:oklch(17% 0.008 240);background-image:linear-gradient(to right,oklch(27% 0.012 240) 1px,transparent 1px);background-size:calc(100% / 16) 100%;overflow:hidden">
+                <sc-for list="{{ pianoRows }}" as="row" hint-placeholder-count="48">
+                  <div style="position:absolute;inset-inline:0;height:14px;border-block-end:1px solid oklch(27% 0.012 240);pointer-events:none;top:{{ row.top }};background:{{ row.bg }}"></div>
+                </sc-for>
+                <sc-for list="{{ pianoNotes }}" as="n" hint-placeholder-count="9">
+                  <button type="button" style="position:absolute;height:14px;min-width:0;min-height:0;padding:0;border:1px solid oklch(93% 0.008 240);border-radius:0;left:{{ n.left }};top:{{ n.top }};width:{{ n.width }};background:{{ n.bg }};border-block-start:{{ n.accent }}"></button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="position:absolute;inset:auto 0 0;display:grid;grid-template-columns:52px 1fr;height:96px">
+              <div style="display:grid;place-items:center;width:52px;border-block-start:1px solid oklch(68% 0.025 235);border-inline-end:1px solid oklch(68% 0.025 235);background:oklch(17% 0.008 240);color:oklch(72% 0.012 240);font:0.62rem ui-monospace,monospace">Vel</div>
+              <div style="position:relative;border-block-start:1px solid oklch(68% 0.025 235);background:color-mix(in oklab,oklch(17% 0.008 240) 94%,transparent)">
+                <sc-for list="{{ pianoNotes }}" as="n" hint-placeholder-count="9">
+                  <div style="position:absolute;bottom:0;border:1px solid oklch(93% 0.008 240);left:{{ n.left }};width:{{ n.width }};height:{{ n.velH }};background:{{ n.velBg }}"></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <p style="margin:0;color:oklch(72% 0.012 240);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">06 · Mobile rack · 375 × 812</p>
+      <div style="width:375px;height:812px;position:relative;overflow:hidden;background:oklch(17% 0.008 240);border:1px solid oklch(27% 0.012 240)">
+        <div style="display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;width:359px;margin-inline:auto;padding-block:4px;border-block-end:1px solid oklch(27% 0.012 240)">
+          <h1 style="display:grid;place-items:center;margin:0;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:50%;background:oklch(22% 0.01 240);font:800 0.82rem/1 ui-monospace,monospace;letter-spacing:-0.06em">s-R</h1>
+          <button type="button" style="display:flex;align-items:center;justify-content:start;gap:8px;min-width:0;min-height:44px;padding:4px 8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;text-align:start">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.16 315)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"></path></svg>
+            <span style="display:grid;min-width:0">
+              <small style="color:oklch(68% 0.025 235);font:700 0.6rem/1 ui-monospace,monospace;letter-spacing:0.06em;text-transform:uppercase">Project</small>
+              <strong style="min-width:0;overflow:hidden;font-size:0.78rem;text-overflow:ellipsis;white-space:nowrap">New Project</strong>
+            </span>
+          </button>
+          <div style="display:flex;align-items:center;gap:4px">
+            <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:transparent;color:inherit" aria-label="Tempo">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6v6h4.5"></path><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"></path></svg>
+            </button>
+            <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:transparent;color:inherit" aria-label="Key">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 9 10.5-3v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66a2.25 2.25 0 0 0 1.63-2.17V2.25L9 5.25v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66A2.25 2.25 0 0 0 9 11.8V9Z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div style="width:359px;margin-inline:auto;padding-block:12px">
+          <p style="margin:0 0 12px;color:oklch(68% 0.025 235);font:700 0.7rem/1 ui-monospace,monospace;letter-spacing:0.08em;text-transform:uppercase">Starter rack ready</p>
+          <article style="position:relative;border:1px solid oklch(27% 0.012 240);border-radius:4px;background:#382319;overflow:clip">
+            <div style="position:absolute;inset:0 0 auto;height:2px;background:oklch(68% 0.025 235)"></div>
+            <header style="display:grid;grid-template-columns:auto auto minmax(5rem,1fr) auto;gap:4px;align-items:center;padding:8px">
+              <span style="display:grid;place-items:center;width:44px;height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:oklch(68% 0.025 235)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"></path></svg>
+              </span>
+              <button type="button" style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit" aria-label="Collapse">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(82% 0.13 245)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m19.5 8.25-7.5 7.5-7.5-7.5"></path></svg>
+              </button>
+              <input value="Drums" style="width:100%;min-height:44px;padding-inline:8px;border:1px solid transparent;background:transparent;color:inherit;font-family:inherit;font-size:1rem;font-weight:800">
+              <span style="display:grid;place-items:center;min-width:44px;min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(72% 0.012 240)" stroke-width="1.5" stroke-linecap="round"><path d="M12 6h.01M12 12h.01M12 18h.01"></path></svg>
+              </span>
+              <div style="grid-column:1 / 3;grid-row:2;display:flex;align-items:center;gap:4px;min-width:0;padding-inline-start:4px;color:oklch(72% 0.012 240);font:700 0.66rem/1 ui-monospace,monospace;letter-spacing:0.04em;text-transform:uppercase">
+                <span style="width:0.55rem;height:0.55rem;border:1px solid oklch(91% 0.22 117);border-radius:50%;background:oklch(91% 0.22 117);box-shadow:0 0 0.35rem color-mix(in oklab,oklch(91% 0.22 117) 65%,transparent)"></span>
+                <strong>drums</strong>
+                <span>Slot 1</span>
+              </div>
+              <div style="grid-column:3 / 5;grid-row:2;display:grid;grid-template-columns:repeat(3,44px);justify-content:end;gap:4px">
+                <button type="button" style="display:grid;place-items:center;min-height:44px;border:2px solid oklch(91% 0.22 117);border-radius:4px;background:oklch(27% 0.012 240);color:inherit" aria-label="Monitor">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19.11 5.64a9 9 0 0 1 0 12.73M16.46 8.29a5.25 5.25 0 0 1 0 7.42M6.75 8.25l4.72-4.72c.47-.47 1.28-.14 1.28.53v15.88c0 .67-.81 1-1.28.53l-4.72-4.72H4.51a2.25 2.25 0 0 1-2.17-1.35 8.97 8.97 0 0 1 0-4.79 2.25 2.25 0 0 1 2.17-1.35h2.24Z"></path></svg>
+                </button>
+                <button type="button" style="min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">S</button>
+                <button type="button" style="min-height:44px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem;font-weight:750">M</button>
+              </div>
+            </header>
+            <div style="border-block-start:1px solid oklch(27% 0.012 240);padding:8px">
+              <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:4px;padding-block-end:8px">
+                <sc-for list="{{ slots }}" as="slot" hint-placeholder-count="8">
+                  <button type="button" style="min-width:0;min-height:44px;padding:0;border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font:750 1rem/1 ui-monospace,monospace;border:{{ slot.border }}">{{ slot.n }}</button>
+                </sc-for>
+              </div>
+              <div style="display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:8px;align-items:center;padding-block-end:8px">
+                <label style="color:oklch(72% 0.012 240);font-size:0.72rem;text-transform:uppercase">Mut</label>
+                <select style="min-width:0;min-height:44px;padding-inline:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:1rem"><option>Level 2</option></select>
+                <button type="button" style="min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:0.9rem;font-weight:750">Mutate</button>
+                <button type="button" style="min-height:44px;padding:8px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit;font-family:inherit;font-size:0.9rem;font-weight:750;opacity:0.72">Revert</button>
+              </div>
+              <div style="overflow:hidden;padding-block:8px">
+                <div style="display:flex;gap:8px;width:max-content">
+                  <div style="display:grid;grid-auto-rows:40px;gap:3px">
+                    <sc-for list="{{ drumLabels }}" as="label" hint-placeholder-count="8">
+                      <span style="display:flex;align-items:center;width:73.6px;overflow:hidden;color:oklch(72% 0.012 240);font:0.62rem/1 ui-monospace,monospace;white-space:nowrap">{{ label }}</span>
+                    </sc-for>
+                  </div>
+                  <div style="position:relative;width:max-content">
+                    <sc-for list="{{ drumLanes }}" as="lane" hint-placeholder-count="8">
+                      <div style="display:grid;grid-template-columns:repeat(16,40px);gap:3px;width:max-content;margin-block-end:3px">
+                        <sc-for list="{{ lane }}" as="pad" hint-placeholder-count="16">
+                          <button type="button" style="width:40px;height:40px;min-width:40px;min-height:40px;padding:0;border-radius:4px;border:1px solid;border-color:{{ pad.bd }};background:{{ pad.bg }};box-shadow:{{ pad.shBig }};border-inline-start:{{ pad.bl }}"></button>
+                        </sc-for>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div style="position:absolute;z-index:10;inset:auto auto 8px 50%;translate:-50% 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;width:359px;border:1px solid oklch(68% 0.025 235);border-radius:6px;padding:4px;background:color-mix(in oklab,oklch(17% 0.008 240) 94%,transparent);box-shadow:0 0.9rem 2.5rem rgb(0 0 0 / 58%)">
+          <button type="button" style="display:grid;grid-template-rows:auto auto;place-items:center;gap:0.16rem;min-width:0;min-height:44px;padding:4px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(86% 0.18 145)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.25 5.65c0-.86.92-1.4 1.67-.99l11.54 6.35a1.13 1.13 0 0 1 0 1.97L6.92 19.33a1.13 1.13 0 0 1-1.67-.99V5.65Z"></path></svg>
+            <span style="font:700 0.62rem/1 ui-monospace,monospace;letter-spacing:0.03em">Play</span>
+          </button>
+          <button type="button" style="display:grid;grid-template-rows:auto auto;place-items:center;gap:0.16rem;min-width:0;min-height:44px;padding:4px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(74% 0.19 28)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.25 7.5A2.25 2.25 0 0 1 7.5 5.25h9a2.25 2.25 0 0 1 2.25 2.25v9a2.25 2.25 0 0 1-2.25 2.25h-9a2.25 2.25 0 0 1-2.25-2.25v-9Z"></path></svg>
+            <span style="font:700 0.62rem/1 ui-monospace,monospace;letter-spacing:0.03em">Stop</span>
+          </button>
+          <button type="button" style="display:grid;grid-template-rows:auto auto;place-items:center;gap:0.16rem;min-width:0;min-height:44px;padding:4px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(86% 0.18 145)" stroke-width="1.5" stroke-linecap="round"><path d="M12 4.5v15M19.5 12h-15"></path></svg>
+            <span style="font:700 0.62rem/1 ui-monospace,monospace;letter-spacing:0.03em">Add</span>
+          </button>
+          <button type="button" style="display:grid;grid-template-rows:auto auto;place-items:center;gap:0.16rem;min-width:0;min-height:44px;padding:4px;border:1px solid oklch(68% 0.025 235);border-radius:4px;background:oklch(22% 0.01 240);color:inherit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="oklch(83% 0.13 195)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 6H20.25M10.5 6A1.5 1.5 0 1 1 7.5 6M3.75 6H7.5M10.5 18H20.25M10.5 18A1.5 1.5 0 1 1 7.5 18M3.75 18H7.5M16.5 12H20.25M16.5 12A1.5 1.5 0 1 1 13.5 12M3.75 12H13.5"></path></svg>
+            <span style="font:700 0.62rem/1 ui-monospace,monospace;letter-spacing:0.03em">Mixer</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000}}">
+const CANVAS = 'oklch(17% 0.008 240)';
+const RAISED = 'oklch(27% 0.012 240)';
+const STRUCT = 'oklch(68% 0.025 235)';
+const LIME = 'oklch(91% 0.22 117)';
+const MUTED = 'oklch(72% 0.012 240)';
+
+function pads(active) {
+  const set = new Set(active);
+  return Array.from({ length: 16 }, (_, i) => {
+    const on = set.has(i);
+    return {
+      bd: on ? LIME : RAISED,
+      bg: on ? STRUCT : CANVAS,
+      sh: on ? 'inset 0 0 0 0.3rem ' + CANVAS : 'none',
+      shBig: on ? 'inset 0 0 0 0.45rem ' + CANVAS : 'none',
+      bl: i % 4 === 0 ? '2px solid ' + STRUCT : '1px solid ' + (on ? LIME : RAISED)
+    };
+  });
+}
+
+function knob(label, pct, display, unit) {
+  return {
+    label,
+    display: display,
+    unit: unit || '',
+    isKnob: true, isStepper: false, isSelect: false, isSegmented: false,
+    dash: pct + ' 100',
+    op: pct <= 0 ? '0' : '1',
+    rotate: 'rotate(' + (-135 + pct * 2.7).toFixed(2) + ' 32 32)'
+  };
+}
+function stepper(label, value, unit) {
+  return { label, value, unit: unit || '', isKnob: false, isStepper: true, isSelect: false, isSegmented: false, dash: '0 100', op: '0', rotate: 'rotate(-135 32 32)' };
+}
+function select(label, value) {
+  return { label, value, unit: '', isKnob: false, isStepper: false, isSelect: true, isSegmented: false, dash: '0 100', op: '0', rotate: 'rotate(-135 32 32)' };
+}
+function segmented(label, value) {
+  return { label, value, unit: value, isKnob: false, isStepper: false, isSelect: false, isSegmented: true, dash: '0 100', op: '0', rotate: 'rotate(-135 32 32)' };
+}
+
+const DRUM_LABELS = ['Kick', 'Snare', 'Closed hat', 'Open hat', 'Clap', 'Tom', 'Rim', 'Perc'];
+const DRUM_PATTERN = [[0, 4, 8, 12], [4, 12], [0, 2, 4, 6, 8, 10, 12, 14], [2, 6, 10, 14], [12], [4], [], [3, 11]];
+
+const ICONS = {
+  rectangleGroup: 'M2.25 7.13A1.13 1.13 0 0 1 3.38 6h6A1.13 1.13 0 0 1 10.5 7.13v3.75A1.13 1.13 0 0 1 9.38 12h-6a1.13 1.13 0 0 1-1.13-1.13V7.13ZM14.25 8.63a1.13 1.13 0 0 1 1.13-1.13h5.25a1.13 1.13 0 0 1 1.12 1.13v8.25A1.13 1.13 0 0 1 20.63 18h-5.25a1.13 1.13 0 0 1-1.13-1.13V8.63ZM3.75 16.13A1.13 1.13 0 0 1 4.88 15h5.25a1.13 1.13 0 0 1 1.12 1.13v2.25a1.13 1.13 0 0 1-1.12 1.12H4.88a1.13 1.13 0 0 1-1.13-1.12v-2.25Z',
+  note: 'm9 9 10.5-3v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66a2.25 2.25 0 0 0 1.63-2.17V2.25L9 5.25v10.3a2.25 2.25 0 0 1-1.63 2.17l-1.32.38a1.8 1.8 0 0 1-2.3-1.73c0-.8.53-1.51 1.31-1.73l2.31-.66A2.25 2.25 0 0 0 9 11.8V9Z',
+  sliders: 'M10.5 6H20.25M10.5 6A1.5 1.5 0 1 1 7.5 6M3.75 6H7.5M10.5 18H20.25M10.5 18A1.5 1.5 0 1 1 7.5 18M3.75 18H7.5M16.5 12H20.25M16.5 12A1.5 1.5 0 1 1 13.5 12M3.75 12H13.5',
+  squares: 'M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z',
+  arrowPath: 'M16.02 9.35h4.99M2.98 19.64v-4.99h4.99M2.98 14.65l3.18 3.18a8.25 8.25 0 0 0 13.8-3.7M4.03 9.86a8.25 8.25 0 0 1 13.8-3.7l3.18 3.18M21.02 4.36v4.99',
+  sparkles: 'm9 5.25.81 2.85A6.75 6.75 0 0 0 14.9 12l-2.85.81A6.75 6.75 0 0 0 9 17.9L8.19 15.1A6.75 6.75 0 0 0 3.1 12L6 11.19A6.75 6.75 0 0 0 8.19 8.1L9 5.25ZM18 2.25l.26 1.04A3.75 3.75 0 0 0 20.71 5.74L21.75 6l-1.04.26a3.75 3.75 0 0 0-2.45 2.45L18 9.75l-.26-1.04a3.75 3.75 0 0 0-2.45-2.45L14.25 6l1.04-.26a3.75 3.75 0 0 0 2.45-2.45L18 2.25Z',
+  cpu: 'M8.25 3v1.5M4.5 8.25H3M21 8.25h-1.5M4.5 12H3m18 0h-1.5M4.5 15.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21M6.75 19.5h10.5a2.25 2.25 0 0 0 2.25-2.25V6.75a2.25 2.25 0 0 0-2.25-2.25H6.75A2.25 2.25 0 0 0 4.5 6.75v10.5a2.25 2.25 0 0 0 2.25 2.25ZM7.5 7.5h9v9h-9v-9Z',
+  waveform: 'M2.25 12h2.1l1.8-5.25L9 17.25l2.6-9 2.2 6.75 1.8-4.5 1.45 1.5h4.7'
+};
+
+const PITCH_NAMES = ['C', 'C\u266F', 'D', 'D\u266F', 'E', 'F', 'F\u266F', 'G', 'G\u266F', 'A', 'A\u266F', 'B'];
+
+class Component extends DCLogic {
+  renderVals() {
+    const slots = Array.from({ length: 8 }, (_, i) => ({
+      n: i + 1,
+      border: i === 0 ? '2px solid ' + LIME : '1px solid ' + STRUCT
+    }));
+
+    const plates = [
+      {
+        name: 'Drums', bg: '#382319',
+        laneLabels: DRUM_LABELS, laneLabelDisplay: 'grid',
+        lanes: DRUM_PATTERN.map(pads),
+        params: [segmented('Steps', '16'), select('Style', 'Four'), knob('Swing', 0, '0', '%'), knob('Humanize', 0, '0', '%')]
+      },
+      {
+        name: 'Bass', bg: '#173027',
+        laneLabels: [], laneLabelDisplay: 'none',
+        lanes: [pads([0, 1, 2, 3, 4, 5, 7, 8, 9, 12])],
+        params: [select('Style', 'Anchor'), stepper('Steps', '16'), stepper('Range', '1', 'oct'), knob('Density', 55, '55', '%'), knob('Drive', 20, '20', '%'), stepper('Octave', '2'), knob('Gate', 70, '70', '%')]
+      },
+      {
+        name: 'Chords', bg: '#321c31',
+        laneLabels: [], laneLabelDisplay: 'none',
+        lanes: [pads([0])],
+        params: [stepper('Chords', '4'), select('Quality', 'Triad'), stepper('Duration', '16', 'steps'), knob('Strum', 0, '0', '%')]
+      }
+    ];
+
+    const leds = (activeCount) => Array.from({ length: 12 }, (_, i) => {
+      const seg = 11 - i;
+      const zone = seg >= 10 ? 'oklch(67% 0.22 28)' : seg >= 8 ? 'oklch(84% 0.18 85)' : 'oklch(78% 0.19 145)';
+      const on = seg < activeCount;
+      return { bg: on ? zone : 'color-mix(in oklab, ' + zone + ' 14%, ' + RAISED + ')', sh: on ? '0 0 0.35rem color-mix(in oklab, ' + zone + ' 62%, transparent)' : 'none' };
+    });
+
+    const chKnobs = (pan) => [
+      Object.assign(knob('Pan', pan, '0', '%'), { span: '1 / -1', display: '0 %' }),
+      Object.assign(knob('Delay send', 0, '0', '%'), { span: 'auto', display: '0 %' }),
+      Object.assign(knob('Reverb send', 0, '0', '%'), { span: 'auto', display: '0 %' })
+    ];
+
+    const channels = [
+      { name: 'Drums', level: '80%', fill: '80%', thumb: 'calc(80% - 6px)', leds: leds(0), knobs: chKnobs(50) },
+      { name: 'Bass', level: '80%', fill: '80%', thumb: 'calc(80% - 6px)', leds: leds(0), knobs: chKnobs(50) },
+      { name: 'Chords', level: '75%', fill: '75%', thumb: 'calc(75% - 6px)', leds: leds(0), knobs: chKnobs(50) }
+    ];
+
+    const masterKnobs = [
+      Object.assign(knob('Delay feedback', 35, '35', '%'), { display: '35 %' }),
+      Object.assign(knob('Delay return', 0, '0', '%'), { display: '0 %' }),
+      Object.assign(knob('Reverb return', 0, '0', '%'), { display: '0 %' }),
+      Object.assign(knob('Master character', 0, '0', '%'), { display: '0 %' })
+    ];
+
+    const projectActions = [
+      { label: 'Undo', tone: 'oklch(82% 0.13 245)', d: 'M9 15 3 9l6-6M3 9h12a6 6 0 0 1 6 6v0a6 6 0 0 1-6 6h-3' },
+      { label: 'Redo', tone: 'oklch(82% 0.13 245)', d: 'm15 15 6-6-6-6m6 6H9a6 6 0 0 0-6 6v0a6 6 0 0 0 6 6h3' },
+      { label: 'Save', tone: 'oklch(86% 0.18 145)', d: 'M10.13 2.25H5.63A1.13 1.13 0 0 0 4.5 3.38v17.25a1.12 1.12 0 0 0 1.13 1.12h12.75a1.12 1.12 0 0 0 1.12-1.12v-9M9 15l2.25 2.25L15 12' },
+      { label: 'Export', tone: 'oklch(87% 0.14 75)', d: 'M19.5 14.25v-2.63a3.38 3.38 0 0 0-3.38-3.37h-1.5a1.12 1.12 0 0 1-1.12-1.12v-1.5a3.38 3.38 0 0 0-3.38-3.38H5.63A1.13 1.13 0 0 0 4.5 3.38v17.25a1.12 1.12 0 0 0 1.13 1.12h12.75a1.12 1.12 0 0 0 1.12-1.12v-9.38M15 14.25l-3-3-3 3M12 11.25v6' },
+      { label: 'Import', tone: 'oklch(87% 0.14 75)', d: 'M19.5 14.25v-2.63a3.38 3.38 0 0 0-3.38-3.37h-1.5a1.12 1.12 0 0 1-1.12-1.12v-1.5a3.38 3.38 0 0 0-3.38-3.38H5.63A1.13 1.13 0 0 0 4.5 3.38v17.25a1.12 1.12 0 0 0 1.13 1.12h12.75a1.12 1.12 0 0 0 1.12-1.12v-9.38M9 14.25l3 3 3-3M12 17.25v-6' },
+      { label: 'Demos', tone: 'oklch(87% 0.14 75)', d: 'M3.75 9.78V6A2.25 2.25 0 0 1 6 3.75h3.88c.4 0 .78.16 1.06.44l2.12 2.12c.28.28.66.44 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.78M3.75 9.78h16.5a2.25 2.25 0 0 1 2.22 2.54l-.86 6A2.25 2.25 0 0 1 19.05 20.25H4.95a2.25 2.25 0 0 1-2.23-1.93l-.86-6a2.25 2.25 0 0 1 1.89-2.54Z' }
+    ];
+
+    const modules = [
+      { label: 'Drums', description: 'Eight-lane rhythmic step sequencer', d: ICONS.rectangleGroup },
+      { label: 'Bass', description: 'Monophonic low-end pattern generator', d: ICONS.note },
+      { label: 'Acid', description: 'Resonant 303-style melodic sequence', d: ICONS.sliders },
+      { label: 'Chords', description: 'Polyphonic harmonic progressions', d: ICONS.squares },
+      { label: 'Arp', description: 'Chord-driven melodic arpeggiator', d: ICONS.arrowPath },
+      { label: 'Euclid', description: 'Polymetric Euclidean percussion', d: ICONS.sparkles },
+      { label: 'Piano roll', description: 'Editable notes, velocity, and accents', d: ICONS.note },
+      { label: 'CC Control', description: 'Record external MIDI automation', d: ICONS.cpu },
+      { label: 'Mod', description: 'Tempo-synced external MIDI LFOs', d: ICONS.arrowPath },
+      { label: 'Synth', description: 'Seeded lead melodies with contour and cadence', d: ICONS.sparkles },
+      { label: 'Drone', description: 'Continuous harmonic atmosphere with slow seeded motion', d: ICONS.waveform }
+    ];
+
+    // Piano roll: 48 rows top-down from C6 to C2
+    const scaleSet = new Set([0, 2, 3, 5, 7, 8, 10]); // A minor-ish degrees on pitch class
+    const pianoKeys = [];
+    const pianoRows = [];
+    for (let row = 0; row < 48; row += 1) {
+      const pitch = 84 - row;
+      const pc = pitch % 12;
+      const black = PITCH_NAMES[pc].includes('\u266F');
+      const inScale = scaleSet.has(pc);
+      pianoKeys.push({
+        name: pc === 0 ? 'C' + (Math.floor(pitch / 12) - 1) : PITCH_NAMES[pc],
+        bg: black ? CANVAS : 'oklch(93% 0.008 240)',
+        fg: black ? MUTED : CANVAS,
+        w: black ? '72%' : '100%',
+        js: black ? 'end' : 'stretch',
+        sh: inScale ? 'inset 0.18rem 0 ' + STRUCT : 'none'
+      });
+      pianoRows.push({
+        top: (row * 14) + 'px',
+        bg: inScale ? 'color-mix(in oklab, ' + STRUCT + ' 7%, transparent)' : 'transparent'
+      });
+    }
+
+    const phrase = [
+      [0, 2, 69, 104, true], [2, 1, 72, 88, false], [3, 1, 74, 80, false], [4, 2, 76, 100, true],
+      [6, 2, 72, 84, false], [8, 3, 69, 96, false], [11, 1, 67, 76, false], [12, 2, 65, 92, true], [14, 2, 69, 88, false]
+    ];
+    const pianoNotes = phrase.map(([start, len, pitch, vel, accent]) => ({
+      left: (start / 16 * 100) + '%',
+      width: (len / 16 * 100) + '%',
+      top: ((84 - pitch) * 14) + 'px',
+      bg: accent ? LIME : 'color-mix(in oklab, ' + STRUCT + ' ' + (44 + vel / 127 * 56).toFixed(0) + '%, ' + CANVAS + ')',
+      accent: accent ? '0.18rem solid ' + LIME : '0',
+      velH: (vel / 127 * 100) + '%',
+      velBg: accent ? LIME : STRUCT
+    }));
+
+    return {
+      slots, plates, channels, masterKnobs, masterLeds: leds(0), projectActions, modules,
+      drumLabels: DRUM_LABELS, drumLanes: DRUM_PATTERN.map(pads),
+      pianoKeys, pianoRows, pianoNotes
+    };
+  }
+}
+
+</script>
+</body>
+</html>

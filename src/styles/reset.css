@@ -1,6 +1,66 @@
+/* Self-hosted so the app keeps its type offline. Files in public/fonts/,
+   latin subset, licences alongside them. */
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/barlow-condensed-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/barlow-condensed-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/barlow-condensed-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/barlow-condensed-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2");
+}
+
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
-  html { min-width: 20rem; background: var(--color-canvas); }
-  body { min-height: 100svh; margin: 0; }
+  html { min-width: 20rem; background: var(--n-900); }
+  body {
+    min-height: 100svh;
+    margin: 0;
+    background: var(--n-780);
+    color: var(--text);
+    font-family: var(--font-label);
+    line-height: 1.35;
+  }
   button, input, select, textarea { font: inherit; }
+  :is(input, output, data, time, progress, .tabular) { font-variant-numeric: tabular-nums; }
 }

@@ -6,12 +6,21 @@ import { createModule, createRackState } from '../../src/lib/state/rack';
 import { STARTER_RACK } from '../../src/lib/share/starter';
 
 describe('module colors', () => {
-  it('assigns every module type a distinct dark palette default', () => {
+  it('assigns every module type a distinct identity hue', () => {
     const defaults = MODULE_TYPES.map((type) => createModule(type, 42).color);
     expect(new Set(defaults).size).toBe(MODULE_TYPES.length);
-    for (const option of MODULE_COLOR_OPTIONS) {
-      const channels = option.value.slice(1).match(/.{2}/gu)?.map((channel) => Number.parseInt(channel, 16)) ?? [];
-      expect(Math.max(...channels)).toBeLessThan(80);
+    // AD-017: these are spine hues, not plate tints. They are deliberately
+    // bright — the plate behind them is what carries the darkness — so the
+    // former per-channel ceiling no longer applies. What still must hold is
+    // that every option is a distinct, in-gamut oklch value.
+    const values = MODULE_COLOR_OPTIONS.map((option) => option.value);
+    expect(new Set(values).size).toBe(MODULE_COLOR_OPTIONS.length);
+    for (const value of values) {
+      const match = /^oklch\((?<lightness>\d+(?:\.\d+)?)% (?<chroma>\d+(?:\.\d+)?) (?<hue>\d+(?:\.\d+)?)\)$/u.exec(value);
+      expect(match?.groups, `${value} is not an oklch triple`).toBeDefined();
+      expect(Number(match!.groups!.lightness)).toBeGreaterThanOrEqual(60);
+      expect(Number(match!.groups!.chroma)).toBeLessThanOrEqual(0.37);
+      expect(Number(match!.groups!.hue)).toBeLessThan(360);
     }
   });
 

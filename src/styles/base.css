@@ -325,8 +325,11 @@
      would reposition the absolutely-placed progress bar and help panel.
      background-color stays a real dark token under the gradient so the plate
      reads as dark to a computed-style check, not as transparent. */
-  article { position: relative; min-width: 0; border: 0; border-radius: var(--radius-plate); background-color: var(--n-620); background-image: var(--grad-plate); box-shadow: var(--elev-plate); overflow: clip; }
-  article::before { content: ''; position: absolute; z-index: 1; inset: 0 auto 0 0; width: 4px; background: var(--plate-hue, var(--n-560)); pointer-events: none; }
+  /* overflow is visible so the actions menu is not clipped by a collapsed
+     plate. The spine and progress bar carry their own radii instead. */
+  article { position: relative; min-width: 0; border: 0; border-radius: var(--radius-plate); background-color: var(--n-620); background-image: var(--grad-plate); box-shadow: var(--elev-plate); overflow: visible; }
+  article:has(.module-menu[open]) { z-index: 8; }
+  article::before { content: ''; position: absolute; z-index: 1; inset: 0 auto 0 0; width: 4px; border-radius: var(--radius-plate) 0 0 var(--radius-plate); background: var(--plate-hue, var(--n-560)); pointer-events: none; }
   article.muted { opacity: 0.65; }
   article.soloed { box-shadow: var(--elev-plate), inset 0 0 0 1px var(--signal); }
   .desktop-module-readonly { padding: var(--space-4); }
@@ -335,7 +338,7 @@
   .desktop-module-readonly h2 { margin: var(--space-1) 0 0; font-size: 1.2rem; }
   .desktop-module-readonly p { max-width: 42rem; margin: var(--space-3) 0 0; color: var(--color-text-muted); }
   .desktop-module-readonly .module-state { border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding: var(--space-2); color: var(--color-text); }
-  .module-progress { position: absolute; inset: 0 0 auto; height: 2px; background: var(--color-structure); }
+  .module-progress { position: absolute; inset: 0 0 auto; height: 2px; border-radius: var(--radius-plate) var(--radius-plate) 0 0; background: var(--n-560); overflow: hidden; }
   .playing .module-progress { background: var(--color-playing); }
   .module-header { display: grid; grid-template-columns: auto auto minmax(5rem, 1fr) auto; gap: var(--space-2); align-items: center; padding: 14px 14px 10px 18px; }
   .drag-handle { display: grid; place-items: center; width: var(--touch-target); height: var(--touch-target); border: 0; border-radius: var(--radius-control); background: var(--n-750); touch-action: none; user-select: none; color: var(--text-1); font-weight: 750; }
@@ -347,13 +350,17 @@
   .mobile-module-meta > span:first-child { width: 0.55rem; height: 0.55rem; border: 1px solid var(--color-structure); border-radius: 50%; background: var(--color-canvas); }
   .mobile-module-meta > span:first-child.active { border-color: var(--color-playing); background: var(--color-playing); box-shadow: 0 0 0.35rem color-mix(in oklab, var(--color-playing) 65%, transparent); }
   .module-menu { position: relative; min-width: 0; }
-  .module-menu > summary { display: grid; place-items: center; min-height: var(--touch-target); border: 1px solid var(--color-structure); border-radius: var(--radius-sm); padding-inline: var(--space-2); cursor: pointer; font-weight: 750; list-style: none; }
+  .module-menu > summary { display: grid; place-items: center; min-height: var(--touch-target); min-width: var(--touch-target); border: 0; border-radius: var(--radius-btn); padding-inline: var(--space-2); background: transparent; color: var(--text-1); cursor: pointer; list-style: none; }
+  .module-menu > summary:hover { background: var(--n-640); }
   .module-menu > summary::-webkit-details-marker { display: none; }
-  .module-menu-popover { position: absolute; z-index: 7; inset: calc(100% + var(--space-1)) 0 auto auto; display: grid; gap: var(--space-1); width: max-content; min-width: 10rem; border: 1px solid var(--color-structure); padding: var(--space-2); background: var(--color-canvas); box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 45%); }
-  .module-menu-popover button { width: 100%; justify-content: start; text-align: start; }
-  .module-color-control { display: grid; grid-template-columns: auto minmax(6rem, 1fr); gap: var(--space-2); align-items: center; min-height: var(--touch-target); color: var(--color-text-muted); font-size: 0.75rem; }
-  .module-color-control select { min-width: 0; }
-  .module-help-toggle { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-1); white-space: nowrap; }
+  .module-menu-popover { position: absolute; z-index: 7; inset: calc(100% + var(--space-1)) 0 auto auto; display: grid; gap: 1px; width: max-content; min-width: 12rem; border: 0; border-radius: var(--radius-float); padding: var(--space-1); background: var(--n-780); box-shadow: var(--elev-panel); }
+  .module-menu-popover :is(button, .module-color-control) { display: flex; align-items: center; justify-content: start; gap: var(--space-2); width: 100%; min-height: var(--touch-target); border: 0; border-radius: var(--radius-control); padding-inline: var(--space-2); background: transparent; box-shadow: none; color: var(--text-body); font: 600 0.86rem/1 var(--font-label); letter-spacing: 0.04em; text-align: start; }
+  .module-menu-popover :is(button, .module-color-control):hover { background: var(--n-700); }
+  .module-menu-popover .delete { color: var(--danger); }
+  .module-menu-popover .icon { width: 1.1rem; height: 1.1rem; }
+  .module-color-control::before { content: ''; flex: 0 0 auto; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--plate-hue, var(--n-560)); box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 35%); }
+  .module-color-control select { flex: 1 1 auto; min-width: 0; min-height: 2.25rem; border: 0; border-radius: var(--radius-control); padding-inline: var(--space-2); background: transparent; box-shadow: none; color: var(--text-body); font: 600 0.86rem/1 var(--font-label); letter-spacing: 0.04em; }
+  .module-help-toggle { white-space: nowrap; }
   .module-help-toggle span { display: grid; place-items: center; width: 1.2rem; height: 1.2rem; border: 1px solid currentColor; border-radius: 50%; font: 800 0.75rem/1 var(--font-data); }
   .module-help-toggle[aria-pressed="true"] { border-color: var(--color-playing); background: color-mix(in oklab, var(--color-playing) 17%, var(--color-surface)); }
   article.help-active { border-color: color-mix(in oklab, var(--color-playing) 65%, var(--color-structure)); }

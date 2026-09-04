@@ -152,7 +152,6 @@
           ><Icon name="question-mark-circle" /> Help</button>
         {/if}
         <label class="module-color-control" data-help-key="module-color">
-          <span>Color</span>
           <select aria-label={`${module.name} color`} value={module.color} onchange={(event) => onpatch({ color: event.currentTarget.value as ModuleColor })}>
             {#each MODULE_COLOR_OPTIONS as option (option.id)}
               <option value={option.id}>{option.label}</option>

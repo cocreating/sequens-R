@@ -320,6 +320,10 @@
   .utility-stack :is(.scene-panel, .hardware-panel, .desktop-studio-panel, .music-export, .rack-switcher, .diagnostics-panel) { margin: 0; }
   .module-list { display: grid; gap: var(--space-3); min-width: 0; }
   .module-list > article { content-visibility: auto; contain-intrinsic-size: auto none auto 44rem; }
+  /* content-visibility: auto implies paint containment, which clips the actions
+     menu to the plate box regardless of overflow. Lift it while the menu is
+     open; the skipping optimisation is pointless for a plate being used. */
+  .module-list > article:has(.module-menu[open]) { content-visibility: visible; contain-intrinsic-size: none; }
   /* Module plates use the plate recipe through `article` rather than the .plate
      class, because their children own their padding and .plate's padding box
      would reposition the absolutely-placed progress bar and help panel.

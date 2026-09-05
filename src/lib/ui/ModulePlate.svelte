@@ -55,6 +55,7 @@
   let recordingStartedAt = 0;
   let helpActive = $state(false);
   let fullWidth = $state(false);
+  let menuElement = $state<HTMLDetailsElement | null>(null);
   let mobilePianoDialog = $state<HTMLDialogElement | null>(null);
   let mobilePianoTrigger = $state<HTMLButtonElement | null>(null);
   let activeHelpKey = $state('module');
@@ -111,7 +112,33 @@
     mobilePianoTrigger?.focus();
   }
 
+  // The actions menu now paints outside its plate, so it can cover the module
+  // below and swallow its clicks. `details` has no light dismiss of its own.
+  function dismissMenuOnOutsidePointer(event: PointerEvent): void {
+    if (menuElement === null || !menuElement.open) return;
+    if (event.target instanceof Node && menuElement.contains(event.target)) return;
+    menuElement.open = false;
+  }
+
+  // One-shot actions dismiss the menu; leaving it open would park it over the
+  // module below and swallow that module's clicks, which is how it behaved
+  // before the plate stopped clipping and the menu simply was not painted.
+  // Move earlier/later deliberately keep it open — reordering is repeatable
+  // and the menu travels with its own module.
+  function runMenuAction(action: () => void): void {
+    if (menuElement !== null) menuElement.open = false;
+    action();
+  }
+
+  function dismissMenuOnEscape(event: KeyboardEvent): void {
+    if (event.key !== 'Escape' || menuElement === null || !menuElement.open) return;
+    menuElement.open = false;
+    menuElement.querySelector<HTMLElement>('summary')?.focus();
+  }
+
 </script>
+
+<svelte:window onpointerdown={dismissMenuOnOutsidePointer} onkeydown={dismissMenuOnEscape} />
 
 <article
   class:collapsed={module.collapsed}
@@ -137,7 +164,11 @@
       <span class="module-chip" aria-hidden="true">{module.type}</span>
     {/if}
     <input id={`${module.id}-name`} class="module-name" data-help-key="module-name" value={module.name} aria-label={`${module.type} module name`} oninput={(event) => onpatch({ name: (event.currentTarget as HTMLInputElement).value })} />
-    <details class="module-menu">
+    <details
+      bind:this={menuElement}
+      class="module-menu"
+      ontoggle={(event) => { if (event.currentTarget.open && module.collapsed) onpatch({ collapsed: false }); }}
+    >
       <summary aria-label={`${module.name} actions`}><Icon name="ellipsis-vertical" /></summary>
       <div class="module-menu-popover">
         {#if desktopSurface}
@@ -152,19 +183,19 @@
           ><Icon name="question-mark-circle" /> Help</button>
         {/if}
         <label class="module-color-control" data-help-key="module-color">
-          <select aria-label={`${module.name} color`} value={module.color} onchange={(event) => onpatch({ color: event.currentTarget.value as ModuleColor })}>
+          <select aria-label={`${module.name} color`} value={module.color} onchange={(event) => { const color = event.currentTarget.value as ModuleColor; runMenuAction(() => onpatch({ color })); }}>
             {#each MODULE_COLOR_OPTIONS as option (option.id)}
               <option value={option.id}>{option.label}</option>
             {/each}
           </select>
         </label>
-        <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={onduplicate}>Duplicate</button>
+        <button type="button" data-help-key="duplicate" aria-label={`Duplicate ${module.name}`} onclick={() => runMenuAction(onduplicate)}>Duplicate</button>
         {#if !desktopSurface}
           <button type="button" aria-label={`Move ${module.name} earlier`} onclick={() => onmove(-1)}>Move earlier</button>
           <button type="button" aria-label={`Move ${module.name} later`} onclick={() => onmove(1)}>Move later</button>
         {/if}
-        <button type="button" data-help-key="export-midi" onclick={onexportmidi}>Export MIDI</button>
-        <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={ondelete}>Delete</button>
+        <button type="button" data-help-key="export-midi" onclick={() => runMenuAction(onexportmidi)}>Export MIDI</button>
+        <button type="button" class="delete" data-help-key="delete" aria-label={`Delete ${module.name}`} onclick={() => runMenuAction(ondelete)}>Delete</button>
       </div>
     </details>
     <div class="module-switches">

@@ -1,0 +1,615 @@
+{
+  "schemaVersion": 7,
+  "id": "demo-project-garage-slant",
+  "name": "Garage Slant",
+  "racks": [
+    {
+      "id": "rack-garage-slant",
+      "name": "Garage Slant Rack",
+      "state": {
+        "bpm": 128,
+        "key": {
+          "root": 7,
+          "scale": "minor"
+        },
+        "modules": [
+          {
+            "id": "drums-garage-slant-1",
+            "type": "drums",
+            "name": "Slant Break",
+            "color": "ember",
+            "seed": 2256939878,
+            "params": {
+              "steps": 32,
+              "groove": 1,
+              "swing": 58,
+              "humanize": 12,
+              "overrideLanes": 255,
+              "lane0": 67175425,
+              "lane1": 16777472,
+              "lane2": 1347702868,
+              "lane3": 0,
+              "lane4": 0,
+              "lane5": 0,
+              "lane6": 8388736,
+              "lane7": 0
+            },
+            "slots": [
+              {
+                "seed": 2256939878,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 58,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 1347702868,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 8388736,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2273717497,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 58,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 1347702868,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 1149239424,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2223384640,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 41,
+                  "humanize": 8,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 269500484,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2240162259,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 58,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 1431655765,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 8388736,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2324050354,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 58,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 1347702868,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 16777472,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2340827973,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 58,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 1347702868,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 33554944,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2290495116,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 29,
+                  "humanize": 0,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 1078214724,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2307272735,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 58,
+                  "humanize": 12,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 1358954752,
+                  "lane2": 1347702868,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 3967811712,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.46,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "drums-broken-v2",
+              "params": {
+                "tone": 70,
+                "punch": 52,
+                "decay": 32
+              },
+              "pan": 0,
+              "delaySend": 0,
+              "reverbSend": 12
+            },
+            "midi": {
+              "portId": null,
+              "channel": 10
+            },
+            "automation": []
+          },
+          {
+            "id": "bass-garage-slant-2",
+            "type": "bass",
+            "name": "Short Wood",
+            "color": "forest",
+            "seed": 1197729612,
+            "params": {
+              "style": 5,
+              "steps": 16,
+              "range": 2,
+              "density": 42,
+              "drive": 10,
+              "octave": 2,
+              "gate": 38
+            },
+            "slots": [
+              {
+                "seed": 1197729612,
+                "params": {
+                  "style": 5,
+                  "steps": 16,
+                  "range": 2,
+                  "density": 42,
+                  "drive": 10,
+                  "octave": 2,
+                  "gate": 38
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1214507231,
+                "params": {
+                  "style": 5,
+                  "steps": 16,
+                  "range": 2,
+                  "density": 56,
+                  "drive": 10,
+                  "octave": 2,
+                  "gate": 26
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1231284850,
+                "params": {
+                  "style": 5,
+                  "steps": 16,
+                  "range": 2,
+                  "density": 18,
+                  "drive": 10,
+                  "octave": 2,
+                  "gate": 56
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1248062469,
+                "params": {
+                  "style": 5,
+                  "steps": 16,
+                  "range": 3,
+                  "density": 70,
+                  "drive": 30,
+                  "octave": 2,
+                  "gate": 38
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1130619136,
+                "params": {
+                  "style": 5,
+                  "steps": 16,
+                  "range": 2,
+                  "density": 27,
+                  "drive": 10,
+                  "octave": 1,
+                  "gate": 38
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1147396755,
+                "params": {
+                  "style": 0,
+                  "steps": 16,
+                  "range": 2,
+                  "density": 42,
+                  "drive": 10,
+                  "octave": 2,
+                  "gate": 38
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1164174374,
+                "params": {
+                  "style": 1,
+                  "steps": 16,
+                  "range": 2,
+                  "density": 50,
+                  "drive": 10,
+                  "octave": 2,
+                  "gate": 38
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1180951993,
+                "params": {
+                  "style": 4,
+                  "steps": 16,
+                  "range": 2,
+                  "density": 42,
+                  "drive": 10,
+                  "octave": 2,
+                  "gate": 18
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.26,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "bass-pluck-v2",
+              "params": {
+                "wave": 2,
+                "cutoff": 48,
+                "resonance": 28,
+                "envelope": 78,
+                "drive": 8,
+                "glide": 0,
+                "sub": 18
+              },
+              "pan": -6,
+              "delaySend": 0,
+              "reverbSend": 0
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "synth-garage-slant-3",
+            "type": "synth",
+            "name": "Quick Pulse",
+            "color": "cobalt",
+            "seed": 50865983,
+            "params": {
+              "style": 1,
+              "steps": 32,
+              "density": 48,
+              "range": 2,
+              "octave": 4,
+              "gate": 32,
+              "repeat": 40
+            },
+            "slots": [
+              {
+                "seed": 50865983,
+                "params": {
+                  "style": 1,
+                  "steps": 32,
+                  "density": 48,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 32,
+                  "repeat": 40
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 34088364,
+                "params": {
+                  "style": 2,
+                  "steps": 32,
+                  "density": 58,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 32,
+                  "repeat": 32
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 84421221,
+                "params": {
+                  "style": 1,
+                  "steps": 32,
+                  "density": 23,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 50,
+                  "repeat": 60
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 67643602,
+                "params": {
+                  "style": 5,
+                  "steps": 32,
+                  "density": 70,
+                  "range": 3,
+                  "octave": 4,
+                  "gate": 32,
+                  "repeat": 40
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4278722803,
+                "params": {
+                  "style": 1,
+                  "steps": 32,
+                  "density": 30,
+                  "range": 2,
+                  "octave": 3,
+                  "gate": 42,
+                  "repeat": 40
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4261945184,
+                "params": {
+                  "style": 5,
+                  "steps": 32,
+                  "density": 48,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 32,
+                  "repeat": 68
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 17310745,
+                "params": {
+                  "style": 3,
+                  "steps": 32,
+                  "density": 48,
+                  "range": 2,
+                  "octave": 5,
+                  "gate": 16,
+                  "repeat": 40
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 533126,
+                "params": {
+                  "style": 4,
+                  "steps": 32,
+                  "density": 64,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 32,
+                  "repeat": 22
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.3,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "synth-pluck-v2",
+              "params": {
+                "wave": 1,
+                "shape": 12,
+                "cutoff": 72,
+                "resonance": 32,
+                "envelope": 88,
+                "attack": 0,
+                "release": 10,
+                "glide": 0
+              },
+              "pan": 10,
+              "delaySend": 22,
+              "reverbSend": 20
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 4,
+          "delayFeedback": 40,
+          "delayReturn": 16,
+          "reverbReturn": 30,
+          "masterCharacter": 24
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-garage-slant",
+  "scenes": [
+    {
+      "id": "scene-garage-slant-intro",
+      "name": "Intro",
+      "assignments": {
+        "drums-garage-slant-1": 2,
+        "bass-garage-slant-2": 2,
+        "synth-garage-slant-3": 2
+      }
+    },
+    {
+      "id": "scene-garage-slant-groove",
+      "name": "Groove",
+      "assignments": {
+        "drums-garage-slant-1": 0,
+        "bass-garage-slant-2": 0,
+        "synth-garage-slant-3": 0
+      }
+    },
+    {
+      "id": "scene-garage-slant-variation",
+      "name": "Variation",
+      "assignments": {
+        "drums-garage-slant-1": 5,
+        "bass-garage-slant-2": 5,
+        "synth-garage-slant-3": 5
+      }
+    },
+    {
+      "id": "scene-garage-slant-peak",
+      "name": "Peak",
+      "assignments": {
+        "drums-garage-slant-1": 3,
+        "bass-garage-slant-2": 3,
+        "synth-garage-slant-3": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Minimal House Techno",
+    "demo": true
+  },
+  "createdAt": 1788170400000,
+  "updatedAt": 1788170400000
+}

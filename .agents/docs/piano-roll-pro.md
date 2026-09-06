@@ -91,7 +91,7 @@ The browser workflow explicitly checks velocity/accent editing, non-destructive 
 
 ## Bundled showcase follow-up
 
-The key-aware Piano melody library remains available inside the editor, but the shipping demo picker changed on 2026-08-31 to fifteen Synth-led electronic projects. The catalog now groups five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats arrangements, with Intro/Groove/Variation/Peak scenes. Mixer is a permanent application panel rather than persisted module data. This catalog change does not remove, migrate, or alter Piano-authored data; the complete current matrix and open listening gate are tracked in `demo-projects.md`.
+The key-aware Piano melody library remains available inside the editor, but the shipping demo picker changed on 2026-08-31 to fifteen Synth-led electronic projects. The catalog now groups five Minimal Techno, five Minimal House Techno, and five Ambient Techno & Breakbeats arrangements, with Intro/Groove/Variation/Peak scenes. Mixer is a permanent application panel rather than persisted module data. That catalog was itself replaced on 2026-09-06 by twenty rhythm-archetype demos grouped 7/7/6. Neither catalog change removes, migrates, or alters Piano-authored data; the complete current matrix and open listening gate are tracked in `demo-projects.md`.
 
 ## Remaining limitations
 

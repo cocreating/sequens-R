@@ -1,91 +1,91 @@
 {
   "schemaVersion": 7,
-  "id": "demo-project-glass-invention",
-  "name": "Glass Invention",
+  "id": "demo-project-motorik-mile",
+  "name": "Motorik Mile",
   "racks": [
     {
-      "id": "rack-glass-invention",
-      "name": "Glass Invention Rack",
+      "id": "rack-motorik-mile",
+      "name": "Motorik Mile Rack",
       "state": {
-        "bpm": 124,
+        "bpm": 130,
         "key": {
           "root": 2,
-          "scale": "dorian"
+          "scale": "minor"
         },
         "modules": [
           {
-            "id": "drums-glass-invention-1",
+            "id": "drums-motorik-mile-1",
             "type": "drums",
-            "name": "Glass Grid",
+            "name": "Motorik Bed",
             "color": "ember",
-            "seed": 2165211060,
+            "seed": 2699903838,
             "params": {
               "steps": 32,
-              "groove": 3,
-              "swing": 6,
-              "humanize": 5,
+              "groove": 0,
+              "swing": 0,
+              "humanize": 3,
               "overrideLanes": 255,
               "lane0": 286331153,
               "lane1": 269488144,
-              "lane2": 1145324612,
-              "lane3": 1077952576,
-              "lane4": 268439552,
+              "lane2": 1431655765,
+              "lane3": 0,
+              "lane4": 0,
               "lane5": 0,
               "lane6": 134744072,
-              "lane7": 2147516416
+              "lane7": 0
             },
             "slots": [
               {
-                "seed": 2165211060,
+                "seed": 2699903838,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 6,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 0,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
                   "lane1": 269488144,
-                  "lane2": 1145324612,
-                  "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane2": 1431655765,
+                  "lane3": 0,
+                  "lane4": 0,
                   "lane5": 0,
                   "lane6": 134744072,
-                  "lane7": 2147516416
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2181988679,
+                "seed": 2716681457,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 6,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 0,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
                   "lane1": 269488144,
-                  "lane2": 1145324612,
-                  "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane2": 1431655765,
+                  "lane3": 0,
+                  "lane4": 0,
                   "lane5": 0,
                   "lane6": 1275594760,
-                  "lane7": 4026564608
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2198766298,
+                "seed": 2666348600,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 4,
-                  "humanize": 3,
+                  "groove": 0,
+                  "swing": 0,
+                  "humanize": 2,
                   "overrideLanes": 255,
                   "lane0": 16843009,
                   "lane1": 269488144,
-                  "lane2": 67372036,
+                  "lane2": 286331153,
                   "lane3": 0,
                   "lane4": 0,
                   "lane5": 0,
@@ -96,71 +96,71 @@
                 "pattern": null
               },
               {
-                "seed": 2215543917,
+                "seed": 2683126219,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 6,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 0,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
                   "lane1": 269488144,
                   "lane2": 1431655765,
-                  "lane3": 1077952576,
-                  "lane4": 269488128,
+                  "lane3": 0,
+                  "lane4": 0,
                   "lane5": 0,
                   "lane6": 134744072,
-                  "lane7": 4026564608
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2098100584,
+                "seed": 2767014314,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 6,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 0,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
                   "lane1": 269488144,
-                  "lane2": 1145324612,
-                  "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane2": 1431655765,
+                  "lane3": 0,
+                  "lane4": 0,
                   "lane5": 0,
                   "lane6": 269488144,
-                  "lane7": 65537
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2114878203,
+                "seed": 2783791933,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 6,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 0,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
                   "lane1": 269488144,
-                  "lane2": 1145324612,
-                  "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane2": 1431655765,
+                  "lane3": 0,
+                  "lane4": 0,
                   "lane5": 0,
                   "lane6": 538976288,
-                  "lane7": 2147516416
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2131655822,
+                "seed": 2733459076,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 3,
+                  "groove": 0,
+                  "swing": 0,
                   "humanize": 0,
                   "overrideLanes": 255,
                   "lane0": 286331153,
@@ -176,21 +176,21 @@
                 "pattern": null
               },
               {
-                "seed": 2148433441,
+                "seed": 2750236695,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 6,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 0,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
                   "lane1": 1343229968,
-                  "lane2": 1145324612,
-                  "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane2": 1431655765,
+                  "lane3": 0,
+                  "lane4": 0,
                   "lane5": 0,
                   "lane6": 3959949320,
-                  "lane7": 3959455744
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
@@ -208,7 +208,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.48,
+            "level": 0.46,
             "sound": {
               "engineVersion": 2,
               "presetId": "drums-core-v2",
@@ -219,7 +219,7 @@
               },
               "pan": 0,
               "delaySend": 0,
-              "reverbSend": 7
+              "reverbSend": 8
             },
             "midi": {
               "portId": null,
@@ -228,102 +228,129 @@
             "automation": []
           },
           {
-            "id": "acid-glass-invention-2",
-            "type": "acid",
-            "name": "Dry Etch",
-            "color": "olive",
-            "seed": 321169013,
+            "id": "bass-motorik-mile-2",
+            "type": "bass",
+            "name": "Block Line",
+            "color": "forest",
+            "seed": 3337647357,
             "params": {
-              "fill": 24,
+              "style": 2,
               "steps": 16,
               "range": 1,
-              "decay": 20
+              "density": 64,
+              "drive": 14,
+              "octave": 2,
+              "gate": 40
             },
             "slots": [
               {
-                "seed": 321169013,
+                "seed": 3337647357,
                 "params": {
-                  "fill": 24,
+                  "style": 2,
                   "steps": 16,
                   "range": 1,
-                  "decay": 20
+                  "density": 64,
+                  "drive": 14,
+                  "octave": 2,
+                  "gate": 40
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 304391394,
+                "seed": 3320869738,
                 "params": {
-                  "fill": 36,
+                  "style": 2,
                   "steps": 16,
                   "range": 1,
-                  "decay": 12
+                  "density": 78,
+                  "drive": 14,
+                  "octave": 2,
+                  "gate": 28
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 287613775,
+                "seed": 3304092119,
                 "params": {
-                  "fill": 8,
+                  "style": 2,
                   "steps": 16,
                   "range": 1,
-                  "decay": 44
+                  "density": 27,
+                  "drive": 14,
+                  "octave": 2,
+                  "gate": 58
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 270836156,
+                "seed": 3287314500,
                 "params": {
-                  "fill": 52,
+                  "style": 2,
                   "steps": 16,
                   "range": 2,
-                  "decay": 20
+                  "density": 92,
+                  "drive": 34,
+                  "octave": 2,
+                  "gate": 40
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 254058537,
+                "seed": 3270536881,
                 "params": {
-                  "fill": 14,
+                  "style": 2,
                   "steps": 16,
                   "range": 1,
-                  "decay": 20
+                  "density": 42,
+                  "drive": 14,
+                  "octave": 1,
+                  "gate": 40
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 237280918,
+                "seed": 3253759262,
                 "params": {
-                  "fill": 24,
+                  "style": 3,
                   "steps": 16,
                   "range": 1,
-                  "decay": 38
+                  "density": 64,
+                  "drive": 14,
+                  "octave": 2,
+                  "gate": 40
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 220503299,
+                "seed": 3236981643,
                 "params": {
-                  "fill": 30,
+                  "style": 4,
                   "steps": 16,
                   "range": 1,
-                  "decay": 20
+                  "density": 72,
+                  "drive": 14,
+                  "octave": 2,
+                  "gate": 40
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 203725680,
+                "seed": 3220204024,
                 "params": {
-                  "fill": 44,
+                  "style": 1,
                   "steps": 16,
                   "range": 1,
-                  "decay": 2
+                  "density": 64,
+                  "drive": 14,
+                  "octave": 2,
+                  "gate": 20
                 },
                 "handEdited": false,
                 "pattern": null
@@ -341,22 +368,21 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.21,
+            "level": 0.26,
             "sound": {
               "engineVersion": 2,
-              "presetId": "acid-sharp-v2",
+              "presetId": "bass-square-v2",
               "params": {
-                "wave": 0,
-                "cutoff": 68,
-                "resonance": 82,
-                "envAmount": 75,
-                "decay": 28,
-                "accent": 80,
-                "slide": 25,
-                "drive": 20
+                "wave": 1,
+                "cutoff": 44,
+                "resonance": 22,
+                "envelope": 38,
+                "drive": 18,
+                "glide": 4,
+                "sub": 45
               },
-              "pan": -12,
-              "delaySend": 8,
+              "pan": -4,
+              "delaySend": 0,
               "reverbSend": 0
             },
             "midi": {
@@ -366,129 +392,129 @@
             "automation": []
           },
           {
-            "id": "synth-glass-invention-3",
+            "id": "synth-motorik-mile-3",
             "type": "synth",
-            "name": "Glass Orbit",
+            "name": "Mile Marker",
             "color": "cobalt",
-            "seed": 1237456204,
+            "seed": 4157617077,
             "params": {
-              "style": 4,
+              "style": 1,
               "steps": 32,
-              "density": 54,
+              "density": 44,
               "range": 2,
               "octave": 4,
-              "gate": 48,
-              "repeat": 32
+              "gate": 46,
+              "repeat": 58
             },
             "slots": [
               {
-                "seed": 1237456204,
+                "seed": 4157617077,
                 "params": {
-                  "style": 4,
+                  "style": 1,
                   "steps": 32,
-                  "density": 54,
+                  "density": 44,
                   "range": 2,
                   "octave": 4,
-                  "gate": 48,
-                  "repeat": 32
+                  "gate": 46,
+                  "repeat": 58
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1254233823,
-                "params": {
-                  "style": 5,
-                  "steps": 32,
-                  "density": 64,
-                  "range": 2,
-                  "octave": 4,
-                  "gate": 48,
-                  "repeat": 24
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 1271011442,
-                "params": {
-                  "style": 4,
-                  "steps": 32,
-                  "density": 26,
-                  "range": 2,
-                  "octave": 4,
-                  "gate": 66,
-                  "repeat": 52
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 1287789061,
+                "seed": 4140839458,
                 "params": {
                   "style": 2,
                   "steps": 32,
-                  "density": 76,
-                  "range": 3,
-                  "octave": 4,
-                  "gate": 48,
-                  "repeat": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 1170345728,
-                "params": {
-                  "style": 4,
-                  "steps": 32,
-                  "density": 33,
+                  "density": 54,
                   "range": 2,
-                  "octave": 3,
-                  "gate": 58,
-                  "repeat": 32
+                  "octave": 4,
+                  "gate": 46,
+                  "repeat": 50
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1187123347,
+                "seed": 4124061839,
+                "params": {
+                  "style": 1,
+                  "steps": 32,
+                  "density": 21,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 64,
+                  "repeat": 78
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4107284220,
                 "params": {
                   "style": 5,
                   "steps": 32,
-                  "density": 54,
+                  "density": 66,
+                  "range": 3,
+                  "octave": 4,
+                  "gate": 46,
+                  "repeat": 58
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4090506601,
+                "params": {
+                  "style": 1,
+                  "steps": 32,
+                  "density": 27,
+                  "range": 2,
+                  "octave": 3,
+                  "gate": 56,
+                  "repeat": 58
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4073728982,
+                "params": {
+                  "style": 5,
+                  "steps": 32,
+                  "density": 44,
                   "range": 2,
                   "octave": 4,
-                  "gate": 48,
-                  "repeat": 60
+                  "gate": 46,
+                  "repeat": 86
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1203900966,
+                "seed": 4056951363,
                 "params": {
-                  "style": 0,
+                  "style": 3,
                   "steps": 32,
-                  "density": 54,
+                  "density": 44,
                   "range": 2,
                   "octave": 5,
-                  "gate": 32,
-                  "repeat": 32
+                  "gate": 30,
+                  "repeat": 58
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1220678585,
+                "seed": 4040173744,
                 "params": {
                   "style": 4,
                   "steps": 32,
-                  "density": 70,
+                  "density": 60,
                   "range": 2,
                   "octave": 4,
-                  "gate": 48,
-                  "repeat": 14
+                  "gate": 46,
+                  "repeat": 40
                 },
                 "handEdited": false,
                 "pattern": null
@@ -506,23 +532,23 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.34,
+            "level": 0.3,
             "sound": {
               "engineVersion": 2,
-              "presetId": "synth-glass-v2",
+              "presetId": "synth-bright-v2",
               "params": {
-                "wave": 0,
-                "shape": 72,
-                "cutoff": 94,
-                "resonance": 68,
-                "envelope": 36,
-                "attack": 2,
-                "release": 64,
-                "glide": 8
+                "wave": 1,
+                "shape": 42,
+                "cutoff": 84,
+                "resonance": 18,
+                "envelope": 64,
+                "attack": 3,
+                "release": 28,
+                "glide": 5
               },
-              "pan": 10,
-              "delaySend": 18,
-              "reverbSend": 18
+              "pan": 8,
+              "delaySend": 20,
+              "reverbSend": 12
             },
             "midi": {
               "portId": null,
@@ -533,50 +559,50 @@
         ],
         "mix": {
           "delayDivision": 4,
-          "delayFeedback": 38,
-          "delayReturn": 14,
-          "reverbReturn": 18,
-          "masterCharacter": 24
+          "delayFeedback": 30,
+          "delayReturn": 10,
+          "reverbReturn": 12,
+          "masterCharacter": 34
         }
       }
     }
   ],
-  "activeRackId": "rack-glass-invention",
+  "activeRackId": "rack-motorik-mile",
   "scenes": [
     {
-      "id": "scene-glass-invention-intro",
+      "id": "scene-motorik-mile-intro",
       "name": "Intro",
       "assignments": {
-        "drums-glass-invention-1": 4,
-        "acid-glass-invention-2": 4,
-        "synth-glass-invention-3": 4
+        "drums-motorik-mile-1": 2,
+        "bass-motorik-mile-2": 2,
+        "synth-motorik-mile-3": 2
       }
     },
     {
-      "id": "scene-glass-invention-groove",
+      "id": "scene-motorik-mile-groove",
       "name": "Groove",
       "assignments": {
-        "drums-glass-invention-1": 0,
-        "acid-glass-invention-2": 0,
-        "synth-glass-invention-3": 0
+        "drums-motorik-mile-1": 0,
+        "bass-motorik-mile-2": 0,
+        "synth-motorik-mile-3": 0
       }
     },
     {
-      "id": "scene-glass-invention-variation",
+      "id": "scene-motorik-mile-variation",
       "name": "Variation",
       "assignments": {
-        "drums-glass-invention-1": 1,
-        "acid-glass-invention-2": 1,
-        "synth-glass-invention-3": 1
+        "drums-motorik-mile-1": 5,
+        "bass-motorik-mile-2": 5,
+        "synth-motorik-mile-3": 5
       }
     },
     {
-      "id": "scene-glass-invention-peak",
+      "id": "scene-motorik-mile-peak",
       "name": "Peak",
       "assignments": {
-        "drums-glass-invention-1": 3,
-        "acid-glass-invention-2": 3,
-        "synth-glass-invention-3": 3
+        "drums-motorik-mile-1": 3,
+        "bass-motorik-mile-2": 3,
+        "synth-motorik-mile-3": 3
       }
     }
   ],

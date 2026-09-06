@@ -1,0 +1,665 @@
+{
+  "schemaVersion": 7,
+  "id": "demo-project-tilt-machine",
+  "name": "Tilt Machine",
+  "racks": [
+    {
+      "id": "rack-tilt-machine",
+      "name": "Tilt Machine Rack",
+      "state": {
+        "bpm": 112,
+        "key": {
+          "root": 6,
+          "scale": "phrygian"
+        },
+        "modules": [
+          {
+            "id": "drums-tilt-machine-1",
+            "type": "drums",
+            "name": "Tilt Kit",
+            "color": "ember",
+            "seed": 819080213,
+            "params": {
+              "steps": 32,
+              "groove": 1,
+              "swing": 6,
+              "humanize": 20,
+              "overrideLanes": 255,
+              "lane0": 545333377,
+              "lane1": 67109888,
+              "lane2": 1246513740,
+              "lane3": 0,
+              "lane4": 0,
+              "lane5": 0,
+              "lane6": 0,
+              "lane7": 2097184
+            },
+            "slots": [
+              {
+                "seed": 819080213,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 6,
+                  "humanize": 20,
+                  "overrideLanes": 255,
+                  "lane0": 545333377,
+                  "lane1": 67109888,
+                  "lane2": 1246513740,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 2097184
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 802302594,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 6,
+                  "humanize": 20,
+                  "overrideLanes": 255,
+                  "lane0": 545333377,
+                  "lane1": 67109888,
+                  "lane2": 1246513740,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 4028629024
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 785524975,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 4,
+                  "humanize": 13,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 67109888,
+                  "lane2": 138676292,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 768747356,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 6,
+                  "humanize": 20,
+                  "overrideLanes": 255,
+                  "lane0": 545333377,
+                  "lane1": 67109888,
+                  "lane2": 1599954781,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 4028629024
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 751969737,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 6,
+                  "humanize": 20,
+                  "overrideLanes": 255,
+                  "lane0": 545333377,
+                  "lane1": 67109888,
+                  "lane2": 1246513740,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 4194368
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 735192118,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 6,
+                  "humanize": 20,
+                  "overrideLanes": 255,
+                  "lane0": 545333377,
+                  "lane1": 67109888,
+                  "lane2": 1246513740,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 2097184
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 718414499,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 3,
+                  "humanize": 0,
+                  "overrideLanes": 255,
+                  "lane0": 545333377,
+                  "lane1": 67109888,
+                  "lane2": 1078214724,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 701636880,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 6,
+                  "humanize": 20,
+                  "overrideLanes": 255,
+                  "lane0": 545333377,
+                  "lane1": 1409287168,
+                  "lane2": 1246513740,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 3961520160
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.44,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "drums-odd-v2",
+              "params": {
+                "tone": 65,
+                "punch": 58,
+                "decay": 42
+              },
+              "pan": 0,
+              "delaySend": 10,
+              "reverbSend": 16
+            },
+            "midi": {
+              "portId": null,
+              "channel": 10
+            },
+            "automation": []
+          },
+          {
+            "id": "euclid-tilt-machine-2",
+            "type": "euclid",
+            "name": "Shards",
+            "color": "teal",
+            "seed": 3479138227,
+            "params": {
+              "steps1": 7,
+              "hits1": 3,
+              "rotation1": 2,
+              "note1": 50,
+              "steps2": 11,
+              "hits2": 4,
+              "rotation2": 6,
+              "note2": 57,
+              "steps3": 13,
+              "hits3": 5,
+              "rotation3": 9,
+              "note3": 64,
+              "separateChannels": 0
+            },
+            "slots": [
+              {
+                "seed": 3479138227,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 3,
+                  "rotation1": 2,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 4,
+                  "rotation2": 6,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 5,
+                  "rotation3": 9,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3462360608,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 3,
+                  "rotation1": 3,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 4,
+                  "rotation2": 8,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 5,
+                  "rotation3": 12,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3512693465,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 1,
+                  "rotation1": 4,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 3,
+                  "rotation2": 10,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 4,
+                  "rotation3": 2,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3495915846,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 5,
+                  "rotation1": 5,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 6,
+                  "rotation2": 1,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 6,
+                  "rotation3": 5,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3546248703,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 3,
+                  "rotation1": 6,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 4,
+                  "rotation2": 3,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 5,
+                  "rotation3": 8,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3529471084,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 3,
+                  "rotation1": 0,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 4,
+                  "rotation2": 5,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 5,
+                  "rotation3": 11,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3579803941,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 3,
+                  "rotation1": 1,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 4,
+                  "rotation2": 7,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 5,
+                  "rotation3": 1,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3563026322,
+                "params": {
+                  "steps1": 7,
+                  "hits1": 3,
+                  "rotation1": 2,
+                  "note1": 50,
+                  "steps2": 11,
+                  "hits2": 4,
+                  "rotation2": 9,
+                  "note2": 57,
+                  "steps3": 13,
+                  "hits3": 5,
+                  "rotation3": 4,
+                  "note3": 64,
+                  "separateChannels": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.12,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "euclid-shards-v2",
+              "params": {
+                "tone": 82,
+                "decay": 24,
+                "spread": 76
+              },
+              "pan": -16,
+              "delaySend": 26,
+              "reverbSend": 30
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "synth-tilt-machine-3",
+            "type": "synth",
+            "name": "Glass Tilt",
+            "color": "cobalt",
+            "seed": 1344829057,
+            "params": {
+              "style": 2,
+              "steps": 64,
+              "density": 36,
+              "range": 2,
+              "octave": 4,
+              "gate": 44,
+              "repeat": 34
+            },
+            "slots": [
+              {
+                "seed": 1344829057,
+                "params": {
+                  "style": 2,
+                  "steps": 64,
+                  "density": 36,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 44,
+                  "repeat": 34
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1328051438,
+                "params": {
+                  "style": 3,
+                  "steps": 64,
+                  "density": 46,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 44,
+                  "repeat": 26
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1311273819,
+                "params": {
+                  "style": 2,
+                  "steps": 64,
+                  "density": 17,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 62,
+                  "repeat": 54
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1294496200,
+                "params": {
+                  "style": 0,
+                  "steps": 64,
+                  "density": 58,
+                  "range": 3,
+                  "octave": 4,
+                  "gate": 44,
+                  "repeat": 34
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1411939533,
+                "params": {
+                  "style": 2,
+                  "steps": 64,
+                  "density": 22,
+                  "range": 2,
+                  "octave": 3,
+                  "gate": 54,
+                  "repeat": 34
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1395161914,
+                "params": {
+                  "style": 5,
+                  "steps": 64,
+                  "density": 36,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 44,
+                  "repeat": 62
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1378384295,
+                "params": {
+                  "style": 4,
+                  "steps": 64,
+                  "density": 36,
+                  "range": 2,
+                  "octave": 5,
+                  "gate": 28,
+                  "repeat": 34
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1361606676,
+                "params": {
+                  "style": 4,
+                  "steps": 64,
+                  "density": 52,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 44,
+                  "repeat": 16
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.29,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "synth-glass-v2",
+              "params": {
+                "wave": 0,
+                "shape": 72,
+                "cutoff": 94,
+                "resonance": 68,
+                "envelope": 36,
+                "attack": 2,
+                "release": 64,
+                "glide": 8
+              },
+              "pan": 12,
+              "delaySend": 26,
+              "reverbSend": 28
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 4,
+          "delayFeedback": 64,
+          "delayReturn": 24,
+          "reverbReturn": 36,
+          "masterCharacter": 22
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-tilt-machine",
+  "scenes": [
+    {
+      "id": "scene-tilt-machine-intro",
+      "name": "Intro",
+      "assignments": {
+        "drums-tilt-machine-1": 2,
+        "euclid-tilt-machine-2": 2,
+        "synth-tilt-machine-3": 2
+      }
+    },
+    {
+      "id": "scene-tilt-machine-groove",
+      "name": "Groove",
+      "assignments": {
+        "drums-tilt-machine-1": 0,
+        "euclid-tilt-machine-2": 0,
+        "synth-tilt-machine-3": 0
+      }
+    },
+    {
+      "id": "scene-tilt-machine-variation",
+      "name": "Variation",
+      "assignments": {
+        "drums-tilt-machine-1": 5,
+        "euclid-tilt-machine-2": 5,
+        "synth-tilt-machine-3": 5
+      }
+    },
+    {
+      "id": "scene-tilt-machine-peak",
+      "name": "Peak",
+      "assignments": {
+        "drums-tilt-machine-1": 3,
+        "euclid-tilt-machine-2": 3,
+        "synth-tilt-machine-3": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Ambient Techno & Breakbeats",
+    "demo": true
+  },
+  "createdAt": 1788170400000,
+  "updatedAt": 1788170400000
+}

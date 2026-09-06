@@ -1,94 +1,124 @@
 {
   "projects": [
     {
-      "name": "Glass Invention",
-      "file": "glass-invention.sequens-r.json",
+      "name": "Basement Ledger",
+      "file": "basement-ledger.sequens-r.json",
       "genre": "Minimal Techno",
-      "description": "124 BPM D dorian: a locked minimal-techno grid, dry acid punctuation, and a glassy Orbit Synth motif."
+      "description": "128 BPM A minor: a locked basement loop, a sub anchor under it, and one hollow Synth cell that never resolves."
     },
     {
-      "name": "Quiet Canon",
-      "file": "quiet-canon.sequens-r.json",
+      "name": "Rotary Hood",
+      "file": "rotary-hood.sequens-r.json",
       "genre": "Minimal Techno",
-      "description": "120 BPM C minor: a low-density techno pulse with a round bass anchor and repeating Motif Synth cadence."
+      "description": "132 BPM C minor: loop-funk drive with an open hat pushing ahead of the beat and a dry acid answer cut short."
     },
     {
-      "name": "Winter Largo",
-      "file": "winter-largo.sequens-r.json",
+      "name": "Motorik Mile",
+      "file": "motorik-mile.sequens-r.json",
       "genre": "Minimal Techno",
-      "description": "116 BPM E minor: a cold two-module techno study with an exposed kick grid and long dark Synth drift."
+      "description": "130 BPM D minor: the krautrock motorik pulse on a drum machine — no swing, continuous eighth-note hats, and a block bass that never lifts."
     },
     {
-      "name": "Clockwork Minuet",
-      "file": "clockwork-minuet.sequens-r.json",
+      "name": "Purpose Signal",
+      "file": "purpose-signal.sequens-r.json",
       "genre": "Minimal Techno",
-      "description": "126 BPM A minor: hyper-precise minimal techno with tiny Euclidean ticks and a hollow repeating Synth mechanism."
+      "description": "134 BPM F♯ minor: two modules only. The floor never moves, so a single high Synth figure carries the whole piece."
     },
     {
-      "name": "Gentle Fugue Pulse",
-      "file": "gentle-fugue-pulse.sequens-r.json",
+      "name": "Chrome Cell",
+      "file": "chrome-cell.sequens-r.json",
       "genre": "Minimal Techno",
-      "description": "128 BPM D minor: a direct minimal-techno drive, clipped acid reply, and a fast falling Synth phrase with restrained motion."
+      "description": "130 BPM G minor: a pure rhythm study. Sixteenth-note hats with a hole on every beat, rim on the odd steps, and Euclid rings that never line up."
     },
     {
-      "name": "Pastoral Morning",
-      "file": "pastoral-morning.sequens-r.json",
+      "name": "Dial Tone Loop",
+      "file": "dial-tone-loop.sequens-r.json",
+      "genre": "Minimal Techno",
+      "description": "125 BPM B minor: Berlin dub techno. The muted chord lands off the beat and goes straight to the returns — here the mix is the arrangement."
+    },
+    {
+      "name": "Schaffel Grain",
+      "file": "schaffel-grain.sequens-r.json",
+      "genre": "Minimal Techno",
+      "description": "126 BPM D minor: the Cologne schaffel limp — swing at 54 against a straight grid, triplet delay, and a driven bass filling the gap."
+    },
+    {
+      "name": "Jack Ledger",
+      "file": "jack-ledger.sequens-r.json",
       "genre": "Minimal House Techno",
-      "description": "122 BPM F minor: soft swung house drums, muted chord air, and a restrained Synth answer for an early-morning floor."
+      "description": "122 BPM F minor: the Chicago jack in four sounds — straight kick, clap on 2 and 4, open hat exactly off the beat, closed hat on every eighth."
     },
     {
-      "name": "Velvet Sarabande",
-      "file": "velvet-sarabande.sequens-r.json",
+      "name": "Deep Pocket",
+      "file": "deep-pocket.sequens-r.json",
       "genre": "Minimal House Techno",
-      "description": "124 BPM G minor: a velvet minimal-house pocket with plucked bass and a wide repeating Synth phrase."
+      "description": "124 BPM A minor: a ninth-chord pad that never leaves, with a rim on the last sixteenth of every beat as the only clock inside it."
     },
     {
-      "name": "Classical Allegretto",
-      "file": "classical-allegretto.sequens-r.json",
+      "name": "Bucharest Tick",
+      "file": "bucharest-tick.sequens-r.json",
       "genre": "Minimal House Techno",
-      "description": "126 BPM B♭ minor: a bright minimal-house cadence with clipped keys and a clean climbing Synth lead."
+      "description": "123 BPM D minor: rominimal. Swing 38 and humanize 16 push almost everything off the grid, and the FM tom lands twice in two bars."
     },
     {
-      "name": "Romantic Waltz Glow",
-      "file": "romantic-waltz-glow.sequens-r.json",
+      "name": "Filter Sunrise",
+      "file": "filter-sunrise.sequens-r.json",
       "genre": "Minimal House Techno",
-      "description": "120 BPM E♭ minor: an after-hours house glide with wide chord haze and a soft Synth answer moving through the pocket."
+      "description": "126 BPM C minor: French filter house. One organ loop repeats unchanged and the master character does the lifting."
     },
     {
-      "name": "Luminous Rondo",
-      "file": "luminous-rondo.sequens-r.json",
+      "name": "Garage Slant",
+      "file": "garage-slant.sequens-r.json",
       "genre": "Minimal House Techno",
-      "description": "128 BPM C mixolydian: luminous tech-house drums, a short bass groove, and a glass Synth rondo above the floor."
+      "description": "128 BPM G minor: two-step garage. The only displaced kick in the catalog, snare on the third beat alone, swing at 58."
     },
     {
-      "name": "Moonlit Nocturne",
-      "file": "moonlit-nocturne.sequens-r.json",
-      "genre": "Ambient Techno & Breakbeats",
-      "description": "92 BPM C♯ minor: beatless ambient techno with a dark drifting Synth phrase suspended over one slow chord veil."
+      "name": "Sunday Organ",
+      "file": "sunday-organ.sequens-r.json",
+      "genre": "Minimal House Techno",
+      "description": "120 BPM B♭ minor: the slowest house tempo here. A sustained organ, a soft clap, and a low tom that breathes once every two bars."
     },
     {
-      "name": "Water Garden",
-      "file": "water-garden.sequens-r.json",
-      "genre": "Ambient Techno & Breakbeats",
-      "description": "98 BPM D♭ lydian: washed broken drums, irregular tuned droplets, and a sparse glass Synth current."
+      "name": "Tech Pocket",
+      "file": "tech-pocket.sequens-r.json",
+      "genre": "Minimal House Techno",
+      "description": "125 BPM E minor: a rolling 32-step bass with glide is the lead, and the drums stay out of its way — clap once per two bars."
     },
     {
-      "name": "Dreaming Étude",
-      "file": "dreaming-etude.sequens-r.json",
+      "name": "Selected Drift",
+      "file": "selected-drift.sequens-r.json",
       "genre": "Ambient Techno & Breakbeats",
-      "description": "86 BPM B minor: a beatless ambient-techno study with slow Euclidean lights and a soft 64-step Synth drift."
+      "description": "96 BPM A lydian: no drums and two modules. A four-voice lydian Drone field holds everything while the Synth drops one slow phrase per cycle."
     },
     {
-      "name": "Sweet Electro Invention",
-      "file": "sweet-electro-invention.sequens-r.json",
+      "name": "Sequencer Field",
+      "file": "sequencer-field.sequens-r.json",
       "genre": "Ambient Techno & Breakbeats",
-      "description": "130 BPM E minor: a compact electro breakbeat with round sub movement and a bright syncopated Synth spark."
+      "description": "92 BPM D minor: Berlin School. The sequencer is the rhythm — a three-octave sixteenth-note Arp over a deep Drone, with no percussion and no lead voice at all."
     },
     {
-      "name": "Ambient Pulse Canon",
-      "file": "ambient-pulse-canon.sequens-r.json",
+      "name": "Amen Chapel",
+      "file": "amen-chapel.sequens-r.json",
       "genre": "Ambient Techno & Breakbeats",
-      "description": "108 BPM A dorian: an ambient broken pulse with clear low motion and a wide Orbit Synth dialogue."
+      "description": "168 BPM F minor: atmospheric jungle. A broken four-sound break against a pad moving at a third of its speed — the gap between the two is the piece."
+    },
+    {
+      "name": "Autobahn Coast",
+      "file": "autobahn-coast.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "108 BPM C minor: electro of the Kraftwerk line. Six displaced kicks per two bars, snare on the third beat only, and a square bass doubling the kick an octave up."
+    },
+    {
+      "name": "Tilt Machine",
+      "file": "tilt-machine.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "112 BPM F♯ phrygian: nothing lands where you expect. Odd-step kicks, a late snare, hats grouped in threes, and humanize at 20 so it reads as played."
+    },
+    {
+      "name": "Tape Haze",
+      "file": "tape-haze.sequens-r.json",
+      "genre": "Ambient Techno & Breakbeats",
+      "description": "84 BPM D minor: the slowest project in the catalog. Halftime drums over a night Drone, with the Synth on maximum glide to imitate tape drag."
     }
   ]
 }

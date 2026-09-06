@@ -1,115 +1,142 @@
 {
   "schemaVersion": 7,
-  "id": "demo-project-moonlit-nocturne",
-  "name": "Moonlit Nocturne",
+  "id": "demo-project-selected-drift",
+  "name": "Selected Drift",
   "racks": [
     {
-      "id": "rack-moonlit-nocturne",
-      "name": "Moonlit Nocturne Rack",
+      "id": "rack-selected-drift",
+      "name": "Selected Drift Rack",
       "state": {
-        "bpm": 92,
+        "bpm": 96,
         "key": {
-          "root": 1,
-          "scale": "minor"
+          "root": 9,
+          "scale": "lydian"
         },
         "modules": [
           {
-            "id": "chords-moonlit-nocturne-1",
-            "type": "chords",
-            "name": "Moon Veil",
-            "color": "plum",
-            "seed": 3481636813,
+            "id": "drone-selected-drift-1",
+            "type": "drone",
+            "name": "Air Field",
+            "color": "graphite",
+            "seed": 3888049086,
             "params": {
-              "length": 4,
-              "quality": 1,
-              "duration": 24,
-              "strum": 18
+              "field": 1,
+              "bars": 2,
+              "voices": 3,
+              "octave": 3,
+              "spread": 78,
+              "change": 20,
+              "tension": 12
             },
             "slots": [
               {
-                "seed": 3481636813,
+                "seed": 3888049086,
                 "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 24,
-                  "strum": 18
+                  "field": 1,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 78,
+                  "change": 20,
+                  "tension": 12
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3464859194,
+                "seed": 3904826705,
                 "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 24,
-                  "strum": 36
+                  "field": 1,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 78,
+                  "change": 34,
+                  "tension": 20
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3448081575,
+                "seed": 3854493848,
                 "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 24,
-                  "strum": 56
+                  "field": 1,
+                  "bars": 2,
+                  "voices": 2,
+                  "octave": 3,
+                  "spread": 68,
+                  "change": 8,
+                  "tension": 6
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3431303956,
+                "seed": 3871271467,
                 "params": {
-                  "length": 4,
-                  "quality": 2,
-                  "duration": 24,
-                  "strum": 10
+                  "field": 1,
+                  "bars": 2,
+                  "voices": 4,
+                  "octave": 3,
+                  "spread": 90,
+                  "change": 42,
+                  "tension": 30
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3414526337,
+                "seed": 3955159562,
                 "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 24,
-                  "strum": 18
+                  "field": 2,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 78,
+                  "change": 20,
+                  "tension": 12
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3397748718,
+                "seed": 3971937181,
                 "params": {
-                  "length": 4,
-                  "quality": 1,
-                  "duration": 24,
-                  "strum": 28
+                  "field": 1,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 78,
+                  "change": 30,
+                  "tension": 12
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3380971099,
+                "seed": 3921604324,
                 "params": {
-                  "length": 3,
-                  "quality": 1,
-                  "duration": 24,
-                  "strum": 18
+                  "field": 1,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 4,
+                  "spread": 86,
+                  "change": 20,
+                  "tension": 12
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3364193480,
+                "seed": 3938381943,
                 "params": {
-                  "length": 5,
-                  "quality": 1,
-                  "duration": 24,
-                  "strum": 46
+                  "field": 4,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 78,
+                  "change": 20,
+                  "tension": 24
                 },
                 "handEdited": false,
                 "pattern": null
@@ -127,20 +154,23 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.18,
+            "level": 0.3,
             "sound": {
               "engineVersion": 2,
-              "presetId": "chords-dark-v2",
+              "presetId": "drone-air-v1",
               "params": {
-                "tone": 18,
-                "attack": 52,
-                "release": 88,
-                "width": 64,
-                "chorus": 34
+                "body": 0,
+                "tone": 72,
+                "motion": 58,
+                "air": 72,
+                "shimmer": 42,
+                "width": 88,
+                "attack": 72,
+                "release": 90
               },
-              "pan": -12,
-              "delaySend": 0,
-              "reverbSend": 64
+              "pan": 0,
+              "delaySend": 18,
+              "reverbSend": 62
             },
             "midi": {
               "portId": null,
@@ -149,129 +179,129 @@
             "automation": []
           },
           {
-            "id": "synth-moonlit-nocturne-2",
+            "id": "synth-selected-drift-2",
             "type": "synth",
-            "name": "Night Signal",
+            "name": "Drift Line",
             "color": "cobalt",
-            "seed": 658726572,
+            "seed": 3542292981,
             "params": {
               "style": 5,
               "steps": 64,
-              "density": 24,
+              "density": 22,
               "range": 2,
               "octave": 4,
-              "gate": 92,
-              "repeat": 70
+              "gate": 94,
+              "repeat": 66
             },
             "slots": [
               {
-                "seed": 658726572,
+                "seed": 3542292981,
                 "params": {
                   "style": 5,
                   "steps": 64,
-                  "density": 24,
+                  "density": 22,
                   "range": 2,
                   "octave": 4,
-                  "gate": 92,
-                  "repeat": 70
+                  "gate": 94,
+                  "repeat": 66
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 675504191,
+                "seed": 3525515362,
                 "params": {
                   "style": 0,
                   "steps": 64,
-                  "density": 34,
+                  "density": 32,
                   "range": 2,
                   "octave": 4,
-                  "gate": 92,
-                  "repeat": 62
+                  "gate": 94,
+                  "repeat": 58
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 692281810,
+                "seed": 3508737743,
                 "params": {
                   "style": 5,
                   "steps": 64,
-                  "density": 12,
+                  "density": 11,
                   "range": 2,
                   "octave": 4,
                   "gate": 100,
-                  "repeat": 90
+                  "repeat": 86
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 709059429,
+                "seed": 3491960124,
                 "params": {
                   "style": 3,
                   "steps": 64,
-                  "density": 46,
+                  "density": 44,
                   "range": 3,
                   "octave": 4,
-                  "gate": 92,
-                  "repeat": 70
+                  "gate": 94,
+                  "repeat": 66
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 591616096,
+                "seed": 3475182505,
                 "params": {
                   "style": 5,
                   "steps": 64,
-                  "density": 15,
+                  "density": 14,
                   "range": 2,
                   "octave": 3,
                   "gate": 100,
-                  "repeat": 70
+                  "repeat": 66
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 608393715,
+                "seed": 3458404886,
                 "params": {
                   "style": 5,
                   "steps": 64,
-                  "density": 24,
+                  "density": 22,
                   "range": 2,
                   "octave": 4,
-                  "gate": 92,
-                  "repeat": 98
+                  "gate": 94,
+                  "repeat": 94
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 625171334,
+                "seed": 3441627267,
                 "params": {
                   "style": 1,
                   "steps": 64,
-                  "density": 24,
+                  "density": 22,
                   "range": 2,
                   "octave": 5,
-                  "gate": 76,
-                  "repeat": 70
+                  "gate": 78,
+                  "repeat": 66
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 641948953,
+                "seed": 3424849648,
                 "params": {
                   "style": 4,
                   "steps": 64,
-                  "density": 40,
+                  "density": 38,
                   "range": 2,
                   "octave": 4,
-                  "gate": 92,
-                  "repeat": 52
+                  "gate": 94,
+                  "repeat": 48
                 },
                 "handEdited": false,
                 "pattern": null
@@ -289,23 +319,23 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.38,
+            "level": 0.32,
             "sound": {
               "engineVersion": 2,
-              "presetId": "synth-dark-v2",
+              "presetId": "synth-soft-v2",
               "params": {
                 "wave": 0,
-                "shape": 48,
-                "cutoff": 24,
-                "resonance": 42,
-                "envelope": 72,
-                "attack": 16,
-                "release": 76,
-                "glide": 64
+                "shape": 18,
+                "cutoff": 48,
+                "resonance": 12,
+                "envelope": 38,
+                "attack": 22,
+                "release": 58,
+                "glide": 18
               },
-              "pan": 10,
+              "pan": 8,
               "delaySend": 34,
-              "reverbSend": 62
+              "reverbSend": 66
             },
             "midi": {
               "portId": null,
@@ -316,46 +346,46 @@
         ],
         "mix": {
           "delayDivision": 0,
-          "delayFeedback": 68,
-          "delayReturn": 34,
-          "reverbReturn": 72,
-          "masterCharacter": 10
+          "delayFeedback": 66,
+          "delayReturn": 30,
+          "reverbReturn": 74,
+          "masterCharacter": 8
         }
       }
     }
   ],
-  "activeRackId": "rack-moonlit-nocturne",
+  "activeRackId": "rack-selected-drift",
   "scenes": [
     {
-      "id": "scene-moonlit-nocturne-intro",
+      "id": "scene-selected-drift-intro",
       "name": "Intro",
       "assignments": {
-        "chords-moonlit-nocturne-1": 4,
-        "synth-moonlit-nocturne-2": 4
+        "drone-selected-drift-1": 2,
+        "synth-selected-drift-2": 2
       }
     },
     {
-      "id": "scene-moonlit-nocturne-groove",
+      "id": "scene-selected-drift-groove",
       "name": "Groove",
       "assignments": {
-        "chords-moonlit-nocturne-1": 0,
-        "synth-moonlit-nocturne-2": 0
+        "drone-selected-drift-1": 0,
+        "synth-selected-drift-2": 0
       }
     },
     {
-      "id": "scene-moonlit-nocturne-variation",
+      "id": "scene-selected-drift-variation",
       "name": "Variation",
       "assignments": {
-        "chords-moonlit-nocturne-1": 1,
-        "synth-moonlit-nocturne-2": 1
+        "drone-selected-drift-1": 5,
+        "synth-selected-drift-2": 5
       }
     },
     {
-      "id": "scene-moonlit-nocturne-peak",
+      "id": "scene-selected-drift-peak",
       "name": "Peak",
       "assignments": {
-        "chords-moonlit-nocturne-1": 3,
-        "synth-moonlit-nocturne-2": 3
+        "drone-selected-drift-1": 3,
+        "synth-selected-drift-2": 3
       }
     }
   ],

@@ -1,90 +1,90 @@
 {
   "schemaVersion": 7,
-  "id": "demo-project-winter-largo",
-  "name": "Winter Largo",
+  "id": "demo-project-purpose-signal",
+  "name": "Purpose Signal",
   "racks": [
     {
-      "id": "rack-winter-largo",
-      "name": "Winter Largo Rack",
+      "id": "rack-purpose-signal",
+      "name": "Purpose Signal Rack",
       "state": {
-        "bpm": 116,
+        "bpm": 134,
         "key": {
-          "root": 4,
+          "root": 6,
           "scale": "minor"
         },
         "modules": [
           {
-            "id": "drums-winter-largo-1",
+            "id": "drums-purpose-signal-1",
             "type": "drums",
-            "name": "Frozen Grid",
+            "name": "Signal Floor",
             "color": "ember",
-            "seed": 1968414398,
+            "seed": 103698406,
             "params": {
               "steps": 32,
               "groove": 3,
               "swing": 4,
-              "humanize": 5,
+              "humanize": 3,
               "overrideLanes": 255,
               "lane0": 286331153,
-              "lane1": 269488144,
+              "lane1": 0,
               "lane2": 1145324612,
-              "lane3": 1077952576,
+              "lane3": 1073758208,
               "lane4": 268439552,
               "lane5": 0,
-              "lane6": 134744072,
-              "lane7": 2147516416
+              "lane6": 0,
+              "lane7": 0
             },
             "slots": [
               {
-                "seed": 1968414398,
+                "seed": 103698406,
                 "params": {
                   "steps": 32,
                   "groove": 3,
                   "swing": 4,
-                  "humanize": 5,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 1073758208,
                   "lane4": 268439552,
                   "lane5": 0,
-                  "lane6": 134744072,
-                  "lane7": 2147516416
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1985192017,
+                "seed": 120476025,
                 "params": {
                   "steps": 32,
                   "groove": 3,
                   "swing": 4,
-                  "humanize": 5,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 1073758208,
                   "lane4": 268439552,
                   "lane5": 0,
-                  "lane6": 1275594760,
-                  "lane7": 4026564608
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1934859160,
+                "seed": 70143168,
                 "params": {
                   "steps": 32,
                   "groove": 3,
                   "swing": 3,
-                  "humanize": 3,
+                  "humanize": 2,
                   "overrideLanes": 255,
                   "lane0": 16843009,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 67372036,
                   "lane3": 0,
                   "lane4": 0,
@@ -96,67 +96,67 @@
                 "pattern": null
               },
               {
-                "seed": 1951636779,
+                "seed": 86920787,
                 "params": {
                   "steps": 32,
                   "groove": 3,
                   "swing": 4,
-                  "humanize": 5,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1431655765,
-                  "lane3": 1077952576,
+                  "lane3": 1073758208,
                   "lane4": 269488128,
                   "lane5": 0,
-                  "lane6": 134744072,
-                  "lane7": 4026564608
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2035524874,
+                "seed": 170808882,
                 "params": {
                   "steps": 32,
                   "groove": 3,
                   "swing": 4,
-                  "humanize": 5,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 1073758208,
                   "lane4": 268439552,
                   "lane5": 0,
-                  "lane6": 269488144,
-                  "lane7": 65537
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2052302493,
+                "seed": 187586501,
                 "params": {
                   "steps": 32,
                   "groove": 3,
                   "swing": 4,
-                  "humanize": 5,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 1077952576,
                   "lane4": 268439552,
                   "lane5": 0,
-                  "lane6": 538976288,
-                  "lane7": 2147516416
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2001969636,
+                "seed": 137253644,
                 "params": {
                   "steps": 32,
                   "groove": 3,
@@ -164,7 +164,7 @@
                   "humanize": 0,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 0,
                   "lane4": 0,
@@ -176,21 +176,21 @@
                 "pattern": null
               },
               {
-                "seed": 2018747255,
+                "seed": 154031263,
                 "params": {
                   "steps": 32,
                   "groove": 3,
                   "swing": 4,
-                  "humanize": 5,
+                  "humanize": 3,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 1343229968,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 1073758208,
                   "lane4": 268439552,
                   "lane5": 0,
-                  "lane6": 3959949320,
-                  "lane7": 3959455744
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
@@ -219,7 +219,7 @@
               },
               "pan": 0,
               "delaySend": 0,
-              "reverbSend": 7
+              "reverbSend": 8
             },
             "midi": {
               "portId": null,
@@ -228,129 +228,129 @@
             "automation": []
           },
           {
-            "id": "synth-winter-largo-2",
+            "id": "synth-purpose-signal-2",
             "type": "synth",
-            "name": "Frozen Drift",
+            "name": "Bell Signal",
             "color": "cobalt",
-            "seed": 2577443933,
+            "seed": 2940083191,
             "params": {
-              "style": 5,
-              "steps": 64,
-              "density": 26,
+              "style": 4,
+              "steps": 32,
+              "density": 52,
               "range": 2,
-              "octave": 3,
-              "gate": 96,
-              "repeat": 76
+              "octave": 5,
+              "gate": 30,
+              "repeat": 78
             },
             "slots": [
               {
-                "seed": 2577443933,
+                "seed": 2940083191,
+                "params": {
+                  "style": 4,
+                  "steps": 32,
+                  "density": 52,
+                  "range": 2,
+                  "octave": 5,
+                  "gate": 30,
+                  "repeat": 78
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2923305572,
                 "params": {
                   "style": 5,
-                  "steps": 64,
-                  "density": 26,
+                  "steps": 32,
+                  "density": 62,
                   "range": 2,
-                  "octave": 3,
-                  "gate": 96,
-                  "repeat": 76
+                  "octave": 5,
+                  "gate": 30,
+                  "repeat": 70
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2560666314,
+                "seed": 2973638429,
                 "params": {
-                  "style": 0,
-                  "steps": 64,
-                  "density": 36,
+                  "style": 4,
+                  "steps": 32,
+                  "density": 25,
                   "range": 2,
-                  "octave": 3,
-                  "gate": 96,
-                  "repeat": 68
+                  "octave": 5,
+                  "gate": 48,
+                  "repeat": 98
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2543888695,
+                "seed": 2956860810,
                 "params": {
-                  "style": 5,
-                  "steps": 64,
-                  "density": 12,
-                  "range": 2,
-                  "octave": 3,
-                  "gate": 100,
-                  "repeat": 96
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 2527111076,
-                "params": {
-                  "style": 3,
-                  "steps": 64,
-                  "density": 48,
+                  "style": 2,
+                  "steps": 32,
+                  "density": 74,
                   "range": 3,
-                  "octave": 3,
-                  "gate": 96,
-                  "repeat": 76
+                  "octave": 5,
+                  "gate": 30,
+                  "repeat": 78
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2510333457,
+                "seed": 2872972715,
                 "params": {
-                  "style": 5,
-                  "steps": 64,
-                  "density": 16,
+                  "style": 4,
+                  "steps": 32,
+                  "density": 32,
                   "range": 2,
-                  "octave": 2,
-                  "gate": 100,
-                  "repeat": 76
+                  "octave": 4,
+                  "gate": 40,
+                  "repeat": 78
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2493555838,
+                "seed": 2856195096,
                 "params": {
                   "style": 5,
-                  "steps": 64,
-                  "density": 26,
+                  "steps": 32,
+                  "density": 52,
                   "range": 2,
-                  "octave": 3,
-                  "gate": 96,
+                  "octave": 5,
+                  "gate": 30,
                   "repeat": 100
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2476778219,
+                "seed": 2906527953,
                 "params": {
-                  "style": 1,
-                  "steps": 64,
-                  "density": 26,
+                  "style": 0,
+                  "steps": 32,
+                  "density": 52,
                   "range": 2,
-                  "octave": 4,
-                  "gate": 80,
-                  "repeat": 76
+                  "octave": 6,
+                  "gate": 14,
+                  "repeat": 78
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2460000600,
+                "seed": 2889750334,
                 "params": {
                   "style": 4,
-                  "steps": 64,
-                  "density": 42,
+                  "steps": 32,
+                  "density": 68,
                   "range": 2,
-                  "octave": 3,
-                  "gate": 96,
-                  "repeat": 58
+                  "octave": 5,
+                  "gate": 30,
+                  "repeat": 60
                 },
                 "handEdited": false,
                 "pattern": null
@@ -368,23 +368,23 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.38,
+            "level": 0.32,
             "sound": {
               "engineVersion": 2,
-              "presetId": "synth-dark-v2",
+              "presetId": "synth-bright-v2",
               "params": {
-                "wave": 0,
-                "shape": 48,
-                "cutoff": 24,
-                "resonance": 42,
-                "envelope": 72,
-                "attack": 16,
-                "release": 76,
-                "glide": 64
+                "wave": 1,
+                "shape": 42,
+                "cutoff": 84,
+                "resonance": 18,
+                "envelope": 64,
+                "attack": 3,
+                "release": 28,
+                "glide": 5
               },
               "pan": 6,
-              "delaySend": 26,
-              "reverbSend": 38
+              "delaySend": 24,
+              "reverbSend": 22
             },
             "midi": {
               "portId": null,
@@ -394,47 +394,47 @@
           }
         ],
         "mix": {
-          "delayDivision": 4,
-          "delayFeedback": 52,
-          "delayReturn": 20,
-          "reverbReturn": 36,
-          "masterCharacter": 16
+          "delayDivision": 1,
+          "delayFeedback": 44,
+          "delayReturn": 18,
+          "reverbReturn": 18,
+          "masterCharacter": 32
         }
       }
     }
   ],
-  "activeRackId": "rack-winter-largo",
+  "activeRackId": "rack-purpose-signal",
   "scenes": [
     {
-      "id": "scene-winter-largo-intro",
+      "id": "scene-purpose-signal-intro",
       "name": "Intro",
       "assignments": {
-        "drums-winter-largo-1": 4,
-        "synth-winter-largo-2": 4
+        "drums-purpose-signal-1": 2,
+        "synth-purpose-signal-2": 2
       }
     },
     {
-      "id": "scene-winter-largo-groove",
+      "id": "scene-purpose-signal-groove",
       "name": "Groove",
       "assignments": {
-        "drums-winter-largo-1": 0,
-        "synth-winter-largo-2": 0
+        "drums-purpose-signal-1": 0,
+        "synth-purpose-signal-2": 0
       }
     },
     {
-      "id": "scene-winter-largo-variation",
+      "id": "scene-purpose-signal-variation",
       "name": "Variation",
       "assignments": {
-        "drums-winter-largo-1": 1,
-        "synth-winter-largo-2": 1
+        "drums-purpose-signal-1": 5,
+        "synth-purpose-signal-2": 5
       }
     },
     {
-      "id": "scene-winter-largo-peak",
+      "id": "scene-purpose-signal-peak",
       "name": "Peak",
       "assignments": {
-        "drums-winter-largo-1": 3,
-        "synth-winter-largo-2": 3
+        "drums-purpose-signal-1": 3,
+        "synth-purpose-signal-2": 3
       }
     }
   ],

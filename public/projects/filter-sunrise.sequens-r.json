@@ -1,90 +1,90 @@
 {
   "schemaVersion": 7,
-  "id": "demo-project-gentle-fugue-pulse",
-  "name": "Gentle Fugue Pulse",
+  "id": "demo-project-filter-sunrise",
+  "name": "Filter Sunrise",
   "racks": [
     {
-      "id": "rack-gentle-fugue-pulse",
-      "name": "Gentle Fugue Pulse Rack",
+      "id": "rack-filter-sunrise",
+      "name": "Filter Sunrise Rack",
       "state": {
-        "bpm": 128,
+        "bpm": 126,
         "key": {
-          "root": 2,
+          "root": 0,
           "scale": "minor"
         },
         "modules": [
           {
-            "id": "drums-gentle-fugue-pulse-1",
+            "id": "drums-filter-sunrise-1",
             "type": "drums",
-            "name": "Fugue Drive",
+            "name": "Sunrise Floor",
             "color": "ember",
-            "seed": 3211487689,
+            "seed": 2017202264,
             "params": {
               "steps": 32,
-              "groove": 3,
-              "swing": 4,
-              "humanize": 5,
+              "groove": 0,
+              "swing": 20,
+              "humanize": 8,
               "overrideLanes": 255,
               "lane0": 286331153,
-              "lane1": 269488144,
+              "lane1": 0,
               "lane2": 1145324612,
               "lane3": 1077952576,
-              "lane4": 268439552,
+              "lane4": 269488144,
               "lane5": 0,
-              "lane6": 134744072,
-              "lane7": 2147516416
+              "lane6": 0,
+              "lane7": 0
             },
             "slots": [
               {
-                "seed": 3211487689,
+                "seed": 2017202264,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 4,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 20,
+                  "humanize": 8,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane4": 269488144,
                   "lane5": 0,
-                  "lane6": 134744072,
-                  "lane7": 2147516416
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3194710070,
+                "seed": 2033979883,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 4,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 20,
+                  "humanize": 8,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane4": 269488144,
                   "lane5": 0,
-                  "lane6": 1275594760,
-                  "lane7": 4026564608
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3177932451,
+                "seed": 2050757502,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 3,
-                  "humanize": 3,
+                  "groove": 0,
+                  "swing": 14,
+                  "humanize": 5,
                   "overrideLanes": 255,
                   "lane0": 16843009,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 67372036,
                   "lane3": 0,
                   "lane4": 0,
@@ -96,75 +96,75 @@
                 "pattern": null
               },
               {
-                "seed": 3161154832,
+                "seed": 2067535121,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 4,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 20,
+                  "humanize": 8,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1431655765,
                   "lane3": 1077952576,
-                  "lane4": 269488128,
+                  "lane4": 269488144,
                   "lane5": 0,
-                  "lane6": 134744072,
-                  "lane7": 4026564608
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3278598165,
+                "seed": 2084312740,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 4,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 20,
+                  "humanize": 8,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane4": 269488144,
                   "lane5": 0,
-                  "lane6": 269488144,
-                  "lane7": 65537
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3261820546,
+                "seed": 2101090359,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 4,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 20,
+                  "humanize": 8,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane4": 269488144,
                   "lane5": 0,
-                  "lane6": 538976288,
-                  "lane7": 2147516416
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 3245042927,
+                "seed": 2117867978,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 2,
+                  "groove": 0,
+                  "swing": 10,
                   "humanize": 0,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 0,
                   "lane4": 0,
@@ -176,21 +176,21 @@
                 "pattern": null
               },
               {
-                "seed": 3228265308,
+                "seed": 2134645597,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 4,
-                  "humanize": 5,
+                  "groove": 0,
+                  "swing": 20,
+                  "humanize": 8,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 1343229968,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 1077952576,
-                  "lane4": 268439552,
+                  "lane4": 269488144,
                   "lane5": 0,
-                  "lane6": 3959949320,
-                  "lane7": 3959455744
+                  "lane6": 0,
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
@@ -208,7 +208,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.48,
+            "level": 0.44,
             "sound": {
               "engineVersion": 2,
               "presetId": "drums-core-v2",
@@ -219,7 +219,7 @@
               },
               "pan": 0,
               "delaySend": 0,
-              "reverbSend": 7
+              "reverbSend": 10
             },
             "midi": {
               "portId": null,
@@ -228,102 +228,102 @@
             "automation": []
           },
           {
-            "id": "acid-gentle-fugue-pulse-2",
-            "type": "acid",
-            "name": "Clipped Reply",
-            "color": "olive",
-            "seed": 2065840134,
+            "id": "chords-filter-sunrise-2",
+            "type": "chords",
+            "name": "Draw Loop",
+            "color": "plum",
+            "seed": 2387698701,
             "params": {
-              "fill": 30,
-              "steps": 16,
-              "range": 1,
-              "decay": 18
+              "length": 4,
+              "quality": 1,
+              "duration": 8,
+              "strum": 16
             },
             "slots": [
               {
-                "seed": 2065840134,
+                "seed": 2387698701,
                 "params": {
-                  "fill": 30,
-                  "steps": 16,
-                  "range": 1,
-                  "decay": 18
+                  "length": 4,
+                  "quality": 1,
+                  "duration": 8,
+                  "strum": 16
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2082617753,
+                "seed": 2370921082,
                 "params": {
-                  "fill": 42,
-                  "steps": 16,
-                  "range": 1,
-                  "decay": 10
+                  "length": 4,
+                  "quality": 1,
+                  "duration": 8,
+                  "strum": 34
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2032284896,
+                "seed": 2354143463,
                 "params": {
-                  "fill": 11,
-                  "steps": 16,
-                  "range": 1,
-                  "decay": 42
+                  "length": 4,
+                  "quality": 1,
+                  "duration": 8,
+                  "strum": 54
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2049062515,
+                "seed": 2337365844,
                 "params": {
-                  "fill": 58,
-                  "steps": 16,
-                  "range": 2,
-                  "decay": 18
+                  "length": 4,
+                  "quality": 2,
+                  "duration": 8,
+                  "strum": 8
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2132950610,
+                "seed": 2320588225,
                 "params": {
-                  "fill": 17,
-                  "steps": 16,
-                  "range": 1,
-                  "decay": 18
+                  "length": 4,
+                  "quality": 1,
+                  "duration": 8,
+                  "strum": 16
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2149728229,
+                "seed": 2303810606,
                 "params": {
-                  "fill": 30,
-                  "steps": 16,
-                  "range": 1,
-                  "decay": 36
+                  "length": 4,
+                  "quality": 1,
+                  "duration": 8,
+                  "strum": 26
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2099395372,
+                "seed": 2287032987,
                 "params": {
-                  "fill": 36,
-                  "steps": 16,
-                  "range": 1,
-                  "decay": 18
+                  "length": 3,
+                  "quality": 1,
+                  "duration": 8,
+                  "strum": 16
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2116172991,
+                "seed": 2270255368,
                 "params": {
-                  "fill": 50,
-                  "steps": 16,
-                  "range": 1,
-                  "decay": 0
+                  "length": 5,
+                  "quality": 1,
+                  "duration": 8,
+                  "strum": 44
                 },
                 "handEdited": false,
                 "pattern": null
@@ -341,23 +341,20 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.2,
+            "level": 0.18,
             "sound": {
               "engineVersion": 2,
-              "presetId": "acid-core-v2",
+              "presetId": "chords-organ-v2",
               "params": {
-                "wave": 0,
-                "cutoff": 55,
-                "resonance": 64,
-                "envAmount": 60,
-                "decay": 45,
-                "accent": 65,
-                "slide": 35,
-                "drive": 12
+                "tone": 42,
+                "attack": 0,
+                "release": 48,
+                "width": 18,
+                "chorus": 20
               },
-              "pan": -14,
-              "delaySend": 8,
-              "reverbSend": 0
+              "pan": -10,
+              "delaySend": 18,
+              "reverbSend": 22
             },
             "midi": {
               "portId": null,
@@ -366,129 +363,129 @@
             "automation": []
           },
           {
-            "id": "synth-gentle-fugue-pulse-3",
+            "id": "synth-filter-sunrise-3",
             "type": "synth",
-            "name": "Falling Subject",
+            "name": "Twin Path",
             "color": "cobalt",
-            "seed": 49633866,
+            "seed": 2572962256,
             "params": {
-              "style": 2,
+              "style": 4,
               "steps": 32,
-              "density": 58,
+              "density": 50,
               "range": 2,
               "octave": 4,
-              "gate": 38,
-              "repeat": 40
+              "gate": 44,
+              "repeat": 52
             },
             "slots": [
               {
-                "seed": 49633866,
+                "seed": 2572962256,
                 "params": {
-                  "style": 2,
+                  "style": 4,
                   "steps": 32,
-                  "density": 58,
+                  "density": 50,
                   "range": 2,
                   "octave": 4,
-                  "gate": 38,
-                  "repeat": 40
+                  "gate": 44,
+                  "repeat": 52
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 66411485,
-                "params": {
-                  "style": 3,
-                  "steps": 32,
-                  "density": 68,
-                  "range": 2,
-                  "octave": 4,
-                  "gate": 38,
-                  "repeat": 32
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 16078628,
-                "params": {
-                  "style": 2,
-                  "steps": 32,
-                  "density": 28,
-                  "range": 2,
-                  "octave": 4,
-                  "gate": 56,
-                  "repeat": 60
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 32856247,
-                "params": {
-                  "style": 0,
-                  "steps": 32,
-                  "density": 80,
-                  "range": 3,
-                  "octave": 4,
-                  "gate": 38,
-                  "repeat": 40
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4277490686,
-                "params": {
-                  "style": 2,
-                  "steps": 32,
-                  "density": 36,
-                  "range": 2,
-                  "octave": 3,
-                  "gate": 48,
-                  "repeat": 40
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 4294268305,
+                "seed": 2589739875,
                 "params": {
                   "style": 5,
                   "steps": 32,
-                  "density": 58,
+                  "density": 60,
                   "range": 2,
                   "octave": 4,
-                  "gate": 38,
-                  "repeat": 68
+                  "gate": 44,
+                  "repeat": 44
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 4243935448,
+                "seed": 2606517494,
                 "params": {
                   "style": 4,
                   "steps": 32,
-                  "density": 58,
+                  "density": 24,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 62,
+                  "repeat": 72
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2623295113,
+                "params": {
+                  "style": 2,
+                  "steps": 32,
+                  "density": 72,
+                  "range": 3,
+                  "octave": 4,
+                  "gate": 44,
+                  "repeat": 52
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2640072732,
+                "params": {
+                  "style": 4,
+                  "steps": 32,
+                  "density": 31,
+                  "range": 2,
+                  "octave": 3,
+                  "gate": 54,
+                  "repeat": 52
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2656850351,
+                "params": {
+                  "style": 5,
+                  "steps": 32,
+                  "density": 50,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 44,
+                  "repeat": 80
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2673627970,
+                "params": {
+                  "style": 0,
+                  "steps": 32,
+                  "density": 50,
                   "range": 2,
                   "octave": 5,
-                  "gate": 22,
-                  "repeat": 40
+                  "gate": 28,
+                  "repeat": 52
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 4260713067,
+                "seed": 2690405589,
                 "params": {
                   "style": 4,
                   "steps": 32,
-                  "density": 74,
+                  "density": 66,
                   "range": 2,
                   "octave": 4,
-                  "gate": 38,
-                  "repeat": 22
+                  "gate": 44,
+                  "repeat": 34
                 },
                 "handEdited": false,
                 "pattern": null
@@ -509,20 +506,20 @@
             "level": 0.3,
             "sound": {
               "engineVersion": 2,
-              "presetId": "synth-pluck-v2",
+              "presetId": "synth-wide-v2",
               "params": {
                 "wave": 1,
-                "shape": 12,
-                "cutoff": 72,
-                "resonance": 32,
-                "envelope": 88,
-                "attack": 0,
-                "release": 10,
-                "glide": 0
+                "shape": 92,
+                "cutoff": 68,
+                "resonance": 20,
+                "envelope": 58,
+                "attack": 7,
+                "release": 48,
+                "glide": 15
               },
               "pan": 10,
-              "delaySend": 12,
-              "reverbSend": 16
+              "delaySend": 20,
+              "reverbSend": 18
             },
             "midi": {
               "portId": null,
@@ -532,56 +529,56 @@
           }
         ],
         "mix": {
-          "delayDivision": 4,
-          "delayFeedback": 36,
-          "delayReturn": 12,
-          "reverbReturn": 18,
-          "masterCharacter": 30
+          "delayDivision": 1,
+          "delayFeedback": 48,
+          "delayReturn": 18,
+          "reverbReturn": 24,
+          "masterCharacter": 46
         }
       }
     }
   ],
-  "activeRackId": "rack-gentle-fugue-pulse",
+  "activeRackId": "rack-filter-sunrise",
   "scenes": [
     {
-      "id": "scene-gentle-fugue-pulse-intro",
+      "id": "scene-filter-sunrise-intro",
       "name": "Intro",
       "assignments": {
-        "drums-gentle-fugue-pulse-1": 4,
-        "acid-gentle-fugue-pulse-2": 4,
-        "synth-gentle-fugue-pulse-3": 4
+        "drums-filter-sunrise-1": 2,
+        "chords-filter-sunrise-2": 2,
+        "synth-filter-sunrise-3": 2
       }
     },
     {
-      "id": "scene-gentle-fugue-pulse-groove",
+      "id": "scene-filter-sunrise-groove",
       "name": "Groove",
       "assignments": {
-        "drums-gentle-fugue-pulse-1": 0,
-        "acid-gentle-fugue-pulse-2": 0,
-        "synth-gentle-fugue-pulse-3": 0
+        "drums-filter-sunrise-1": 0,
+        "chords-filter-sunrise-2": 0,
+        "synth-filter-sunrise-3": 0
       }
     },
     {
-      "id": "scene-gentle-fugue-pulse-variation",
+      "id": "scene-filter-sunrise-variation",
       "name": "Variation",
       "assignments": {
-        "drums-gentle-fugue-pulse-1": 1,
-        "acid-gentle-fugue-pulse-2": 1,
-        "synth-gentle-fugue-pulse-3": 1
+        "drums-filter-sunrise-1": 5,
+        "chords-filter-sunrise-2": 5,
+        "synth-filter-sunrise-3": 5
       }
     },
     {
-      "id": "scene-gentle-fugue-pulse-peak",
+      "id": "scene-filter-sunrise-peak",
       "name": "Peak",
       "assignments": {
-        "drums-gentle-fugue-pulse-1": 3,
-        "acid-gentle-fugue-pulse-2": 3,
-        "synth-gentle-fugue-pulse-3": 3
+        "drums-filter-sunrise-1": 3,
+        "chords-filter-sunrise-2": 3,
+        "synth-filter-sunrise-3": 3
       }
     }
   ],
   "settings": {
-    "genre": "Minimal Techno",
+    "genre": "Minimal House Techno",
     "demo": true
   },
   "createdAt": 1788170400000,

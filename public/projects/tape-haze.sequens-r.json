@@ -1,0 +1,616 @@
+{
+  "schemaVersion": 7,
+  "id": "demo-project-tape-haze",
+  "name": "Tape Haze",
+  "racks": [
+    {
+      "id": "rack-tape-haze",
+      "name": "Tape Haze Rack",
+      "state": {
+        "bpm": 84,
+        "key": {
+          "root": 2,
+          "scale": "minor"
+        },
+        "modules": [
+          {
+            "id": "drums-tape-haze-1",
+            "type": "drums",
+            "name": "Haze Weight",
+            "color": "ember",
+            "seed": 3629382116,
+            "params": {
+              "steps": 32,
+              "groove": 1,
+              "swing": 20,
+              "humanize": 22,
+              "overrideLanes": 255,
+              "lane0": 67175425,
+              "lane1": 16777472,
+              "lane2": 269488144,
+              "lane3": 0,
+              "lane4": 0,
+              "lane5": 0,
+              "lane6": 1073758208,
+              "lane7": 0
+            },
+            "slots": [
+              {
+                "seed": 3629382116,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 20,
+                  "humanize": 22,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 269488144,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 1073758208,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3646159735,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 20,
+                  "humanize": 22,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 269488144,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 1140867072,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3662937354,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 14,
+                  "humanize": 14,
+                  "overrideLanes": 255,
+                  "lane0": 65537,
+                  "lane1": 16777472,
+                  "lane2": 1048592,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3679714973,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 20,
+                  "humanize": 22,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 1431655765,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 1073758208,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3562271640,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 20,
+                  "humanize": 22,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 269488144,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 2147516416,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3579049259,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 20,
+                  "humanize": 22,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 269488144,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 65537,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3595826878,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 10,
+                  "humanize": 0,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 16777472,
+                  "lane2": 0,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 0,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3612604497,
+                "params": {
+                  "steps": 32,
+                  "groove": 1,
+                  "swing": 20,
+                  "humanize": 22,
+                  "overrideLanes": 255,
+                  "lane0": 67175425,
+                  "lane1": 1358954752,
+                  "lane2": 269488144,
+                  "lane3": 0,
+                  "lane4": 0,
+                  "lane5": 0,
+                  "lane6": 3959439360,
+                  "lane7": 0
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.38,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "drums-halftime-v2",
+              "params": {
+                "tone": 38,
+                "punch": 78,
+                "decay": 70
+              },
+              "pan": 0,
+              "delaySend": 10,
+              "reverbSend": 24
+            },
+            "midi": {
+              "portId": null,
+              "channel": 10
+            },
+            "automation": []
+          },
+          {
+            "id": "drone-tape-haze-2",
+            "type": "drone",
+            "name": "Night Bloom",
+            "color": "graphite",
+            "seed": 3036718887,
+            "params": {
+              "field": 4,
+              "bars": 2,
+              "voices": 3,
+              "octave": 3,
+              "spread": 82,
+              "change": 26,
+              "tension": 16
+            },
+            "slots": [
+              {
+                "seed": 3036718887,
+                "params": {
+                  "field": 4,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 82,
+                  "change": 26,
+                  "tension": 16
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3019941268,
+                "params": {
+                  "field": 4,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 82,
+                  "change": 40,
+                  "tension": 24
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3070274125,
+                "params": {
+                  "field": 4,
+                  "bars": 2,
+                  "voices": 2,
+                  "octave": 3,
+                  "spread": 72,
+                  "change": 10,
+                  "tension": 8
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3053496506,
+                "params": {
+                  "field": 4,
+                  "bars": 2,
+                  "voices": 4,
+                  "octave": 3,
+                  "spread": 94,
+                  "change": 48,
+                  "tension": 34
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2969608411,
+                "params": {
+                  "field": 5,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 82,
+                  "change": 26,
+                  "tension": 16
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2952830792,
+                "params": {
+                  "field": 4,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 82,
+                  "change": 36,
+                  "tension": 16
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3003163649,
+                "params": {
+                  "field": 4,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 4,
+                  "spread": 90,
+                  "change": 26,
+                  "tension": 16
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2986386030,
+                "params": {
+                  "field": 1,
+                  "bars": 2,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 82,
+                  "change": 26,
+                  "tension": 28
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.28,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "drone-night-v1",
+              "params": {
+                "body": 1,
+                "tone": 24,
+                "motion": 66,
+                "air": 14,
+                "shimmer": 24,
+                "width": 82,
+                "attack": 76,
+                "release": 96
+              },
+              "pan": 0,
+              "delaySend": 14,
+              "reverbSend": 54
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "synth-tape-haze-3",
+            "type": "synth",
+            "name": "Warp Line",
+            "color": "cobalt",
+            "seed": 1027193106,
+            "params": {
+              "style": 5,
+              "steps": 64,
+              "density": 24,
+              "range": 1,
+              "octave": 4,
+              "gate": 90,
+              "repeat": 70
+            },
+            "slots": [
+              {
+                "seed": 1027193106,
+                "params": {
+                  "style": 5,
+                  "steps": 64,
+                  "density": 24,
+                  "range": 1,
+                  "octave": 4,
+                  "gate": 90,
+                  "repeat": 70
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1043970725,
+                "params": {
+                  "style": 0,
+                  "steps": 64,
+                  "density": 34,
+                  "range": 1,
+                  "octave": 4,
+                  "gate": 90,
+                  "repeat": 62
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 993637868,
+                "params": {
+                  "style": 5,
+                  "steps": 64,
+                  "density": 12,
+                  "range": 1,
+                  "octave": 4,
+                  "gate": 100,
+                  "repeat": 90
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1010415487,
+                "params": {
+                  "style": 3,
+                  "steps": 64,
+                  "density": 46,
+                  "range": 2,
+                  "octave": 4,
+                  "gate": 90,
+                  "repeat": 70
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 960082630,
+                "params": {
+                  "style": 5,
+                  "steps": 64,
+                  "density": 15,
+                  "range": 1,
+                  "octave": 3,
+                  "gate": 100,
+                  "repeat": 70
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 976860249,
+                "params": {
+                  "style": 5,
+                  "steps": 64,
+                  "density": 24,
+                  "range": 1,
+                  "octave": 4,
+                  "gate": 90,
+                  "repeat": 98
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 926527392,
+                "params": {
+                  "style": 1,
+                  "steps": 64,
+                  "density": 24,
+                  "range": 1,
+                  "octave": 5,
+                  "gate": 74,
+                  "repeat": 70
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 943305011,
+                "params": {
+                  "style": 4,
+                  "steps": 64,
+                  "density": 40,
+                  "range": 1,
+                  "octave": 4,
+                  "gate": 90,
+                  "repeat": 52
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.3,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "synth-dark-v2",
+              "params": {
+                "wave": 0,
+                "shape": 48,
+                "cutoff": 24,
+                "resonance": 42,
+                "envelope": 72,
+                "attack": 16,
+                "release": 76,
+                "glide": 64
+              },
+              "pan": 10,
+              "delaySend": 32,
+              "reverbSend": 50
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 0,
+          "delayFeedback": 68,
+          "delayReturn": 28,
+          "reverbReturn": 56,
+          "masterCharacter": 10
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-tape-haze",
+  "scenes": [
+    {
+      "id": "scene-tape-haze-intro",
+      "name": "Intro",
+      "assignments": {
+        "drums-tape-haze-1": 2,
+        "drone-tape-haze-2": 2,
+        "synth-tape-haze-3": 2
+      }
+    },
+    {
+      "id": "scene-tape-haze-groove",
+      "name": "Groove",
+      "assignments": {
+        "drums-tape-haze-1": 0,
+        "drone-tape-haze-2": 0,
+        "synth-tape-haze-3": 0
+      }
+    },
+    {
+      "id": "scene-tape-haze-variation",
+      "name": "Variation",
+      "assignments": {
+        "drums-tape-haze-1": 5,
+        "drone-tape-haze-2": 5,
+        "synth-tape-haze-3": 5
+      }
+    },
+    {
+      "id": "scene-tape-haze-peak",
+      "name": "Peak",
+      "assignments": {
+        "drums-tape-haze-1": 3,
+        "drone-tape-haze-2": 3,
+        "synth-tape-haze-3": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Ambient Techno & Breakbeats",
+    "demo": true
+  },
+  "createdAt": 1788170400000,
+  "updatedAt": 1788170400000
+}

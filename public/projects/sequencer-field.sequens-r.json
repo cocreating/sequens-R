@@ -1,0 +1,385 @@
+{
+  "schemaVersion": 7,
+  "id": "demo-project-sequencer-field",
+  "name": "Sequencer Field",
+  "racks": [
+    {
+      "id": "rack-sequencer-field",
+      "name": "Sequencer Field Rack",
+      "state": {
+        "bpm": 92,
+        "key": {
+          "root": 2,
+          "scale": "minor"
+        },
+        "modules": [
+          {
+            "id": "arp-sequencer-field-1",
+            "type": "arp",
+            "name": "Copper Run",
+            "color": "navy",
+            "seed": 1973407049,
+            "params": {
+              "direction": 0,
+              "rate": 2,
+              "span": 3,
+              "gate": 38,
+              "followChords": 0,
+              "octave": 3
+            },
+            "slots": [
+              {
+                "seed": 1973407049,
+                "params": {
+                  "direction": 0,
+                  "rate": 2,
+                  "span": 3,
+                  "gate": 38,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1956629430,
+                "params": {
+                  "direction": 2,
+                  "rate": 2,
+                  "span": 3,
+                  "gate": 28,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1939851811,
+                "params": {
+                  "direction": 0,
+                  "rate": 1,
+                  "span": 2,
+                  "gate": 56,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1923074192,
+                "params": {
+                  "direction": 0,
+                  "rate": 3,
+                  "span": 4,
+                  "gate": 20,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2040517525,
+                "params": {
+                  "direction": 3,
+                  "rate": 1,
+                  "span": 3,
+                  "gate": 38,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2023739906,
+                "params": {
+                  "direction": 0,
+                  "rate": 2,
+                  "span": 4,
+                  "gate": 38,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2006962287,
+                "params": {
+                  "direction": 1,
+                  "rate": 2,
+                  "span": 3,
+                  "gate": 48,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 1990184668,
+                "params": {
+                  "direction": 3,
+                  "rate": 3,
+                  "span": 3,
+                  "gate": 14,
+                  "followChords": 0,
+                  "octave": 3
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.24,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "arp-copper-v2",
+              "params": {
+                "tone": 60,
+                "brightness": 66,
+                "decay": 52,
+                "character": 88
+              },
+              "pan": -10,
+              "delaySend": 30,
+              "reverbSend": 34
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          },
+          {
+            "id": "drone-sequencer-field-2",
+            "type": "drone",
+            "name": "Deep Current",
+            "color": "graphite",
+            "seed": 2727757258,
+            "params": {
+              "field": 0,
+              "bars": 3,
+              "voices": 3,
+              "octave": 2,
+              "spread": 58,
+              "change": 16,
+              "tension": 8
+            },
+            "slots": [
+              {
+                "seed": 2727757258,
+                "params": {
+                  "field": 0,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 2,
+                  "spread": 58,
+                  "change": 16,
+                  "tension": 8
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2744534877,
+                "params": {
+                  "field": 0,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 2,
+                  "spread": 58,
+                  "change": 30,
+                  "tension": 16
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2694202020,
+                "params": {
+                  "field": 0,
+                  "bars": 3,
+                  "voices": 2,
+                  "octave": 2,
+                  "spread": 48,
+                  "change": 6,
+                  "tension": 4
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2710979639,
+                "params": {
+                  "field": 0,
+                  "bars": 3,
+                  "voices": 4,
+                  "octave": 2,
+                  "spread": 70,
+                  "change": 38,
+                  "tension": 26
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2660646782,
+                "params": {
+                  "field": 1,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 2,
+                  "spread": 58,
+                  "change": 16,
+                  "tension": 8
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2677424401,
+                "params": {
+                  "field": 0,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 2,
+                  "spread": 58,
+                  "change": 26,
+                  "tension": 8
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2627091544,
+                "params": {
+                  "field": 0,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 3,
+                  "spread": 66,
+                  "change": 16,
+                  "tension": 8
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 2643869163,
+                "params": {
+                  "field": 3,
+                  "bars": 3,
+                  "voices": 3,
+                  "octave": 2,
+                  "spread": 58,
+                  "change": 16,
+                  "tension": 20
+                },
+                "handEdited": false,
+                "pattern": null
+              }
+            ],
+            "activeSlot": 0,
+            "mutation": {
+              "on": false,
+              "intensity": 2,
+              "everyNLoops": 4,
+              "revert": null
+            },
+            "shareable": true,
+            "collapsed": false,
+            "mute": false,
+            "solo": false,
+            "monitor": true,
+            "level": 0.3,
+            "sound": {
+              "engineVersion": 2,
+              "presetId": "drone-deep-v1",
+              "params": {
+                "body": 0,
+                "tone": 18,
+                "motion": 22,
+                "air": 5,
+                "shimmer": 8,
+                "width": 54,
+                "attack": 62,
+                "release": 88
+              },
+              "pan": 0,
+              "delaySend": 0,
+              "reverbSend": 58
+            },
+            "midi": {
+              "portId": null,
+              "channel": 1
+            },
+            "automation": []
+          }
+        ],
+        "mix": {
+          "delayDivision": 1,
+          "delayFeedback": 70,
+          "delayReturn": 34,
+          "reverbReturn": 62,
+          "masterCharacter": 10
+        }
+      }
+    }
+  ],
+  "activeRackId": "rack-sequencer-field",
+  "scenes": [
+    {
+      "id": "scene-sequencer-field-intro",
+      "name": "Intro",
+      "assignments": {
+        "arp-sequencer-field-1": 2,
+        "drone-sequencer-field-2": 2
+      }
+    },
+    {
+      "id": "scene-sequencer-field-groove",
+      "name": "Groove",
+      "assignments": {
+        "arp-sequencer-field-1": 0,
+        "drone-sequencer-field-2": 0
+      }
+    },
+    {
+      "id": "scene-sequencer-field-variation",
+      "name": "Variation",
+      "assignments": {
+        "arp-sequencer-field-1": 5,
+        "drone-sequencer-field-2": 5
+      }
+    },
+    {
+      "id": "scene-sequencer-field-peak",
+      "name": "Peak",
+      "assignments": {
+        "arp-sequencer-field-1": 3,
+        "drone-sequencer-field-2": 3
+      }
+    }
+  ],
+  "settings": {
+    "genre": "Ambient Techno & Breakbeats",
+    "demo": true
+  },
+  "createdAt": 1788170400000,
+  "updatedAt": 1788170400000
+}

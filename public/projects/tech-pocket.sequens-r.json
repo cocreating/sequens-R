@@ -1,90 +1,90 @@
 {
   "schemaVersion": 7,
-  "id": "demo-project-quiet-canon",
-  "name": "Quiet Canon",
+  "id": "demo-project-tech-pocket",
+  "name": "Tech Pocket",
   "racks": [
     {
-      "id": "rack-quiet-canon",
-      "name": "Quiet Canon Rack",
+      "id": "rack-tech-pocket",
+      "name": "Tech Pocket Rack",
       "state": {
-        "bpm": 120,
+        "bpm": 125,
         "key": {
-          "root": 0,
+          "root": 4,
           "scale": "minor"
         },
         "modules": [
           {
-            "id": "drums-quiet-canon-1",
+            "id": "drums-tech-pocket-1",
             "type": "drums",
-            "name": "Quiet Machine",
+            "name": "Pocket Grid",
             "color": "ember",
-            "seed": 1085959716,
+            "seed": 1343394352,
             "params": {
               "steps": 32,
-              "groove": 3,
-              "swing": 10,
-              "humanize": 5,
+              "groove": 2,
+              "swing": 24,
+              "humanize": 9,
               "overrideLanes": 255,
               "lane0": 286331153,
-              "lane1": 269488144,
+              "lane1": 0,
               "lane2": 1145324612,
-              "lane3": 1077952576,
+              "lane3": 0,
               "lane4": 268439552,
               "lane5": 0,
               "lane6": 134744072,
-              "lane7": 2147516416
+              "lane7": 0
             },
             "slots": [
               {
-                "seed": 1085959716,
+                "seed": 1343394352,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 10,
-                  "humanize": 5,
+                  "groove": 2,
+                  "swing": 24,
+                  "humanize": 9,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 0,
                   "lane4": 268439552,
                   "lane5": 0,
                   "lane6": 134744072,
-                  "lane7": 2147516416
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1102737335,
+                "seed": 1360171971,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 10,
-                  "humanize": 5,
+                  "groove": 2,
+                  "swing": 24,
+                  "humanize": 9,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 0,
                   "lane4": 268439552,
                   "lane5": 0,
                   "lane6": 1275594760,
-                  "lane7": 4026564608
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1119514954,
+                "seed": 1376949590,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 7,
-                  "humanize": 3,
+                  "groove": 2,
+                  "swing": 17,
+                  "humanize": 6,
                   "overrideLanes": 255,
                   "lane0": 16843009,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 67372036,
                   "lane3": 0,
                   "lane4": 0,
@@ -96,75 +96,75 @@
                 "pattern": null
               },
               {
-                "seed": 1136292573,
+                "seed": 1393727209,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 10,
-                  "humanize": 5,
+                  "groove": 2,
+                  "swing": 24,
+                  "humanize": 9,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1431655765,
-                  "lane3": 1077952576,
+                  "lane3": 0,
                   "lane4": 269488128,
                   "lane5": 0,
                   "lane6": 134744072,
-                  "lane7": 4026564608
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1018849240,
+                "seed": 1410504828,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 10,
-                  "humanize": 5,
+                  "groove": 2,
+                  "swing": 24,
+                  "humanize": 9,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 0,
                   "lane4": 268439552,
                   "lane5": 0,
                   "lane6": 269488144,
-                  "lane7": 65537
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1035626859,
+                "seed": 1427282447,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 10,
-                  "humanize": 5,
+                  "groove": 2,
+                  "swing": 24,
+                  "humanize": 9,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 0,
                   "lane4": 268439552,
                   "lane5": 0,
                   "lane6": 538976288,
-                  "lane7": 2147516416
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1052404478,
+                "seed": 1444060066,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 5,
+                  "groove": 2,
+                  "swing": 12,
                   "humanize": 0,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 269488144,
+                  "lane1": 0,
                   "lane2": 1145324612,
                   "lane3": 0,
                   "lane4": 0,
@@ -176,21 +176,21 @@
                 "pattern": null
               },
               {
-                "seed": 1069182097,
+                "seed": 1460837685,
                 "params": {
                   "steps": 32,
-                  "groove": 3,
-                  "swing": 10,
-                  "humanize": 5,
+                  "groove": 2,
+                  "swing": 24,
+                  "humanize": 9,
                   "overrideLanes": 255,
                   "lane0": 286331153,
-                  "lane1": 1343229968,
+                  "lane1": 0,
                   "lane2": 1145324612,
-                  "lane3": 1077952576,
+                  "lane3": 0,
                   "lane4": 268439552,
                   "lane5": 0,
                   "lane6": 3959949320,
-                  "lane7": 3959455744
+                  "lane7": 0
                 },
                 "handEdited": false,
                 "pattern": null
@@ -208,7 +208,7 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.48,
+            "level": 0.45,
             "sound": {
               "engineVersion": 2,
               "presetId": "drums-core-v2",
@@ -219,7 +219,7 @@
               },
               "pan": 0,
               "delaySend": 0,
-              "reverbSend": 7
+              "reverbSend": 10
             },
             "midi": {
               "portId": null,
@@ -228,43 +228,57 @@
             "automation": []
           },
           {
-            "id": "bass-quiet-canon-2",
+            "id": "bass-tech-pocket-2",
             "type": "bass",
-            "name": "Canon Floor",
+            "name": "Orbit Roll",
             "color": "forest",
-            "seed": 1132556796,
+            "seed": 4061654725,
             "params": {
-              "style": 4,
-              "steps": 16,
-              "range": 1,
-              "density": 28,
-              "drive": 8,
+              "style": 2,
+              "steps": 32,
+              "range": 2,
+              "density": 62,
+              "drive": 22,
               "octave": 2,
-              "gate": 74
+              "gate": 44
             },
             "slots": [
               {
-                "seed": 1132556796,
+                "seed": 4061654725,
                 "params": {
-                  "style": 4,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 28,
-                  "drive": 8,
+                  "style": 2,
+                  "steps": 32,
+                  "range": 2,
+                  "density": 62,
+                  "drive": 22,
                   "octave": 2,
-                  "gate": 74
+                  "gate": 44
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1149334415,
+                "seed": 4044877106,
                 "params": {
-                  "style": 4,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 42,
-                  "drive": 8,
+                  "style": 2,
+                  "steps": 32,
+                  "range": 2,
+                  "density": 76,
+                  "drive": 22,
+                  "octave": 2,
+                  "gate": 32
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 4028099487,
+                "params": {
+                  "style": 2,
+                  "steps": 32,
+                  "range": 2,
+                  "density": 26,
+                  "drive": 22,
                   "octave": 2,
                   "gate": 62
                 },
@@ -272,85 +286,71 @@
                 "pattern": null
               },
               {
-                "seed": 1166112034,
+                "seed": 4011321868,
                 "params": {
-                  "style": 4,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 12,
-                  "drive": 8,
+                  "style": 2,
+                  "steps": 32,
+                  "range": 3,
+                  "density": 90,
+                  "drive": 42,
                   "octave": 2,
-                  "gate": 92
+                  "gate": 44
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1182889653,
+                "seed": 3994544249,
                 "params": {
-                  "style": 4,
-                  "steps": 16,
+                  "style": 2,
+                  "steps": 32,
                   "range": 2,
-                  "density": 56,
-                  "drive": 28,
-                  "octave": 2,
-                  "gate": 74
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 1065446320,
-                "params": {
-                  "style": 4,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 18,
-                  "drive": 8,
+                  "density": 40,
+                  "drive": 22,
                   "octave": 1,
-                  "gate": 74
+                  "gate": 44
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 1082223939,
-                "params": {
-                  "style": 5,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 28,
-                  "drive": 8,
-                  "octave": 2,
-                  "gate": 74
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 1099001558,
-                "params": {
-                  "style": 0,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 36,
-                  "drive": 8,
-                  "octave": 2,
-                  "gate": 74
-                },
-                "handEdited": false,
-                "pattern": null
-              },
-              {
-                "seed": 1115779177,
+                "seed": 3977766630,
                 "params": {
                   "style": 3,
-                  "steps": 16,
-                  "range": 1,
-                  "density": 28,
-                  "drive": 8,
+                  "steps": 32,
+                  "range": 2,
+                  "density": 62,
+                  "drive": 22,
                   "octave": 2,
-                  "gate": 54
+                  "gate": 44
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3960989011,
+                "params": {
+                  "style": 4,
+                  "steps": 32,
+                  "range": 2,
+                  "density": 70,
+                  "drive": 22,
+                  "octave": 2,
+                  "gate": 44
+                },
+                "handEdited": false,
+                "pattern": null
+              },
+              {
+                "seed": 3944211392,
+                "params": {
+                  "style": 1,
+                  "steps": 32,
+                  "range": 2,
+                  "density": 62,
+                  "drive": 22,
+                  "octave": 2,
+                  "gate": 24
                 },
                 "handEdited": false,
                 "pattern": null
@@ -368,20 +368,20 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.28,
+            "level": 0.26,
             "sound": {
               "engineVersion": 2,
-              "presetId": "bass-clean-v2",
+              "presetId": "bass-animated-v2",
               "params": {
-                "wave": 0,
-                "cutoff": 72,
-                "resonance": 10,
-                "envelope": 30,
-                "drive": 0,
-                "glide": 5,
-                "sub": 20
+                "wave": 2,
+                "cutoff": 62,
+                "resonance": 48,
+                "envelope": 70,
+                "drive": 25,
+                "glide": 55,
+                "sub": 25
               },
-              "pan": -5,
+              "pan": -6,
               "delaySend": 0,
               "reverbSend": 0
             },
@@ -392,129 +392,129 @@
             "automation": []
           },
           {
-            "id": "synth-quiet-canon-3",
+            "id": "synth-tech-pocket-3",
             "type": "synth",
-            "name": "Quiet Motif",
+            "name": "Pocket Pulse",
             "color": "cobalt",
-            "seed": 2541271714,
+            "seed": 3679085169,
             "params": {
               "style": 0,
               "steps": 32,
-              "density": 38,
+              "density": 40,
               "range": 1,
               "octave": 4,
-              "gate": 58,
-              "repeat": 68
+              "gate": 36,
+              "repeat": 62
             },
             "slots": [
               {
-                "seed": 2541271714,
+                "seed": 3679085169,
                 "params": {
                   "style": 0,
                   "steps": 32,
-                  "density": 38,
+                  "density": 40,
                   "range": 1,
                   "octave": 4,
-                  "gate": 58,
-                  "repeat": 68
+                  "gate": 36,
+                  "repeat": 62
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2558049333,
+                "seed": 3662307550,
                 "params": {
                   "style": 1,
                   "steps": 32,
-                  "density": 48,
+                  "density": 50,
                   "range": 1,
                   "octave": 4,
-                  "gate": 58,
-                  "repeat": 60
+                  "gate": 36,
+                  "repeat": 54
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2507716476,
+                "seed": 3645529931,
                 "params": {
                   "style": 0,
                   "steps": 32,
-                  "density": 18,
+                  "density": 19,
                   "range": 1,
                   "octave": 4,
-                  "gate": 76,
-                  "repeat": 88
+                  "gate": 54,
+                  "repeat": 82
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2524494095,
+                "seed": 3628752312,
                 "params": {
                   "style": 4,
                   "steps": 32,
-                  "density": 60,
+                  "density": 62,
                   "range": 2,
                   "octave": 4,
-                  "gate": 58,
-                  "repeat": 68
+                  "gate": 36,
+                  "repeat": 62
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2474161238,
+                "seed": 3746195645,
                 "params": {
                   "style": 0,
                   "steps": 32,
-                  "density": 24,
+                  "density": 25,
                   "range": 1,
                   "octave": 3,
-                  "gate": 68,
-                  "repeat": 68
+                  "gate": 46,
+                  "repeat": 62
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2490938857,
+                "seed": 3729418026,
                 "params": {
                   "style": 5,
                   "steps": 32,
-                  "density": 38,
+                  "density": 40,
                   "range": 1,
                   "octave": 4,
-                  "gate": 58,
-                  "repeat": 96
+                  "gate": 36,
+                  "repeat": 90
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2440606000,
+                "seed": 3712640407,
                 "params": {
                   "style": 2,
                   "steps": 32,
-                  "density": 38,
+                  "density": 40,
                   "range": 1,
                   "octave": 5,
-                  "gate": 42,
-                  "repeat": 68
+                  "gate": 20,
+                  "repeat": 62
                 },
                 "handEdited": false,
                 "pattern": null
               },
               {
-                "seed": 2457383619,
+                "seed": 3695862788,
                 "params": {
                   "style": 4,
                   "steps": 32,
-                  "density": 54,
+                  "density": 56,
                   "range": 1,
                   "octave": 4,
-                  "gate": 58,
-                  "repeat": 50
+                  "gate": 36,
+                  "repeat": 44
                 },
                 "handEdited": false,
                 "pattern": null
@@ -532,23 +532,23 @@
             "mute": false,
             "solo": false,
             "monitor": true,
-            "level": 0.32,
+            "level": 0.29,
             "sound": {
               "engineVersion": 2,
-              "presetId": "synth-core-v2",
+              "presetId": "synth-pluck-v2",
               "params": {
                 "wave": 1,
-                "shape": 35,
-                "cutoff": 62,
-                "resonance": 24,
-                "envelope": 52,
-                "attack": 8,
-                "release": 38,
-                "glide": 12
+                "shape": 12,
+                "cutoff": 72,
+                "resonance": 32,
+                "envelope": 88,
+                "attack": 0,
+                "release": 10,
+                "glide": 0
               },
-              "pan": 9,
-              "delaySend": 14,
-              "reverbSend": 20
+              "pan": 10,
+              "delaySend": 18,
+              "reverbSend": 16
             },
             "midi": {
               "portId": null,
@@ -558,56 +558,56 @@
           }
         ],
         "mix": {
-          "delayDivision": 4,
-          "delayFeedback": 42,
-          "delayReturn": 14,
-          "reverbReturn": 20,
-          "masterCharacter": 22
+          "delayDivision": 1,
+          "delayFeedback": 44,
+          "delayReturn": 15,
+          "reverbReturn": 22,
+          "masterCharacter": 26
         }
       }
     }
   ],
-  "activeRackId": "rack-quiet-canon",
+  "activeRackId": "rack-tech-pocket",
   "scenes": [
     {
-      "id": "scene-quiet-canon-intro",
+      "id": "scene-tech-pocket-intro",
       "name": "Intro",
       "assignments": {
-        "drums-quiet-canon-1": 4,
-        "bass-quiet-canon-2": 4,
-        "synth-quiet-canon-3": 4
+        "drums-tech-pocket-1": 2,
+        "bass-tech-pocket-2": 2,
+        "synth-tech-pocket-3": 2
       }
     },
     {
-      "id": "scene-quiet-canon-groove",
+      "id": "scene-tech-pocket-groove",
       "name": "Groove",
       "assignments": {
-        "drums-quiet-canon-1": 0,
-        "bass-quiet-canon-2": 0,
-        "synth-quiet-canon-3": 0
+        "drums-tech-pocket-1": 0,
+        "bass-tech-pocket-2": 0,
+        "synth-tech-pocket-3": 0
       }
     },
     {
-      "id": "scene-quiet-canon-variation",
+      "id": "scene-tech-pocket-variation",
       "name": "Variation",
       "assignments": {
-        "drums-quiet-canon-1": 1,
-        "bass-quiet-canon-2": 1,
-        "synth-quiet-canon-3": 1
+        "drums-tech-pocket-1": 5,
+        "bass-tech-pocket-2": 5,
+        "synth-tech-pocket-3": 5
       }
     },
     {
-      "id": "scene-quiet-canon-peak",
+      "id": "scene-tech-pocket-peak",
       "name": "Peak",
       "assignments": {
-        "drums-quiet-canon-1": 3,
-        "bass-quiet-canon-2": 3,
-        "synth-quiet-canon-3": 3
+        "drums-tech-pocket-1": 3,
+        "bass-tech-pocket-2": 3,
+        "synth-tech-pocket-3": 3
       }
     }
   ],
   "settings": {
-    "genre": "Minimal Techno",
+    "genre": "Minimal House Techno",
     "demo": true
   },
   "createdAt": 1788170400000,

@@ -38,19 +38,19 @@ test('lists and loads a bundled demo project', async ({ page }) => {
   await expect(page.locator('.import-project')).toBeVisible();
   await page.getByRole('button', { name: 'Demos projects' }).click();
   await expect(page.getByRole('heading', { name: 'Demos projects' })).toBeVisible();
-  await expect(page.locator('.demo-projects-list button')).toHaveCount(15);
-  for (const genre of ['Minimal Techno', 'Minimal House Techno', 'Ambient Techno & Breakbeats']) {
+  await expect(page.locator('.demo-projects-list button')).toHaveCount(20);
+  for (const [genre, count] of [['Minimal Techno', 7], ['Minimal House Techno', 7], ['Ambient Techno & Breakbeats', 6]] as const) {
     const group = page.locator('.demo-projects-group').filter({ has: page.getByRole('heading', { name: genre, exact: true }) });
     await expect(group).toBeVisible();
-    await expect(group.locator('.demo-projects-list button')).toHaveCount(5);
+    await expect(group.locator('.demo-projects-list button')).toHaveCount(count);
   }
-  await expect(page.getByRole('button', { name: /Dreaming Étude/u })).toBeVisible();
-  await page.locator('.demo-projects-list button').filter({ has: page.getByText('Glass Invention', { exact: true }) }).click();
-  await expect(page.getByText('Glass Invention demo loaded and saved locally')).toBeVisible();
-  await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Glass Invention');
-  await expect(page.getByRole('listitem', { name: 'Glass Grid' })).toBeVisible();
-  await expect(page.getByRole('listitem', { name: 'Dry Etch' })).toBeVisible();
-  await expect(page.getByRole('listitem', { name: 'Glass Orbit' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Sequencer Field/u })).toBeVisible();
+  await page.locator('.demo-projects-list button').filter({ has: page.getByText('Basement Ledger', { exact: true }) }).click();
+  await expect(page.getByText('Basement Ledger demo loaded and saved locally')).toBeVisible();
+  await expect(page.getByRole('textbox', { name: 'Project' })).toHaveValue('Basement Ledger');
+  await expect(page.getByRole('listitem', { name: 'Ledger Grid' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Sub Anchor' })).toBeVisible();
+  await expect(page.getByRole('listitem', { name: 'Hollow Cell' })).toBeVisible();
 });
 
 test('slots, editable seeds, mutate, and revert stay deterministic', async ({ page }) => {

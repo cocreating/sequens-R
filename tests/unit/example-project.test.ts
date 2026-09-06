@@ -26,33 +26,38 @@ describe('legacy project fixtures', () => {
 
 });
 
-describe('bundled Synth electronic projects', () => {
-  it('imports all fifteen Synth-first demos with bounded tempos, modules, scenes, and released sounds', () => {
+describe('bundled electronic demo projects', () => {
+  it('imports all twenty rhythm-archetype demos with bounded tempos, modules, scenes, and released sounds', () => {
     const expectedFiles = [
-      'glass-invention.sequens-r.json',
-      'quiet-canon.sequens-r.json',
-      'winter-largo.sequens-r.json',
-      'clockwork-minuet.sequens-r.json',
-      'gentle-fugue-pulse.sequens-r.json',
-      'pastoral-morning.sequens-r.json',
-      'velvet-sarabande.sequens-r.json',
-      'classical-allegretto.sequens-r.json',
-      'romantic-waltz-glow.sequens-r.json',
-      'luminous-rondo.sequens-r.json',
-      'moonlit-nocturne.sequens-r.json',
-      'water-garden.sequens-r.json',
-      'dreaming-etude.sequens-r.json',
-      'sweet-electro-invention.sequens-r.json',
-      'ambient-pulse-canon.sequens-r.json',
+      'basement-ledger.sequens-r.json',
+      'rotary-hood.sequens-r.json',
+      'motorik-mile.sequens-r.json',
+      'purpose-signal.sequens-r.json',
+      'chrome-cell.sequens-r.json',
+      'dial-tone-loop.sequens-r.json',
+      'schaffel-grain.sequens-r.json',
+      'jack-ledger.sequens-r.json',
+      'deep-pocket.sequens-r.json',
+      'bucharest-tick.sequens-r.json',
+      'filter-sunrise.sequens-r.json',
+      'garage-slant.sequens-r.json',
+      'sunday-organ.sequens-r.json',
+      'tech-pocket.sequens-r.json',
+      'selected-drift.sequens-r.json',
+      'sequencer-field.sequens-r.json',
+      'amen-chapel.sequens-r.json',
+      'autobahn-coast.sequens-r.json',
+      'tilt-machine.sequens-r.json',
+      'tape-haze.sequens-r.json',
     ];
     const index = parseDemoProjectIndex(JSON.parse(readFileSync(new URL('../../public/projects/index.json', import.meta.url), 'utf8')));
     const groups = groupDemoProjects(index);
 
     expect(index.map(({ file }) => file)).toEqual(expectedFiles);
     expect(groups.map(({ genre, projects }) => [genre, projects.length])).toEqual([
-      ['Minimal Techno', 5],
-      ['Minimal House Techno', 5],
-      ['Ambient Techno & Breakbeats', 5],
+      ['Minimal Techno', 7],
+      ['Minimal House Techno', 7],
+      ['Ambient Techno & Breakbeats', 6],
     ]);
     for (const entry of index) {
       const source = readFileSync(new URL(`../../public/projects/${entry.file}`, import.meta.url), 'utf8');
@@ -65,15 +70,26 @@ describe('bundled Synth electronic projects', () => {
       expect(project.schemaVersion).toBe(7);
       expect(project.settings.genre).toBe(entry.genre);
       expect(project.scenes.map(({ name }) => name)).toEqual(['Intro', 'Groove', 'Variation', 'Peak']);
-      expect(rack.bpm).toBeLessThanOrEqual(130);
+      expect(rack.bpm).toBeGreaterThanOrEqual(84);
+      expect(rack.bpm).toBeLessThanOrEqual(168);
+      expect(rack.modules.length).toBeGreaterThanOrEqual(2);
       expect(rack.modules.length).toBeLessThanOrEqual(3);
       expect(rack.modules.every(({ slots }) => slots.length === 8)).toBe(true);
       expect(rack.modules.every(({ sound }) => sound.engineVersion === 2)).toBe(true);
-      expect(synths).toHaveLength(1);
-      expect(synth?.sound.presetId.startsWith('synth-')).toBe(true);
-      expect(synth?.slots.every(({ handEdited, pattern }) => !handEdited && pattern === null)).toBe(true);
-      expect(new Set(synth?.slots.map(({ seed }) => seed))).toHaveLength(8);
-      expect(rack.modules.some(({ type }) => type === 'synth' || type === 'drums')).toBe(true);
+      expect(synths.length).toBeLessThanOrEqual(1);
+      if (synth !== undefined) {
+        expect(synth.sound.presetId.startsWith('synth-')).toBe(true);
+        expect(synth.slots.every(({ handEdited, pattern }) => !handEdited && pattern === null)).toBe(true);
+        expect(new Set(synth.slots.map(({ seed }) => seed))).toHaveLength(8);
+      }
+      // Every demo declares at most four drum sounds, in all eight pattern slots.
+      for (const drums of rack.modules.filter(({ type }) => type === 'drums')) {
+        for (const slot of drums.slots) {
+          const voiced = Array.from({ length: 8 }, (_, lane) => slot.params[`lane${lane}`] ?? 0).filter((mask) => mask > 0);
+          expect(voiced.length).toBeLessThanOrEqual(4);
+        }
+      }
+      expect(rack.modules.some(({ type }) => type === 'synth' || type === 'drums' || type === 'drone')).toBe(true);
       expect(project.scenes.every(({ assignments }) => Object.keys(assignments).every((id) => moduleIds.has(id)))).toBe(true);
     }
   });
